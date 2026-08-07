@@ -1,34 +1,53 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/winterdienst-aussenanlagen/";
 ---
 
 <ServiceDetailPage
-  current="/winterdienst-aussenanlagen"
-  metaTitle="Winterdienst & Außenanlagen Emden | Fixum Objektservice"
-  description="Winterdienst, Außenanlagenpflege und laufende Objektarbeiten in Emden und Ostfriesland nach Vereinbarung."
+  current={current}
+  crumb="Winterdienst"
+  metaTitle="Winterdienst & Außenanlagen in Emden | Fixum Objektservice"
+  description="Winterdienst in Emden und Ostfriesland: Räum- und Streupflicht zuverlässig erfüllt, mit schriftlich festgelegten Flächen und Einsatzzeiten. Dazu Grünpflege und laufende Außenarbeiten."
   eyebrow="Winterdienst & Außenanlagen"
-  title="Außenanlagen und Winterdienst für Objekte"
-  heroText="Fixum übernimmt laufende Außenarbeiten, einfache Pflege und Winterdienst nach klarer Vereinbarung - passend für Eigentümer, Verwaltungen und Gewerbe."
+  title="Winterdienst und Pflege der Außenanlagen"
+  heroText="Räum- und Streupflicht ist keine Frage des guten Willens, sondern der Haftung. Wir übernehmen sie im schriftlich vereinbarten Umfang - zuverlässig und nachvollziehbar."
   image="/images/categories/hausmeister-winterdienst.png"
-  lead="Diese Leistung hält den Kontakt zum Objekt auch zwischen größeren Projekten. Umfang, Zeiten und Reaktionswege werden vorab festgelegt."
+  imageAlt="Winterdienst auf einem Gehweg in Emden durch Fixum Objektservice"
+  serviceType="Winterdienst und Außenanlagenpflege"
+  areaTitle="Winterdienst in Emden und Ostfriesland"
+  lead="Als Eigentümer oder Verwaltung haften Sie für geräumte Wege - auch dann, wenn Sie selbst nicht vor Ort sind. Eine schriftliche Vereinbarung überträgt diese Pflicht im festgelegten Umfang und macht sie überprüfbar."
   included={[
-    "Winterdienst nach vereinbartem Objektumfang",
-    "Einfache Pflegearbeiten an Außenbereichen",
-    "Kontrollgänge und kleinere Objektaufgaben",
-    "Rahmenvertrag für Verwaltungen und Eigentümer möglich",
+    "Räumen und Streuen der vereinbarten Gehwege, Zufahrten und Zugänge",
+    "Einsatzzeiten schriftlich festgelegt - werktags und an Sonn- und Feiertagen",
+    "Nachräumen bei anhaltendem Schneefall",
+    "Bereitstellung und Lagerung der vereinbarten Streumittel",
+    "Dokumentation der Einsätze auf Wunsch",
+    "Laubbeseitigung, Grünpflege und einfache Außenarbeiten",
+    "Kombinierbar mit laufendem Hausmeisterservice",
   ]}
   process={[
     [
-      "Objekt aufnehmen",
-      "Wege, Flächen, Pflichten und gewünschter Umfang werden vor Ort geklärt.",
+      "Flächen festlegen",
+      "Wir gehen das Objekt durch und legen fest, welche Wege, Zufahrten und Zugänge in welchem Umfang betreut werden.",
     ],
     [
-      "Rahmen festlegen",
-      "Leistungszeiten, Reaktion und Dokumentation werden vereinbart.",
+      "Vereinbarung schließen",
+      "Flächen, Zeiten, Streumittel und Konditionen kommen schriftlich in die Vereinbarung - das ist die Grundlage der Haftungsübertragung.",
     ],
     [
-      "Laufend betreuen",
-      "Fixum arbeitet nach Absprache und meldet Auffälligkeiten zurück.",
+      "Saison über betreuen",
+      "Wir räumen und streuen wie vereinbart und dokumentieren die Einsätze auf Wunsch für Ihre Unterlagen.",
     ],
   ]}
+  facts={[
+    ["Zeiten", "Werktags bis 7 Uhr, sonn- und feiertags bis 9 Uhr."],
+    ["Umfang", "Flächen und Streumittel schriftlich festgelegt."],
+    ["Nachweis", "Einsatzdokumentation auf Wunsch."],
+    ["Sommer", "Grünpflege und Laubbeseitigung ergänzbar."],
+  ]}
+  noteTitle="Haftung sauber geregelt"
+  noteText="Die Räum- und Streupflicht geht nur in dem Umfang auf uns über, der schriftlich vereinbart ist - deshalb halten wir Flächen, Zeiten und Streumittel so genau fest. Was nicht in der Vereinbarung steht, bleibt in Ihrer Verantwortung. Das klingt kleinlich, ist im Schadensfall aber genau der Punkt, auf den es ankommt."
+  faq={serviceFaq[current]}
 />

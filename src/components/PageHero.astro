@@ -1,5 +1,7 @@
 ---
+import Breadcrumbs from "./Breadcrumbs.astro";
 import Button from "./Button.astro";
+import Icon from "./Icon.astro";
 import { site, telUrl, whatsappUrl } from "../data/site";
 
 interface Props {
@@ -7,6 +9,10 @@ interface Props {
   title: string;
   text: string;
   image?: string;
+  imageAlt?: string;
+  breadcrumbs?: Array<[string, string]>;
+  /** Kurze Vertrauenspunkte unter den Buttons. */
+  badges?: string[];
 }
 
 const {
@@ -14,22 +20,67 @@ const {
   title,
   text,
   image = "/images/team-van.png",
+  imageAlt = "",
+  breadcrumbs = [],
+  badges = [
+    "Festpreis nach Besichtigung",
+    "Termin ist Termin",
+    "Haftpflichtversichert",
+  ],
 } = Astro.props;
+
+const base = image.replace(/\.[a-zA-Z0-9]+$/, "");
 ---
 
-<section
-  class="page-hero section--dark"
-  style={`--hero-image: url("${image}")`}
->
-  <div class="container page-hero-inner">
-    <p class="eyebrow">{eyebrow}</p>
-    <h1>{title}</h1>
-    <p class="lead">{text}</p>
-    <div class="hero-actions">
-      <Button href={telUrl}>Anrufen - {site.phoneDisplay}</Button>
-      <Button href={whatsappUrl()} variant="secondary"
-        >WhatsApp schreiben</Button
-      >
+<section class="page-hero section--dark">
+  {
+    /* Echtes <img> statt CSS-Hintergrund: das LCP-Element ist so für den
+      Browser priorisierbar und wird als AVIF/WebP ausgeliefert. */
+  }
+  <picture class="page-hero-media" aria-hidden={imageAlt ? undefined : "true"}>
+    <source srcset={`${base}.avif`} type="image/avif" />
+    <source srcset={`${base}.webp`} type="image/webp" />
+    <img
+      src={image}
+      alt={imageAlt}
+      width="1600"
+      height="900"
+      fetchpriority="high"
+      decoding="sync"
+    />
+  </picture>
+  <div class="page-hero-scrim" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="page-hero-inner">
+      {
+        breadcrumbs.length > 0 && (
+          <Breadcrumbs trail={breadcrumbs} class="page-hero-crumbs" />
+        )
+      }
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      <p class="lead">{text}</p>
+
+      <div class="btn-row">
+        <Button href={telUrl} icon="phone">{site.phoneDisplay}</Button>
+        <Button href={whatsappUrl()} variant="secondary" icon="whatsapp">
+          WhatsApp schreiben
+        </Button>
+      </div>
+
+      {
+        badges.length > 0 && (
+          <ul class="hero-badges">
+            {badges.map((badge) => (
+              <li>
+                <Icon name="check" size={15} />
+                <span>{badge}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
     </div>
   </div>
 </section>
@@ -38,30 +89,91 @@ const {
   .page-hero {
     position: relative;
     isolation: isolate;
-    min-height: 460px;
-    padding: 154px 0 82px;
-    background-image:
-      linear-gradient(90deg, rgba(10, 23, 48, 0.92), rgba(10, 23, 48, 0.72)),
-      var(--hero-image);
-    background-size: cover;
-    background-position: center;
+    display: flex;
+    align-items: center;
+    min-height: clamp(440px, 56vh, 620px);
+    padding: calc(var(--header-h) + clamp(2.5rem, 6vw, 4.5rem)) 0
+      clamp(3rem, 6vw, 4.5rem);
+    overflow: hidden;
+    background: var(--navy-deep);
+  }
+
+  .page-hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .page-hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Zwei überlagerte Verläufe: horizontal für Textkontrast,
+     vertikal damit der Header sauber aufsitzt. */
+  .page-hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(
+        95deg,
+        rgba(7, 19, 38, 0.95) 0%,
+        rgba(10, 23, 48, 0.86) 45%,
+        rgba(10, 23, 48, 0.6) 100%
+      ),
+      linear-gradient(180deg, rgba(7, 19, 38, 0.7), transparent 32%);
   }
 
   .page-hero-inner {
-    max-width: 760px;
-    margin-inline: 0;
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    max-width: 780px;
   }
 
-  .lead {
-    max-width: 720px;
-    margin: 22px 0 28px;
-    color: #d8e7fb;
-    font-size: 20px;
+  .page-hero-crumbs {
+    margin-bottom: 0.25rem;
   }
 
-  .hero-actions {
+  .page-hero .lead {
+    max-width: 62ch;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 0.5rem 1.25rem;
+    margin-top: 0.75rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero-badges li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
+  }
+
+  .hero-badges :global(.icon) {
+    color: var(--amber);
+  }
+
+  @media (max-width: 900px) {
+    .page-hero-scrim {
+      background: linear-gradient(
+        180deg,
+        rgba(7, 19, 38, 0.92),
+        rgba(10, 23, 48, 0.86)
+      );
+    }
   }
 </style>

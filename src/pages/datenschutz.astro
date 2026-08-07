@@ -1,15 +1,27 @@
 ---
 import Base from "../layouts/Base.astro";
 import PdfLegal from "../components/PdfLegal.astro";
+
+const breadcrumbs: Array<[string, string]> = [["Datenschutz", "/datenschutz/"]];
 ---
 
 <Base
-  title="Datenschutz | Fixum Objektservice"
-  description="Datenschutzerklärung von Fixum Objektservice als geprüfte PDF-Fassung."
+  title="Datenschutzerklärung | Fixum Objektservice"
+  description="Datenschutzerklärung von Fixum Objektservice, Emden: Umgang mit Anfragedaten, Kontaktaufnahme und Betroffenenrechte. Vollständige Fassung als PDF."
+  canonical="/datenschutz/"
+  breadcrumbs={breadcrumbs}
+  pageType="WebPage"
 >
   <PdfLegal
-    title="Datenschutz"
-    intro="Die geprüfte Datenschutzerklärung liegt als PDF vor. Sie können sie hier ansehen oder herunterladen."
+    title="Datenschutzerklärung"
+    intro="Die vollständige, geprüfte Datenschutzerklärung liegt als PDF vor. Sie können sie direkt hier lesen oder herunterladen."
     pdf="/docs/Fixum_Datenschutzerklaerung.pdf"
+    breadcrumbs={breadcrumbs}
+    summary={[
+      "Die Website läuft ohne Tracking, ohne Cookies zu Analysezwecken und ohne externe Schriftarten oder CDNs.",
+      "Daten aus dem Anfrageformular nutzen wir ausschließlich zur Bearbeitung Ihrer Anfrage.",
+      "Sie haben jederzeit Anspruch auf Auskunft, Berichtigung, Löschung und Widerspruch.",
+      "Verantwortlich ist Eckhard Singer, Hermann-Allmers-Str. 13, 26721 Emden.",
+    ]}
   />
 </Base>

@@ -1,36 +1,53 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/kernsanierung-vorbereiten/";
 ---
 
 <ServiceDetailPage
-  current="/kernsanierung-vorbereiten"
-  metaTitle="Kernsanierung vorbereiten Emden | Fixum Objektservice"
-  description="Kernsanierung vorbereiten in Emden: Räumen, nicht-tragender Rückbau, Trockenbau und Koordination zugelassener Fachbetriebe."
+  current={current}
+  crumb="Kernsanierung vorbereiten"
+  metaTitle="Kernsanierung vorbereiten in Emden | Fixum Objektservice"
+  description="Kernsanierung vorbereiten in Emden und Ostfriesland: Räumen, nicht-tragender Rückbau, Trockenbau, Boden und Montage aus einer Hand - inklusive Koordination zugelassener Fachbetriebe."
   eyebrow="Kernsanierung vorbereiten"
-  title="Vom vollen Objekt zur ausbaufertigen Fläche"
-  heroText="Fixum bereitet Sanierungen vor: räumen, nicht-tragend zurückbauen, sortieren, Trockenbau starten und Fachbetriebe koordinieren."
+  title="Kernsanierung vorbereiten - von leer bis ausbaufertig"
+  heroText="Wir übernehmen die Vorbereitung einer Kernsanierung komplett: räumen, zurückbauen, ausbauen und die Fachbetriebe so takten, dass niemand wartet."
   image="/images/categories/kernsanierung-vorbereiten.png"
-  lead="Kernsanierung ist ein großes Wort. Fixum übernimmt die zulassungsfreien, praktischen Schritte rund um Räumung, Rückbau und Ausbau - und koordiniert Fachbetriebe dort, wo Zulassung oder Freigabe nötig ist."
+  imageAlt="Objekt in Vorbereitung für eine Kernsanierung in Ostfriesland"
+  serviceType="Vorbereitung von Kernsanierungen"
+  areaTitle="Kernsanierungen in Emden und Ostfriesland"
+  lead="Bei einer Kernsanierung liegt das Risiko selten in den einzelnen Gewerken, sondern zwischen ihnen. Wir übernehmen die Bausteine, die man nicht zulassungspflichtig ausführen muss - und die Terminplanung, die alles zusammenhält."
   included={[
-    "Entrümpelung und Haushaltsauflösung vor Sanierungsbeginn",
-    "Nicht-tragender Rückbau und Entkernung mit klaren Grenzen",
-    "Trockenbau, Boden, Montage und Ausbauvorbereitung",
-    "Koordination von Fachbetrieben für Elektro, Sanitär, Heizung und Statik",
+    "Vollständige Räumung des Objekts inklusive Keller und Nebenräume",
+    "Nicht-tragender Rückbau bis zur ausbaufertigen Fläche",
+    "Sortenreine Trennung und Entsorgung mit Nachweis",
+    "Trockenbau: Wände, Decken, Dachschrägen, Spachtelung Q1 bis Q3",
+    "Bodenverlegung, Türen, Zargen und Möbelmontage zum Abschluss",
+    "Koordination zugelassener Fachbetriebe für Elektro, Sanitär und Heizung",
+    "Terminplanung mit definierten Übergabepunkten zwischen den Gewerken",
   ]}
   process={[
     [
-      "Objektkette planen",
-      "Räumen, Rückbau, Ausbau und Übergabe werden in eine sinnvolle Reihenfolge gebracht.",
+      "Objektaufnahme",
+      "Wir nehmen den Bestand auf, klären Baujahr, Materialien und Schadstoffrisiken und legen fest, welche Gewerke wann gebraucht werden.",
     ],
     [
-      "Grenzen markieren",
-      "Tragende Bauteile, Schadstoffe und Anschlüsse werden vor Ausführung geklärt.",
+      "Räumen und Rückbau",
+      "Das Objekt wird geräumt und nicht-tragend zurückgebaut. Danach folgen die Fachbetriebe für Leitungen - zum abgestimmten Termin.",
     ],
     [
-      "Ausbau vorbereiten",
-      "Nach Rückbau kann Fixum Trockenbau, Boden und Montage weiterführen.",
+      "Ausbau und Übergabe",
+      "Trockenbau, Boden und Montage schließen an. Sie bekommen ein Objekt, das nutzbar oder vermietbar ist.",
     ],
   ]}
-  noteTitle="Keine Komplettsanierung ohne Fachbetriebe"
-  noteText="Fixum bewirbt keine Elektro-, Sanitär-, Heizungs-, Statik-, Schadstoff-, Fliesen-, Putz- oder umfangreichen Malerarbeiten als eigene Leistung. Diese Bereiche werden nur mit zugelassenen Fachbetrieben koordiniert."
+  facts={[
+    ["Rolle", "Vorbereitung und Ausbau, nicht Generalunternehmer."],
+    ["Koordination", "Fachbetriebe getaktet, Übergabepunkte definiert."],
+    ["Umfang", "Von der Räumung bis zur montierten Tür."],
+    ["Transparenz", "Positionen im Angebot einzeln ausgewiesen."],
+  ]}
+  noteTitle="Wir sind nicht der Generalunternehmer"
+  noteText="Das sagen wir bewusst deutlich: Wir übernehmen die Vorbereitung und den Ausbau, nicht die Gesamtverantwortung für ein schlüsselfertiges Objekt. Strom, Wasser, Heizung, Statik, Fenster, Dach und Schadstoffe liegen bei zugelassenen Fachbetrieben. Wir koordinieren die Termine, damit die Gewerke ineinandergreifen - die Ausführung bleibt aber dort, wo die Zulassung liegt."
+  faq={serviceFaq[current]}
 />

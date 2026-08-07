@@ -1,48 +1,369 @@
 ---
 import Base from "../layouts/Base.astro";
+import AreaServed from "../components/AreaServed.astro";
+import Button from "../components/Button.astro";
 import CtaBand from "../components/CtaBand.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
+import { canonicalPath, serviceSchema } from "../data/seo";
+
+const path = "/fuer-hausverwaltungen/";
+const breadcrumbs: Array<[string, string]> = [["Für Hausverwaltungen", path]];
+const heroImage = "/images/categories/wohnungsraeumung.png";
+
+const description =
+  "Mieterwechsel komplett aus einer Hand: Fixum Objektservice räumt, baut zurück, renoviert und übergibt dokumentiert - für Hausverwaltungen in Emden und Ostfriesland. Rahmenvertrag mit festen Konditionen möglich.";
+
+const leistungen: Array<
+  [string, string, "clock" | "clipboard" | "euro" | "users"]
+> = [
+  [
+    "Reaktionszeit",
+    "Besichtigung meist innerhalb von zwei Werktagen nach Schlüsselübergabe. Im Rahmenvertrag halten wir feste Zeiten schriftlich fest.",
+    "clock",
+  ],
+  [
+    "Dokumentation",
+    "Auf Wunsch Fotos vor, während und nach der Ausführung - die einfachste Grundlage für die Abnahme und gegenüber dem Vormieter.",
+    "clipboard",
+  ],
+  [
+    "Abrechnung",
+    "Pro Objekt oder gesammelt, mit festen Konditionen im Rahmenvertrag. Arbeits- und Fahrtkosten sind getrennt ausgewiesen.",
+    "euro",
+  ],
+  [
+    "Ein Ansprechpartner",
+    "Räumen, Rückbau, Trockenbau, Boden und Montage laufen über dieselbe Person. Keine Koordination zwischen drei Firmen.",
+    "users",
+  ],
+];
+
+const ablauf: Array<[string, string]> = [
+  [
+    "Schlüssel und Auftrag",
+    "Sie melden die Einheit, wir holen den Schlüssel ab oder übernehmen ihn direkt. Eine Anwesenheit Ihrerseits ist nicht nötig.",
+  ],
+  [
+    "Aufnahme und Angebot",
+    "Wir dokumentieren den Zustand, kalkulieren den Umfang und schicken ein Festpreisangebot mit klarer Leistungsgrenze.",
+  ],
+  [
+    "Ausführung im Block",
+    "Räumung, Rückbau und Ausbau laufen in einem Durchgang - ohne Wartetage zwischen den Gewerken.",
+  ],
+  [
+    "Übergabe mit Nachweis",
+    "Besenreine Übergabe, auf Wunsch mit Fotodokumentation und Entsorgungsnachweis. Die Einheit ist wieder vermietbar.",
+  ],
+];
+
+const verwaltungsFaq = [
+  {
+    question: "Gibt es einen Rahmenvertrag mit festen Konditionen?",
+    answer:
+      "Ja. Für Verwaltungen mit regelmäßigem Bedarf vereinbaren wir Stundensätze, Pauschalen für Standardgrößen, Reaktionszeiten und den Leistungsumfang schriftlich. Damit ist die Kostenseite planbar und muss nicht bei jeder Einheit neu verhandelt werden.",
+  },
+  {
+    question: "Wie viele Leerstandstage spart das konkret?",
+    answer:
+      "Das hängt vom Objekt ab, aber der größte Hebel ist immer derselbe: die Wartezeit zwischen Räumung und Ausbau. Wenn beides derselbe Betrieb macht, entfällt der Übergabetermin zwischen zwei Firmen - das sind erfahrungsgemäß mehrere Tage pro Einheit.",
+  },
+  {
+    question: "Übernehmen Sie auch einzelne Gewerke?",
+    answer:
+      "Ja, jede Leistung ist einzeln buchbar. Wenn Sie für Trockenbau bereits einen Betrieb haben, machen wir eben nur die Räumung. Der Vorteil kommt aus der Kombination, aber sie ist keine Bedingung.",
+  },
+  {
+    question: "Was ist mit Elektro, Sanitär und Heizung?",
+    answer:
+      "Diese Arbeiten führen wir nicht selbst aus. Wir koordinieren die zugelassenen Fachbetriebe und stimmen die Termine so ab, dass die Gewerke ineinandergreifen. Sie behalten trotzdem einen Ansprechpartner für den Gesamtablauf.",
+  },
+  {
+    question: "Wie schnell reagieren Sie bei einem Notfall im Objekt?",
+    answer:
+      "Für Rahmenvertragskunden halten wir Kapazität für kurzfristige Einsätze frei. Ohne Vereinbarung richtet sich die Reaktionszeit nach der aktuellen Auslastung - rufen Sie in dem Fall an statt zu mailen.",
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: "Objektservice für Hausverwaltungen",
+    description,
+    path: canonicalPath(path),
+    serviceType: "Mieterwechsel, Räumung und Ausbau für Hausverwaltungen",
+  }),
+  {
+    "@type": "FAQPage",
+    mainEntity: verwaltungsFaq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+];
 ---
 
 <Base
-  title="Für Hausverwaltungen | Fixum Objektservice"
-  description="Räumung, Rückbau, Renovierung und Übergabe für Hausverwaltungen in Emden und Ostfriesland."
+  title="Für Hausverwaltungen: Mieterwechsel aus einer Hand | Fixum Emden"
+  description={description}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage={heroImage}
 >
   <PageHero
     eyebrow="Für Hausverwaltungen"
     title="Mieterwechsel komplett - aus einer Hand"
     text="Weniger Leerstandstage pro Einheit: Fixum räumt, baut zurück, koordiniert Fachbetriebe und übergibt nachvollziehbar dokumentiert."
+    image={heroImage}
+    imageAlt="Besenrein geräumte Wohnung nach Mieterwechsel in Ostfriesland"
+    breadcrumbs={breadcrumbs}
+    badges={["Rahmenvertrag möglich", "Feste Reaktionszeit", "Mit Fotodoku"]}
   />
+
+  {/* Nutzen */}
   <section class="section">
-    <div class="container grid-3 audience-page">
-      <article>
-        <h2>Reaktionszeit</h2><p>
-          Besichtigung meist innerhalb von zwei Werktagen nach
-          Schlüsselübergabe.
-        </p>
-      </article>
-      <article>
-        <h2>Dokumentation</h2><p>
-          Auf Wunsch mit Fotos vor, während und nach der Ausführung.
-        </p>
-      </article>
-      <article>
-        <h2>Abrechnung</h2><p>
-          Pro Objekt oder gesammelt, mit festen Konditionen im Rahmenvertrag.
-        </p>
-      </article>
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Der Unterschied</p>
+      <h2>Warum ein Betrieb statt drei</h2>
+      <p class="lead">
+        Der größte Kostenblock beim Mieterwechsel ist selten die Arbeit selbst -
+        es sind die Tage, an denen niemand arbeitet, weil das nächste Gewerk
+        noch nicht dran ist.
+      </p>
+    </div>
+
+    <div class="container grid-2 verwaltung-grid" data-reveal-group>
+      {
+        leistungen.map(([title, text, icon]) => (
+          <article class="card verwaltung-card" data-reveal>
+            <span class="verwaltung-icon">
+              <Icon name={icon} size={22} />
+            </span>
+            <div>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+          </article>
+        ))
+      }
     </div>
   </section>
-  <CtaBand />
+
+  {/* Ablauf */}
+  <section class="section section--mist" aria-labelledby="ablauf-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Ablauf</p>
+      <h2 id="ablauf-title">Vom Schlüssel zur vermietbaren Einheit</h2>
+    </div>
+
+    <ol class="container ablauf-list" data-reveal-group>
+      {
+        ablauf.map(([title, text], index) => (
+          <li class="ablauf-step" data-reveal>
+            <span class="ablauf-no">{String(index + 1).padStart(2, "0")}</span>
+            <div>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  {/* Leistungspaket */}
+  <section class="section">
+    <div class="container split split--top">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Leistungspaket</p>
+        <h2>Was im Mieterwechsel typischerweise anfällt</h2>
+        <p class="muted">
+          Nicht jede Einheit braucht alles. Der Umfang wird bei der Aufnahme
+          festgelegt und steht im Angebot - inklusive der Positionen, die
+          ausdrücklich nicht dabei sind.
+        </p>
+        <p>
+          <a class="arrow-link" href="/kontakt/">Konditionen anfordern</a>
+        </p>
+      </div>
+
+      <ul class="check-list paket-list card" data-reveal>
+        <li>
+          <a href="/wohnungsraeumung/">Wohnungsräumung</a> und besenreine Übergabe
+        </li>
+        <li>
+          <a href="/entruempelung-haushaltsaufloesung/">Entrümpelung</a> von Keller,
+          Dachboden und Nebenräumen
+        </li>
+        <li>
+          <a href="/entkernung-rueckbau/">Nicht-tragender Rückbau</a> alter Böden
+          und Einbauten
+        </li>
+        <li>
+          <a href="/trockenbau-innenausbau/">Trockenbau</a> für Wände, Decken und
+          Schadstellen
+        </li>
+        <li>
+          <a href="/montage-boden/">Boden und Türen</a> übergabefertig gesetzt
+        </li>
+        <li>
+          <a href="/hausmeisterservice/">Laufende Objektbetreuung</a> zwischen den
+          Mietverhältnissen
+        </li>
+        <li>Fotodokumentation und Entsorgungsnachweis auf Wunsch</li>
+      </ul>
+    </div>
+  </section>
+
+  {/* FAQ */}
+  <section class="section section--soft" aria-labelledby="faq-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="faq-title">Was Verwaltungen vorher wissen wollen</h2>
+    </div>
+    <div class="container container--narrow" data-reveal>
+      <FaqAccordion items={verwaltungsFaq} />
+    </div>
+  </section>
+
+  {/* Direktkontakt */}
+  <section class="section section--tight">
+    <div class="container kontakt-box card" data-reveal>
+      <div>
+        <h2>Rahmenvereinbarung besprechen</h2>
+        <p class="muted">
+          Sagen Sie uns, wie viele Einheiten Sie betreuen und welche Leistungen
+          regelmäßig anfallen. Sie bekommen ein Konditionsblatt, das sich
+          rechnen lässt.
+        </p>
+      </div>
+      <Button href="/kontakt/">Konditionen anfordern</Button>
+    </div>
+  </section>
+
+  <AreaServed
+    service="Objektservice für Verwaltungen"
+    title="Hausverwaltungen in Emden und Ostfriesland"
+  />
+  <CtaBand
+    eyebrow="Kurzer Draht"
+    title="Mieterwechsel steht an?"
+    text="Ein Anruf reicht, um die Einheit einzuplanen. Bei laufenden Rahmenverträgen genügt eine kurze Nachricht mit Adresse und Übergabetermin."
+  />
 </Base>
 
 <style>
-  .audience-page article {
-    border-left: 4px solid var(--amber);
-    padding-left: 22px;
+  .verwaltung-grid {
+    gap: 1rem;
   }
-  .audience-page h2 {
-    margin-bottom: 12px;
-    font-size: 28px;
+
+  .verwaltung-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: clamp(1.375rem, 2.4vw, 1.75rem);
+  }
+
+  .verwaltung-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    color: var(--blue-light);
+    background: linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+  }
+
+  .verwaltung-card h3 {
+    margin-bottom: 0.4rem;
+  }
+
+  .verwaltung-card p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* ---- Ablauf ---- */
+  .ablauf-list {
+    display: grid;
+    gap: 0.875rem;
+    margin-block: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ablauf-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    padding: clamp(1.125rem, 2.2vw, 1.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+    box-shadow: var(--shadow-xs);
+    transition:
+      transform var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+
+  .ablauf-step:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ablauf-no {
+    font-family: var(--font-utility);
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--amber);
+  }
+
+  .ablauf-step h3 {
+    margin-bottom: 0.3rem;
+  }
+
+  .ablauf-step p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* ---- Paketliste ---- */
+  .paket-list a {
+    color: var(--blue);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(22, 104, 196, 0.35);
+  }
+
+  .paket-list a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* ---- Kontaktbox ---- */
+  .kontakt-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: linear-gradient(160deg, var(--mist-soft), var(--mist));
+  }
+
+  .kontakt-box h2 {
+    margin-bottom: 0.5rem;
+    font-size: var(--step-3);
+  }
+
+  .kontakt-box p {
+    max-width: 52ch;
   }
 </style>

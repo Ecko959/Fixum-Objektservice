@@ -1,7 +1,25 @@
-export const services = [
+export interface Service {
+  title: string;
+  href: string;
+  image: string;
+  text: string;
+  bullets?: string[];
+  /** Kurzform für Chips und Sekundärnavigation. */
+  short: string;
+}
+
+/**
+ * Kanonische Leistungsliste. Jeder Eintrag zeigt auf genau eine Seite.
+ *
+ * Die Titel sind bewusst gegeneinander abgegrenzt: verwandte Seiten dürfen
+ * sich nicht auf dasselbe Hauptkeyword ausrichten, sonst konkurrieren sie
+ * in der Suche gegeneinander.
+ */
+export const services: Service[] = [
   {
     title: "Entrümpelung & Haushaltsauflösung",
-    href: "/entruempelung-haushaltsaufloesung",
+    short: "Entrümpelung",
+    href: "/entruempelung-haushaltsaufloesung/",
     image: "/images/categories/haushaltsaufloesung.png",
     text: "Wohnung, Haus, Keller, Dachboden, Garage. Wir räumen, trennen sortenrein und übergeben besenrein - auf Wunsch mit Entsorgungsnachweis. Verwertbarer Hausrat wird angerechnet und senkt Ihren Preis.",
     bullets: [
@@ -12,7 +30,8 @@ export const services = [
   },
   {
     title: "Entkernung & Rückbau",
-    href: "/entkernung-rueckbau",
+    short: "Entkernung",
+    href: "/entkernung-rueckbau/",
     image: "/images/categories/entkernung-rueckbau.png",
     text: "Nicht-tragender Rückbau bis auf den Rohbau: alte Böden, Wände, Einbauten, Sanitärobjekte. Wir trennen direkt vor Ort nach Fraktionen - das spart Entsorgungskosten.",
     bullets: [
@@ -23,59 +42,88 @@ export const services = [
   },
   {
     title: "Trockenbau & Innenausbau",
-    href: "/trockenbau-innenausbau",
+    short: "Trockenbau",
+    href: "/trockenbau-innenausbau/",
     image: "/images/categories/trockenbau-innenausbau.png",
     text: "Ständerwände, Vorsatzschalen, Schallschutz, abgehängte Decken, Dachschrägen, Spachtelung Q1 bis Q3. Für private Modernisierer und als Nachunternehmer.",
     bullets: ["Wände und Decken", "Spachtelung Q1-Q3", "Nachunternehmer"],
   },
   {
-    title: "Montage & Boden",
-    href: "/montage-boden",
+    title: "Bodenverlegung & Türmontage",
+    short: "Boden & Türen",
+    href: "/montage-boden/",
     image: "/images/categories/montage-boden.png",
-    text: "Türen und Zargen, Laminat, Vinyl, Teppich, Möbel- und Küchenmontage.",
+    text: "Laminat, Vinyl und Teppich fachgerecht verlegt, Türen und Zargen sauber gesetzt - der Schritt, der aus einem leeren Raum wieder einen fertigen macht.",
+    bullets: ["Laminat, Vinyl, Teppich", "Türen und Zargen", "Nach Aufmaß"],
   },
   {
     title: "Umzüge & Transporte",
-    href: "/umzuege-transporte",
+    short: "Umzüge",
+    href: "/umzuege-transporte/",
     image: "/images/categories/umzuege-transporte.png",
-    text: "Privat- und Firmenumzüge bis 3,5 t, im Team, zum Festpreis.",
+    text: "Privat- und Firmenumzüge bis 3,5 t, im Team und zum Festpreis. Kombinierbar mit Entrümpelung, damit nur eine Firma anrückt.",
+    bullets: ["Bis 3,5 t", "Festpreis", "Mit Demontage"],
   },
   {
     title: "Hausmeisterservice",
-    href: "/hausmeisterservice",
+    short: "Hausmeister",
+    href: "/hausmeisterservice/",
     image: "/images/categories/hausmeister-winterdienst.png",
-    text: "Objektbetreuung, Kleinreparaturen, Außenanlagen, Winterdienst - auch als laufender Rahmenvertrag.",
+    text: "Objektbetreuung, Kleinreparaturen, Außenanlagen und Winterdienst - einmalig oder als laufender Rahmenvertrag mit festen Konditionen.",
+    bullets: ["Kleinreparaturen", "Objektkontrolle", "Rahmenvertrag"],
   },
   {
-    title: "Haushaltsauflösung",
-    href: "/haushaltsaufloesung",
+    title: "Haushaltsauflösung & Nachlass",
+    short: "Nachlass",
+    href: "/haushaltsaufloesung/",
     image: "/images/categories/haushaltsaufloesung.png",
-    text: "Diskrete Räumung von Nachlässen, Wohnungen und Häusern mit Wertanrechnung und klarer Übergabe.",
+    text: "Diskrete Auflösung von Nachlässen und Haushalten - im Trauerfall oder beim Umzug ins Heim. Auf Wunsch komplett ohne Ihre Anwesenheit.",
+    bullets: ["Diskret und ruhig", "Auch ohne Anwesenheit", "Wertanrechnung"],
   },
   {
     title: "Wohnungsräumung",
-    href: "/wohnungsraeumung",
+    short: "Wohnungsräumung",
+    href: "/wohnungsraeumung/",
     image: "/images/categories/wohnungsraeumung.png",
-    text: "Besenreine Räumung für Übergabe, Mieterwechsel, Verkauf oder Neuvermietung.",
+    text: "Besenreine Räumung für Übergabe, Mieterwechsel, Verkauf oder Neuvermietung - mit Fotodokumentation zur Abnahme.",
+    bullets: ["Für die Übergabe", "Fotodokumentation", "Feste Termine"],
   },
   {
-    title: "Möbel & Küchenmontage",
-    href: "/moebel-kuechenmontage",
+    title: "Möbel- & Küchenmontage",
+    short: "Möbelmontage",
+    href: "/moebel-kuechenmontage/",
     image: "/images/categories/montage-boden.png",
-    text: "Möbel- und Küchenmontage ohne Elektro-, Gas- und Wasseranschlüsse.",
+    text: "Möbel und Küchen fachgerecht aufgebaut und ausgerichtet - ohne Elektro-, Gas- und Wasseranschlüsse, die gehören zugelassenen Fachbetrieben.",
+    bullets: ["Möbel und Küchen", "Auch Demontage", "Klare Grenzen"],
   },
   {
     title: "Winterdienst & Außenanlagen",
-    href: "/winterdienst-aussenanlagen",
+    short: "Winterdienst",
+    href: "/winterdienst-aussenanlagen/",
     image: "/images/categories/hausmeister-winterdienst.png",
-    text: "Winterdienst, einfache Außenpflege und laufende Objektarbeiten nach Vereinbarung.",
+    text: "Räum- und Streupflicht zuverlässig erfüllt, dazu einfache Außenpflege und laufende Objektarbeiten nach Vereinbarung.",
+    bullets: ["Räum- und Streudienst", "Grünpflege", "Nach Vereinbarung"],
   },
   {
     title: "Kernsanierung vorbereiten",
-    href: "/kernsanierung-vorbereiten",
+    short: "Kernsanierung",
+    href: "/kernsanierung-vorbereiten/",
     image: "/images/categories/kernsanierung-vorbereiten.png",
-    text: "Räumen, nicht-tragender Rückbau, Trockenbau und Koordination zugelassener Fachbetriebe.",
+    text: "Räumen, nicht-tragender Rückbau, Trockenbau und die Koordination zugelassener Fachbetriebe - die komplette Vorbereitung aus einer Hand.",
+    bullets: [
+      "Räumen und Rückbau",
+      "Ausbau danach",
+      "Fachbetriebe koordiniert",
+    ],
   },
 ];
 
+/** Die drei Kernleistungen - Startseite und Footer heben sie hervor. */
+export const primaryServices = services.slice(0, 3);
+
 export const offerCatalog = services.map((service) => service.title);
+
+export const serviceByHref = (href: string) =>
+  services.find(
+    (service) => service.href.replace(/\/+$/, "") === href.replace(/\/+$/, ""),
+  );

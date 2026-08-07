@@ -1,48 +1,206 @@
 ---
 import Base from "../layouts/Base.astro";
+import AreaServed from "../components/AreaServed.astro";
 import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
 import ServiceCard from "../components/ServiceCard.astro";
+import { absolute, canonicalPath } from "../data/seo";
 import { services } from "../data/services";
+
+const path = "/leistungen/";
+const breadcrumbs: Array<[string, string]> = [["Leistungen", path]];
+const heroImage = "/images/hero-renovation.png";
+
+/* Leistungsübersicht als ItemList: Google kann die Seite dadurch als
+   Sammelseite einordnen statt als weitere Leistungsseite. */
+const itemListSchema = {
+  "@type": "ItemList",
+  name: "Leistungen von Fixum Objektservice",
+  itemListOrder: "https://schema.org/ItemListOrderAscending",
+  numberOfItems: services.length,
+  itemListElement: services.map((service, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: service.title,
+    url: absolute(canonicalPath(service.href)),
+  })),
+};
+
+const bereiche: Array<[string, string, "recycle" | "hammer" | "clipboard"]> = [
+  [
+    "Räumen",
+    "Entrümpelung, Haushaltsauflösung, Wohnungsräumung und Transporte - alles, was raus muss.",
+    "recycle",
+  ],
+  [
+    "Rückbau & Ausbau",
+    "Entkernung, Trockenbau, Boden, Türen und Montage - alles, was wieder rein muss.",
+    "hammer",
+  ],
+  [
+    "Objektservice",
+    "Hausmeisterdienste, Winterdienst und die Vorbereitung ganzer Kernsanierungen.",
+    "clipboard",
+  ],
+];
 ---
 
 <Base
-  title="Leistungen | Fixum Objektservice"
-  description="Alle Leistungen von Fixum Objektservice: Entrümpelung, Entkernung, Trockenbau, Montage, Transporte und Hausmeisterservice in Emden."
+  title="Leistungen: Entrümpelung, Rückbau, Trockenbau & Montage | Fixum Emden"
+  description="Alle Leistungen von Fixum Objektservice in Emden und Ostfriesland: Entrümpelung, Haushaltsauflösung, Entkernung, Trockenbau, Boden, Montage, Transporte und Hausmeisterservice - einzeln buchbar oder als kompletter Ablauf."
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={[itemListSchema]}
+  preloadImage={heroImage}
+  pageType="CollectionPage"
 >
   <PageHero
     eyebrow="Leistungen"
     title="Alles aus einer Hand"
     text="Fixum verbindet Entrümpelung, Rückbau, Trockenbau, Montage, Transporte und Objektbetreuung. Sie wählen den einzelnen Baustein oder den kompletten Ablauf."
-    image="/images/hero-renovation.png"
+    image={heroImage}
+    imageAlt="Renovierungsarbeiten in einem Objekt in Emden durch Fixum Objektservice"
+    breadcrumbs={breadcrumbs}
+    badges={["11 Leistungen", "Einzeln buchbar", "Ein Ansprechpartner"]}
   />
-  <section class="section services-overview">
-    <div class="container section-head">
-      <p class="eyebrow">Übersicht</p>
-      <h2>Was Fixum übernimmt</h2>
+
+  {/* Drei Bereiche zur Orientierung */}
+  <section class="section section--tight" aria-labelledby="bereiche-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Struktur</p>
+      <h2 id="bereiche-title">Drei Bereiche, ein Betrieb</h2>
       <p class="muted">
-        Jede Leistung ist einzeln buchbar. Besonders stark wird Fixum, wenn
-        mehrere Schritte an einem Objekt zusammenlaufen.
+        Die meisten Betriebe können entweder räumen oder ausbauen. Bei Fixum
+        laufen beide Seiten zusammen - deshalb entfällt die teuerste
+        Schnittstelle im Objekt: die Übergabe zwischen zwei Firmen.
       </p>
     </div>
-    <div class="container grid-3">
+
+    <div class="container grid-3 bereich-grid" data-reveal-group>
       {
-        services.map((service) => (
-          <ServiceCard {...service} large={Boolean(service.image)} />
+        bereiche.map(([name, text, icon]) => (
+          <article class="card bereich-card" data-reveal>
+            <span class="bereich-icon">
+              <Icon name={icon} size={22} />
+            </span>
+            <h3>{name}</h3>
+            <p>{text}</p>
+          </article>
         ))
       }
     </div>
   </section>
+
+  {/* Alle Leistungen */}
+  <section class="section services-overview" aria-labelledby="uebersicht-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Übersicht</p>
+      <h2 id="uebersicht-title">Was Fixum übernimmt</h2>
+      <p class="muted">
+        Jede Leistung ist einzeln buchbar. Besonders stark wird Fixum, wenn
+        mehrere Schritte an einem Objekt zusammenlaufen - dann sparen Sie
+        Anfahrten, Wartetage und Abstimmung.
+      </p>
+    </div>
+
+    <div class="container grid-3 overview-grid" data-reveal-group>
+      {
+        services.map((service, index) => (
+          <div data-reveal>
+            <ServiceCard {...service} large eager={index < 3} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Abgrenzung */}
+  <section class="section section--tight">
+    <div class="container limits card card--accent" data-reveal>
+      <span class="limits-icon"><Icon name="shield" size={24} /></span>
+      <div>
+        <p class="eyebrow">Ehrliche Grenzen</p>
+        <h2>Was wir nicht machen</h2>
+        <p class="muted">
+          Anschlussarbeiten an Strom, Gas, Wasser und Heizung, Eingriffe in die
+          Statik, geprüfte Brandschutzkonstruktionen und Schadstoffsanierung
+          führen wir nicht selbst aus. Das ist kein Mangel, sondern Vorschrift -
+          und wir sagen es lieber vorher als mitten im Projekt. Wo solche
+          Arbeiten nötig sind, koordinieren wir zugelassene Fachbetriebe, damit
+          Sie niemanden selbst suchen müssen.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <AreaServed
+    service="Objektservice"
+    title="Alle Leistungen in Emden und Ostfriesland"
+  />
   <CtaBand />
 </Base>
 
 <style>
-  .section-head {
-    max-width: 820px;
-    margin-bottom: 34px;
+  .bereich-card {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    padding: clamp(1.375rem, 2.4vw, 1.75rem);
+  }
+
+  .bereich-icon {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0.25rem;
+    border-radius: var(--radius-sm);
+    color: var(--blue-light);
+    background: linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+  }
+
+  .bereich-card p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
   }
 
   .services-overview {
-    background: #f7fbff;
+    background: var(--mist-soft);
+    border-block: 1px solid var(--line);
+  }
+
+  .overview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .limits {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--mist-soft);
+  }
+
+  .limits-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .limits h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  @media (max-width: 900px) {
+    .limits {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

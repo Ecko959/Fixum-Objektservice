@@ -1,52 +1,106 @@
 ---
 import Button from "./Button.astro";
+import Icon from "./Icon.astro";
 import { site, telUrl, whatsappUrl } from "../data/site";
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+}
+
+const {
+  eyebrow = "Ein Anruf reicht",
+  title = "Bereit für Ihr Objekt?",
+  text = "Ob volle Wohnung, Entkernung oder Trockenbau - sagen Sie kurz, worum es geht. Sie bekommen eine ehrliche Einschätzung, auch wenn es am Ende ein anderer machen soll.",
+} = Astro.props;
 ---
 
-<section class="section section--dark cta-band">
-  <div class="container">
-    <p class="script">Ein Anruf reicht</p>
-    <h2>Bereit für Ihr Objekt?</h2>
-    <p>
-      Ob volle Wohnung, Entkernung oder Trockenbau - sagen Sie kurz, worum es
-      geht. Sie bekommen eine ehrliche Einschätzung, auch wenn es am Ende ein
-      anderer machen soll.
-    </p>
-    <div>
-      <Button href={telUrl}>☎ {site.phoneDisplay}</Button>
-      <Button href={whatsappUrl()} variant="secondary"
-        >WhatsApp schreiben</Button
-      >
+<section class="section cta-band section--dark">
+  <div class="cta-glow" aria-hidden="true"></div>
+
+  <div class="container cta-inner" data-reveal>
+    <p class="script">{eyebrow}</p>
+    <h2>{title}</h2>
+    <p class="lead">{text}</p>
+
+    <div class="btn-row cta-actions">
+      <Button href={telUrl} icon="phone">{site.phoneDisplay}</Button>
+      <Button href={whatsappUrl()} variant="secondary" icon="whatsapp">
+        WhatsApp schreiben
+      </Button>
     </div>
-    <small>{site.hours} · Emden und 50 km Umkreis</small>
+
+    <p class="cta-meta">
+      <span><Icon name="clock" size={16} /> {site.hours}</span>
+      <span
+        ><Icon name="pin" size={16} />
+        {site.city} + {site.radiusKm} km Umkreis</span
+      >
+      <span><Icon name="euro" size={16} /> Besichtigung kostenlos</span>
+    </p>
   </div>
 </section>
 
 <style>
   .cta-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     text-align: center;
+    background: linear-gradient(180deg, var(--navy-ink), var(--navy-mid));
   }
 
-  .cta-band .container {
+  .cta-glow {
+    position: absolute;
+    inset: auto 0 -60% 0;
+    z-index: -1;
+    height: 520px;
+    background: radial-gradient(
+      50% 100% at 50% 100%,
+      rgba(31, 122, 224, 0.35),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .cta-inner {
     display: grid;
     justify-items: center;
-    gap: 20px;
-    max-width: 860px;
+    gap: 1.125rem;
+    max-width: 820px;
   }
 
-  .cta-band p:not(.script) {
-    color: #d8e7fb;
-    font-size: 20px;
+  .cta-band .lead {
+    max-width: 60ch;
   }
 
-  .cta-band div {
+  .cta-actions {
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .cta-meta {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 14px;
+    gap: 0.5rem 1.5rem;
+    margin-top: 0.75rem;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
   }
 
-  .cta-band small {
-    color: #d8e7fb;
+  .cta-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .cta-meta :global(.icon) {
+    color: var(--blue-light);
   }
 </style>

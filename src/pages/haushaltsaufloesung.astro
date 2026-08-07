@@ -1,34 +1,56 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/haushaltsaufloesung/";
 ---
 
 <ServiceDetailPage
-  current="/haushaltsaufloesung"
-  metaTitle="Haushaltsauflösung Emden | Fixum Objektservice"
-  description="Haushaltsauflösung in Emden und Ostfriesland: diskret, besenrein, mit Wertanrechnung und Festpreis nach Besichtigung."
-  eyebrow="Haushaltsauflösung"
-  title="Haushaltsauflösung in Emden"
-  heroText="Wenn ein Haushalt aufgelöst werden muss, braucht es Ruhe, Diskretion und einen klaren Ablauf. Fixum übernimmt Räumung, Sortierung, Transport und besenreine Übergabe."
+  current={current}
+  crumb="Haushaltsauflösung"
+  metaTitle="Haushaltsauflösung & Nachlass in Emden | Fixum Objektservice"
+  description="Diskrete Haushaltsauflösung und Nachlassauflösung in Emden und Ostfriesland - im Trauerfall oder beim Umzug ins Heim. Auf Wunsch komplett ohne Ihre Anwesenheit, mit Wertanrechnung und Festpreis."
+  eyebrow="Haushaltsauflösung & Nachlass"
+  title="Haushaltsauflösung und Nachlassauflösung"
+  heroText="Im Trauerfall oder beim Umzug ins Heim braucht es keinen Verkaufstermin, sondern jemanden, der die Sache ruhig und vollständig abwickelt."
   image="/images/categories/haushaltsaufloesung.png"
-  lead="Ob Nachlass, Umzug ins Heim oder Verkauf einer Immobilie: Wir klären vorher, was bleibt, was verwertet wird und was entsorgt werden darf."
+  imageAlt="Diskrete Haushaltsauflösung in Ostfriesland durch Fixum Objektservice"
+  serviceType="Haushaltsauflösung und Nachlassauflösung"
+  areaTitle="Haushaltsauflösung in Emden und Ostfriesland"
+  lead="Eine Haushaltsauflösung ist selten nur eine Räumung. Meistens hängt eine Frist daran, eine Erbengemeinschaft, ein Übergabetermin - und Angehörige, die weit weg wohnen. Genau darauf ist unser Ablauf ausgelegt."
   included={[
-    "Wohnungen, Häuser, Keller, Dachboden und Garage räumen",
-    "Persönliche Gegenstände nach Absprache sichern",
-    "Verwertbaren Hausrat prüfen und im Angebot anrechnen",
-    "Sortenreine Entsorgung und besenreine Übergabe",
+    "Vollständige Auflösung von Wohnung, Haus oder einzelnen Etagen",
+    "Aussortieren und Übergabe von Dokumenten, Fotos und persönlichen Unterlagen",
+    "Wertanrechnung auf verwertbaren Hausrat, Möbel und Sammlerstücke",
+    "Abwicklung nach Schlüsselübergabe - Ihre Anwesenheit ist nicht nötig",
+    "Sortenreine Entsorgung mit Nachweis für Nachlassverwaltung oder Erbengemeinschaft",
+    "Besenreine Übergabe an Vermieter, Makler oder Käufer",
+    "Auf Wunsch Fotodokumentation des gesamten Ablaufs",
   ]}
   process={[
     [
-      "Erstgespräch",
-      "Sie schildern die Situation oder schicken Fotos per WhatsApp.",
+      "Erstes Gespräch",
+      "Am Telefon klären wir Umfang, Frist und Besonderheiten. Was behalten werden soll, notieren wir gleich mit.",
     ],
     [
-      "Besichtigung",
-      "Wir prüfen Umfang, Wege, Etagen, Parken und mögliche Wertanrechnung.",
+      "Besichtigung und Angebot",
+      "Wir sehen uns das Objekt an und kalkulieren den Festpreis. Verwertbarer Hausrat mindert den Preis - das steht sichtbar im Angebot.",
     ],
     [
-      "Übergabe",
-      "Nach Auftrag wird der Haushalt geräumt und besenrein übergeben.",
+      "Auflösung und Übergabe",
+      "Wir lösen den Haushalt vollständig auf, übergeben gefundene Dokumente und Wertsachen und hinterlassen das Objekt besenrein.",
     ],
   ]}
+  facts={[
+    ["Diskretion", "Unbeschriftete Fahrzeuge, keine Gespräche im Haus."],
+    [
+      "Anwesenheit",
+      "Nicht erforderlich - wir arbeiten nach Schlüsselübergabe.",
+    ],
+    ["Dokumente", "Werden gesammelt und Ihnen übergeben, nie entsorgt."],
+    ["Nachweis", "Entsorgungsbelege für die Nachlassabwicklung auf Wunsch."],
+  ]}
+  noteTitle="Was wir immer aussortieren"
+  noteText="Dokumente, Fotoalben, Briefe, Schmuck, Bargeld und alles, was nach Erinnerungsstück aussieht, wird zur Seite gelegt und Ihnen übergeben. Das ist Teil des Auftrags und kostet nicht extra. Im Zweifel fragen wir lieber einmal zu viel nach, als etwas wegzuwerfen, das nicht ersetzbar ist."
+  faq={serviceFaq[current]}
 />

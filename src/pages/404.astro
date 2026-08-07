@@ -1,0 +1,100 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import { site, telUrl } from "../data/site";
+import { allServiceMenuItems } from "../data/serviceMenu";
+---
+
+<Base
+  title="Seite nicht gefunden | Fixum Objektservice"
+  description="Diese Seite gibt es nicht mehr. Hier finden Sie alle Leistungen von Fixum Objektservice in Emden und Ostfriesland."
+  canonical="/404/"
+  noindex
+>
+  <section class="section notfound page-top section--mist">
+    <div class="container container--narrow notfound-inner">
+      <p class="eyebrow">Fehler 404</p>
+      <h1>Diese Seite gibt es nicht.</h1>
+      <p class="lead">
+        Vielleicht wurde sie verschoben oder der Link ist alt. Über die
+        Leistungen unten kommen Sie direkt weiter - oder Sie rufen einfach kurz
+        an.
+      </p>
+
+      <div class="btn-row">
+        <Button href="/">Zur Startseite</Button>
+        <Button href={telUrl} variant="secondary" icon="phone">
+          {site.phoneDisplay}
+        </Button>
+      </div>
+
+      <nav class="notfound-links" aria-label="Alle Leistungen">
+        <h2>Alle Leistungen</h2>
+        <ul>
+          {
+            allServiceMenuItems.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+          <li><a href="/leistungen/">Übersicht</a></li>
+          <li><a href="/kontakt/">Kontakt</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    min-height: 70vh;
+  }
+
+  .notfound-inner {
+    display: grid;
+    justify-items: start;
+    gap: 1.125rem;
+  }
+
+  .notfound-links {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .notfound-links h2 {
+    margin-bottom: 1rem;
+    font-size: var(--step-2);
+  }
+
+  .notfound-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .notfound-links a {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--navy);
+    transition:
+      border-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+
+  .notfound-links a:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+</style>

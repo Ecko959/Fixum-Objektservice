@@ -1,33 +1,108 @@
 ---
 import Base from "../layouts/Base.astro";
 import Button from "../components/Button.astro";
-import { site, telUrl } from "../data/site";
+import Icon from "../components/Icon.astro";
+import { site, telUrl, whatsappUrl } from "../data/site";
 ---
 
 <Base
-  title="Danke | Fixum Objektservice"
-  description="Ihre Anfrage ist angekommen. Fixum Objektservice meldet sich am selben Werktag."
+  title="Anfrage eingegangen | Fixum Objektservice"
+  description="Ihre Anfrage bei Fixum Objektservice ist eingegangen. Wir melden uns am selben Werktag zurück."
+  canonical="/danke/"
+  noindex
 >
-  <section class="section thanks section--mist">
-    <div class="container">
+  <section class="section thanks page-top section--mist">
+    <div class="container container--narrow thanks-inner">
+      <span class="thanks-mark"><Icon name="check" size={34} /></span>
       <h1>Danke - Ihre Anfrage ist angekommen.</h1>
-      <p>
-        Wir melden uns am selben Werktag. Wenn es eilig ist, rufen Sie direkt
-        an: {site.phoneDisplay}.
+      <p class="lead">
+        Wir melden uns am selben Werktag bei Ihnen. Wenn es eilig ist, rufen Sie
+        gern direkt an - dann bekommen Sie sofort eine erste Einschätzung.
       </p>
-      <Button href={telUrl}>Jetzt anrufen</Button>
+
+      <div class="btn-row thanks-actions">
+        <Button href={telUrl} icon="phone">{site.phoneDisplay}</Button>
+        <Button href={whatsappUrl()} variant="secondary" icon="whatsapp">
+          WhatsApp schreiben
+        </Button>
+      </div>
+
+      <div class="card thanks-next">
+        <h2>Wie es weitergeht</h2>
+        <ol>
+          <li>Wir rufen zurück und klären offene Punkte in wenigen Minuten.</li>
+          <li>
+            Bei Bedarf kommen wir zur kostenlosen Besichtigung, meist innerhalb
+            von zwei Werktagen.
+          </li>
+          <li>
+            Sie bekommen ein schriftliches Angebot mit Festpreis und
+            Leistungsumfang - und entscheiden in Ruhe.
+          </li>
+        </ol>
+      </div>
+
+      <p class="thanks-links">
+        Zurück zur <a href="/">Startseite</a> oder weiter zu den
+        <a href="/leistungen/">Leistungen</a>.
+      </p>
     </div>
   </section>
 </Base>
 
 <style>
   .thanks {
-    padding-top: 150px;
-    min-height: 70vh;
+    min-height: 68vh;
   }
-  .thanks .container {
-    max-width: 760px;
+
+  .thanks-inner {
     display: grid;
-    gap: 22px;
+    justify-items: start;
+    gap: 1.125rem;
+  }
+
+  .thanks-mark {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-pill);
+    color: #fff;
+    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+    box-shadow: var(--glow-blue);
+  }
+
+  .thanks-actions {
+    margin-top: 0.25rem;
+  }
+
+  .thanks-next {
+    width: 100%;
+    margin-top: 1rem;
+    padding: clamp(1.25rem, 3vw, 1.875rem);
+  }
+
+  .thanks-next h2 {
+    margin-bottom: 1rem;
+    font-size: var(--step-2);
+    text-transform: none;
+  }
+
+  .thanks-next ol {
+    display: grid;
+    gap: 0.75rem;
+    padding-left: 1.25rem;
+    color: var(--muted);
+  }
+
+  .thanks-links {
+    color: var(--muted);
+  }
+
+  .thanks-links a {
+    color: var(--blue);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 </style>

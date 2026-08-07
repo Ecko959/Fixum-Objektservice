@@ -1,15 +1,29 @@
 ---
 import Base from "../layouts/Base.astro";
 import PdfLegal from "../components/PdfLegal.astro";
+
+const breadcrumbs: Array<[string, string]> = [
+  ["Widerrufsbelehrung", "/widerruf/"],
+];
 ---
 
 <Base
   title="Widerrufsbelehrung | Fixum Objektservice"
-  description="Widerrufsbelehrung von Fixum Objektservice als geprüfte PDF-Fassung."
+  description="Widerrufsbelehrung von Fixum Objektservice, Emden: Widerrufsfrist, Ausübung des Widerrufs und Folgen für Verbraucherverträge. Vollständige Fassung als PDF."
+  canonical="/widerruf/"
+  breadcrumbs={breadcrumbs}
+  pageType="WebPage"
 >
   <PdfLegal
     title="Widerrufsbelehrung"
     intro="Die geprüfte Widerrufsbelehrung liegt als PDF vor. Sie können sie hier ansehen oder herunterladen."
     pdf="/docs/Fixum_Widerrufsbelehrung.pdf"
+    breadcrumbs={breadcrumbs}
+    summary={[
+      "Verbraucher können außerhalb von Geschäftsräumen geschlossene Verträge widerrufen.",
+      "Die Widerrufsfrist beträgt 14 Tage ab Vertragsschluss.",
+      "Der Widerruf ist formlos möglich - Telefon, E-Mail oder Brief genügen.",
+      "Die Einzelheiten und das Muster-Widerrufsformular stehen im PDF.",
+    ]}
   />
 </Base>

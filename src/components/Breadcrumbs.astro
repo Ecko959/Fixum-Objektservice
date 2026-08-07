@@ -1,0 +1,100 @@
+---
+interface Props {
+  /** Pfad ohne Startseite: [Label, URL]. Der letzte Eintrag ist die aktuelle Seite. */
+  trail: Array<[string, string]>;
+  class?: string;
+}
+
+const { trail, class: className = "" } = Astro.props;
+const items: Array<[string, string]> = [["Startseite", "/"], ...trail];
+---
+
+{
+  items.length > 1 && (
+    <nav
+      class={`breadcrumbs ${className}`.trim()}
+      aria-label="Brotkrumennavigation"
+    >
+      <ol>
+        {items.map(([label, href], index) => {
+          const isLast = index === items.length - 1;
+          return (
+            <li>
+              {isLast ? (
+                <span aria-current="page">{label}</span>
+              ) : (
+                <a href={href}>{label}</a>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-utility);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+  }
+
+  /* Trenner als Pseudo-Element, damit er nicht vorgelesen wird */
+  .breadcrumbs li + li::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-top: 1.5px solid currentColor;
+    border-right: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    opacity: 0.6;
+  }
+
+  .breadcrumbs a {
+    color: inherit;
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .breadcrumbs [aria-current="page"] {
+    color: var(--navy);
+  }
+
+  /* Auf dunklem Grund */
+  .section--dark .breadcrumbs li,
+  .page-hero .breadcrumbs li {
+    color: rgba(211, 227, 249, 0.8);
+  }
+
+  .section--dark .breadcrumbs a:hover,
+  .page-hero .breadcrumbs a:hover {
+    color: #fff;
+  }
+
+  .section--dark .breadcrumbs [aria-current="page"],
+  .page-hero .breadcrumbs [aria-current="page"] {
+    color: var(--blue-light);
+  }
+</style>

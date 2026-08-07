@@ -1,80 +1,53 @@
 ---
-import Base from "../layouts/Base.astro";
-import CtaBand from "../components/CtaBand.astro";
-import PageHero from "../components/PageHero.astro";
-import RelatedServices from "../components/RelatedServices.astro";
+import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/montage-boden/";
 ---
 
-<Base
-  title="Montage & Boden Emden | Fixum Objektservice"
-  description="Montagearbeiten, Türen, Zargen, Laminat, Vinyl, Teppich und Möbelmontage in Emden und Ostfriesland."
->
-  <PageHero
-    eyebrow="Montage & Boden"
-    title="Montage und Bodenverlegung in Emden"
-    text="Wenn nach Räumung oder Rückbau wieder Ordnung entstehen soll, übernimmt Fixum Montagearbeiten, Bodenverlegung und praktische Innenarbeiten aus einer Hand."
-    image="/images/categories/montage-boden.png"
-  />
-  <section class="section">
-    <div class="container split">
-      <div class="page-copy">
-        <p class="eyebrow">Leistungen</p>
-        <h2>Praktische Arbeiten für fertige Räume</h2>
-        <p class="muted">
-          Wir übernehmen die Arbeiten, die aus einem leeren Objekt wieder einen
-          nutzbaren Raum machen: Türen, Zargen, Böden, Möbelmontage und saubere
-          Abschlussarbeiten.
-        </p>
-      </div>
-      <ul class="card check-list">
-        <li>Türen und Zargen montieren</li>
-        <li>Laminat, Vinyl und Teppich verlegen</li>
-        <li>Möbel- und Küchenmontage nach Absprache</li>
-        <li>Übergabefertige Abschlussarbeiten nach Rückbau oder Trockenbau</li>
-      </ul>
-    </div>
-  </section>
-  <section class="section section--mist">
-    <div class="container grid-3 detail-grid">
-      <article>
-        <h2>Vor Ort prüfen</h2><p>
-          Untergrund, Maße und Material werden vor Ausführung abgestimmt.
-        </p>
-      </article>
-      <article>
-        <h2>Klar kalkulieren</h2><p>
-          Sie bekommen ein Angebot nach Fläche, Umfang und Materialweg.
-        </p>
-      </article>
-      <article>
-        <h2>Sauber übergeben</h2><p>
-          Am Ende zählt ein Raum, der praktisch nutzbar und ordentlich übergeben
-          ist.
-        </p>
-      </article>
-    </div>
-  </section>
-  <RelatedServices current="/montage-boden" />
-  <CtaBand />
-</Base>
-
-<style>
-  .page-copy {
-    display: grid;
-    gap: 16px;
-  }
-  .check-list {
-    padding: 30px 30px 30px 52px;
-  }
-  .detail-grid article {
-    padding: 26px;
-    border-radius: 18px;
-    background: #fff;
-    border: 1px solid var(--line);
-  }
-  .detail-grid h2 {
-    margin-bottom: 12px;
-    font-size: 24px;
-    text-transform: none;
-  }
-</style>
+<ServiceDetailPage
+  current={current}
+  crumb="Boden & Türen"
+  metaTitle="Bodenverlegung & Türmontage in Emden | Fixum Objektservice"
+  description="Laminat, Vinyl und Teppich verlegen, Türen und Zargen montieren in Emden und Ostfriesland. Nach Aufmaß, zum Festpreis und direkt im Anschluss an Rückbau oder Trockenbau."
+  eyebrow="Boden & Türen"
+  title="Bodenverlegung und Türmontage in Emden"
+  heroText="Der Schritt, der aus einem leeren Raum wieder einen fertigen macht: Boden verlegt, Türen gesetzt, Übergänge sauber abgeschlossen."
+  image="/images/categories/montage-boden.png"
+  imageAlt="Verlegter Vinylboden und montierte Zarge in einer Wohnung in Emden"
+  serviceType="Bodenverlegung und Türmontage"
+  areaTitle="Boden und Türen in Emden und Ostfriesland"
+  lead="Bodenbeläge und Türen wirken einfach - bis der Untergrund uneben ist, die Zarge nicht ins Mauerwerk passt oder die Tür nach dem Verlegen schleift. Deshalb nehmen wir beides in einem Aufmaß auf."
+  included={[
+    "Laminat, Vinyl, Klick-Systeme und Teppich fachgerecht verlegen",
+    "Untergrund prüfen, ausgleichen und für den Belag vorbereiten",
+    "Alte Beläge aufnehmen und entsorgen",
+    "Sockelleisten, Übergangsprofile und Abschlüsse setzen",
+    "Türen und Zargen montieren, ausrichten und einstellen",
+    "Höhenabstimmung zwischen Boden und Türblatt in einem Arbeitsgang",
+    "Verlegung von bauseits gestelltem Material nach Absprache",
+  ]}
+  process={[
+    [
+      "Aufmaß vor Ort",
+      "Untergrund, Feuchte, Ebenheit, Maße und Materialwunsch werden aufgenommen - inklusive der Frage, ob Türen angepasst werden müssen.",
+    ],
+    [
+      "Angebot nach Fläche",
+      "Sie bekommen einen Preis nach Fläche, Umfang und Materialweg. Vorarbeiten wie Ausgleichsmasse stehen als eigene Position drin.",
+    ],
+    [
+      "Verlegung und Übergabe",
+      "Belag, Leisten, Übergänge und Türen werden gesetzt. Am Ende zählt ein Raum, der praktisch nutzbar und sauber übergeben ist.",
+    ],
+  ]}
+  facts={[
+    ["Beläge", "Laminat, Vinyl, Klick-Systeme, Teppich."],
+    ["Untergrund", "Prüfung und Ausgleich als eigene Position im Angebot."],
+    ["Material", "Eigenes Material oder bauseits gestellt."],
+    ["Türen", "Zargen und Türblätter auf Bodenhöhe abgestimmt."],
+  ]}
+  noteTitle="Boden und Türen gehören zusammen"
+  noteText="Wer den Boden verlegen lässt und die Türen später separat beauftragt, zahlt die Abstimmung meist doppelt: Entweder schleift die Tür auf dem neuen Belag oder es bleibt eine Fuge, durch die es zieht. Wir nehmen beides in einem Aufmaß auf und stimmen die Höhen vorher ab - das kostet einmal Planung statt zweimal Nacharbeit."
+  faq={serviceFaq[current]}
+/>

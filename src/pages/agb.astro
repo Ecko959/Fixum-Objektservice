@@ -1,15 +1,27 @@
 ---
 import Base from "../layouts/Base.astro";
 import PdfLegal from "../components/PdfLegal.astro";
+
+const breadcrumbs: Array<[string, string]> = [["AGB", "/agb/"]];
 ---
 
 <Base
   title="AGB | Fixum Objektservice"
-  description="Allgemeine Geschäftsbedingungen von Fixum Objektservice als geprüfte PDF-Fassung."
+  description="Allgemeine Geschäftsbedingungen von Fixum Objektservice, Emden: Vertragsschluss, Leistungsumfang, Preise und Abwicklung. Vollständige Fassung als PDF."
+  canonical="/agb/"
+  breadcrumbs={breadcrumbs}
+  pageType="WebPage"
 >
   <PdfLegal
     title="Allgemeine Geschäftsbedingungen"
     intro="Die geprüften Allgemeinen Geschäftsbedingungen liegen als PDF vor. Sie können sie hier ansehen oder herunterladen."
     pdf="/docs/Fixum_AGB.pdf"
+    breadcrumbs={breadcrumbs}
+    summary={[
+      "Angebote von Fixum Objektservice sind nach Besichtigung Festpreise in Textform.",
+      "Der Leistungsumfang und die ausdrücklich ausgenommenen Arbeiten stehen in jedem Angebot.",
+      "Zulassungspflichtige Gewerke werden koordiniert, aber nicht selbst ausgeführt.",
+      "Gemäß § 19 UStG wird keine Umsatzsteuer berechnet und daher nicht ausgewiesen.",
+    ]}
   />
 </Base>

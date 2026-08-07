@@ -1,36 +1,53 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/moebel-kuechenmontage/";
 ---
 
 <ServiceDetailPage
-  current="/moebel-kuechenmontage"
-  metaTitle="Möbel- & Küchenmontage Emden | Fixum Objektservice"
-  description="Möbel- und Küchenmontage in Emden und Ostfriesland ohne Elektro-, Gas- und Wasseranschlüsse."
-  eyebrow="Möbel & Küchenmontage"
-  title="Möbel- und Küchenmontage ohne Anschlussarbeiten"
-  heroText="Fixum montiert Möbel, Küchenmöbel und praktische Innenausstattung - ohne Elektro-, Gas- oder Wasseranschlüsse."
+  current={current}
+  crumb="Möbel- & Küchenmontage"
+  metaTitle="Möbelmontage & Küchenmontage in Emden | Fixum Objektservice"
+  description="Möbel- und Küchenmontage in Emden und Ostfriesland: aufgebaut, ausgerichtet und befestigt - ohne Elektro-, Gas- und Wasseranschlüsse. Auch Demontage und Entsorgung alter Möbel."
+  eyebrow="Möbel- & Küchenmontage"
+  title="Möbel- und Küchenmontage in Emden"
+  heroText="Aufgebaut, ausgerichtet, sicher befestigt. Wir übernehmen die Montage - die Anschlüsse bleiben bei den Fachbetrieben, die sie ausführen dürfen."
   image="/images/categories/montage-boden.png"
-  lead="Montagearbeiten passen besonders gut nach Umzug, Räumung, Renovierung oder Bodenverlegung. Anschlussarbeiten werden nicht selbst ausgeführt."
+  imageAlt="Montierte Küchenzeile in einer Wohnung in Ostfriesland"
+  serviceType="Möbelmontage und Küchenmontage"
+  areaTitle="Möbel- und Küchenmontage in Emden und Ostfriesland"
+  lead="Eine Küche steht selten von selbst gerade. Alte Wände, unebene Böden und Leitungen an unerwarteter Stelle machen aus zwei Stunden Aufbau schnell einen Tag - wenn man weiß, was man tut, aus einem Tag wieder zwei Stunden."
   included={[
-    "Möbel aufbauen, ausrichten und befestigen",
-    "Küchenmöbel montieren und vorbereiten",
-    "Demontage und Wiedermontage nach Absprache",
-    "Koordination zugelassener Fachbetriebe für Anschlüsse",
+    "Aufbau und Ausrichtung von Küchenzeilen, Ober- und Unterschränken",
+    "Arbeitsplatten zuschneiden, einpassen und abdichten",
+    "Fronten, Griffe, Sockelblenden und Auszüge einstellen",
+    "Möbelmontage aller gängigen Hersteller nach Aufbauanleitung",
+    "Sichere Wandbefestigung inklusive passender Dübeltechnik",
+    "Demontage und Entsorgung alter Möbel und Küchen",
+    "Koordination des Anschlusstermins mit dem Fachbetrieb",
   ]}
   process={[
     [
-      "Umfang klären",
-      "Fotos, Pläne oder Aufbauanleitungen helfen bei der Einschätzung.",
+      "Vorab klären",
+      "Wir prüfen Maße, Wandbeschaffenheit, Leitungsverläufe und die vorhandene Anschlusssituation - am besten anhand Ihres Planungsplans.",
     ],
     [
-      "Montieren",
-      "Möbel und Küchenmöbel werden sauber aufgebaut und ausgerichtet.",
+      "Montage",
+      "Korpusse werden aufgebaut, ausgerichtet, verbunden und befestigt, Arbeitsplatte eingepasst, Fronten eingestellt.",
     ],
     [
-      "Fachbetriebe",
-      "Elektro, Gas und Wasser werden nur durch zugelassene Fachbetriebe angeschlossen.",
+      "Anschluss durch Fachbetrieb",
+      "Strom, Gas und Wasser übernimmt ein zugelassener Betrieb. Den Termin stimmen wir auf Wunsch direkt mit ab.",
     ],
   ]}
-  noteTitle="Anschlüsse bleiben Fachbetrieben vorbehalten"
-  noteText="Fixum übernimmt keine Elektro-, Gas- oder Wasseranschlüsse. Wenn das nötig ist, koordinieren wir zugelassene Fachbetriebe oder stimmen uns mit vorhandenen Handwerkern ab."
+  facts={[
+    ["Umfang", "Aufbau, Ausrichtung, Befestigung, Einstellung."],
+    ["Grenze", "Keine Elektro-, Gas- und Wasseranschlüsse."],
+    ["Altmöbel", "Demontage und Entsorgung im selben Termin."],
+    ["Kombination", "Zusammen mit Umzug oder Räumung günstiger."],
+  ]}
+  noteTitle="Warum wir die Geräte nicht anschließen"
+  noteText="Elektro-, Gas- und Wasseranschlüsse dürfen nur zugelassene Fachbetriebe herstellen - das ist keine Formalie, sondern Vorschrift, und im Schadensfall auch eine Versicherungsfrage. Wir bauen die Küche komplett auf und stimmen den Anschlusstermin auf Wunsch direkt mit ab, damit nicht zweimal jemand anrücken muss."
+  faq={serviceFaq[current]}
 />

@@ -1,28 +1,53 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/wohnungsraeumung/";
 ---
 
 <ServiceDetailPage
-  current="/wohnungsraeumung"
-  metaTitle="Wohnungsräumung Emden | Fixum Objektservice"
-  description="Wohnungsräumung in Emden für Übergabe, Mieterwechsel, Verkauf oder Neuvermietung mit Festpreis nach Besichtigung."
+  current={current}
+  crumb="Wohnungsräumung"
+  metaTitle="Wohnungsräumung Emden - besenrein zur Übergabe | Fixum"
+  description="Wohnungsräumung in Emden und Ostfriesland für Übergabe, Mieterwechsel, Verkauf oder Neuvermietung. Besenreine Übergabe zum Festpreis, auf Wunsch mit Fotodokumentation zur Abnahme."
   eyebrow="Wohnungsräumung"
-  title="Wohnungsräumung für Übergabe und Mieterwechsel"
-  heroText="Fixum räumt Wohnungen, Nebenräume und Keller zügig, nachvollziehbar und besenrein - ideal für Vermieter, Verwaltungen und private Auftraggeber."
+  title="Wohnungsräumung für die Übergabe"
+  heroText="Wenn eine Wohnung zu einem festen Termin leer und übergabefähig sein muss, planen wir rückwärts vom Termin - nicht vorwärts von der Auslastung."
   image="/images/categories/wohnungsraeumung.png"
-  lead="Bei Wohnungsräumungen zählt der Termin. Wir planen Laufwege, Entsorgung, Schlüsselübergabe und auf Wunsch Fotodokumentation."
+  imageAlt="Besenrein geräumte Wohnung nach Übergabe durch Fixum Objektservice"
+  serviceType="Wohnungsräumung"
+  areaTitle="Wohnungsräumung in Emden und Ostfriesland"
+  lead="Für Vermieter, Hausverwaltungen, Eigentümer und Mieter, die aus einer Wohnung eine übergabefähige Einheit machen müssen - meist unter Zeitdruck und mit einem Abnahmetermin im Kalender."
   included={[
-    "Räumung von Wohnung, Keller, Dachboden und Garage",
-    "Besenreine Übergabe an Vermieter oder Verwaltung",
-    "Fotodokumentation nach Absprache",
-    "Kombinierbar mit Rückbau, Trockenbau und Montage",
+    "Vollständige Räumung von Wohnung, Keller, Dachboden und Nebenräumen",
+    "Demontage von Einbauschränken, Lampen, Bodenbelägen und Regalen",
+    "Sortenreine Trennung und Entsorgung nach Fraktionen",
+    "Besenreine Übergabe im vereinbarten Zustand",
+    "Fotodokumentation vor, während und nach der Räumung auf Wunsch",
+    "Terminplanung rückwärts vom festen Übergabetermin",
+    "Auf Wunsch direkt anschließend Rückbau, Trockenbau oder Bodenverlegung",
   ]}
   process={[
     [
-      "Termin klären",
-      "Frist, Schlüsselübergabe und gewünschter Übergabezustand werden vorab festgelegt.",
+      "Termin und Umfang",
+      "Sie nennen den Übergabetermin und den Zustand der Wohnung. Wir prüfen sofort, ob der Slot machbar ist - und sagen ab, wenn nicht.",
     ],
-    ["Räumen", "Inventar und Abfälle werden getragen, sortiert und entsorgt."],
-    ["Dokumentieren", "Auf Wunsch erhalten Sie Fotos vom fertigen Zustand."],
+    [
+      "Aufnahme vor Ort",
+      "Wir dokumentieren den Ist-Zustand, klären Demontagen und legen fest, was genau 'besenrein' im Angebot bedeutet.",
+    ],
+    [
+      "Räumung und Abnahme",
+      "Die Wohnung wird geräumt, gefegt und übergeben. Auf Wunsch bekommen Sie die Fotodokumentation für die Abnahme.",
+    ],
   ]}
+  facts={[
+    ["Dauer", "Eine durchschnittliche Wohnung an einem Tag."],
+    ["Termine", "Rückwärts vom Übergabetermin geplant."],
+    ["Nachweis", "Fotodokumentation für die Abnahme auf Wunsch."],
+    ["Anschluss", "Rückbau und Ausbau direkt danach möglich."],
+  ]}
+  noteTitle="Besenrein ist nicht gleich renoviert"
+  noteText="Besenrein heißt: vollständig leer, grob gefegt und übergabefähig. Feuchtreinigung, Fensterputz, Malerarbeiten oder Bodenerneuerung sind nicht automatisch enthalten - lassen sich aber dazubuchen. Was genau vereinbart ist, steht im Angebot, damit es bei der Abnahme keine Diskussion mit dem Vermieter gibt."
+  faq={serviceFaq[current]}
 />
