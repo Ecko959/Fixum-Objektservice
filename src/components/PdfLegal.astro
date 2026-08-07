@@ -1,0 +1,44 @@
+---
+interface Props {
+  title: string;
+  intro: string;
+  pdf: string;
+}
+
+const { title, intro, pdf } = Astro.props;
+---
+
+<section class="section legal-page section--mist">
+  <div class="container legal-card card">
+    <p class="eyebrow">Rechtliches</p>
+    <h1>{title}</h1>
+    <p>{intro}</p>
+    <a class="btn" href={pdf} download>PDF herunterladen</a>
+    <object data={pdf} type="application/pdf" class="pdf-view">
+      <p>
+        Das PDF kann in diesem Browser nicht eingebettet angezeigt werden. Bitte
+        nutzen Sie den Download-Link.
+      </p>
+    </object>
+  </div>
+</section>
+
+<style>
+  .legal-page {
+    padding-top: 150px;
+  }
+
+  .legal-card {
+    display: grid;
+    gap: 20px;
+    padding: 34px;
+  }
+
+  .pdf-view {
+    width: 100%;
+    min-height: 720px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+  }
+</style>

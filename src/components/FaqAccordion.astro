@@ -1,0 +1,41 @@
+---
+import { faq } from "../data/faq";
+---
+
+<div class="faq-list">
+  {
+    faq.map((item, index) => (
+      <details open={index === 0}>
+        <summary>{item.question}</summary>
+        <p>{item.answer}</p>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  details {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    padding: 18px 20px;
+  }
+
+  summary {
+    cursor: pointer;
+    color: var(--navy);
+    font-family: "Outfit", sans-serif;
+    font-weight: 700;
+    list-style-position: outside;
+  }
+
+  details p {
+    margin-top: 12px;
+    color: var(--muted);
+  }
+</style>

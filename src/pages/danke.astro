@@ -1,0 +1,33 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import { site, telUrl } from "../data/site";
+---
+
+<Base
+  title="Danke | Fixum Objektservice"
+  description="Ihre Anfrage ist angekommen. Fixum Objektservice meldet sich am selben Werktag."
+>
+  <section class="section thanks section--mist">
+    <div class="container">
+      <h1>Danke - Ihre Anfrage ist angekommen.</h1>
+      <p>
+        Wir melden uns am selben Werktag. Wenn es eilig ist, rufen Sie direkt
+        an: {site.phoneDisplay}.
+      </p>
+      <Button href={telUrl}>Jetzt anrufen</Button>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .thanks {
+    padding-top: 150px;
+    min-height: 70vh;
+  }
+  .thanks .container {
+    max-width: 760px;
+    display: grid;
+    gap: 22px;
+  }
+</style>

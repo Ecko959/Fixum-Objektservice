@@ -1,0 +1,48 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+---
+
+<Base
+  title="Für Hausverwaltungen | Fixum Objektservice"
+  description="Räumung, Rückbau, Renovierung und Übergabe für Hausverwaltungen in Emden und Ostfriesland."
+>
+  <PageHero
+    eyebrow="Für Hausverwaltungen"
+    title="Mieterwechsel komplett - aus einer Hand"
+    text="Weniger Leerstandstage pro Einheit: Fixum räumt, baut zurück, koordiniert Fachbetriebe und übergibt nachvollziehbar dokumentiert."
+  />
+  <section class="section">
+    <div class="container grid-3 audience-page">
+      <article>
+        <h2>Reaktionszeit</h2><p>
+          Besichtigung meist innerhalb von zwei Werktagen nach
+          Schlüsselübergabe.
+        </p>
+      </article>
+      <article>
+        <h2>Dokumentation</h2><p>
+          Auf Wunsch mit Fotos vor, während und nach der Ausführung.
+        </p>
+      </article>
+      <article>
+        <h2>Abrechnung</h2><p>
+          Pro Objekt oder gesammelt, mit festen Konditionen im Rahmenvertrag.
+        </p>
+      </article>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .audience-page article {
+    border-left: 4px solid var(--amber);
+    padding-left: 22px;
+  }
+  .audience-page h2 {
+    margin-bottom: 12px;
+    font-size: 28px;
+  }
+</style>

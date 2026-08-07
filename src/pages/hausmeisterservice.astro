@@ -1,0 +1,75 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+import RelatedServices from "../components/RelatedServices.astro";
+---
+
+<Base
+  title="Hausmeisterservice Emden | Fixum Objektservice"
+  description="Hausmeisterservice, Objektbetreuung, Kleinreparaturen, Außenanlagen und Winterdienst in Emden und Ostfriesland."
+>
+  <PageHero
+    eyebrow="Hausmeisterservice"
+    title="Objektbetreuung für Emden und Ostfriesland"
+    text="Fixum übernimmt laufende Betreuung, Kleinreparaturen und praktische Objektarbeiten für Eigentümer, Verwaltungen und Gewerbe."
+    image="/images/categories/hausmeister-winterdienst.png"
+  />
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Rahmenvertrag möglich</p>
+        <h2>Ein Ansprechpartner für laufende Aufgaben</h2>
+        <p class="muted">
+          Ob regelmäßige Kontrolle, Kleinreparatur, Außenanlage oder
+          Winterdienst: Fixum arbeitet mit klarer Absprache, dokumentiert nach
+          Wunsch und bleibt für Verwaltungen und Eigentümer erreichbar.
+        </p>
+      </div>
+      <ul class="card check-list">
+        <li>Objektkontrolle und Kleinreparaturen</li>
+        <li>Außenanlagen und einfache Pflegearbeiten</li>
+        <li>Winterdienst nach Vereinbarung</li>
+        <li>Rahmenvertrag mit festen Konditionen möglich</li>
+      </ul>
+    </div>
+  </section>
+  <section class="section section--mist">
+    <div class="container grid-3 detail-grid">
+      <article>
+        <h2>Für Eigentümer</h2><p>
+          Praktische Hilfe, wenn kleinere Arbeiten regelmäßig liegen bleiben.
+        </p>
+      </article>
+      <article>
+        <h2>Für Verwaltungen</h2><p>
+          Kurze Wege bei Mieterwechsel, Übergabe und laufender Objektpflege.
+        </p>
+      </article>
+      <article>
+        <h2>Für Gewerbe</h2><p>
+          Ordentliche Betreuung von Flächen, Nebenräumen und Außenbereichen.
+        </p>
+      </article>
+    </div>
+  </section>
+  <RelatedServices current="/hausmeisterservice" />
+  <CtaBand />
+</Base>
+
+<style>
+  .check-list {
+    padding: 30px 30px 30px 52px;
+  }
+  .detail-grid article {
+    padding: 26px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .detail-grid h2 {
+    margin-bottom: 12px;
+    font-size: 24px;
+    text-transform: none;
+  }
+</style>

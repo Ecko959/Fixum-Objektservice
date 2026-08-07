@@ -1,0 +1,74 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+import RelatedServices from "../components/RelatedServices.astro";
+---
+
+<Base
+  title="Umzüge & Transporte Emden | Fixum Objektservice"
+  description="Privat- und Firmenumzüge, Transporte und Objektfahrten bis 3,5 t in Emden und Ostfriesland."
+>
+  <PageHero
+    eyebrow="Umzüge & Transporte"
+    title="Umzüge und Transporte bis 3,5 t"
+    text="Für private Umzüge, kleinere Firmenumzüge und Objekttransporte plant Fixum den Ablauf klar, packt im Team an und verbindet Transport mit Räumung oder Montage."
+    image="/images/categories/umzuege-transporte.png"
+  />
+  <section class="section">
+    <div class="container grid-3 detail-grid">
+      <article class="card">
+        <h2>Privatumzüge</h2><p>
+          Wohnungswechsel, einzelne Möbel, Kartons und Kleintransporte im
+          Umkreis Emden.
+        </p>
+      </article>
+      <article class="card">
+        <h2>Firmenumzüge</h2><p>
+          Kleine Büro- und Objektumzüge mit klarer Terminabsprache und festem
+          Umfang.
+        </p>
+      </article>
+      <article class="card">
+        <h2>Objekttransporte</h2><p>
+          Material, Möbel, Werkzeug und Entsorgungsfahrten als Teil eines
+          Gesamtauftrags.
+        </p>
+      </article>
+    </div>
+  </section>
+  <section class="section section--mist">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Planung</p>
+        <h2>Transport ohne Chaos</h2>
+        <p class="muted">
+          Wir klären vorher Etagen, Laufwege, Parkmöglichkeiten, Demontagebedarf
+          und Zieladresse. Danach bekommen Sie einen nachvollziehbaren
+          Festpreis.
+        </p>
+      </div>
+      <ul class="card check-list">
+        <li>Umzüge und Transporte bis 3,5 t</li>
+        <li>Demontage und Montage nach Absprache</li>
+        <li>Kombinierbar mit Entrümpelung und Haushaltsauflösung</li>
+      </ul>
+    </div>
+  </section>
+  <RelatedServices current="/umzuege-transporte" />
+  <CtaBand />
+</Base>
+
+<style>
+  .detail-grid article {
+    padding: 26px;
+  }
+  .detail-grid h2 {
+    margin-bottom: 12px;
+    font-size: 24px;
+    text-transform: none;
+  }
+  .check-list {
+    padding: 30px 30px 30px 52px;
+  }
+</style>

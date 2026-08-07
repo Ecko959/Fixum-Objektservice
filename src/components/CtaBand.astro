@@ -1,0 +1,52 @@
+---
+import Button from "./Button.astro";
+import { site, telUrl, whatsappUrl } from "../data/site";
+---
+
+<section class="section section--dark cta-band">
+  <div class="container">
+    <p class="script">Ein Anruf reicht</p>
+    <h2>Bereit für Ihr Objekt?</h2>
+    <p>
+      Ob volle Wohnung, Entkernung oder Trockenbau - sagen Sie kurz, worum es
+      geht. Sie bekommen eine ehrliche Einschätzung, auch wenn es am Ende ein
+      anderer machen soll.
+    </p>
+    <div>
+      <Button href={telUrl}>☎ {site.phoneDisplay}</Button>
+      <Button href={whatsappUrl()} variant="secondary"
+        >WhatsApp schreiben</Button
+      >
+    </div>
+    <small>{site.hours} · Emden und 50 km Umkreis</small>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    text-align: center;
+  }
+
+  .cta-band .container {
+    display: grid;
+    justify-items: center;
+    gap: 20px;
+    max-width: 860px;
+  }
+
+  .cta-band p:not(.script) {
+    color: #d8e7fb;
+    font-size: 20px;
+  }
+
+  .cta-band div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .cta-band small {
+    color: #d8e7fb;
+  }
+</style>

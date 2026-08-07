@@ -1,0 +1,40 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+---
+
+<Base
+  title="Trockenbau als Nachunternehmer | Fixum Objektservice"
+  description="Trockenbau-Sub für Bauunternehmen in Ostfriesland, zuverlässig planbar nach m² oder Tagessatz."
+>
+  <PageHero
+    eyebrow="Für Bauunternehmen"
+    title="Trockenbau-Sub für Ostfriesland"
+    text="Fixum unterstützt Bauunternehmen, Generalunternehmer und Zimmereien bei Trockenbau und Rückbau nach m²-Preis oder Tagessatz."
+    image="/images/service-drywall.png"
+  />
+  <section class="section">
+    <div class="container split">
+      <div>
+        <h2>Zuverlässig als Nachunternehmer</h2>
+        <p class="muted">
+          Material bauseits möglich, Abrechnung klar, Betriebshaftpflicht
+          vorhanden. Freistellungsbescheinigung nach § 48b EStG auf Anfrage.
+        </p>
+      </div>
+      <ul class="card check-list">
+        <li>Trockenbau und nicht-tragender Rückbau</li>
+        <li>Planbare Termine und klare Rückmeldung</li>
+        <li>Einsatz in Emden und Ostfriesland</li>
+      </ul>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .check-list {
+    padding: 30px 30px 30px 52px;
+  }
+</style>

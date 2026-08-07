@@ -1,0 +1,67 @@
+---
+import Button from "./Button.astro";
+import { site, telUrl, whatsappUrl } from "../data/site";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text: string;
+  image?: string;
+}
+
+const {
+  eyebrow = "Fixum Objektservice",
+  title,
+  text,
+  image = "/images/team-van.png",
+} = Astro.props;
+---
+
+<section
+  class="page-hero section--dark"
+  style={`--hero-image: url("${image}")`}
+>
+  <div class="container page-hero-inner">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="lead">{text}</p>
+    <div class="hero-actions">
+      <Button href={telUrl}>Anrufen - {site.phoneDisplay}</Button>
+      <Button href={whatsappUrl()} variant="secondary"
+        >WhatsApp schreiben</Button
+      >
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    isolation: isolate;
+    min-height: 460px;
+    padding: 154px 0 82px;
+    background-image:
+      linear-gradient(90deg, rgba(10, 23, 48, 0.92), rgba(10, 23, 48, 0.72)),
+      var(--hero-image);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .page-hero-inner {
+    max-width: 760px;
+    margin-inline: 0;
+  }
+
+  .lead {
+    max-width: 720px;
+    margin: 22px 0 28px;
+    color: #d8e7fb;
+    font-size: 20px;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+</style>

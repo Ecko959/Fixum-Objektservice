@@ -1,0 +1,70 @@
+---
+import Photo from "./Photo.astro";
+
+interface Props {
+  title: string;
+  text: string;
+  href?: string;
+  image?: string;
+  large?: boolean;
+}
+
+const { title, text, href = "/kontakt", image, large = false } = Astro.props;
+---
+
+<article class={`service-card card ${large ? "is-large" : ""}`}>
+  {
+    image && (
+      <Photo
+        src={image}
+        alt={`${title} bei Fixum Objektservice`}
+        width={960}
+        height={640}
+        class={large ? "service-photo-large" : "service-photo-compact"}
+      />
+    )
+  }
+  <div>
+    <h3>{title}</h3>
+    <p>{text}</p>
+    <a class="label" href={href}>Mehr erfahren</a>
+  </div>
+</article>
+
+<style>
+  .service-card {
+    display: grid;
+    overflow: hidden;
+  }
+
+  .service-card > div {
+    padding: 24px;
+  }
+
+  .service-card h3 {
+    margin-bottom: 12px;
+  }
+
+  .service-card p {
+    color: var(--muted);
+  }
+
+  .service-card a {
+    display: inline-flex;
+    margin-top: 18px;
+    color: var(--blue);
+  }
+
+  .service-card :global(.photo) {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .service-card :global(.photo img) {
+    aspect-ratio: 16 / 10;
+  }
+
+  .service-card :global(.service-photo-compact img) {
+    aspect-ratio: 16 / 8;
+  }
+</style>

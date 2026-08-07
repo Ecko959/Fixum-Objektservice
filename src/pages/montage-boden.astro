@@ -1,0 +1,80 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+import RelatedServices from "../components/RelatedServices.astro";
+---
+
+<Base
+  title="Montage & Boden Emden | Fixum Objektservice"
+  description="Montagearbeiten, Türen, Zargen, Laminat, Vinyl, Teppich und Möbelmontage in Emden und Ostfriesland."
+>
+  <PageHero
+    eyebrow="Montage & Boden"
+    title="Montage und Bodenverlegung in Emden"
+    text="Wenn nach Räumung oder Rückbau wieder Ordnung entstehen soll, übernimmt Fixum Montagearbeiten, Bodenverlegung und praktische Innenarbeiten aus einer Hand."
+    image="/images/categories/montage-boden.png"
+  />
+  <section class="section">
+    <div class="container split">
+      <div class="page-copy">
+        <p class="eyebrow">Leistungen</p>
+        <h2>Praktische Arbeiten für fertige Räume</h2>
+        <p class="muted">
+          Wir übernehmen die Arbeiten, die aus einem leeren Objekt wieder einen
+          nutzbaren Raum machen: Türen, Zargen, Böden, Möbelmontage und saubere
+          Abschlussarbeiten.
+        </p>
+      </div>
+      <ul class="card check-list">
+        <li>Türen und Zargen montieren</li>
+        <li>Laminat, Vinyl und Teppich verlegen</li>
+        <li>Möbel- und Küchenmontage nach Absprache</li>
+        <li>Übergabefertige Abschlussarbeiten nach Rückbau oder Trockenbau</li>
+      </ul>
+    </div>
+  </section>
+  <section class="section section--mist">
+    <div class="container grid-3 detail-grid">
+      <article>
+        <h2>Vor Ort prüfen</h2><p>
+          Untergrund, Maße und Material werden vor Ausführung abgestimmt.
+        </p>
+      </article>
+      <article>
+        <h2>Klar kalkulieren</h2><p>
+          Sie bekommen ein Angebot nach Fläche, Umfang und Materialweg.
+        </p>
+      </article>
+      <article>
+        <h2>Sauber übergeben</h2><p>
+          Am Ende zählt ein Raum, der praktisch nutzbar und ordentlich übergeben
+          ist.
+        </p>
+      </article>
+    </div>
+  </section>
+  <RelatedServices current="/montage-boden" />
+  <CtaBand />
+</Base>
+
+<style>
+  .page-copy {
+    display: grid;
+    gap: 16px;
+  }
+  .check-list {
+    padding: 30px 30px 30px 52px;
+  }
+  .detail-grid article {
+    padding: 26px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .detail-grid h2 {
+    margin-bottom: 12px;
+    font-size: 24px;
+    text-transform: none;
+  }
+</style>

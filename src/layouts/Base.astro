@@ -1,0 +1,116 @@
+---
+import "../styles/global.css";
+import { faq } from "../data/faq";
+import { offerCatalog } from "../data/services";
+import { site } from "../data/site";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import StickyCallBar from "../components/StickyCallBar.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  faqSchema?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical = Astro.url.pathname,
+  faqSchema = false,
+} = Astro.props;
+const canonicalUrl = new URL(canonical, site.domain).toString();
+const businessSchema = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  name: site.name,
+  image: `${site.domain}/og.svg`,
+  url: site.domain,
+  telephone: site.phoneDisplay,
+  email: site.email,
+  priceRange: "€€",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.street,
+    postalCode: site.zip,
+    addressLocality: site.city,
+    addressCountry: site.country,
+  },
+  openingHours: "Mo-Sa 07:00-19:00",
+  areaServed: site.areaServed.map((name) => ({ "@type": "City", name })),
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Leistungen",
+    itemListElement: offerCatalog.map((name) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name },
+    })),
+  },
+};
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="geo.region" content="DE-NI" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicon/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0A1730" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={`${site.domain}/og.svg`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${site.domain}/og.svg`} />
+    <title>{title}</title>
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(businessSchema)}
+    />
+    {
+      faqSchema && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(faqPageSchema)}
+        />
+      )
+    }
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <StickyCallBar />
+  </body>
+</html>

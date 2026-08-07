@@ -1,0 +1,51 @@
+---
+import Base from "../layouts/Base.astro";
+import ContactForm from "../components/ContactForm.astro";
+import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
+---
+
+<Base
+  title="Kontakt | Fixum Objektservice"
+  description="Kontakt zu Fixum Objektservice in Emden: Telefon, WhatsApp, E-Mail und Anfrageformular für kostenlose Besichtigung."
+>
+  <section class="section contact-page section--mist">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Kontakt</p>
+        <h1>Kontakt und Anfahrt</h1>
+        <p class="lead">
+          Rufen Sie an, schreiben Sie per WhatsApp oder senden Sie eine Anfrage.
+          Wenn es eilig ist, ist Telefon der schnellste Weg.
+        </p>
+        <div class="contact-links card">
+          <a href={telUrl}>{site.phoneDisplay}</a>
+          <a href={whatsappUrl()}>WhatsApp schreiben</a>
+          <a href={mailUrl}>{site.email}</a>
+          <p>{site.street}<br />{site.zip} {site.city}</p>
+          <p>{site.hours}</p>
+        </div>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-page {
+    padding-top: 150px;
+  }
+  .lead {
+    margin: 20px 0 26px;
+    color: var(--muted);
+    font-size: 20px;
+  }
+  .contact-links {
+    display: grid;
+    gap: 10px;
+    padding: 24px;
+  }
+  .contact-links a {
+    color: var(--blue);
+    font-weight: 700;
+  }
+</style>

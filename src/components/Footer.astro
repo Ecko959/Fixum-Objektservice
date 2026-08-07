@@ -1,0 +1,122 @@
+---
+import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
+import { services } from "../data/services";
+---
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <img
+        src="/logo/fixum-lockup-white.png"
+        alt="Fixum Objektservice"
+        width="260"
+        height="96"
+      />
+      <p class="script">Alles aus einer Hand</p>
+      <p>
+        Fixum Objektservice unterstützt private Auftraggeber, Hausverwaltungen
+        und Bauunternehmen in Emden und Ostfriesland. Wir verbinden Räumung,
+        Rückbau, Trockenbau und Montage in einem klaren Ablauf.
+      </p>
+    </div>
+    <div>
+      <h2>Leistungen</h2>
+      {services.map((service) => <a href={service.href}>{service.title}</a>)}
+    </div>
+    <div>
+      <h2>Rechtliches</h2>
+      <a href="/impressum">Impressum</a>
+      <a href="/datenschutz">Datenschutz</a>
+      <a href="/agb">AGB</a>
+      <a href="/widerruf">Widerrufsbelehrung</a>
+      <a href="/kontakt">Kontakt</a>
+    </div>
+    <div>
+      <h2>Kontakt</h2>
+      <a href={telUrl}>{site.phoneDisplay}</a>
+      <a href={whatsappUrl()}>WhatsApp schreiben</a>
+      <a href={mailUrl}>{site.email}</a>
+      <p>{site.street}<br />{site.zip} {site.city}</p>
+      <p>{site.hours}</p>
+    </div>
+  </div>
+  <div class="container area">
+    {site.areaServed.map((area) => <span>{area}</span>)}
+  </div>
+  <div class="container footer-bottom">
+    <span>© {new Date().getFullYear()} {site.name} · Inhaber {site.owner}</span>
+    <span
+      ><a href="/impressum">Impressum</a> · <a href="/datenschutz"
+        >Datenschutz</a
+      > · <a href="/agb">AGB</a></span
+    >
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 76px 0 34px;
+    color: #d8e7fb;
+    background: var(--navy-deep);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.1fr;
+    gap: 34px;
+  }
+
+  .footer img {
+    width: min(260px, 100%);
+    height: auto;
+    margin-bottom: 18px;
+  }
+
+  .footer h2 {
+    margin-bottom: 16px;
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+
+  .footer a {
+    display: block;
+    margin: 8px 0;
+  }
+
+  .footer a:hover {
+    color: var(--blue-light);
+  }
+
+  .area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 34px;
+  }
+
+  .area span {
+    border: 1px solid rgba(79, 160, 245, 0.32);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 14px;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border-top: 1px solid rgba(220, 229, 242, 0.16);
+    margin-top: 34px;
+    padding-top: 22px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid,
+    .footer-bottom {
+      grid-template-columns: 1fr;
+      display: grid;
+    }
+  }
+</style>

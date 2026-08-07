@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+import { site } from "../data/site";
+---
+
+<Base
+  title="Über uns | Fixum Objektservice"
+  description="Das Team hinter Fixum Objektservice: Objektservice, Rückbau, Trockenbau und Montage aus Emden für Ostfriesland."
+>
+  <PageHero
+    eyebrow="Über uns"
+    title="Das Team hinter Fixum"
+    text={`${site.owner} führt Fixum Objektservice als lokalen Ansprechpartner für Entrümpelung, Entkernung, Trockenbau und Montage in Emden und Ostfriesland.`}
+  />
+  <section class="section">
+    <div class="container legal-copy">
+      <h2>Ein Ansprechpartner für das ganze Objekt</h2>
+      <p>
+        Der Betrieb ist darauf ausgelegt, die Arbeiten zwischen Räumung,
+        Rückbau, Ausbau und Übergabe zusammenzuführen. Das spart Abstimmungen
+        und macht Angebote nachvollziehbarer.
+      </p>
+      <h2>Klare Grenzen</h2>
+      <p>
+        Zulassungspflichtige Gewerke wie Strom, Wasser, Heizung oder statische
+        Eingriffe werden nicht als eigene Leistung beworben. Wenn sie nötig
+        sind, werden zugelassene Fachbetriebe koordiniert.
+      </p>
+    </div>
+  </section>
+  <CtaBand />
+</Base>

@@ -1,0 +1,177 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "./CtaBand.astro";
+import PageHero from "./PageHero.astro";
+import { allServiceMenuItems } from "../data/serviceMenu";
+
+interface Props {
+  title: string;
+  metaTitle: string;
+  description: string;
+  eyebrow: string;
+  heroText: string;
+  image?: string;
+  lead: string;
+  included: string[];
+  process: Array<[string, string]>;
+  noteTitle?: string;
+  noteText?: string;
+  current: string;
+}
+
+const {
+  title,
+  metaTitle,
+  description,
+  eyebrow,
+  heroText,
+  image = "/images/hero-renovation.png",
+  lead,
+  included,
+  process,
+  noteTitle = "Klarer Umfang statt Ratespiel",
+  noteText = "Nach Besichtigung oder aussagekräftigen Fotos bekommen Sie ein Angebot mit Leistungsumfang, Termin und Preis. Was nicht Teil der Leistung ist, steht genauso klar drin.",
+  current,
+} = Astro.props;
+const otherItems = allServiceMenuItems.filter((item) => item.href !== current);
+---
+
+<Base title={metaTitle} description={description}>
+  <PageHero eyebrow={eyebrow} title={title} text={heroText} image={image} />
+  <section class="section">
+    <div class="container split">
+      <div class="page-copy">
+        <p class="eyebrow">Leistung</p>
+        <h2>Was dazugehört</h2>
+        <p class="muted">{lead}</p>
+      </div>
+      <ul class="card check-list">
+        {included.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+  <section class="section section--mist">
+    <div class="container grid-3 detail-grid">
+      {
+        process.map(([headline, text]) => (
+          <article>
+            <h2>{headline}</h2>
+            <p>{text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+  <section class="section note-section">
+    <div class="container note-card">
+      <p class="eyebrow">Wichtig</p>
+      <h2>{noteTitle}</h2>
+      <p>{noteText}</p>
+    </div>
+  </section>
+  <section class="section service-directory">
+    <div class="container section-head">
+      <p class="eyebrow">Leistungsmenü</p>
+      <h2>Direkt weiter zum passenden Bereich</h2>
+    </div>
+    <div class="container service-link-grid">
+      {
+        otherItems.map((item) => (
+          <a href={item.href}>
+            <strong>{item.label}</strong>
+            <span>{item.description}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .page-copy {
+    display: grid;
+    gap: 16px;
+  }
+
+  .check-list {
+    padding: 30px 30px 30px 52px;
+  }
+
+  .detail-grid article {
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: #fff;
+  }
+
+  .detail-grid h2 {
+    margin-bottom: 12px;
+    font-size: 24px;
+    text-transform: none;
+  }
+
+  .note-section {
+    padding-top: 0;
+  }
+
+  .note-card {
+    border-left: 4px solid var(--amber);
+    border-radius: 18px;
+    padding: 34px;
+    background: #f7fbff;
+  }
+
+  .note-card h2 {
+    margin: 8px 0 14px;
+  }
+
+  .service-directory {
+    background: var(--navy-deep);
+    color: #fff;
+  }
+
+  .service-directory h2 {
+    color: #fff;
+  }
+
+  .section-head {
+    max-width: 820px;
+    margin-bottom: 28px;
+  }
+
+  .service-link-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .service-link-grid a {
+    display: grid;
+    gap: 8px;
+    min-height: 132px;
+    border: 1px solid rgba(220, 229, 242, 0.16);
+    border-radius: 18px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .service-link-grid strong {
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+    font-size: 19px;
+    line-height: 1.15;
+  }
+
+  .service-link-grid span {
+    color: #d8e7fb;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 900px) {
+    .service-link-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

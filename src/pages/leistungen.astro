@@ -1,0 +1,48 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import { services } from "../data/services";
+---
+
+<Base
+  title="Leistungen | Fixum Objektservice"
+  description="Alle Leistungen von Fixum Objektservice: Entrümpelung, Entkernung, Trockenbau, Montage, Transporte und Hausmeisterservice in Emden."
+>
+  <PageHero
+    eyebrow="Leistungen"
+    title="Alles aus einer Hand"
+    text="Fixum verbindet Entrümpelung, Rückbau, Trockenbau, Montage, Transporte und Objektbetreuung. Sie wählen den einzelnen Baustein oder den kompletten Ablauf."
+    image="/images/hero-renovation.png"
+  />
+  <section class="section services-overview">
+    <div class="container section-head">
+      <p class="eyebrow">Übersicht</p>
+      <h2>Was Fixum übernimmt</h2>
+      <p class="muted">
+        Jede Leistung ist einzeln buchbar. Besonders stark wird Fixum, wenn
+        mehrere Schritte an einem Objekt zusammenlaufen.
+      </p>
+    </div>
+    <div class="container grid-3">
+      {
+        services.map((service) => (
+          <ServiceCard {...service} large={Boolean(service.image)} />
+        ))
+      }
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .section-head {
+    max-width: 820px;
+    margin-bottom: 34px;
+  }
+
+  .services-overview {
+    background: #f7fbff;
+  }
+</style>

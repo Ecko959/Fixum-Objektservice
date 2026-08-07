@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+import { addressLines, mailUrl, site, telUrl } from "../data/site";
+---
+
+<Base
+  title="Impressum | Fixum Objektservice"
+  description="Impressum von Fixum Objektservice, Inhaber Eckhard Singer, Emden."
+>
+  <section class="section legal-page section--mist">
+    <div class="container legal-card card legal-copy">
+      <p class="eyebrow">Rechtliches</p>
+      <h1>Impressum</h1>
+      <h2>Angaben gemäß § 5 TMG</h2>
+      <p>
+        {
+          addressLines.map((line) => (
+            <>
+              {line}
+              <br />
+            </>
+          ))
+        }
+      </p>
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: <a href={telUrl}>{site.phoneDisplay}</a><br />E-Mail: <a
+          href={mailUrl}>{site.email}</a
+        >
+      </p>
+      <h2>Unternehmensangaben</h2>
+      <p>{site.legalForm}<br />Zuständige Kammer: {site.chamber}</p>
+      {
+        site.taxId ? (
+          <p>Steuernummer: {site.taxId}</p>
+        ) : (
+          <p>Steuernummer: wird nachgetragen.</p>
+        )
+      }
+      <p>{site.smallBusinessNote}</p>
+      <h2>Verantwortlich für den Inhalt</h2>
+      <p>{site.owner}, {site.street}, {site.zip} {site.city}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal-page {
+    padding-top: 150px;
+  }
+  .legal-card {
+    padding: 34px;
+    max-width: 900px;
+  }
+  a {
+    color: var(--blue);
+    font-weight: 700;
+  }
+</style>

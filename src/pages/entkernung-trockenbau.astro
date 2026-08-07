@@ -1,0 +1,72 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import PageHero from "../components/PageHero.astro";
+import RelatedServices from "../components/RelatedServices.astro";
+---
+
+<Base
+  title="Trockenbau & Entkernung Emden | Fixum Objektservice"
+  description="Nicht-tragender Rückbau, Entkernung, Trockenbau, Decken, Wände und Montage in Emden und Ostfriesland."
+>
+  <PageHero
+    eyebrow="Entkernung & Trockenbau"
+    title="Trockenbau und Entkernung in Emden"
+    text="Vom Rückbau bis zur ausbaufertigen Fläche: Fixum verbindet Demontage, nicht-tragenden Rückbau und Trockenbau in einem klaren Objektablauf."
+    image="/images/service-drywall.png"
+  />
+  <section class="section">
+    <div class="container grid-2">
+      <article class="card content-card">
+        <h2>Entkernung & Rückbau</h2>
+        <p>
+          Alte Böden, nicht-tragende Wände, Einbauten und Sanitärobjekte kommen
+          raus. Wir trennen direkt vor Ort nach Fraktionen und sagen klar, wenn
+          ein zugelassener Fachbetrieb übernehmen muss.
+        </p>
+      </article>
+      <article class="card content-card">
+        <h2>Trockenbau & Innenausbau</h2>
+        <p>
+          Ständerwände, Vorsatzschalen, Schallschutz, abgehängte Decken,
+          Dachschrägen, Spachtelung Q1 bis Q3, Boden, Türen und Montage.
+        </p>
+      </article>
+    </div>
+  </section>
+  <section class="section section--mist">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Saubere Grenzen</p>
+        <h2>Was Fixum macht - und was Fachbetriebe übernehmen</h2>
+        <p class="muted">
+          Nicht-tragender Rückbau, Trockenbau, Montage und Bodenarbeiten liegen
+          bei uns. Strom, Wasser, Heizung, Statik und Schadstoffe werden nicht
+          als eigene Leistung angeboten, sondern bei Bedarf mit zugelassenen
+          Fachbetrieben abgestimmt.
+        </p>
+      </div>
+      <ul class="card check-list">
+        <li>Alte Böden, Einbauten und nicht-tragende Bauteile entfernen</li>
+        <li>Ständerwände, Vorsatzschalen und abgehängte Decken erstellen</li>
+        <li>Spachtelung Q1 bis Q3 und vorbereitende Montagearbeiten</li>
+        <li>Material- und Entsorgungswege nachvollziehbar halten</li>
+      </ul>
+    </div>
+  </section>
+  <RelatedServices current="/entkernung-trockenbau" />
+  <CtaBand />
+</Base>
+
+<style>
+  .content-card {
+    padding: 30px;
+  }
+  .content-card h2 {
+    margin-bottom: 14px;
+  }
+
+  .check-list {
+    padding: 30px 30px 30px 52px;
+  }
+</style>

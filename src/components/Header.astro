@@ -1,0 +1,371 @@
+---
+import { navItems, site, telUrl } from "../data/site";
+import { serviceMenuGroups } from "../data/serviceMenu";
+import Button from "./Button.astro";
+
+const navBeforeServices = navItems.filter(
+  (item) => item.label === "Startseite",
+);
+const navAfterServices = navItems.filter(
+  (item) => !["Startseite", "Leistungen"].includes(item.label),
+);
+---
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Fixum Objektservice Startseite">
+      <img src="/logo/fixum-icon.png" alt="" width="50" height="50" />
+      <span><strong>FIXUM</strong><small>OBJEKTSERVICE</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Hauptnavigation">
+      {navBeforeServices.map((item) => <a href={item.href}>{item.label}</a>)}
+      <div class="mega-wrap">
+        <a class="mega-trigger" href="/leistungen" aria-haspopup="true"
+          >Leistungen</a
+        >
+        <div class="mega-menu" aria-label="Leistungsmenü">
+          {
+            serviceMenuGroups.map((group) => (
+              <section>
+                <h2>{group.title}</h2>
+                {group.items.map((item) => (
+                  <a href={item.href}>
+                    <strong>{item.label}</strong>
+                    <span>{item.description}</span>
+                  </a>
+                ))}
+              </section>
+            ))
+          }
+        </div>
+      </div>
+      {navAfterServices.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <Button href="/kontakt">Festpreis anfragen</Button>
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menü öffnen</span>
+    </button>
+  </div>
+  <div id="mobile-menu" class="mobile-menu" data-mobile-menu>
+    <nav aria-label="Mobile Navigation">
+      {navBeforeServices.map((item) => <a href={item.href}>{item.label}</a>)}
+      <details open>
+        <summary>Leistungen</summary>
+        {
+          serviceMenuGroups.map((group) => (
+            <div>
+              <h2>{group.title}</h2>
+              {group.items.map((item) => (
+                <a href={item.href}>{item.label}</a>
+              ))}
+            </div>
+          ))
+        }
+      </details>
+      {navAfterServices.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a class="btn" href={telUrl}>Anrufen - {site.phoneDisplay}</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector("[data-header]");
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-mobile-menu]");
+
+  const syncHeader = () => {
+    header?.classList.toggle("is-scrolled", window.scrollY > 40);
+  };
+
+  syncHeader();
+  window.addEventListener("scroll", syncHeader, { passive: true });
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!isOpen));
+    menu?.classList.toggle("is-open", !isOpen);
+    document.body.classList.toggle("menu-open", !isOpen);
+  });
+
+  menu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      toggle?.setAttribute("aria-expanded", "false");
+      menu.classList.remove("is-open");
+      document.body.classList.remove("menu-open");
+    });
+  });
+</script>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    color: var(--ink);
+    transition:
+      background 180ms ease,
+      backdrop-filter 180ms ease;
+  }
+
+  .site-header.is-scrolled {
+    background: transparent;
+  }
+
+  .header-inner {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 22px;
+    padding: 10px 12px 10px 16px;
+    border: 1px solid rgba(220, 229, 242, 0.9);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 48px rgba(10, 23, 48, 0.18);
+    backdrop-filter: blur(16px);
+    transition:
+      min-height 180ms ease,
+      margin 180ms ease,
+      background 180ms ease;
+  }
+
+  .is-scrolled .header-inner {
+    min-height: 58px;
+    margin-top: 10px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: max-content;
+  }
+
+  .brand img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
+
+  .brand span {
+    display: grid;
+    line-height: 1;
+    font-family: "Outfit", sans-serif;
+  }
+
+  .brand strong {
+    font-size: 22px;
+  }
+
+  .brand small {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .desktop-nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    font-size: 15px;
+  }
+
+  .desktop-nav > a,
+  .mega-trigger {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-radius: 999px;
+    padding: 0 8px;
+    font-weight: 700;
+  }
+
+  .desktop-nav a:hover,
+  .mega-wrap:focus-within .mega-trigger,
+  .mega-wrap:hover .mega-trigger {
+    color: var(--blue);
+  }
+
+  .mega-wrap {
+    position: relative;
+  }
+
+  .mega-trigger::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    margin-left: 8px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+  }
+
+  .mega-menu {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 12px);
+    width: min(930px, calc(100vw - 44px));
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    border: 1px solid rgba(220, 229, 242, 0.9);
+    border-radius: 28px;
+    padding: 18px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 26px 70px rgba(10, 23, 48, 0.22);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(8px);
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+
+  .mega-wrap:hover .mega-menu,
+  .mega-wrap:focus-within .mega-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .mega-menu section {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    border-radius: 20px;
+    padding: 14px;
+    background: #f7fbff;
+  }
+
+  .mega-menu h2 {
+    margin: 0 0 8px;
+    color: var(--blue);
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .mega-menu a {
+    display: grid;
+    gap: 2px;
+    border-radius: 14px;
+    padding: 10px;
+  }
+
+  .mega-menu a:hover {
+    color: var(--ink);
+    background: #fff;
+  }
+
+  .mega-menu strong {
+    color: var(--navy);
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  .mega-menu span {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .menu-toggle,
+  .mobile-menu {
+    display: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  @media (max-width: 980px) {
+    .desktop-nav,
+    .header-inner > .btn {
+      display: none;
+    }
+
+    .header-inner {
+      justify-content: space-between;
+      min-height: 64px;
+      border-radius: 22px;
+    }
+
+    .menu-toggle {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--navy-deep);
+    }
+
+    .menu-toggle span:not(.sr-only) {
+      display: block;
+      width: 22px;
+      height: 2px;
+      margin: 3px 0;
+      background: #fff;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      display: none;
+      padding: 110px 22px 32px;
+      background: rgba(10, 23, 48, 0.98);
+    }
+
+    .mobile-menu.is-open {
+      display: block;
+    }
+
+    .mobile-menu nav {
+      display: grid;
+      gap: 16px;
+      font-family: "Manrope", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .mobile-menu details {
+      border: 1px solid rgba(220, 229, 242, 0.16);
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mobile-menu summary {
+      cursor: pointer;
+    }
+
+    .mobile-menu h2 {
+      margin: 18px 0 6px;
+      color: var(--blue-light);
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .mobile-menu details a {
+      display: block;
+      padding: 6px 0;
+      color: #fff;
+      font-size: 18px;
+    }
+  }
+</style>
