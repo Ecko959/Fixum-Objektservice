@@ -26,7 +26,7 @@ src/
   pages/         Eine Datei pro URL
   styles/        global.css - Design-Tokens und Basis-Layout
 scripts/         build-og.mjs erzeugt die Social-Preview-Grafik
-public/          Bilder, Logos, PDFs, robots.txt
+public/          Bilder, Logos, Quell-PDFs der Rechtstexte, robots.txt
 ```
 
 ## Stammdaten ändern
@@ -148,10 +148,33 @@ echten Fotos schon eingesetzt sind.
 
 ## Rechtstexte
 
-AGB, Datenschutzerklärung und Widerrufsbelehrung liegen als PDF in
-`public/docs/` und werden eingebettet. Zusätzlich steht auf jeder dieser Seiten
-eine kurze HTML-Zusammenfassung, damit der Inhalt auch indexierbar ist. Das
-Impressum ist vollständig als HTML umgesetzt.
+AGB, Datenschutzerklärung und Widerrufsbelehrung stehen vollständig als HTML
+auf den jeweiligen Seiten - kein PDF-Download, kein eingebettetes Dokument.
+Das Impressum ebenfalls.
+
+Gemeinsame Hülle ist `src/components/LegalPage.astro`: Brotkrumen, Kopfbereich
+mit Stand-Datum, Inhaltsverzeichnis mit Sprungmarken und die Typografie des
+Fließtexts. Jede Seite liefert nur die Abschnitte:
+
+```astro
+<LegalPage title="…" stand="04.08.2026" sections={[["p1", "Geltungsbereich"]]}>
+  <section id="p1">
+    <h2>§ 1 Geltungsbereich</h2>
+    <p>…</p>
+  </section>
+</LegalPage>
+```
+
+Die IDs im `sections`-Array müssen den `id`-Attributen der Abschnitte
+entsprechen - sonst zeigt das Inhaltsverzeichnis ins Leere.
+
+Für hervorgehobene Passagen (Rechtsgrundlagen, Schlusshinweise) gibt es
+`<div class="legal-note">`.
+
+**Wortlaut ändern:** Die Texte sind aus den geprüften Fassungen übernommen
+(Stand 04.08.2026, Quellen in `public/docs/`). Inhaltliche Änderungen gehören
+zuerst in das geprüfte Dokument und erst danach in die Seite - nicht
+umgekehrt.
 
 ## Cloudflare Pages
 

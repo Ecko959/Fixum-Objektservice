@@ -60,13 +60,41 @@ wirkt schlechter als gar keine. Alternativ `showReferences` in
 
 ## Rechtliches
 
-- AGB, Datenschutzerklärung und Widerrufsbelehrung sind als Original-PDFs
-  eingebunden und zusätzlich als kurze HTML-Zusammenfassung sichtbar.
-- Die Zusammenfassungen sind bewusst knapp gehalten und ersetzen die PDFs
-  nicht. Wenn die PDFs überarbeitet werden, die Stichpunkte in
-  `src/pages/agb.astro`, `datenschutz.astro` und `widerruf.astro` gegenprüfen.
+- AGB, Datenschutzerklärung und Widerrufsbelehrung stehen vollständig als
+  HTML-Text auf den Seiten. Der Wortlaut ist aus den geprüften Fassungen
+  übernommen (Stand 04.08.2026).
+- Werden die geprüften Dokumente überarbeitet, müssen `src/pages/agb.astro`,
+  `datenschutz.astro` und `widerruf.astro` nachgezogen werden. Das Stand-Datum
+  steht als `stand`-Attribut oben in jeder Seite.
 - Das Impressum enthält die bekannten Stammdaten sowie Hinweise zu
   EU-Streitschlichtung, Haftung und Urheberrecht.
+
+### Zwei Punkte zu den PDFs in `public/docs/`
+
+Die PDFs sind seit der Umstellung **nirgends mehr verlinkt**, liegen aber
+weiterhin im Ordner und sind damit über ihre direkte URL erreichbar.
+
+1. **`Fixum_Widerrufsbelehrung.pdf` enthält ab Seite 3 eine Anlage
+   ("Textbaustein für Auftragsbestätigung und Auftragsformular" nebst
+   Praxishinweisen).** Dieses Dokument bezeichnet sich selbst als internes
+   Arbeitsmittel und ausdrücklich nicht als Bestandteil der Belehrung. In die
+   HTML-Fassung wurde es deshalb nicht übernommen. Solange die PDF-Datei im
+   Ordner liegt, ist der interne Teil aber weiterhin öffentlich abrufbar und
+   möglicherweise bereits indexiert. Empfehlung: die Datei durch eine Fassung
+   ohne Anlage ersetzen oder ganz entfernen.
+2. Werden die PDFs weiterhin gebraucht, um Kunden die Unterlagen in Textform
+   zu übergeben (die AGB setzen das voraus), können sie im Ordner bleiben -
+   dann aber bitte Punkt 1 vorher klären.
+
+### Offene Abwägung: § 35a EStG in den AGB
+
+Die Werbung mit "20 % zurück vom Finanzamt" wurde auf Wunsch von allen Seiten
+entfernt. In **§ 5 Abs. 6 der AGB** steht weiterhin, dass Arbeits- und
+Fahrtkosten getrennt ausgewiesen werden, "damit die Steuerermäßigung nach
+§ 35a EStG in Anspruch genommen werden kann". Das ist keine Werbeaussage,
+sondern eine vertragliche Zusage zur Rechnungsstellung - deshalb steht sie
+noch drin. Soll sie ebenfalls raus, muss zuerst die geprüfte AGB-Fassung
+geändert werden.
 
 ## Seitenstruktur - offener Punkt
 

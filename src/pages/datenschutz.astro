@@ -1,27 +1,261 @@
 ---
-import Base from "../layouts/Base.astro";
-import PdfLegal from "../components/PdfLegal.astro";
+import LegalPage from "../components/LegalPage.astro";
+import { mailUrl, site, telUrl } from "../data/site";
 
-const breadcrumbs: Array<[string, string]> = [["Datenschutz", "/datenschutz/"]];
+/*
+  Wortlaut übernommen aus der geprüften Fassung (Fixum_Datenschutzerklaerung,
+  Stand 04.08.2026). Inhaltliche Änderungen gehören zuerst ins geprüfte
+  Dokument, nicht hierher.
+*/
+
+const sections: Array<[string, string]> = [
+  ["verantwortlicher", "Verantwortlicher"],
+  ["grundsaetze", "Grundsätze"],
+  ["daten", "Verarbeitete Daten, Zwecke und Rechtsgrundlagen"],
+  ["empfaenger", "Empfänger und Weitergabe von Daten"],
+  ["speicherdauer", "Speicherdauer"],
+  ["messenger", "Kommunikation über Messenger-Dienste und Portale"],
+  ["rechte", "Ihre Rechte als betroffene Person"],
+  ["beschwerde", "Beschwerderecht bei der Aufsichtsbehörde"],
+  ["erforderlichkeit", "Erforderlichkeit der Bereitstellung"],
+  ["automatisiert", "Keine automatisierte Entscheidungsfindung"],
+  ["aenderungen", "Änderungen dieser Datenschutzerklärung"],
+];
 ---
 
-<Base
-  title="Datenschutzerklärung | Fixum Objektservice"
-  description="Datenschutzerklärung von Fixum Objektservice, Emden: Umgang mit Anfragedaten, Kontaktaufnahme und Betroffenenrechte. Vollständige Fassung als PDF."
-  canonical="/datenschutz/"
-  breadcrumbs={breadcrumbs}
-  pageType="WebPage"
+<LegalPage
+  title="Datenschutzerklärung"
+  metaTitle="Datenschutzerklärung | Fixum Objektservice Emden"
+  description="Datenschutzerklärung von Fixum Objektservice, Emden: Verantwortlicher, verarbeitete Daten, Rechtsgrundlagen, Speicherdauer, Empfänger und Ihre Rechte nach DSGVO."
+  path="/datenschutz/"
+  stand="04.08.2026"
+  intro="Diese Erklärung beschreibt, welche personenbezogenen Daten wir verarbeiten, zu welchem Zweck und auf welcher Rechtsgrundlage - und welche Rechte Sie dabei haben."
+  sections={sections}
 >
-  <PdfLegal
-    title="Datenschutzerklärung"
-    intro="Die vollständige, geprüfte Datenschutzerklärung liegt als PDF vor. Sie können sie direkt hier lesen oder herunterladen."
-    pdf="/docs/Fixum_Datenschutzerklaerung.pdf"
-    breadcrumbs={breadcrumbs}
-    summary={[
-      "Die Website läuft ohne Tracking, ohne Cookies zu Analysezwecken und ohne externe Schriftarten oder CDNs.",
-      "Daten aus dem Anfrageformular nutzen wir ausschließlich zur Bearbeitung Ihrer Anfrage.",
-      "Sie haben jederzeit Anspruch auf Auskunft, Berichtigung, Löschung und Widerspruch.",
-      "Verantwortlich ist Eckhard Singer, Hermann-Allmers-Str. 13, 26721 Emden.",
-    ]}
-  />
-</Base>
+  <section id="verantwortlicher">
+    <h2>1. Verantwortlicher</h2>
+    <address>
+      {site.owner} – {site.name}<br />
+      Hermann-Allmers-Straße 13, {site.zip}
+      {site.city}<br />
+      Telefon: <a href={telUrl}>0151 29628025</a><br />
+      E-Mail: <a href={mailUrl}>{site.email}</a>
+    </address>
+    <p>
+      Ein Datenschutzbeauftragter ist nicht bestellt, da die gesetzlichen
+      Voraussetzungen hierfür (§ 38 BDSG) nicht vorliegen.
+    </p>
+  </section>
+
+  <section id="grundsaetze">
+    <h2>2. Grundsätze</h2>
+    <p>
+      Der Schutz Ihrer personenbezogenen Daten ist uns wichtig. Wir verarbeiten
+      Ihre Daten ausschließlich auf Grundlage der Datenschutz-Grundverordnung
+      (DSGVO) und des Bundesdatenschutzgesetzes (BDSG). Personenbezogene Daten
+      sind alle Informationen, die sich auf eine identifizierte oder
+      identifizierbare natürliche Person beziehen.
+    </p>
+  </section>
+
+  <section id="daten">
+    <h2>3. Verarbeitete Daten, Zwecke und Rechtsgrundlagen</h2>
+
+    <h3>3.1 Anfragen und Kontaktaufnahme</h3>
+    <p>
+      Wenn Sie uns per Telefon, E-Mail, Messenger (z. B. WhatsApp),
+      Kontaktformular oder über ein Kleinanzeigen- oder Auftragsportal
+      kontaktieren, verarbeiten wir die von Ihnen mitgeteilten Daten: Name,
+      Anschrift, Telefonnummer, E-Mail-Adresse, Objektangaben sowie den Inhalt
+      Ihrer Anfrage einschließlich übersandter Fotos.
+    </p>
+    <div class="legal-note">
+      <p>
+        <strong>Zweck:</strong> Bearbeitung Ihrer Anfrage, Erstellung eines Angebots
+        und Kommunikation mit Ihnen.
+      </p>
+      <p>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche
+        Maßnahmen und Vertragserfüllung), im Übrigen Art. 6 Abs. 1 lit. f DSGVO (berechtigtes
+        Interesse an der Beantwortung von Anfragen).
+      </p>
+    </div>
+
+    <h3>3.2 Durchführung des Auftrags</h3>
+    <p>
+      Zur Abwicklung beauftragter Leistungen verarbeiten wir Ihre Stammdaten,
+      Objekt- und Zugangsdaten, Terminangaben, Leistungs- und Abrechnungsdaten
+      sowie Zahlungsinformationen.
+    </p>
+    <div class="legal-note">
+      <p>
+        <strong>Zweck:</strong> Vertragserfüllung, Terminplanung, Abrechnung.
+      </p>
+      <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO.</p>
+    </div>
+
+    <h3>3.3 Dokumentation von Leistungen (Fotos)</h3>
+    <p>
+      Zur Beweissicherung des Objektzustands vor und nach Ausführung fertigen
+      wir Lichtbilder an. Diese dienen der Dokumentation gegenüber Auftraggeber
+      und Versicherung.
+    </p>
+    <div class="legal-note">
+      <p>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes
+        Interesse an Beweissicherung und Abwehr unberechtigter Ansprüche). Eine Veröffentlichung
+        von Referenzfotos erfolgt ausschließlich nach Ihrer vorherigen Einwilligung
+        nach Art. 6 Abs. 1 lit. a DSGVO und in anonymisierter Form; die Einwilligung
+        ist jederzeit mit Wirkung für die Zukunft widerruflich.
+      </p>
+    </div>
+
+    <h3>3.4 Gesetzliche Aufbewahrungspflichten</h3>
+    <p>
+      Rechnungen, Buchungsbelege und steuerlich relevante Unterlagen werden
+      aufgrund handels- und steuerrechtlicher Vorgaben aufbewahrt.
+    </p>
+    <div class="legal-note">
+      <p>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. c DSGVO i. V. m. §§ 147
+        AO, 257 HGB.
+      </p>
+    </div>
+  </section>
+
+  <section id="empfaenger">
+    <h2>4. Empfänger und Weitergabe von Daten</h2>
+    <p>
+      Eine Übermittlung Ihrer Daten erfolgt nur, soweit dies zur
+      Vertragserfüllung erforderlich ist oder eine gesetzliche Verpflichtung
+      besteht. Empfänger können sein:
+    </p>
+    <ul>
+      <li>
+        eingesetzte Subunternehmer und Fachbetriebe, soweit sie zur
+        Leistungserbringung beitragen,
+      </li>
+      <li>
+        Entsorgungsunternehmen und Containerdienste, soweit für die
+        Abfallentsorgung erforderlich,
+      </li>
+      <li>Steuerberatung sowie Buchhaltungsdienstleister,</li>
+      <li>Kreditinstitute und Zahlungsdienstleister zur Zahlungsabwicklung,</li>
+      <li>Versicherungen im Schadensfall,</li>
+      <li>Behörden und Gerichte, soweit gesetzlich verpflichtend.</li>
+    </ul>
+    <p>
+      Eine Übermittlung in Drittländer außerhalb der EU bzw. des EWR findet
+      nicht statt, ausgenommen die technisch bedingte Verarbeitung bei Nutzung
+      von Messenger-Diensten (siehe Ziffer 6).
+    </p>
+  </section>
+
+  <section id="speicherdauer">
+    <h2>5. Speicherdauer</h2>
+    <p>
+      Wir speichern personenbezogene Daten nur so lange, wie es für die
+      genannten Zwecke erforderlich ist. Anfragen, die nicht zu einem Vertrag
+      führen, werden spätestens nach sechs Monaten gelöscht. Vertragsbezogene
+      Daten werden nach Vertragsende bis zum Ablauf der gesetzlichen
+      Gewährleistungs- und Verjährungsfristen aufbewahrt, steuerlich relevante
+      Unterlagen entsprechend der gesetzlichen Aufbewahrungsfristen von bis zu
+      zehn Jahren.
+    </p>
+  </section>
+
+  <section id="messenger">
+    <h2>6. Kommunikation über Messenger-Dienste und Portale</h2>
+    <p>
+      Nehmen Sie über WhatsApp oder einen vergleichbaren Messenger Kontakt zu
+      uns auf, werden Ihre Daten auch durch den jeweiligen Anbieter verarbeitet.
+      Auf Art und Umfang dieser Verarbeitung haben wir keinen Einfluss. Es
+      gelten insoweit zusätzlich die Datenschutzhinweise des jeweiligen
+      Anbieters. Gleiches gilt für die Kommunikation über Kleinanzeigen- und
+      Auftragsportale. Wenn Sie dies vermeiden möchten, nutzen Sie bitte
+      Telefon, Post oder E-Mail.
+    </p>
+  </section>
+
+  <section id="rechte">
+    <h2>7. Ihre Rechte als betroffene Person</h2>
+    <p>Sie haben nach der DSGVO folgende Rechte:</p>
+    <ul>
+      <li>
+        Auskunft über die zu Ihrer Person verarbeiteten Daten (Art. 15 DSGVO),
+      </li>
+      <li>
+        Berichtigung unrichtiger oder Vervollständigung unvollständiger Daten
+        (Art. 16 DSGVO),
+      </li>
+      <li>
+        Löschung Ihrer Daten, soweit keine gesetzlichen Aufbewahrungspflichten
+        entgegenstehen (Art. 17 DSGVO),
+      </li>
+      <li>Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+      <li>Datenübertragbarkeit (Art. 20 DSGVO),</li>
+      <li>
+        Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art.
+        7 Abs. 3 DSGVO).
+      </li>
+    </ul>
+
+    <h3>Widerspruchsrecht nach Art. 21 DSGVO</h3>
+    <p>
+      Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen Situation
+      ergeben, jederzeit gegen die Verarbeitung Sie betreffender
+      personenbezogener Daten, die aufgrund von Art. 6 Abs. 1 lit. f DSGVO
+      erfolgt, Widerspruch einzulegen. Wir verarbeiten die Daten dann nicht
+      mehr, es sei denn, wir können zwingende schutzwürdige Gründe nachweisen,
+      die Ihre Interessen, Rechte und Freiheiten überwiegen, oder die
+      Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von
+      Rechtsansprüchen.
+    </p>
+  </section>
+
+  <section id="beschwerde">
+    <h2>8. Beschwerderecht bei der Aufsichtsbehörde</h2>
+    <p>
+      Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu
+      beschweren. Zuständig ist für uns:
+    </p>
+    <address>
+      Die Landesbeauftragte für den Datenschutz Niedersachsen<br />
+      Prinzenstraße 5, 30159 Hannover<br />
+      <a
+        href="https://www.lfd.niedersachsen.de"
+        target="_blank"
+        rel="noopener noreferrer">www.lfd.niedersachsen.de</a
+      >
+    </address>
+  </section>
+
+  <section id="erforderlichkeit">
+    <h2>9. Erforderlichkeit der Bereitstellung</h2>
+    <p>
+      Die Bereitstellung Ihrer Daten ist weder gesetzlich noch vertraglich
+      vorgeschrieben. Ohne Angabe der zur Auftragsabwicklung erforderlichen
+      Daten (insbesondere Name, Kontaktdaten und Objektanschrift) können wir
+      jedoch keinen Vertrag mit Ihnen schließen und die Leistung nicht
+      erbringen.
+    </p>
+  </section>
+
+  <section id="automatisiert">
+    <h2>10. Keine automatisierte Entscheidungsfindung</h2>
+    <p>
+      Eine automatisierte Entscheidungsfindung einschließlich Profiling nach
+      Art. 22 DSGVO findet nicht statt.
+    </p>
+  </section>
+
+  <section id="aenderungen">
+    <h2>11. Änderungen dieser Datenschutzerklärung</h2>
+    <p>
+      Wir behalten uns vor, diese Datenschutzerklärung anzupassen, damit sie
+      stets den aktuellen rechtlichen Anforderungen entspricht oder um
+      Änderungen unserer Leistungen abzubilden. Es gilt jeweils die zum
+      Zeitpunkt Ihrer Anfrage abrufbare Fassung.
+    </p>
+  </section>
+</LegalPage>
