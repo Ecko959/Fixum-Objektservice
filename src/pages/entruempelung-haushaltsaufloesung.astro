@@ -1,109 +1,56 @@
 ---
-import Base from "../layouts/Base.astro";
-import CtaBand from "../components/CtaBand.astro";
-import PageHero from "../components/PageHero.astro";
-import RelatedServices from "../components/RelatedServices.astro";
+import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/entruempelung-haushaltsaufloesung/";
 ---
 
-<Base
-  title="Entrümpelung Emden - Festpreis | Fixum Objektservice"
-  description="Entrümpelung und Haushaltsauflösung in Emden und Ostfriesland mit kostenloser Besichtigung, Festpreis und besenreiner Übergabe."
->
-  <PageHero
-    eyebrow="Entrümpelung Emden"
-    title="Entrümpelung und Haushaltsauflösung in Emden"
-    text="Wenn eine Wohnung leer werden muss, zählt ein ruhiger Ablauf. Fixum räumt, trennt sortenrein, rechnet verwertbaren Hausrat an und übergibt besenrein."
-    image="/images/categories/haushaltsaufloesung.png"
-  />
-  <section class="section">
-    <div class="container split">
-      <div class="page-copy">
-        <p class="eyebrow">Leistungsumfang</p>
-        <h2>Was wir übernehmen</h2>
-        <p>
-          Wohnungen, Häuser, Keller, Dachböden, Garagen, Nachlässe und Übergaben
-          an Vermieter. Sie zeigen uns, was bleibt. Alles andere wird ordentlich
-          sortiert, getragen und entsorgt.
-        </p>
-        <ul>
-          <li>
-            Kostenlose Besichtigung vor Ort oder erste Einschätzung per Foto
-          </li>
-          <li>Festpreis mit Leistungsumfang in Textform</li>
-          <li>Wertanrechnung auf verwertbaren Hausrat</li>
-          <li>Fotodokumentation und Entsorgungsnachweis auf Wunsch</li>
-        </ul>
-      </div>
-      <div class="card info-card">
-        <h2>Warum keine Preisliste?</h2>
-        <p>
-          Der Aufwand hängt vom Volumen, der Zugänglichkeit, den Abfallarten und
-          der Entfernung zum Fahrzeug ab. Ein sauberer Festpreis ist erst nach
-          Besichtigung fair.
-        </p>
-      </div>
-    </div>
-  </section>
-  <section class="section section--mist">
-    <div class="container grid-3 detail-grid">
-      <article>
-        <span>01</span>
-        <h2>Fotos oder Anruf</h2>
-        <p>
-          Sie schicken erste Bilder per WhatsApp oder rufen kurz an. So lässt
-          sich der Umfang grob einordnen.
-        </p>
-      </article>
-      <article>
-        <span>02</span>
-        <h2>Besichtigung</h2>
-        <p>
-          Vor Ort prüfen wir Volumen, Wege, Parken, Etagen, Abfallarten und
-          verwertbare Gegenstände.
-        </p>
-      </article>
-      <article>
-        <span>03</span>
-        <h2>Festpreis</h2>
-        <p>
-          Sie bekommen ein schriftliches Angebot mit klarer Leistung und
-          sauberer Übergabe.
-        </p>
-      </article>
-    </div>
-  </section>
-  <RelatedServices current="/entruempelung-haushaltsaufloesung" />
-  <CtaBand />
-</Base>
-
-<style>
-  .page-copy {
-    display: grid;
-    gap: 16px;
-  }
-
-  .info-card {
-    padding: 30px;
-  }
-  .info-card h2 {
-    margin-bottom: 14px;
-  }
-
-  .detail-grid article {
-    border-left: 4px solid var(--amber);
-    padding-left: 22px;
-  }
-
-  .detail-grid span {
-    color: var(--blue);
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-  }
-
-  .detail-grid h2 {
-    margin: 8px 0 12px;
-    font-size: 24px;
-    text-transform: none;
-  }
-</style>
+<ServiceDetailPage
+  current={current}
+  crumb="Entrümpelung"
+  metaTitle="Entrümpelung Emden zum Festpreis | Fixum Objektservice"
+  description="Entrümpelung und Haushaltsauflösung in Emden und Ostfriesland: kostenlose Besichtigung, Festpreis in Textform, sortenreine Entsorgung, Wertanrechnung und besenreine Übergabe."
+  eyebrow="Entrümpelung Emden"
+  title="Entrümpelung und Haushaltsauflösung in Emden"
+  heroText="Wenn eine Wohnung leer werden muss, zählt ein ruhiger Ablauf. Fixum räumt, trennt sortenrein, rechnet verwertbaren Hausrat an und übergibt besenrein."
+  image="/images/categories/haushaltsaufloesung.png"
+  imageAlt="Sortierte Entrümpelung einer Wohnung in Emden durch Fixum Objektservice"
+  serviceType="Entrümpelung und Haushaltsauflösung"
+  areaTitle="Entrümpelung in Emden, Aurich, Leer und Umgebung"
+  lead="Wohnungen, Häuser, Keller, Dachböden, Garagen, Nachlässe und Übergaben an Vermieter. Sie zeigen uns, was bleibt. Alles andere wird ordentlich sortiert, getragen und entsorgt - ohne dass Sie dabei sein müssen."
+  included={[
+    "Kostenlose Besichtigung vor Ort oder erste Einschätzung nach Fotos per WhatsApp",
+    "Festpreis mit Leistungsumfang in Textform - ohne Nachberechnung",
+    "Räumung von Wohnung, Haus, Keller, Dachboden, Garage und Nebenräumen",
+    "Sortenreine Trennung nach Holz, Metall, Elektro, Bauschutt und Restmüll",
+    "Wertanrechnung auf verwertbaren Hausrat, sichtbar im Angebot",
+    "Besenreine Übergabe, auf Wunsch mit Fotodokumentation und Entsorgungsnachweis",
+    "Demontage von Einbauten, Möbeln und Bodenbelägen nach Absprache",
+  ]}
+  process={[
+    [
+      "Fotos oder Anruf",
+      "Sie schicken erste Bilder per WhatsApp oder rufen kurz an. So lässt sich der Umfang grob einordnen - oft reicht das schon für eine Preisspanne.",
+    ],
+    [
+      "Besichtigung",
+      "Vor Ort prüfen wir Volumen, Wege, Parkmöglichkeiten, Etagen, Abfallarten und verwertbare Gegenstände. Kostenlos und unverbindlich.",
+    ],
+    [
+      "Festpreis und Ausführung",
+      "Sie bekommen ein schriftliches Angebot mit klarer Leistung. Am Ausführungstag räumen wir und übergeben besenrein.",
+    ],
+  ]}
+  facts={[
+    ["Besichtigung", "Kostenlos, meist innerhalb von zwei Werktagen."],
+    [
+      "Preis",
+      "Festpreis nach Besichtigung, verwertbarer Hausrat wird angerechnet.",
+    ],
+    ["Steuer", "20 % der Arbeitskosten nach § 35a EStG absetzbar."],
+    ["Übergabe", "Besenrein, auf Wunsch mit Entsorgungsnachweis."],
+  ]}
+  noteTitle="Warum es keine Preisliste gibt"
+  noteText="Der Aufwand hängt vom Volumen, der Zugänglichkeit, den Abfallarten und der Entfernung zum Fahrzeug ab - eine vollgestellte Zweizimmerwohnung im vierten Stock ohne Aufzug ist mehr Arbeit als ein halbleeres Haus mit Hofzufahrt. Ein sauberer Festpreis ist deshalb erst nach Besichtigung fair. Dafür gilt er dann auch."
+  faq={serviceFaq[current]}
+/>

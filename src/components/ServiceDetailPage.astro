@@ -1,8 +1,12 @@
 ---
 import Base from "../layouts/Base.astro";
+import AreaServed from "./AreaServed.astro";
 import CtaBand from "./CtaBand.astro";
+import FaqAccordion from "./FaqAccordion.astro";
+import Icon from "./Icon.astro";
 import PageHero from "./PageHero.astro";
-import { allServiceMenuItems } from "../data/serviceMenu";
+import RelatedServices from "./RelatedServices.astro";
+import { canonicalPath, serviceSchema } from "../data/seo";
 
 interface Props {
   title: string;
@@ -11,11 +15,20 @@ interface Props {
   eyebrow: string;
   heroText: string;
   image?: string;
+  imageAlt?: string;
   lead: string;
   included: string[];
   process: Array<[string, string]>;
   noteTitle?: string;
   noteText?: string;
+  /** Kurzer, sichtbarer Vertrauensblock rechts neben dem Leistungsumfang. */
+  facts?: Array<[string, string]>;
+  /** Seiteneigene Fragen - erzeugen zusätzlich ein FAQ-Rich-Result. */
+  faq?: Array<{ question: string; answer: string }>;
+  /** Label für die Brotkrumennavigation, sonst wird eyebrow genutzt. */
+  crumb?: string;
+  serviceType?: string;
+  areaTitle?: string;
   current: string;
 }
 
@@ -26,151 +39,255 @@ const {
   eyebrow,
   heroText,
   image = "/images/hero-renovation.png",
+  imageAlt = "",
   lead,
   included,
   process,
   noteTitle = "Klarer Umfang statt Ratespiel",
   noteText = "Nach Besichtigung oder aussagekräftigen Fotos bekommen Sie ein Angebot mit Leistungsumfang, Termin und Preis. Was nicht Teil der Leistung ist, steht genauso klar drin.",
+  facts = [
+    ["Besichtigung", "Kostenlos und unverbindlich, meist in zwei Werktagen."],
+    ["Angebot", "Festpreis in Textform, mit klarer Leistungsgrenze."],
+    ["Abwicklung", "Ein Ansprechpartner vom Anruf bis zur Übergabe."],
+  ],
+  faq = [],
+  crumb,
+  serviceType,
+  areaTitle,
   current,
 } = Astro.props;
-const otherItems = allServiceMenuItems.filter((item) => item.href !== current);
+
+const path = canonicalPath(current);
+const breadcrumbs: Array<[string, string]> = [
+  ["Leistungen", "/leistungen/"],
+  [crumb ?? eyebrow, path],
+];
+
+const schema = [serviceSchema({ name: title, description, path, serviceType })];
 ---
 
-<Base title={metaTitle} description={description}>
-  <PageHero eyebrow={eyebrow} title={title} text={heroText} image={image} />
+<Base
+  title={metaTitle}
+  description={description}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  faqSchema={false}
+  preloadImage={image}
+  pageType="WebPage"
+>
+  <PageHero
+    eyebrow={eyebrow}
+    title={title}
+    text={heroText}
+    image={image}
+    imageAlt={imageAlt}
+    breadcrumbs={breadcrumbs}
+  />
+
+  {/* Leistungsumfang */}
   <section class="section">
-    <div class="container split">
-      <div class="page-copy">
-        <p class="eyebrow">Leistung</p>
+    <div class="container split split--top">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Leistungsumfang</p>
         <h2>Was dazugehört</h2>
-        <p class="muted">{lead}</p>
+        <p class="lead">{lead}</p>
+
+        <ul class="check-list detail-check">
+          {included.map((item) => <li>{item}</li>)}
+        </ul>
       </div>
-      <ul class="card check-list">
-        {included.map((item) => <li>{item}</li>)}
-      </ul>
+
+      <aside class="facts card" data-reveal aria-label="Ablauf auf einen Blick">
+        <p class="facts-title">So läuft es ab</p>
+        <dl>
+          {
+            facts.map(([term, text]) => (
+              <div class="fact">
+                <dt>{term}</dt>
+                <dd>{text}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="arrow-link" href="/kontakt/">Festpreis anfragen</a>
+      </aside>
     </div>
   </section>
+
+  {/* Ablauf in drei Schritten */}
   <section class="section section--mist">
-    <div class="container grid-3 detail-grid">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Ablauf</p>
+      <h2>In drei Schritten zum Ergebnis</h2>
+    </div>
+    <div class="container grid-3 detail-grid" data-reveal-group>
       {
-        process.map(([headline, text]) => (
-          <article>
-            <h2>{headline}</h2>
+        process.map(([headline, text], index) => (
+          <article class="detail-step card" data-reveal>
+            <span class="step-no">{String(index + 1).padStart(2, "0")}</span>
+            <h3>{headline}</h3>
             <p>{text}</p>
           </article>
         ))
       }
     </div>
   </section>
-  <section class="section note-section">
-    <div class="container note-card">
-      <p class="eyebrow">Wichtig</p>
-      <h2>{noteTitle}</h2>
-      <p>{noteText}</p>
+
+  {/* Leistungsgrenzen */}
+  <section class="section section--tight">
+    <div class="container note-card card card--accent" data-reveal>
+      <span class="note-icon"><Icon name="shield" size={24} /></span>
+      <div>
+        <p class="eyebrow">Wichtig zu wissen</p>
+        <h2>{noteTitle}</h2>
+        <p class="muted">{noteText}</p>
+      </div>
     </div>
   </section>
-  <section class="section service-directory">
-    <div class="container section-head">
-      <p class="eyebrow">Leistungsmenü</p>
-      <h2>Direkt weiter zum passenden Bereich</h2>
-    </div>
-    <div class="container service-link-grid">
-      {
-        otherItems.map((item) => (
-          <a href={item.href}>
-            <strong>{item.label}</strong>
-            <span>{item.description}</span>
-          </a>
-        ))
-      }
-    </div>
-  </section>
+
+  {
+    faq.length > 0 && (
+      <section class="section section--soft">
+        <div class="container section-head" data-reveal>
+          <p class="eyebrow">Häufige Fragen</p>
+          <h2>Was Auftraggeber vorher wissen wollen</h2>
+        </div>
+        <div class="container container--narrow faq-wrap" data-reveal>
+          <FaqAccordion items={faq} />
+        </div>
+      </section>
+    )
+  }
+
+  <AreaServed service={crumb ?? eyebrow} title={areaTitle} />
+  <RelatedServices current={current} />
   <CtaBand />
 </Base>
 
+{
+  /* FAQ-Rich-Result nur, wenn die Fragen tatsächlich auf der Seite stehen. */
+  faq.length > 0 && (
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      })}
+    />
+  )
+}
+
 <style>
-  .page-copy {
-    display: grid;
-    gap: 16px;
-  }
-
-  .check-list {
-    padding: 30px 30px 30px 52px;
-  }
-
-  .detail-grid article {
-    padding: 26px;
+  .detail-check {
+    padding-left: clamp(1.5rem, 3vw, 2rem);
+    padding-right: clamp(1.5rem, 3vw, 2rem);
     border: 1px solid var(--line);
-    border-radius: 18px;
-    background: #fff;
+    border-radius: var(--radius-md);
+    background: var(--mist-soft);
   }
 
-  .detail-grid h2 {
-    margin-bottom: 12px;
-    font-size: 24px;
-    text-transform: none;
+  /* ---- Faktenkarte ---- */
+  .facts {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    padding: clamp(1.5rem, 3vw, 2rem);
   }
 
-  .note-section {
-    padding-top: 0;
+  .facts-title {
+    margin-bottom: 1.125rem;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
   }
 
+  .facts dl {
+    display: grid;
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .fact {
+    display: grid;
+    gap: 0.2rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--line);
+  }
+
+  .fact dt {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--navy);
+  }
+
+  .fact dd {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  /* ---- Ablaufkarten ---- */
+  .detail-step {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  }
+
+  .step-no {
+    font-family: var(--font-utility);
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--amber);
+  }
+
+  .detail-step p {
+    color: var(--muted);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  /* ---- Hinweisblock ---- */
   .note-card {
-    border-left: 4px solid var(--amber);
-    border-radius: 18px;
-    padding: 34px;
-    background: #f7fbff;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--mist-soft);
+  }
+
+  .note-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    color: var(--navy-deep);
+    background: var(--amber);
   }
 
   .note-card h2 {
-    margin: 8px 0 14px;
-  }
-
-  .service-directory {
-    background: var(--navy-deep);
-    color: #fff;
-  }
-
-  .service-directory h2 {
-    color: #fff;
-  }
-
-  .section-head {
-    max-width: 820px;
-    margin-bottom: 28px;
-  }
-
-  .service-link-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .service-link-grid a {
-    display: grid;
-    gap: 8px;
-    min-height: 132px;
-    border: 1px solid rgba(220, 229, 242, 0.16);
-    border-radius: 18px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  .service-link-grid strong {
-    color: #fff;
-    font-family: "Manrope", sans-serif;
-    font-size: 19px;
-    line-height: 1.15;
-  }
-
-  .service-link-grid span {
-    color: #d8e7fb;
-    font-size: 15px;
-    line-height: 1.45;
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
   }
 
   @media (max-width: 900px) {
-    .service-link-grid {
+    .facts {
+      position: static;
+    }
+
+    .note-card {
       grid-template-columns: 1fr;
     }
   }

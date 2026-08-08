@@ -1,5 +1,14 @@
 ---
+import Icon from "./Icon.astro";
 import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
+
+interface Props {
+  /** Vorbelegtes Thema, z. B. von einer Leistungsseite aus. */
+  topic?: string;
+  title?: string;
+}
+
+const { topic = "", title = "Kostenlose Besichtigung anfragen" } = Astro.props;
 
 const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT;
 const topics = [
@@ -7,6 +16,7 @@ const topics = [
   "Entkernung & Rückbau",
   "Trockenbau & Innenausbau",
   "Montage & Bodenverlegung",
+  "Umzug / Transport",
   "Hausmeisterservice / Rahmenvertrag",
   "Anfrage als Bauunternehmen",
 ];
@@ -18,206 +28,397 @@ const topics = [
       class="contact-form"
       method="post"
       action={endpoint}
+      novalidate
       data-contact-form
     >
-      <input type="hidden" name="_redirect" value="/danke" />
-      <p class="form-title">Kostenlose Besichtigung anfragen</p>
-      <p class="muted">Wir melden uns am selben Werktag zurück.</p>
+      <input type="hidden" name="_redirect" value="/danke/" />
+      <input
+        type="hidden"
+        name="_subject"
+        value="Website-Anfrage Fixum Objektservice"
+      />
+
+      <div class="form-head">
+        <p class="form-title">{title}</p>
+        <p class="form-sub">Wir melden uns am selben Werktag zurück.</p>
+      </div>
+
+      {/* Honeypot: für Menschen unsichtbar, für Bots ein Pflichtfeld zum Hineintappen. */}
       <div class="honeypot" aria-hidden="true">
         <label>
-          Bitte leer lassen{" "}
+          Bitte leer lassen
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
         </label>
       </div>
-      <label>
-        Name / Firma
-        <input
-          name="name"
-          type="text"
-          required
-          autocomplete="name"
-          data-message="Bitte geben Sie Ihren Namen ein."
-        />
-        <span class="error" />
-      </label>
-      <label>
-        Telefon
-        <input
-          name="telefon"
-          type="tel"
-          required
-          autocomplete="tel"
-          data-message="Bitte geben Sie Ihre Telefonnummer ein."
-        />
-        <span class="error" />
-      </label>
-      <label>
-        E-Mail
+
+      <div class="field-row">
+        <label class="field">
+          <span class="field-label">Name / Firma *</span>
+          <input
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            placeholder="Ihr Name"
+            data-message="Bitte geben Sie Ihren Namen ein."
+          />
+          <span class="error" aria-live="polite" />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Telefon *</span>
+          <input
+            name="telefon"
+            type="tel"
+            required
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="Für Rückfragen"
+            data-message="Bitte geben Sie Ihre Telefonnummer ein."
+          />
+          <span class="error" aria-live="polite" />
+        </label>
+      </div>
+
+      <label class="field">
+        <span class="field-label">E-Mail</span>
         <input
           name="email"
           type="email"
           autocomplete="email"
+          inputmode="email"
+          placeholder="optional"
           data-message="Bitte geben Sie eine gültige E-Mail-Adresse ein."
         />
-        <span class="error" />
+        <span class="error" aria-live="polite" />
       </label>
-      <label>
-        Worum geht es?
-        <select
-          name="thema"
-          required
-          data-message="Bitte wählen Sie ein Thema aus."
-        >
-          <option value="">Bitte auswählen</option>
-          {topics.map((topic) => (
-            <option>{topic}</option>
-          ))}
-        </select>
-        <span class="error" />
+
+      <label class="field">
+        <span class="field-label">Worum geht es? *</span>
+        <div class="select-wrap">
+          <select
+            name="thema"
+            required
+            data-message="Bitte wählen Sie ein Thema aus."
+          >
+            <option value="">Bitte auswählen</option>
+            {topics.map((item) => (
+              <option selected={item === topic}>{item}</option>
+            ))}
+          </select>
+        </div>
+        <span class="error" aria-live="polite" />
       </label>
-      <label>
-        Objekt & Ort
-        <input name="objekt_ort" type="text" autocomplete="street-address" />
+
+      <label class="field">
+        <span class="field-label">Objekt & Ort</span>
+        <input
+          name="objekt_ort"
+          type="text"
+          autocomplete="street-address"
+          placeholder="z. B. 3-Zimmer-Wohnung, Emden"
+        />
       </label>
-      <label>
-        Ihre Nachricht
-        <textarea name="nachricht" rows="4" />
+
+      <label class="field">
+        <span class="field-label">Ihre Nachricht</span>
+        <textarea
+          name="nachricht"
+          rows="4"
+          placeholder="Umfang, Wunschtermin, Besonderheiten"
+        />
       </label>
-      <label class="checkbox">
+
+      <label class="field checkbox">
         <input
           name="datenschutz"
           type="checkbox"
           required
           data-message="Bitte bestätigen Sie den Datenschutzhinweis."
         />
-        <span>Ich habe die Datenschutzerklärung gelesen.</span>
-        <span class="error" />
+        <span>
+          Ich habe die <a href="/datenschutz/">Datenschutzerklärung</a> gelesen.
+          *
+        </span>
+        <span class="error" aria-live="polite" />
       </label>
-      <button class="btn" type="submit">
-        Anfrage senden
+
+      <button class="btn btn--wide" type="submit">
+        <span>Anfrage senden</span>
       </button>
-      <small>Unverbindlich. Ohne Kosten. Ohne Vertreterbesuch.</small>
+
+      <p class="form-note">
+        <Icon name="shield" size={16} />
+        <span>Unverbindlich. Ohne Kosten. Ohne Vertreterbesuch.</span>
+      </p>
     </form>
   ) : (
-    <div class="contact-fallback card">
-      <p class="form-title">Kostenlose Besichtigung anfragen</p>
-      <p class="muted">
-        Das Online-Formular wird aktiviert, sobald der Formspree-Endpunkt
-        gesetzt ist. Bis dahin erreichen Sie Fixum direkt per Telefon, WhatsApp
-        oder E-Mail.
+    <div class="contact-fallback">
+      <div class="form-head">
+        <p class="form-title">{title}</p>
+        <p class="form-sub">
+          Am schnellsten geht es direkt - Telefon, WhatsApp oder E-Mail.
+        </p>
+      </div>
+      <a class="btn btn--wide" href={telUrl}>
+        <Icon name="phone" size={18} />
+        <span>{site.phoneDisplay}</span>
+      </a>
+      <a
+        class="btn btn--secondary btn--wide"
+        href={whatsappUrl()}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="whatsapp" size={18} />
+        <span>Foto per WhatsApp schicken</span>
+      </a>
+      <a class="fallback-mail" href={mailUrl}>
+        <Icon name="mail" size={18} />
+        <span>{site.email}</span>
+      </a>
+      <p class="form-note">
+        <Icon name="clock" size={16} />
+        <span>{site.hours}</span>
       </p>
-      <a class="btn" href={telUrl}>
-        Anrufen - {site.phoneDisplay}
-      </a>
-      <a class="btn btn--secondary" href={whatsappUrl()}>
-        Foto per WhatsApp schicken
-      </a>
-      <a href={mailUrl}>{site.email}</a>
     </div>
   )
 }
 
 <script>
-  document.querySelectorAll("[data-contact-form]").forEach((form) => {
-    form.addEventListener("submit", (event) => {
-      let valid = true;
-      form.querySelectorAll("input, select, textarea").forEach((field) => {
-        const input = field;
-        const error = input.parentElement?.querySelector(".error");
-        if (!(
-          input instanceof HTMLInputElement ||
-          input instanceof HTMLSelectElement ||
-          input instanceof HTMLTextAreaElement
-        ))
-          return;
-        if (!input.checkValidity()) {
-          valid = false;
-          const message =
-            input.dataset.message || "Bitte prüfen Sie dieses Feld.";
-          input.setAttribute("aria-invalid", "true");
-          if (error) error.textContent = message;
-        } else {
-          input.removeAttribute("aria-invalid");
-          if (error) error.textContent = "";
+  document
+    .querySelectorAll<HTMLFormElement>("[data-contact-form]")
+    .forEach((form) => {
+      const fields = form.querySelectorAll<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >("input, select, textarea");
+
+      const validate = (
+        field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+      ) => {
+        const wrapper = field.closest(".field");
+        const error = wrapper?.querySelector(".error");
+        const ok = field.checkValidity();
+
+        field.setAttribute("aria-invalid", ok ? "false" : "true");
+        wrapper?.classList.toggle("has-error", !ok);
+        if (error) {
+          error.textContent = ok
+            ? ""
+            : field.dataset.message || "Bitte prüfen Sie dieses Feld.";
+        }
+        return ok;
+      };
+
+      // Erst nach dem ersten Absendeversuch live prüfen - sonst meckert
+      // das Formular schon beim Tippen im ersten Feld.
+      let submitted = false;
+      fields.forEach((field) => {
+        field.addEventListener("blur", () => submitted && validate(field));
+        field.addEventListener("input", () => submitted && validate(field));
+        field.addEventListener("change", () => submitted && validate(field));
+      });
+
+      form.addEventListener("submit", (event) => {
+        submitted = true;
+        const invalid = [...fields].filter((field) => !validate(field));
+        const firstInvalid = invalid[0];
+
+        if (firstInvalid) {
+          event.preventDefault();
+          firstInvalid.focus();
+          firstInvalid.scrollIntoView({ block: "center", behavior: "smooth" });
         }
       });
-      if (!valid) event.preventDefault();
     });
-  });
 </script>
 
 <style>
   .contact-form,
   .contact-fallback {
     display: grid;
-    gap: 14px;
-    padding: 28px;
-    border-radius: 18px;
+    gap: 0.875rem;
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-lg);
     background: #fff;
-    box-shadow: 0 14px 40px rgba(16, 36, 78, 0.16);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .form-head {
+    display: grid;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
   }
 
   .form-title {
-    color: var(--navy);
-    font-family: "Outfit", sans-serif;
-    font-size: 24px;
-    font-weight: 700;
+    font-size: var(--step-2);
+    font-weight: 800;
     line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--navy);
   }
 
-  label {
+  .form-sub {
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  .field-row {
     display: grid;
-    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.875rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.375rem;
+  }
+
+  .field-label {
+    font-family: var(--font-utility);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--navy);
-    font-weight: 500;
   }
 
   input,
   select,
   textarea {
     width: 100%;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 12px 14px;
+    padding: 0.75rem 0.875rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--mist-soft);
     color: var(--ink);
+    font-size: 1rem;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      background var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #96a3b8;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--blue-bright);
     background: #fff;
+    box-shadow: 0 0 0 4px rgba(31, 122, 224, 0.14);
   }
 
   textarea {
     resize: vertical;
+    min-height: 110px;
+  }
+
+  /* Eigener Pfeil, damit das Select in beiden Systemen gleich aussieht */
+  .select-wrap {
+    position: relative;
+  }
+
+  .select-wrap::after {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -6px;
+    border-right: 2px solid var(--blue);
+    border-bottom: 2px solid var(--blue);
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+
+  select {
+    appearance: none;
+    padding-right: 2.5rem;
+    cursor: pointer;
   }
 
   .checkbox {
-    grid-template-columns: 20px 1fr;
+    grid-template-columns: 22px 1fr;
     align-items: start;
+    gap: 0.375rem 0.625rem;
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  .checkbox input {
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    padding: 0;
+    accent-color: var(--blue);
+    cursor: pointer;
+  }
+
+  .checkbox a {
+    color: var(--blue);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .checkbox .error {
     grid-column: 2;
   }
 
-  .checkbox input {
-    width: 20px;
-    height: 20px;
-    margin-top: 4px;
+  .error {
+    min-height: 0;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: #b3261e;
   }
 
-  .error {
-    min-height: 18px;
-    color: #9d1c1c;
-    font-size: 13px;
+  .has-error input,
+  .has-error select,
+  .has-error textarea {
+    border-color: #b3261e;
+    background: #fef5f4;
   }
 
   .honeypot {
     position: absolute;
     left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 
-  small {
+  .form-note {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
     color: var(--muted);
   }
 
-  .contact-fallback .btn {
-    width: 100%;
+  .form-note :global(.icon) {
+    color: var(--blue);
+  }
+
+  .fallback-mail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: var(--blue);
+    font-weight: 700;
+  }
+
+  @media (max-width: 480px) {
+    .field-row {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

@@ -1,0 +1,121 @@
+---
+import Icon from "./Icon.astro";
+import { site } from "../data/site";
+
+interface Props {
+  /** Leistung im Satz, z. B. "Entrümpelung". */
+  service?: string;
+  title?: string;
+}
+
+const { service = "Objektservice", title } = Astro.props;
+const heading = title ?? `${service} in Emden und Ostfriesland`;
+---
+
+<section class="section section--tight area-served">
+  <div class="container area-inner">
+    <div class="area-copy" data-reveal>
+      <p class="eyebrow">Einsatzgebiet</p>
+      <h2>{heading}</h2>
+      <p class="muted">
+        Fixum arbeitet von {site.city} aus in einem Umkreis von rund {
+          site.radiusKm
+        } Kilometern. Anfahrt und Arbeitszeit stehen im Angebot getrennt, damit Sie
+        sehen, was der Weg kostet. Größere Projekte fahren wir auf Anfrage auch weiter.
+      </p>
+      <p class="area-meta">
+        <span
+          ><Icon name="pin" size={16} />
+          {site.street}, {site.zip}
+          {site.city}</span
+        >
+        <span><Icon name="clock" size={16} /> {site.hours}</span>
+      </p>
+    </div>
+
+    <ul class="area-chips" data-reveal>
+      {site.areaServed.map((city) => <li>{city}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .area-served {
+    background: #fff;
+    border-top: 1px solid var(--line);
+  }
+
+  .area-inner {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: clamp(1.75rem, 4vw, 3rem);
+    align-items: center;
+  }
+
+  .area-copy {
+    display: grid;
+    gap: 0.875rem;
+  }
+
+  .area-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 0.25rem;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+
+  .area-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .area-meta :global(.icon) {
+    color: var(--blue);
+  }
+
+  .area-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin: 0;
+    list-style: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, var(--mist-soft), var(--mist));
+  }
+
+  .area-chips li {
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--navy);
+    box-shadow: var(--shadow-xs);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .area-chips li:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue-light);
+  }
+
+  @media (max-width: 900px) {
+    .area-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

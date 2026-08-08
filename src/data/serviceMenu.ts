@@ -4,22 +4,22 @@ export const serviceMenuGroups = [
     items: [
       {
         label: "Entrümpelung",
-        href: "/entruempelung-haushaltsaufloesung",
+        href: "/entruempelung-haushaltsaufloesung/",
         description: "Wohnung, Haus, Keller, Dachboden, Garage.",
       },
       {
         label: "Haushaltsauflösung",
-        href: "/haushaltsaufloesung",
+        href: "/haushaltsaufloesung/",
         description: "Nachlass, Umzug ins Heim, diskrete Abwicklung.",
       },
       {
         label: "Wohnungsräumung",
-        href: "/wohnungsraeumung",
+        href: "/wohnungsraeumung/",
         description: "Besenrein für Übergabe, Vermietung oder Verkauf.",
       },
       {
         label: "Umzüge & Transporte",
-        href: "/umzuege-transporte",
+        href: "/umzuege-transporte/",
         description: "Privat, Gewerbe und Objektfahrten bis 3,5 t.",
       },
     ],
@@ -29,23 +29,23 @@ export const serviceMenuGroups = [
     items: [
       {
         label: "Entkernung",
-        href: "/entkernung-rueckbau",
+        href: "/entkernung-rueckbau/",
         description: "Nicht-tragender Rückbau, sortenrein getrennt.",
       },
       {
         label: "Trockenbau",
-        href: "/trockenbau-innenausbau",
+        href: "/trockenbau-innenausbau/",
         description: "Wände, Decken, Dachschrägen, Q1 bis Q3.",
       },
       {
-        label: "Montage & Boden",
-        href: "/montage-boden",
-        description: "Türen, Zargen, Laminat, Vinyl, Teppich.",
+        label: "Rückbau + Trockenbau",
+        href: "/entkernung-trockenbau/",
+        description: "Beide Gewerke in einem Durchgang, ein Angebot.",
       },
       {
-        label: "Möbel & Küchenmontage",
-        href: "/moebel-kuechenmontage",
-        description: "Ohne Elektro-, Gas- und Wasseranschlüsse.",
+        label: "Boden & Türen",
+        href: "/montage-boden/",
+        description: "Laminat, Vinyl, Teppich, Türen und Zargen.",
       },
     ],
   },
@@ -53,24 +53,24 @@ export const serviceMenuGroups = [
     title: "Objektservice",
     items: [
       {
+        label: "Möbel- & Küchenmontage",
+        href: "/moebel-kuechenmontage/",
+        description: "Ohne Elektro-, Gas- und Wasseranschlüsse.",
+      },
+      {
         label: "Hausmeisterservice",
-        href: "/hausmeisterservice",
+        href: "/hausmeisterservice/",
         description: "Objektbetreuung, Kleinreparaturen, Rahmenvertrag.",
       },
       {
         label: "Winterdienst & Außenanlagen",
-        href: "/winterdienst-aussenanlagen",
-        description: "Laufende Pflege nach klarer Vereinbarung.",
+        href: "/winterdienst-aussenanlagen/",
+        description: "Räum- und Streupflicht zuverlässig erfüllt.",
       },
       {
         label: "Kernsanierung vorbereiten",
-        href: "/kernsanierung-vorbereiten",
+        href: "/kernsanierung-vorbereiten/",
         description: "Räumen, Rückbau, Ausbau - Fachbetriebe koordiniert.",
-      },
-      {
-        label: "Für Hausverwaltungen",
-        href: "/fuer-hausverwaltungen",
-        description: "Mieterwechsel in einem Durchgang.",
       },
     ],
   },

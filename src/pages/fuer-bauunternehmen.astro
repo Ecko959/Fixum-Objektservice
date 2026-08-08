@@ -1,40 +1,264 @@
 ---
 import Base from "../layouts/Base.astro";
+import AreaServed from "../components/AreaServed.astro";
 import CtaBand from "../components/CtaBand.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
+import { canonicalPath, serviceSchema } from "../data/seo";
+
+const path = "/fuer-bauunternehmen/";
+const breadcrumbs: Array<[string, string]> = [["Für Bauunternehmen", path]];
+const heroImage = "/images/service-drywall.png";
+
+const description =
+  "Trockenbau und Rückbau als Nachunternehmer in Ostfriesland: Abrechnung nach m² oder Tagessatz, Material bauseits möglich, Betriebshaftpflicht und Freistellungsbescheinigung nach § 48b EStG.";
+
+const punkte: Array<[string, string, "wall" | "euro" | "shield" | "clock"]> = [
+  [
+    "Trockenbau und Rückbau",
+    "Ständerwände, Vorsatzschalen, abgehängte Decken, Dachschrägen, Spachtelung Q1 bis Q3 sowie nicht-tragender Rückbau als Vorleistung.",
+    "wall",
+  ],
+  [
+    "Abrechnung nach m² oder Tagessatz",
+    "Beides möglich, Material auf Wunsch bauseits. Der Aufmaßmodus wird vor Beginn festgelegt, nicht in der Schlussrechnung diskutiert.",
+    "euro",
+  ],
+  [
+    "Versicherung und Nachweise",
+    "Betriebshaftpflicht mit Subunternehmer-Klausel. Freistellungsbescheinigung nach § 48b EStG legen wir auf Anfrage vor.",
+    "shield",
+  ],
+  [
+    "Planbare Termine",
+    "Zugesagte Einsatztage werden gehalten. Kommt etwas dazwischen, bekommen Sie die Information rechtzeitig - nicht am Einsatztag.",
+    "clock",
+  ],
+];
+
+const subFaq = [
+  {
+    question: "Wie schnell können Sie einen Einsatz zusagen?",
+    answer:
+      "Für planbare Bauabschnitte brauchen wir in der Regel ein bis zwei Wochen Vorlauf. Für kurzfristige Ausfälle lohnt ein Anruf - wir sagen ehrlich, ob wir Kapazität haben, statt einen Termin zu blockieren, den wir nicht halten können.",
+  },
+  {
+    question: "Arbeiten Sie mit Material bauseits?",
+    answer:
+      "Ja, das ist bei Nachunternehmereinsätzen der Normalfall. Profile, Platten, Dämmung und Spachtelmasse können vollständig von Ihnen gestellt werden. Verbrauch und Verschnitt rechnen wir dann transparent ab.",
+  },
+  {
+    question: "Welche Spachtelqualitäten führen Sie aus?",
+    answer:
+      "Q1 bis Q3. Q4 - also die spiegelglatte Fläche für Streiflicht und Glanzlacke - bieten wir bewusst nicht an, weil sie eine andere Arbeitsvorbereitung braucht. Was vereinbart ist, steht vor Beginn fest.",
+  },
+  {
+    question: "Übernehmen Sie auch geprüften Brandschutz?",
+    answer:
+      "Nein. Geprüfte Brandschutzkonstruktionen mit Verwendbarkeitsnachweis führen wir nicht aus - dafür braucht es einen Betrieb mit dem passenden Nachweis. Schallschutzaufbauten mit entsprechender Dämmung machen wir.",
+  },
+  {
+    question: "In welchem Umkreis sind Sie als Sub unterwegs?",
+    answer:
+      "Schwerpunkt ist Ostfriesland mit rund 50 km um Emden. Für längere Bauabschnitte mit mehreren Wochen Dauer fahren wir auf Anfrage auch weiter - dann kalkulieren wir die Anfahrt gesondert.",
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: "Trockenbau als Nachunternehmer",
+    description,
+    path: canonicalPath(path),
+    serviceType: "Trockenbau und Rückbau im Nachunternehmereinsatz",
+  }),
+  {
+    "@type": "FAQPage",
+    mainEntity: subFaq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+];
 ---
 
 <Base
-  title="Trockenbau als Nachunternehmer | Fixum Objektservice"
-  description="Trockenbau-Sub für Bauunternehmen in Ostfriesland, zuverlässig planbar nach m² oder Tagessatz."
+  title="Trockenbau als Nachunternehmer in Ostfriesland | Fixum Objektservice"
+  description={description}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage={heroImage}
 >
   <PageHero
     eyebrow="Für Bauunternehmen"
     title="Trockenbau-Sub für Ostfriesland"
-    text="Fixum unterstützt Bauunternehmen, Generalunternehmer und Zimmereien bei Trockenbau und Rückbau nach m²-Preis oder Tagessatz."
-    image="/images/service-drywall.png"
+    text="Fixum unterstützt Bauunternehmen, Generalunternehmer und Zimmereien bei Trockenbau und Rückbau - nach m²-Preis oder Tagessatz, Material bauseits möglich."
+    image={heroImage}
+    imageAlt="Trockenbauarbeiten im Nachunternehmereinsatz auf einer Baustelle in Ostfriesland"
+    breadcrumbs={breadcrumbs}
+    badges={["m² oder Tagessatz", "§ 48b auf Anfrage", "Material bauseits"]}
   />
+
+  {/* Leistungsprofil */}
   <section class="section">
-    <div class="container split">
-      <div>
-        <h2>Zuverlässig als Nachunternehmer</h2>
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Leistungsprofil</p>
+      <h2>Zuverlässig als Nachunternehmer</h2>
+      <p class="lead">
+        Im Ausbau ist Verlässlichkeit der knappere Rohstoff als Kapazität. Wir
+        sagen weniger zu, halten das aber - und melden uns, bevor Sie nachfragen
+        müssen.
+      </p>
+    </div>
+
+    <div class="container grid-2 sub-grid" data-reveal-group>
+      {
+        punkte.map(([title, text, icon]) => (
+          <article class="card sub-card" data-reveal>
+            <span class="sub-icon">
+              <Icon name={icon} size={22} />
+            </span>
+            <div>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Konkrete Leistungen */}
+  <section class="section section--mist">
+    <div class="container split split--top">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Umfang</p>
+        <h2>Was wir auf Ihrer Baustelle übernehmen</h2>
         <p class="muted">
-          Material bauseits möglich, Abrechnung klar, Betriebshaftpflicht
-          vorhanden. Freistellungsbescheinigung nach § 48b EStG auf Anfrage.
+          Wir kommen als Gewerk, nicht als Generalist. Der Umfang wird vor
+          Beginn schriftlich festgelegt, inklusive der Schnittstellen zu Ihren
+          anderen Nachunternehmern.
+        </p>
+        <p>
+          <a class="arrow-link" href="/kontakt/">Kapazität anfragen</a>
         </p>
       </div>
-      <ul class="card check-list">
-        <li>Trockenbau und nicht-tragender Rückbau</li>
-        <li>Planbare Termine und klare Rückmeldung</li>
-        <li>Einsatz in Emden und Ostfriesland</li>
+
+      <ul class="check-list sub-list card" data-reveal>
+        <li>Ständerwände, Vorsatzschalen und Raumteilungen</li>
+        <li>Abgehängte Decken, Dachschrägen und Schallschutzaufbauten</li>
+        <li>Spachtelung Q1 bis Q3 nach Vereinbarung</li>
+        <li>Nicht-tragender Rückbau als Vorleistung zum Ausbau</li>
+        <li>Sortenreine Trennung und Entsorgung des Rückbaumaterials</li>
+        <li>Einsatz in Emden, Aurich, Leer und Umgebung</li>
       </ul>
     </div>
   </section>
-  <CtaBand />
+
+  {/* Abgrenzung */}
+  <section class="section section--tight">
+    <div class="container limits card card--accent" data-reveal>
+      <span class="limits-icon"><Icon name="shield" size={24} /></span>
+      <div>
+        <p class="eyebrow">Schnittstellen</p>
+        <h2>Wo unsere Leistung endet</h2>
+        <p class="muted">
+          Statik, Elektro, Sanitär, Heizung, geprüfter Brandschutz und
+          Schadstoffsanierung liegen nicht bei uns. Das ist für Sie in der
+          Ausschreibung eher hilfreich als hinderlich: Sie wissen vorher genau,
+          welche Positionen bei uns liegen und welche Sie anderweitig vergeben
+          müssen - ohne Grauzone in der Abrechnung.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* FAQ */}
+  <section class="section section--soft" aria-labelledby="sub-faq-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="sub-faq-title">Was Auftraggeber vorher klären</h2>
+    </div>
+    <div class="container container--narrow" data-reveal>
+      <FaqAccordion items={subFaq} />
+    </div>
+  </section>
+
+  <AreaServed
+    service="Trockenbau"
+    title="Nachunternehmereinsätze in Ostfriesland"
+  />
+  <CtaBand
+    eyebrow="Direkt anfragen"
+    title="Kapazität für Ihren Bauabschnitt?"
+    text="Nennen Sie Objekt, Umfang und Zeitfenster - Sie bekommen eine ehrliche Rückmeldung, auch wenn sie 'geht nicht' lautet."
+  />
 </Base>
 
 <style>
-  .check-list {
-    padding: 30px 30px 30px 52px;
+  .sub-grid {
+    gap: 1rem;
+  }
+
+  .sub-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: clamp(1.375rem, 2.4vw, 1.75rem);
+  }
+
+  .sub-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    color: var(--blue-light);
+    background: linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+  }
+
+  .sub-card h3 {
+    margin-bottom: 0.4rem;
+  }
+
+  .sub-card p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .sub-list {
+    background: #fff;
+  }
+
+  .limits {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--mist-soft);
+  }
+
+  .limits-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .limits h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  @media (max-width: 900px) {
+    .limits {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

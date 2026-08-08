@@ -1,72 +1,160 @@
 ---
 import "../styles/global.css";
-import { faq } from "../data/faq";
-import { offerCatalog } from "../data/services";
-import { site } from "../data/site";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import StickyCallBar from "../components/StickyCallBar.astro";
+import {
+  absolute,
+  breadcrumbSchema,
+  businessSchema,
+  canonicalPath,
+  faqPageSchema,
+  ids,
+  logoSchema,
+  websiteSchema,
+} from "../data/seo";
+import { site } from "../data/site";
 
 interface Props {
   title: string;
   description: string;
   canonical?: string;
+  /** FAQ-Rich-Result nur dort ausspielen, wo die Fragen auch auf der Seite stehen. */
   faqSchema?: boolean;
+  /** Seiten ohne Suchwert (Danke-Seite, 404) aus dem Index halten. */
+  noindex?: boolean;
+  /** Social-Preview-Bild, absolut oder als interner Pfad. */
+  image?: string;
+  imageAlt?: string;
+  /** Breadcrumb-Pfad als [Label, Pfad]-Paare ohne Startseite. */
+  breadcrumbs?: Array<[string, string]>;
+  /** Zusätzliche schema.org-Knoten dieser Seite (Service, ContactPage ...). */
+  schema?: Record<string, unknown>[];
+  /** Basispfad des LCP-Bildes, damit die AVIF-Variante vorgeladen wird. */
+  preloadImage?: string;
+  /** Semantischer Seitentyp für den WebPage-Knoten. */
+  pageType?: string;
+  datePublished?: string;
 }
 
 const {
   title,
   description,
-  canonical = Astro.url.pathname,
+  canonical,
   faqSchema = false,
+  noindex = false,
+  image,
+  imageAlt = site.ogImageAlt,
+  breadcrumbs = [],
+  schema = [],
+  preloadImage,
+  pageType = "WebPage",
 } = Astro.props;
-const canonicalUrl = new URL(canonical, site.domain).toString();
-const businessSchema = {
-  "@context": "https://schema.org",
-  "@type": "HomeAndConstructionBusiness",
-  name: site.name,
-  image: `${site.domain}/og.svg`,
-  url: site.domain,
-  telephone: site.phoneDisplay,
-  email: site.email,
-  priceRange: "€€",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: site.street,
-    postalCode: site.zip,
-    addressLocality: site.city,
-    addressCountry: site.country,
-  },
-  openingHours: "Mo-Sa 07:00-19:00",
-  areaServed: site.areaServed.map((name) => ({ "@type": "City", name })),
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Leistungen",
-    itemListElement: offerCatalog.map((name) => ({
-      "@type": "Offer",
-      itemOffered: { "@type": "Service", name },
-    })),
-  },
+
+const path = canonicalPath(canonical ?? Astro.url.pathname);
+const canonicalUrl = absolute(path);
+const socialImage = absolute(image ?? site.ogImage);
+const robots = noindex
+  ? "noindex, nofollow"
+  : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+const preloadBase = preloadImage?.replace(/\.[a-zA-Z0-9]+$/, "");
+
+const pageNode: Record<string, unknown> = {
+  "@type": pageType,
+  "@id": `${canonicalUrl}#webpage`,
+  url: canonicalUrl,
+  name: title,
+  description,
+  inLanguage: "de-DE",
+  isPartOf: { "@id": ids.website },
+  about: { "@id": ids.business },
+  primaryImageOfPage: socialImage,
 };
-const faqPageSchema = {
+
+if (breadcrumbs.length) {
+  pageNode.breadcrumb = { "@id": `${canonicalUrl}#breadcrumb` };
+}
+
+const graph: Record<string, unknown>[] = [
+  logoSchema,
+  businessSchema,
+  websiteSchema,
+  pageNode,
+  ...(breadcrumbs.length
+    ? [
+        {
+          ...breadcrumbSchema(breadcrumbs),
+          "@id": `${canonicalUrl}#breadcrumb`,
+        },
+      ]
+    : []),
+  ...(faqSchema ? [faqPageSchema] : []),
+  ...schema,
+];
+
+const jsonLd = JSON.stringify({
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faq.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: { "@type": "Answer", text: item.answer },
-  })),
-};
+  "@graph": graph,
+});
 ---
 
 <!doctype html>
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="geo.region" content="DE-NI" />
+    <meta name="robots" content={robots} />
     <link rel="canonical" href={canonicalUrl} />
+
+    {
+      /* Reveal-Animationen nur aktivieren, wenn JS läuft - sonst bleibt alles sichtbar. */
+    }
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+
+    {
+      preloadBase && (
+        <link
+          rel="preload"
+          as="image"
+          href={`${preloadBase}.avif`}
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <meta name="author" content={site.legalName} />
+    <meta name="publisher" content={site.name} />
+    <meta name="format-detection" content="telephone=no" />
+
+    {/* Lokale Signale */}
+    <meta name="geo.region" content={site.regionCode} />
+    <meta name="geo.placename" content={site.city} />
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+    <meta name="ICBM" content={`${site.geo.lat}, ${site.geo.lng}`} />
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content={String(site.ogImageWidth)} />
+    <meta property="og:image:height" content={String(site.ogImageHeight)} />
+    <meta property="og:image:alt" content={imageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
     <link
       rel="icon"
       type="image/png"
@@ -80,37 +168,69 @@ const faqPageSchema = {
     />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0A1730" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={`${site.domain}/og.svg`} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${site.domain}/og.svg`} />
-    <title>{title}</title>
-    <script
-      is:inline
-      type="application/ld+json"
-      set:html={JSON.stringify(businessSchema)}
-    />
-    {
-      faqSchema && (
-        <script
-          is:inline
-          type="application/ld+json"
-          set:html={JSON.stringify(faqPageSchema)}
-        />
-      )
-    }
+    <meta name="color-scheme" content="light" />
+
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
   </head>
   <body>
+    <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
     <Header />
-    <main>
+    <main id="inhalt">
       <slot />
     </main>
     <Footer />
     <StickyCallBar />
+
+    {
+      /* Scroll-Reveal: einmalig, entkoppelt vom Scroll-Event, respektiert Reduced Motion. */
+    }
+    <script is:inline>
+      (() => {
+        const targets = document.querySelectorAll("[data-reveal]");
+        if (!targets.length) return;
+
+        const revealAll = () =>
+          targets.forEach((el) => el.classList.add("is-revealed"));
+
+        const reduced = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+
+        if (reduced || !("IntersectionObserver" in window)) {
+          revealAll();
+          return;
+        }
+
+        // Sicherheitsnetz: Inhalt darf nie dauerhaft unsichtbar bleiben,
+        // falls der Observer aus irgendeinem Grund nicht auslöst.
+        window.setTimeout(revealAll, 3000);
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add("is-revealed");
+              observer.unobserve(entry.target);
+            });
+          },
+          { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
+        );
+
+        targets.forEach((el, index) => {
+          // Gestaffelter Einsatz innerhalb einer Gruppe, gedeckelt bei 240ms.
+          const group = el.closest("[data-reveal-group]");
+          if (group) {
+            const items = [...group.querySelectorAll("[data-reveal]")];
+            el.style.setProperty(
+              "--reveal-delay",
+              `${Math.min(items.indexOf(el) * 80, 240)}ms`,
+            );
+          } else if (index === 0) {
+            el.style.setProperty("--reveal-delay", "0ms");
+          }
+          observer.observe(el);
+        });
+      })();
+    </script>
   </body>
 </html>

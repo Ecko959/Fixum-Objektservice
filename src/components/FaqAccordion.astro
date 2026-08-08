@@ -1,13 +1,26 @@
 ---
 import { faq } from "../data/faq";
+
+interface Props {
+  items?: Array<{ question: string; answer: string }>;
+}
+
+/* Standard ist der globale FAQ-Katalog; Leistungsseiten reichen eigene Fragen durch.
+   Wichtig fürs FAQ-Rich-Result: die Antworten stehen im HTML, nicht nur im JSON-LD. */
+const { items = faq } = Astro.props;
 ---
 
-<div class="faq-list">
+<div class="faq-list" data-faq>
   {
-    faq.map((item, index) => (
-      <details open={index === 0}>
-        <summary>{item.question}</summary>
-        <p>{item.answer}</p>
+    items.map((item, index) => (
+      <details class="faq-item" open={index === 0}>
+        <summary>
+          <span class="faq-question">{item.question}</span>
+          <span class="faq-marker" aria-hidden="true" />
+        </summary>
+        <div class="faq-answer">
+          <p>{item.answer}</p>
+        </div>
       </details>
     ))
   }
@@ -16,26 +29,118 @@ import { faq } from "../data/faq";
 <style>
   .faq-list {
     display: grid;
-    gap: 12px;
+    gap: 0.75rem;
   }
 
-  details {
+  .faq-item {
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius-md);
     background: #fff;
-    padding: 18px 20px;
+    box-shadow: var(--shadow-xs);
+    transition:
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+
+  .faq-item[open] {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .faq-item:hover {
+    border-color: var(--line-strong);
   }
 
   summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.125rem 1.25rem;
     cursor: pointer;
-    color: var(--navy);
-    font-family: "Outfit", sans-serif;
-    font-weight: 700;
-    list-style-position: outside;
+    list-style: none;
   }
 
-  details p {
-    margin-top: 12px;
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question {
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--navy);
+    text-wrap: balance;
+  }
+
+  /* Plus-Zeichen, das beim Öffnen zum Minus wird */
+  .faq-marker {
+    position: relative;
+    flex: none;
+    width: 26px;
+    height: 26px;
+    margin-top: 3px;
+    border-radius: var(--radius-pill);
+    background: var(--mist);
+    transition: background var(--dur) var(--ease-out);
+  }
+
+  .faq-marker::before,
+  .faq-marker::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--blue);
+    transform: translate(-50%, -50%);
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .faq-marker::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .faq-item[open] .faq-marker {
+    background: var(--blue);
+  }
+
+  .faq-item[open] .faq-marker::before,
+  .faq-item[open] .faq-marker::after {
+    background: #fff;
+  }
+
+  .faq-item[open] .faq-marker::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  .faq-answer {
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  .faq-answer p {
+    max-width: var(--measure);
     color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* Sanftes Aufklappen, wo der Browser es unterstützt */
+  @supports (interpolate-size: allow-keywords) {
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size var(--dur) var(--ease-out),
+        content-visibility var(--dur) allow-discrete,
+        opacity var(--dur) var(--ease-out);
+    }
+
+    .faq-item[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
   }
 </style>

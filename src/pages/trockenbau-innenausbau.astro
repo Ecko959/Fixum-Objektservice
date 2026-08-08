@@ -1,34 +1,53 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/trockenbau-innenausbau/";
 ---
 
 <ServiceDetailPage
-  current="/trockenbau-innenausbau"
-  metaTitle="Trockenbau Emden | Fixum Objektservice"
-  description="Trockenbau und Innenausbau in Emden: Ständerwände, Decken, Vorsatzschalen, Dachschrägen und Spachtelung Q1 bis Q3."
+  current={current}
+  crumb="Trockenbau"
+  metaTitle="Trockenbau Emden: Wände, Decken, Q1-Q3 | Fixum Objektservice"
+  description="Trockenbau und Innenausbau in Emden und Ostfriesland: Ständerwände, Vorsatzschalen, abgehängte Decken, Dachschrägen, Schallschutz und Spachtelung Q1 bis Q3 - privat und als Nachunternehmer."
   eyebrow="Trockenbau & Innenausbau"
   title="Trockenbau für Räume, Decken und Dachschrägen"
   heroText="Fixum baut Ständerwände, Vorsatzschalen, abgehängte Decken und Dachschrägen - für private Modernisierer, Verwaltungen und Bauunternehmen."
   image="/images/categories/trockenbau-innenausbau.png"
-  lead="Trockenbau ist die zweite Säule von Fixum. Besonders stark wird es, wenn vorher geräumt oder zurückgebaut wurde und der Ausbau direkt weiterlaufen kann."
+  imageAlt="Trockenbauarbeiten an einer Ständerwand in Emden"
+  serviceType="Trockenbau und Innenausbau"
+  areaTitle="Trockenbau in Emden und Ostfriesland"
+  lead="Trockenbau ist die zweite Säule von Fixum. Besonders stark wird es, wenn vorher geräumt oder zurückgebaut wurde und der Ausbau ohne Wartetag direkt weiterlaufen kann - ohne Übergabe zwischen zwei Firmen."
   included={[
-    "Ständerwände, Vorsatzschalen und Raumteilungen",
-    "Abgehängte Decken, Dachschrägen und Schallschutzlösungen",
+    "Ständerwände, Vorsatzschalen und Raumteilungen in Metall- oder Holzständerbauweise",
+    "Abgehängte Decken mit Direktabhängern oder Nonius-Systemen",
+    "Dachschrägen, Kehlbalkenlagen und Drempelausbau",
+    "Schallschutzaufbauten mit passender Dämmung und Entkopplung",
     "Spachtelung Q1 bis Q3 als vorbereitende Ausbauleistung",
-    "Nachunternehmer-Einsatz für Bauunternehmen nach Absprache",
+    "Revisionsöffnungen, Aussparungen und vorbereitende Installationsebenen",
+    "Nachunternehmer-Einsatz für Bauunternehmen nach m² oder Tagessatz",
   ]}
   process={[
     [
       "Aufmaß",
-      "Flächen, Material, Untergrund und gewünschte Qualität werden aufgenommen.",
+      "Flächen, Material, Untergrund, Deckenhöhe und die gewünschte Spachtelqualität werden aufgenommen und schriftlich festgehalten.",
     ],
     [
       "Ausbau",
-      "Profile, Platten, Dämmung und Spachtelung werden nach vereinbartem Umfang umgesetzt.",
+      "Profile, Platten, Dämmung und Spachtelung werden im vereinbarten Umfang umgesetzt - inklusive Staubschutz und Schutz angrenzender Bereiche.",
     ],
     [
       "Übergabe",
-      "Sie erhalten eine klare Übergabe für Folgegewerke oder Nutzung.",
+      "Sie erhalten eine klar definierte Fläche für Folgegewerke oder direkte Nutzung, besenrein und ohne offene Punkte.",
     ],
   ]}
+  facts={[
+    ["Qualität", "Spachtelung Q1 bis Q3 - Q4 bieten wir bewusst nicht an."],
+    ["Abrechnung", "Privat als Festpreis, gewerblich nach m² oder Tagessatz."],
+    ["Material", "Bauseits möglich, auf Wunsch komplett von uns."],
+    ["Kombination", "Direkt nach Rückbau ohne Wartetag."],
+  ]}
+  noteTitle="Welche Spachtelqualität Sie wirklich brauchen"
+  noteText="Q1 reicht für Flächen, die verkleidet werden. Q2 ist der Standard für Raufaser und Strukturtapeten. Q3 brauchen Sie für glatte Anstriche und Vliestapeten. Q4 - die spiegelglatte Fläche für Streiflicht und Glanzlacke - führen wir nicht aus, weil sie eine andere Arbeitsvorbereitung erfordert. Wir schreiben Ihnen ins Angebot, welche Stufe zu Ihrer geplanten Oberfläche passt."
+  faq={serviceFaq[current]}
 />

@@ -1,59 +1,125 @@
 ---
 import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import { addressLines, mailUrl, site, telUrl } from "../data/site";
+
+const path = "/impressum/";
+const breadcrumbs: Array<[string, string]> = [["Impressum", path]];
 ---
 
 <Base
-  title="Impressum | Fixum Objektservice"
-  description="Impressum von Fixum Objektservice, Inhaber Eckhard Singer, Emden."
+  title="Impressum | Fixum Objektservice Emden"
+  description="Impressum von Fixum Objektservice, Inhaber Eckhard Singer, Hermann-Allmers-Str. 13, 26721 Emden. Angaben gemäß § 5 TMG."
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  pageType="WebPage"
 >
-  <section class="section legal-page section--mist">
-    <div class="container legal-card card legal-copy">
-      <p class="eyebrow">Rechtliches</p>
-      <h1>Impressum</h1>
-      <h2>Angaben gemäß § 5 TMG</h2>
-      <p>
-        {
-          addressLines.map((line) => (
-            <>
-              {line}
-              <br />
-            </>
-          ))
-        }
-      </p>
-      <h2>Kontakt</h2>
-      <p>
-        Telefon: <a href={telUrl}>{site.phoneDisplay}</a><br />E-Mail: <a
-          href={mailUrl}>{site.email}</a
-        >
-      </p>
-      <h2>Unternehmensangaben</h2>
-      <p>{site.legalForm}<br />Zuständige Kammer: {site.chamber}</p>
-      {
-        site.taxId ? (
-          <p>Steuernummer: {site.taxId}</p>
-        ) : (
-          <p>Steuernummer: wird nachgetragen.</p>
-        )
-      }
-      <p>{site.smallBusinessNote}</p>
-      <h2>Verantwortlich für den Inhalt</h2>
-      <p>{site.owner}, {site.street}, {site.zip} {site.city}</p>
+  <section class="section legal-page page-top section--mist">
+    <div class="container container--narrow">
+      <Breadcrumbs trail={breadcrumbs} class="legal-crumbs" />
+
+      <div class="legal-card card legal-copy">
+        <p class="eyebrow">Rechtliches</p>
+        <h1>Impressum</h1>
+
+        <h2>Angaben gemäß § 5 TMG</h2>
+        <address>
+          {
+            addressLines.map((line) => (
+              <>
+                {line}
+                <br />
+              </>
+            ))
+          }
+        </address>
+
+        <h2>Kontakt</h2>
+        <p>
+          Telefon: <a href={telUrl}>{site.phoneDisplay}</a><br />
+          E-Mail: <a href={mailUrl}>{site.email}</a>
+        </p>
+
+        <h2>Unternehmensangaben</h2>
+        <p>
+          Rechtsform: {site.legalForm}<br />
+          Zuständige Kammer: {site.chamber}<br />
+          {
+            site.taxId
+              ? `Steuernummer: ${site.taxId}`
+              : "Steuernummer: wird nachgetragen."
+          }
+        </p>
+        <p>{site.smallBusinessNote}</p>
+
+        <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+        <p>{site.owner}, {site.street}, {site.zip} {site.city}</p>
+
+        <h2>EU-Streitschlichtung</h2>
+        <p>
+          Die Europäische Kommission stellt eine Plattform zur
+          Online-Streitbeilegung bereit: <a
+            href="https://ec.europa.eu/consumers/odr/"
+            target="_blank"
+            rel="noopener noreferrer">ec.europa.eu/consumers/odr</a
+          >. Wir sind nicht verpflichtet und nicht bereit, an einem
+          Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+          teilzunehmen.
+        </p>
+
+        <h2>Haftung für Inhalte und Links</h2>
+        <p>
+          Die Inhalte dieser Seiten wurden mit Sorgfalt erstellt. Für die
+          Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir
+          jedoch keine Gewähr übernehmen. Für die Inhalte verlinkter externer
+          Seiten ist stets der jeweilige Anbieter verantwortlich. Bei
+          Bekanntwerden von Rechtsverletzungen entfernen wir entsprechende Links
+          umgehend.
+        </p>
+
+        <h2>Urheberrecht</h2>
+        <p>
+          Die auf dieser Website erstellten Inhalte und Werke unterliegen dem
+          deutschen Urheberrecht. Beiträge Dritter sind als solche
+          gekennzeichnet. Vervielfältigung, Bearbeitung und Verbreitung
+          außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen
+          Zustimmung.
+        </p>
+
+        <p class="legal-links">
+          Weiter zu <a href="/datenschutz/">Datenschutz</a>, <a href="/agb/"
+            >AGB</a
+          > und <a href="/widerruf/">Widerrufsbelehrung</a>.
+        </p>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  .legal-page {
-    padding-top: 150px;
+  .legal-crumbs {
+    margin-bottom: 1.25rem;
   }
+
   .legal-card {
-    padding: 34px;
-    max-width: 900px;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    max-width: none;
+    box-shadow: var(--shadow-md);
   }
-  a {
-    color: var(--blue);
-    font-weight: 700;
+
+  .legal-card h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-card address {
+    font-style: normal;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .legal-links {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
   }
 </style>

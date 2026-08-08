@@ -1,72 +1,60 @@
 ---
-import Base from "../layouts/Base.astro";
-import CtaBand from "../components/CtaBand.astro";
-import PageHero from "../components/PageHero.astro";
-import RelatedServices from "../components/RelatedServices.astro";
+import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/entkernung-trockenbau/";
 ---
 
-<Base
-  title="Trockenbau & Entkernung Emden | Fixum Objektservice"
-  description="Nicht-tragender Rückbau, Entkernung, Trockenbau, Decken, Wände und Montage in Emden und Ostfriesland."
->
-  <PageHero
-    eyebrow="Entkernung & Trockenbau"
-    title="Trockenbau und Entkernung in Emden"
-    text="Vom Rückbau bis zur ausbaufertigen Fläche: Fixum verbindet Demontage, nicht-tragenden Rückbau und Trockenbau in einem klaren Objektablauf."
-    image="/images/service-drywall.png"
-  />
-  <section class="section">
-    <div class="container grid-2">
-      <article class="card content-card">
-        <h2>Entkernung & Rückbau</h2>
-        <p>
-          Alte Böden, nicht-tragende Wände, Einbauten und Sanitärobjekte kommen
-          raus. Wir trennen direkt vor Ort nach Fraktionen und sagen klar, wenn
-          ein zugelassener Fachbetrieb übernehmen muss.
-        </p>
-      </article>
-      <article class="card content-card">
-        <h2>Trockenbau & Innenausbau</h2>
-        <p>
-          Ständerwände, Vorsatzschalen, Schallschutz, abgehängte Decken,
-          Dachschrägen, Spachtelung Q1 bis Q3, Boden, Türen und Montage.
-        </p>
-      </article>
-    </div>
-  </section>
-  <section class="section section--mist">
-    <div class="container split">
-      <div>
-        <p class="eyebrow">Saubere Grenzen</p>
-        <h2>Was Fixum macht - und was Fachbetriebe übernehmen</h2>
-        <p class="muted">
-          Nicht-tragender Rückbau, Trockenbau, Montage und Bodenarbeiten liegen
-          bei uns. Strom, Wasser, Heizung, Statik und Schadstoffe werden nicht
-          als eigene Leistung angeboten, sondern bei Bedarf mit zugelassenen
-          Fachbetrieben abgestimmt.
-        </p>
-      </div>
-      <ul class="card check-list">
-        <li>Alte Böden, Einbauten und nicht-tragende Bauteile entfernen</li>
-        <li>Ständerwände, Vorsatzschalen und abgehängte Decken erstellen</li>
-        <li>Spachtelung Q1 bis Q3 und vorbereitende Montagearbeiten</li>
-        <li>Material- und Entsorgungswege nachvollziehbar halten</li>
-      </ul>
-    </div>
-  </section>
-  <RelatedServices current="/entkernung-trockenbau" />
-  <CtaBand />
-</Base>
-
-<style>
-  .content-card {
-    padding: 30px;
-  }
-  .content-card h2 {
-    margin-bottom: 14px;
-  }
-
-  .check-list {
-    padding: 30px 30px 30px 52px;
-  }
-</style>
+{
+  /*
+  Kombiseite: bewusst auf das Paket "Rückbau + Ausbau in einem Auftrag"
+  ausgerichtet und nicht auf die Einzelkeywords - dafür gibt es
+  /entkernung-rueckbau/ und /trockenbau-innenausbau/.
+*/
+}
+<ServiceDetailPage
+  current={current}
+  crumb="Rückbau + Trockenbau"
+  metaTitle="Rückbau und Trockenbau kombiniert | Fixum Objektservice Emden"
+  description="Entkernung und Trockenbau in einem Auftrag: ein Betrieb, ein Angebot, keine Wartetage zwischen den Gewerken. Für Modernisierungen in Emden und Ostfriesland."
+  eyebrow="Rückbau + Trockenbau"
+  title="Rückbau und Trockenbau in einem Durchgang"
+  heroText="Der teuerste Teil einer Modernisierung ist selten die Arbeit - es sind die Tage dazwischen. Wenn Rückbau und Ausbau in einer Hand liegen, entfallen sie."
+  image="/images/service-drywall.png"
+  imageAlt="Rückbau und anschließender Trockenbau in einem Objekt in Emden"
+  serviceType="Kombinierter Rückbau und Trockenbau"
+  areaTitle="Rückbau und Ausbau in Emden und Ostfriesland"
+  lead="Diese Kombination ist der häufigste Fall bei uns: Alte Böden, Wände und Einbauten müssen raus, danach entstehen neue Wände, Decken und Flächen. Beides mit demselben Team, in einem Angebot und ohne Übergabetermin zwischen zwei Firmen."
+  included={[
+    "Nicht-tragender Rückbau von Wänden, Böden, Decken und Einbauten",
+    "Sortenreine Trennung und Entsorgung des Rückbaumaterials",
+    "Direkt anschließend Ständerwände, Vorsatzschalen und abgehängte Decken",
+    "Dachschrägen, Schallschutzaufbauten und Spachtelung Q1 bis Q3",
+    "Ein Angebot mit getrennt ausgewiesenen Positionen für beide Gewerke",
+    "Eine Baustelleneinrichtung, ein Staubschutzkonzept, ein Ansprechpartner",
+    "Koordination zugelassener Fachbetriebe für Elektro, Sanitär und Heizung",
+  ]}
+  process={[
+    [
+      "Gemeinsames Aufmaß",
+      "Rückbauumfang und Ausbauziel werden in einem Termin aufgenommen. Dadurch passt der Ausbau exakt auf das, was der Rückbau hinterlässt.",
+    ],
+    [
+      "Rückbau",
+      "Alte Bauteile kommen kontrolliert raus, das Material wird direkt getrennt. Die Fläche wird für den Ausbau vorbereitet, nicht nur geräumt.",
+    ],
+    [
+      "Ausbau ohne Wartetag",
+      "Sobald der Rückbau steht, beginnt der Trockenbau - dasselbe Team, kein Übergabetermin, keine Diskussion über Vorschäden.",
+    ],
+  ]}
+  facts={[
+    ["Vorteil", "Kein Wartetag zwischen Rückbau und Ausbau."],
+    ["Angebot", "Ein Dokument, Positionen getrennt ausgewiesen."],
+    ["Haftung", "Ein Betrieb - keine Zuständigkeitsfragen bei Schäden."],
+    ["Flexibel", "Einzelpositionen streichbar, ohne neu zu kalkulieren."],
+  ]}
+  noteTitle="Auch einzeln buchbar"
+  noteText="Wenn Sie nur den Rückbau brauchen oder nur den Ausbau, ist das genauso in Ordnung - dafür gibt es die Seiten zu Entkernung und Trockenbau. Der Vorteil dieser Kombination liegt in der Schnittstelle, nicht in einem Zwang zum Gesamtpaket. Steht die Modernisierung eines kompletten Objekts an, ist die Seite zur Kernsanierung der passendere Einstieg."
+  faq={serviceFaq[current]}
+/>

@@ -1,122 +1,312 @@
 ---
-import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
-import { services } from "../data/services";
+import Icon from "./Icon.astro";
+import { mailUrl, sameAs, site, telUrl, whatsappUrl } from "../data/site";
+import { serviceMenuGroups } from "../data/serviceMenu";
+
+const year = new Date().getFullYear();
+
+const legalLinks = [
+  ["Impressum", "/impressum/"],
+  ["Datenschutz", "/datenschutz/"],
+  ["AGB", "/agb/"],
+  ["Widerrufsbelehrung", "/widerruf/"],
+  ["Kontakt", "/kontakt/"],
+];
+
+const companyLinks = [
+  ["Über uns", "/ueber-uns/"],
+  ["Alle Leistungen", "/leistungen/"],
+  ["Für Hausverwaltungen", "/fuer-hausverwaltungen/"],
+  ["Für Bauunternehmen", "/fuer-bauunternehmen/"],
+  ["Ablauf & Festpreis", "/#ablauf"],
+];
+
+/* Erste zwei Menügruppen als Leistungsspalte - hält den Footer kompakt
+   und die interne Verlinkung auf die wichtigsten Seiten fokussiert. */
+const footerServices = serviceMenuGroups
+  .flatMap((group) => group.items)
+  .slice(0, 8);
 ---
 
 <footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+
   <div class="container footer-grid">
-    <div>
+    <div class="footer-brand">
       <img
         src="/logo/fixum-lockup-white.png"
-        alt="Fixum Objektservice"
+        alt={site.name}
         width="260"
         height="96"
+        loading="lazy"
+        decoding="async"
       />
-      <p class="script">Alles aus einer Hand</p>
-      <p>
-        Fixum Objektservice unterstützt private Auftraggeber, Hausverwaltungen
-        und Bauunternehmen in Emden und Ostfriesland. Wir verbinden Räumung,
-        Rückbau, Trockenbau und Montage in einem klaren Ablauf.
+      <p class="script">{site.claim}</p>
+      <p class="footer-text">
+        Fixum Objektservice verbindet Räumung, Rückbau, Trockenbau und Montage
+        zu einem Ablauf - für private Auftraggeber, Hausverwaltungen und
+        Bauunternehmen in Emden und Ostfriesland.
       </p>
+
+      {
+        /* Adressblock maschinenlesbar: identische NAP-Daten wie im Impressum. */
+      }
+      <address class="footer-address">
+        <strong>{site.name}</strong>
+        <span>{site.street}</span>
+        <span>{site.zip} {site.city}</span>
+      </address>
     </div>
-    <div>
-      <h2>Leistungen</h2>
-      {services.map((service) => <a href={service.href}>{service.title}</a>)}
-    </div>
-    <div>
-      <h2>Rechtliches</h2>
-      <a href="/impressum">Impressum</a>
-      <a href="/datenschutz">Datenschutz</a>
-      <a href="/agb">AGB</a>
-      <a href="/widerruf">Widerrufsbelehrung</a>
-      <a href="/kontakt">Kontakt</a>
-    </div>
-    <div>
-      <h2>Kontakt</h2>
-      <a href={telUrl}>{site.phoneDisplay}</a>
-      <a href={whatsappUrl()}>WhatsApp schreiben</a>
-      <a href={mailUrl}>{site.email}</a>
-      <p>{site.street}<br />{site.zip} {site.city}</p>
-      <p>{site.hours}</p>
+
+    <nav class="footer-col" aria-labelledby="footer-leistungen">
+      <h2 class="footer-title" id="footer-leistungen">Leistungen</h2>
+      {footerServices.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <nav class="footer-col" aria-labelledby="footer-unternehmen">
+      <h2 class="footer-title" id="footer-unternehmen">Unternehmen</h2>
+      {companyLinks.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
+
+    <div class="footer-col">
+      <h2 class="footer-title">Kontakt</h2>
+      <a class="footer-contact" href={telUrl}>
+        <Icon name="phone" size={18} />
+        <span>{site.phoneDisplay}</span>
+      </a>
+      <a
+        class="footer-contact"
+        href={whatsappUrl()}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="whatsapp" size={18} />
+        <span>WhatsApp schreiben</span>
+      </a>
+      <a class="footer-contact" href={mailUrl}>
+        <Icon name="mail" size={18} />
+        <span>{site.email}</span>
+      </a>
+      <p class="footer-contact footer-contact--static">
+        <Icon name="clock" size={18} />
+        <span>{site.hours}</span>
+      </p>
+      <p class="footer-contact footer-contact--static">
+        <Icon name="pin" size={18} />
+        <span>{site.city} + {site.radiusKm} km Umkreis</span>
+      </p>
+
+      {
+        sameAs.length > 0 && (
+          <p class="footer-social">
+            {sameAs.map((url) => (
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                Google Unternehmensprofil
+              </a>
+            ))}
+          </p>
+        )
+      }
     </div>
   </div>
-  <div class="container area">
-    {site.areaServed.map((area) => <span>{area}</span>)}
+
+  <div class="container area-block">
+    <h2 class="footer-title">Einsatzgebiet</h2>
+    <ul class="area-list">
+      {site.areaServed.map((area) => <li>{area}</li>)}
+    </ul>
   </div>
+
   <div class="container footer-bottom">
-    <span>© {new Date().getFullYear()} {site.name} · Inhaber {site.owner}</span>
-    <span
-      ><a href="/impressum">Impressum</a> · <a href="/datenschutz"
-        >Datenschutz</a
-      > · <a href="/agb">AGB</a></span
-    >
+    <p>© {year} {site.name} · Inhaber {site.owner}</p>
+    <nav class="footer-legal" aria-label="Rechtliches">
+      {legalLinks.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
   </div>
 </footer>
 
 <style>
   .footer {
-    padding: 76px 0 34px;
-    color: #d8e7fb;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(3.5rem, 7vw, 5.5rem) 0 2rem;
+    color: var(--on-dark-soft);
     background: var(--navy-deep);
+  }
+
+  /* Weicher Lichtkegel am oberen Rand */
+  .footer-glow {
+    position: absolute;
+    inset: -40% 0 auto;
+    z-index: -1;
+    height: 420px;
+    background: radial-gradient(
+      50% 100% at 50% 0%,
+      rgba(31, 122, 224, 0.24),
+      transparent 70%
+    );
+    pointer-events: none;
   }
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1.1fr;
-    gap: 34px;
+    grid-template-columns: 1.5fr 1fr 1fr 1.15fr;
+    gap: clamp(1.75rem, 3.5vw, 3rem);
   }
 
-  .footer img {
-    width: min(260px, 100%);
+  .footer-brand img {
+    width: min(230px, 100%);
     height: auto;
-    margin-bottom: 18px;
+    margin-bottom: 1rem;
   }
 
-  .footer h2 {
-    margin-bottom: 16px;
+  .footer-text {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    max-width: 42ch;
+  }
+
+  .footer-address {
+    display: grid;
+    gap: 2px;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--on-dark-hairline);
+    font-style: normal;
+    font-size: 0.9375rem;
+  }
+
+  .footer-address strong {
     color: #fff;
-    font-size: 16px;
+  }
+
+  .footer-title {
+    margin-bottom: 1rem;
+    color: #fff;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
-  .footer a {
-    display: block;
-    margin: 8px 0;
+  .footer-col {
+    display: grid;
+    align-content: start;
+    gap: 0.1rem;
   }
 
-  .footer a:hover {
+  .footer-col a {
+    position: relative;
+    display: inline-block;
+    width: fit-content;
+    padding: 0.32rem 0;
+    font-size: 0.9375rem;
+    transition:
+      color var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+
+  .footer-col a:hover {
+    color: #fff;
+    transform: translateX(3px);
+  }
+
+  .footer-contact {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .footer-contact--static {
+    padding: 0.32rem 0;
+    font-size: 0.9375rem;
+  }
+
+  .footer-contact :global(.icon) {
     color: var(--blue-light);
   }
 
-  .area {
+  .footer-social {
+    margin-top: 0.75rem;
+  }
+
+  .footer-social a {
+    color: var(--amber);
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+
+  /* ---- Einsatzgebiet ---- */
+  .area-block {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding-top: clamp(1.75rem, 3vw, 2.25rem);
+    border-top: 1px solid var(--on-dark-hairline);
+  }
+
+  .area-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    padding-top: 34px;
+    gap: 0.5rem;
+    padding: 0;
+    list-style: none;
   }
 
-  .area span {
-    border: 1px solid rgba(79, 160, 245, 0.32);
-    border-radius: 999px;
-    padding: 5px 12px;
-    font-size: 14px;
+  .area-list li {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(79, 160, 245, 0.3);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      background var(--dur) var(--ease-out);
   }
 
+  .area-list li:hover {
+    border-color: var(--blue-light);
+    background: rgba(79, 160, 245, 0.12);
+  }
+
+  /* ---- Fußzeile ---- */
   .footer-bottom {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    border-top: 1px solid rgba(220, 229, 242, 0.16);
-    margin-top: 34px;
-    padding-top: 22px;
-    font-size: 14px;
+    gap: 1rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--on-dark-hairline);
+    font-size: 0.875rem;
   }
 
-  @media (max-width: 900px) {
-    .footer-grid,
-    .footer-bottom {
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+  }
+
+  .footer-legal a:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 1024px) {
+    .footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .footer-grid {
       grid-template-columns: 1fr;
-      display: grid;
     }
   }
 </style>

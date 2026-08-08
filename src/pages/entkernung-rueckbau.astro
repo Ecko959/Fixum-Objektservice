@@ -1,33 +1,53 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/entkernung-rueckbau/";
 ---
 
 <ServiceDetailPage
-  current="/entkernung-rueckbau"
-  metaTitle="Entkernung & Rückbau Emden | Fixum Objektservice"
-  description="Nicht-tragender Rückbau und Entkernung in Emden und Ostfriesland: Böden, Einbauten, Trennwände und sortenreine Entsorgung."
+  current={current}
+  crumb="Entkernung"
+  metaTitle="Entkernung & Rückbau in Emden | Fixum Objektservice"
+  description="Nicht-tragender Rückbau und Entkernung in Emden und Ostfriesland: alte Böden, Trennwände, Einbauten und Sanitärobjekte raus, sortenrein getrennt, mit klaren Leistungsgrenzen und Festpreis."
   eyebrow="Entkernung & Rückbau"
   title="Nicht-tragender Rückbau in Emden"
-  heroText="Fixum entfernt alte Böden, Einbauten, nicht-tragende Bauteile und vorbereitende Ausbauhindernisse - sortenrein getrennt und sauber kalkuliert."
+  heroText="Fixum entfernt alte Böden, Einbauten, nicht-tragende Bauteile und Ausbauhindernisse - sortenrein getrennt und sauber kalkuliert."
   image="/images/categories/entkernung-rueckbau.png"
-  lead="Entkernung heißt bei Fixum: klare Grenzen, keine Eingriffe in Statik, keine Schadstoffsanierung und keine Anschlussarbeiten an Strom, Wasser oder Heizung."
+  imageAlt="Entkernung und nicht-tragender Rückbau in einem Objekt in Ostfriesland"
+  serviceType="Entkernung und nicht-tragender Rückbau"
+  areaTitle="Entkernung in Emden und Ostfriesland"
+  lead="Entkernung heißt bei Fixum: klare Grenzen, keine Eingriffe in die Statik, keine Schadstoffsanierung und keine Anschlussarbeiten an Strom, Wasser oder Heizung. Alles andere räumen wir kontrolliert zurück."
   included={[
-    "Nicht-tragende Trennwände und Einbauten entfernen",
-    "Alte Bodenbeläge, Paneele und leichte Innenausbauten rückbauen",
-    "Schutt, Holz, Metall und Mischabfälle sortenrein trennen",
-    "Vorbereitung für Trockenbau, Montage oder Fachbetriebe",
+    "Nicht-tragende Trennwände, Vorsatzschalen und Einbauten entfernen",
+    "Alte Bodenbeläge, Estrichaufbauten, Paneele und Deckenverkleidungen zurückbauen",
+    "Sanitärobjekte und Küchen demontieren (ohne Trennung der Anschlüsse)",
+    "Schutt, Holz, Metall und Mischabfälle direkt vor Ort sortenrein trennen",
+    "Staubschutz, Abdeckung von Fluchtwegen und Schutz angrenzender Bereiche",
+    "Abtransport und Entsorgung mit Nachweis auf Wunsch",
+    "Direkte Vorbereitung für Trockenbau, Boden oder Fachbetriebe",
   ]}
   process={[
     [
       "Bestand prüfen",
-      "Baujahr, Materialien, Leitungen und tragende Bauteile werden vor Start eingeordnet.",
+      "Baujahr, Materialien, Leitungsverläufe und tragende Bauteile werden vor dem Start eingeordnet. Bei Unklarheiten holen wir eine Fachmeinung dazu.",
     ],
     [
       "Rückbau ausführen",
-      "Nicht-tragende Bauteile werden kontrolliert entfernt und getrennt gesammelt.",
+      "Nicht-tragende Bauteile werden kontrolliert entfernt und direkt nach Fraktionen getrennt gesammelt - das senkt die Entsorgungskosten spürbar.",
     ],
-    ["Weiterbauen", "Auf Wunsch folgt direkt Trockenbau, Boden oder Montage."],
+    [
+      "Weiterbauen",
+      "Die Fläche wird besenrein und ausbaufertig übergeben. Auf Wunsch folgt direkt Trockenbau, Boden oder Montage durch dasselbe Team.",
+    ],
+  ]}
+  facts={[
+    ["Umfang", "Alles nicht-tragende - Statik bleibt unangetastet."],
+    ["Entsorgung", "Sortenrein getrennt, Vorteil landet im Angebot."],
+    ["Schadstoffe", "Bei Verdacht sofortiger Stopp, Fachbetrieb übernimmt."],
+    ["Anschluss", "Ausbau kann direkt weiterlaufen."],
   ]}
   noteTitle="Keine Statik, keine Schadstoffe"
-  noteText="Bei Verdacht auf Asbest, KMF, PAK-Kleber oder andere Schadstoffe stoppen wir den betroffenen Bereich. Tragende Bauteile, Elektro, Sanitär und Heizung gehören zugelassenen Fachbetrieben."
+  noteText="Bei Verdacht auf Asbest, KMF, PAK-Kleber oder andere Schadstoffe stoppen wir den betroffenen Bereich sofort - das gilt besonders bei Gebäuden vor 1993. Tragende Bauteile, Elektro, Sanitär und Heizung gehören zugelassenen Fachbetrieben. Beides steht in jedem Angebot, damit es hinterher keine Diskussion gibt."
+  faq={serviceFaq[current]}
 />

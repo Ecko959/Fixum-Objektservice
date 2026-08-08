@@ -1,74 +1,53 @@
 ---
-import Base from "../layouts/Base.astro";
-import CtaBand from "../components/CtaBand.astro";
-import PageHero from "../components/PageHero.astro";
-import RelatedServices from "../components/RelatedServices.astro";
+import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/umzuege-transporte/";
 ---
 
-<Base
-  title="Umzüge & Transporte Emden | Fixum Objektservice"
-  description="Privat- und Firmenumzüge, Transporte und Objektfahrten bis 3,5 t in Emden und Ostfriesland."
->
-  <PageHero
-    eyebrow="Umzüge & Transporte"
-    title="Umzüge und Transporte bis 3,5 t"
-    text="Für private Umzüge, kleinere Firmenumzüge und Objekttransporte plant Fixum den Ablauf klar, packt im Team an und verbindet Transport mit Räumung oder Montage."
-    image="/images/categories/umzuege-transporte.png"
-  />
-  <section class="section">
-    <div class="container grid-3 detail-grid">
-      <article class="card">
-        <h2>Privatumzüge</h2><p>
-          Wohnungswechsel, einzelne Möbel, Kartons und Kleintransporte im
-          Umkreis Emden.
-        </p>
-      </article>
-      <article class="card">
-        <h2>Firmenumzüge</h2><p>
-          Kleine Büro- und Objektumzüge mit klarer Terminabsprache und festem
-          Umfang.
-        </p>
-      </article>
-      <article class="card">
-        <h2>Objekttransporte</h2><p>
-          Material, Möbel, Werkzeug und Entsorgungsfahrten als Teil eines
-          Gesamtauftrags.
-        </p>
-      </article>
-    </div>
-  </section>
-  <section class="section section--mist">
-    <div class="container split">
-      <div>
-        <p class="eyebrow">Planung</p>
-        <h2>Transport ohne Chaos</h2>
-        <p class="muted">
-          Wir klären vorher Etagen, Laufwege, Parkmöglichkeiten, Demontagebedarf
-          und Zieladresse. Danach bekommen Sie einen nachvollziehbaren
-          Festpreis.
-        </p>
-      </div>
-      <ul class="card check-list">
-        <li>Umzüge und Transporte bis 3,5 t</li>
-        <li>Demontage und Montage nach Absprache</li>
-        <li>Kombinierbar mit Entrümpelung und Haushaltsauflösung</li>
-      </ul>
-    </div>
-  </section>
-  <RelatedServices current="/umzuege-transporte" />
-  <CtaBand />
-</Base>
-
-<style>
-  .detail-grid article {
-    padding: 26px;
-  }
-  .detail-grid h2 {
-    margin-bottom: 12px;
-    font-size: 24px;
-    text-transform: none;
-  }
-  .check-list {
-    padding: 30px 30px 30px 52px;
-  }
-</style>
+<ServiceDetailPage
+  current={current}
+  crumb="Umzüge & Transporte"
+  metaTitle="Umzüge & Transporte in Emden bis 3,5 t | Fixum Objektservice"
+  description="Privat- und Firmenumzüge sowie Transporte bis 3,5 t in Emden und Ostfriesland. Im Team, zum Festpreis, mit Demontage und auf Wunsch direkt kombiniert mit Entrümpelung."
+  eyebrow="Umzüge & Transporte"
+  title="Umzüge und Transporte bis 3,5 t"
+  heroText="Für private Umzüge, kleinere Firmenumzüge und Objekttransporte planen wir den Ablauf vorher durch - Etagen, Laufwege, Parken und Demontage inklusive."
+  image="/images/categories/umzuege-transporte.png"
+  imageAlt="Transportfahrzeug von Fixum Objektservice bei einem Umzug in Emden"
+  serviceType="Umzüge und Transporte"
+  areaTitle="Umzüge in Emden, Aurich, Leer und Umgebung"
+  lead="Ein Umzug scheitert selten am Tragen, sondern an der Planung: Zu wenig Kartons, kein Parkplatz vor der Tür, ein Schrank, der nicht durchs Treppenhaus passt. Genau das klären wir vorher."
+  included={[
+    "Privatumzüge innerhalb von Emden und Ostfriesland",
+    "Kleinere Büro- und Firmenumzüge mit fester Terminabsprache",
+    "Objekt- und Materialtransporte bis 3,5 t Fahrzeuggröße",
+    "Demontage und Wiederaufbau von Möbeln nach Absprache",
+    "Absicherung von Treppenhaus, Türzargen und Böden",
+    "Entsorgungsfahrten für alles, was nicht mitkommt",
+    "Kombinierbar mit Entrümpelung, Räumung und Montage",
+  ]}
+  process={[
+    [
+      "Planung",
+      "Wir klären Etagen, Laufwege, Parkmöglichkeiten, Demontagebedarf, Zieladresse und Termin - meist am Telefon, bei größerem Umfang vor Ort.",
+    ],
+    [
+      "Festpreis",
+      "Sie bekommen einen nachvollziehbaren Preis für Team, Fahrzeug und Fahrten. Was nicht enthalten ist, steht ebenfalls im Angebot.",
+    ],
+    [
+      "Umzugstag",
+      "Wir laden, transportieren, stellen auf und bauen bei Bedarf wieder zusammen. Was zurückbleibt, kann direkt entsorgt werden.",
+    ],
+  ]}
+  facts={[
+    ["Größe", "Bis 3,5 t Fahrzeuge - Wohnungen, Büros, Objektfahrten."],
+    ["Preis", "Festpreis nach Planung, keine Stundenüberraschung."],
+    ["Extras", "Demontage, Aufbau und Entsorgung kombinierbar."],
+    ["Gebiet", "Emden und rund 50 km Umkreis."],
+  ]}
+  noteTitle="Umzug und Entrümpelung in einem Termin"
+  noteText="Der häufigste Fall bei uns: Ein Teil des Hausstands zieht mit um, der Rest muss weg. Wenn beides derselbe Betrieb macht, fährt ein Fahrzeug einmal statt zwei Firmen zweimal. Das ist spürbar günstiger als zwei getrennte Aufträge und spart Ihnen einen kompletten Koordinationstermin."
+  faq={serviceFaq[current]}
+/>

@@ -1,34 +1,262 @@
 ---
 import Base from "../layouts/Base.astro";
+import AreaServed from "../components/AreaServed.astro";
 import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
+import Photo from "../components/Photo.astro";
+import { ids } from "../data/seo";
 import { site } from "../data/site";
+
+const path = "/ueber-uns/";
+const breadcrumbs: Array<[string, string]> = [["Über uns", path]];
+const heroImage = "/images/team-van.png";
+
+const aboutSchema = {
+  "@type": "AboutPage",
+  "@id": `${site.domain}${path}#about`,
+  name: `Über ${site.name}`,
+  about: { "@id": ids.business },
+  mainEntity: { "@id": ids.business },
+};
+
+const werte: Array<[string, string, "check" | "euro" | "clock" | "shield"]> = [
+  [
+    "Wir sagen, was wir nicht machen",
+    "Strom, Wasser, Heizung, Statik und Schadstoffe gehören zugelassenen Fachbetrieben. Das steht in jedem Angebot - nicht erst, wenn die Wand schon offen ist.",
+    "shield",
+  ],
+  [
+    "Der Preis gilt",
+    "Ein Festpreis nach Besichtigung ist genau das: fest. Wenn der Keller voller ist als gedacht, ist das unser Kalkulationsrisiko, nicht Ihr Nachtrag.",
+    "euro",
+  ],
+  [
+    "Termine sind Zusagen",
+    "Der zugesagte Tag wird gehalten. Und wenn wirklich einmal etwas dazwischenkommt, erfahren Sie es von uns - nicht dadurch, dass niemand kommt.",
+    "clock",
+  ],
+  [
+    "Sauber übergeben",
+    "Ein Objekt ist fertig, wenn es übergabefähig ist. Nicht, wenn die Arbeit erledigt ist. Der Unterschied liegt in der letzten Stunde.",
+    "check",
+  ],
+];
 ---
 
 <Base
-  title="Über uns | Fixum Objektservice"
-  description="Das Team hinter Fixum Objektservice: Objektservice, Rückbau, Trockenbau und Montage aus Emden für Ostfriesland."
+  title="Über uns: Der Betrieb hinter Fixum Objektservice | Emden"
+  description="Fixum Objektservice aus Emden: Inhaber Eckhard Singer, über 17 Jahre Praxis am Bau, ein Ansprechpartner für Räumung, Rückbau, Trockenbau und Montage in Ostfriesland."
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={[aboutSchema]}
+  preloadImage={heroImage}
+  pageType="AboutPage"
 >
   <PageHero
     eyebrow="Über uns"
-    title="Das Team hinter Fixum"
+    title="Der Betrieb hinter Fixum"
     text={`${site.owner} führt Fixum Objektservice als lokalen Ansprechpartner für Entrümpelung, Entkernung, Trockenbau und Montage in Emden und Ostfriesland.`}
+    image={heroImage}
+    imageAlt="Fahrzeug und Team von Fixum Objektservice in Emden"
+    breadcrumbs={breadcrumbs}
+    badges={["Inhabergeführt", "17+ Jahre Praxis", "Emden + 50 km"]}
   />
+
+  {/* Der Betrieb */}
   <section class="section">
-    <div class="container legal-copy">
-      <h2>Ein Ansprechpartner für das ganze Objekt</h2>
-      <p>
-        Der Betrieb ist darauf ausgelegt, die Arbeiten zwischen Räumung,
-        Rückbau, Ausbau und Übergabe zusammenzuführen. Das spart Abstimmungen
-        und macht Angebote nachvollziehbarer.
-      </p>
-      <h2>Klare Grenzen</h2>
-      <p>
-        Zulassungspflichtige Gewerke wie Strom, Wasser, Heizung oder statische
-        Eingriffe werden nicht als eigene Leistung beworben. Wenn sie nötig
-        sind, werden zugelassene Fachbetriebe koordiniert.
-      </p>
+    <div class="container split">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Der Betrieb</p>
+        <h2>Ein Ansprechpartner für das ganze Objekt</h2>
+        <p class="lead">
+          Fixum ist darauf ausgelegt, die Arbeiten zwischen Räumung, Rückbau,
+          Ausbau und Übergabe zusammenzuführen - statt sie auf drei Firmen zu
+          verteilen.
+        </p>
+        <p class="muted">
+          Der Name ist neu, die Leute sind es nicht. Hinter dem Betrieb stehen
+          über 17 Jahre kombinierte Praxis am Bau und im Objektservice, ein
+          großer Teil davon hier in Ostfriesland. Das merkt man weniger an
+          großen Worten als an der Kalkulation: Wer weiß, wie lange ein
+          Dachboden mit Treppenhaus wirklich dauert, muss hinterher nicht
+          nachverhandeln.
+        </p>
+        <p class="muted">
+          Der praktische Vorteil für Sie ist die weggefallene Schnittstelle.
+          Zwischen Entrümpelungsfirma und Trockenbauer liegt sonst eine Woche
+          Wartezeit, mindestens ein Missverständnis und meist die Frage, wer den
+          Kratzer in der Zarge verursacht hat. Wenn beides derselbe Betrieb
+          macht, stellt sich diese Frage nicht.
+        </p>
+      </div>
+
+      <Photo
+        src="/images/team-van.png"
+        alt="Fahrzeug von Fixum Objektservice vor einem Objekt in Emden"
+        width={900}
+        height={600}
+        sizes="(max-width: 900px) 100vw, 46vw"
+        class="about-photo"
+      />
     </div>
   </section>
-  <CtaBand />
+
+  {/* Arbeitsweise */}
+  <section class="section section--mist" aria-labelledby="werte-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Arbeitsweise</p>
+      <h2 id="werte-title">Vier Punkte, an denen wir uns messen lassen</h2>
+      <p class="muted">
+        Nichts davon ist besonders originell. Es ist nur erstaunlich selten
+        selbstverständlich.
+      </p>
+    </div>
+
+    <div class="container grid-2 werte-grid" data-reveal-group>
+      {
+        werte.map(([title, text, icon]) => (
+          <article class="card werte-card" data-reveal>
+            <span class="werte-icon">
+              <Icon name={icon} size={22} />
+            </span>
+            <div>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Grenzen */}
+  <section class="section section--tight">
+    <div class="container limits card card--accent" data-reveal>
+      <span class="limits-icon"><Icon name="shield" size={24} /></span>
+      <div>
+        <p class="eyebrow">Klare Grenzen</p>
+        <h2>Was wir bewusst nicht anbieten</h2>
+        <p class="muted">
+          Zulassungspflichtige Gewerke wie Elektro, Sanitär, Gas und Heizung,
+          Eingriffe in die Statik, geprüfte Brandschutzkonstruktionen und
+          Schadstoffsanierung führen wir nicht als eigene Leistung aus. Wenn sie
+          nötig sind, koordinieren wir zugelassene Fachbetriebe und stimmen die
+          Termine so ab, dass niemand zweimal anrücken muss. Sie behalten einen
+          Ansprechpartner - nur die Ausführung liegt dort, wo sie hingehört.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Regionalbezug */}
+  <section class="section section--soft">
+    <div class="container split">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Region</p>
+        <h2>Warum Ostfriesland und nicht überall</h2>
+        <p class="muted">
+          Der Einsatzradius von rund {site.radiusKm} Kilometern um {site.city} ist
+          eine bewusste Entscheidung. Kurze Wege bedeuten, dass eine Besichtigung
+          innerhalb von zwei Werktagen realistisch ist, dass wir bei einer Rückfrage
+          nochmal vorbeifahren können und dass die Anfahrt auf Ihrer Rechnung eine
+          Randnotiz bleibt statt ein Posten.
+        </p>
+        <p class="muted">
+          Wir kennen die Entsorgungsstellen der Region, die üblichen
+          Übergabefristen der Verwaltungen vor Ort und die Eigenheiten des
+          Altbaubestands zwischen Emden, Aurich und Leer. Das ist kein
+          Marketingargument, sondern der Grund, warum unsere Kalkulationen
+          halten.
+        </p>
+        <p>
+          <a class="arrow-link" href="/kontakt/"
+            >Kostenlose Besichtigung anfragen</a
+          >
+        </p>
+      </div>
+
+      <Photo
+        src="/images/service-clearance.png"
+        alt="Sortierte Räumung in einem Objekt in Ostfriesland"
+        width={900}
+        height={600}
+        sizes="(max-width: 900px) 100vw, 46vw"
+        class="about-photo"
+      />
+    </div>
+  </section>
+
+  <AreaServed service="Objektservice" />
+  <CtaBand
+    eyebrow="Lernen Sie uns kennen"
+    title="Reden Sie mit dem, der auch kalkuliert"
+    text="Bei Fixum sprechen Sie nicht mit einem Callcenter, sondern mit der Person, die das Angebot schreibt und am Ausführungstag auf der Baustelle steht."
+  />
 </Base>
+
+<style>
+  .about-photo {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .werte-grid {
+    gap: 1rem;
+  }
+
+  .werte-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: clamp(1.375rem, 2.4vw, 1.75rem);
+  }
+
+  .werte-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    color: var(--blue-light);
+    background: linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+  }
+
+  .werte-card h3 {
+    margin-bottom: 0.4rem;
+  }
+
+  .werte-card p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .limits {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--mist-soft);
+  }
+
+  .limits-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .limits h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  @media (max-width: 900px) {
+    .limits {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

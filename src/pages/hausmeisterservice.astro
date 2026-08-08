@@ -1,75 +1,53 @@
 ---
-import Base from "../layouts/Base.astro";
-import CtaBand from "../components/CtaBand.astro";
-import PageHero from "../components/PageHero.astro";
-import RelatedServices from "../components/RelatedServices.astro";
+import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+const current = "/hausmeisterservice/";
 ---
 
-<Base
-  title="Hausmeisterservice Emden | Fixum Objektservice"
-  description="Hausmeisterservice, Objektbetreuung, Kleinreparaturen, Außenanlagen und Winterdienst in Emden und Ostfriesland."
->
-  <PageHero
-    eyebrow="Hausmeisterservice"
-    title="Objektbetreuung für Emden und Ostfriesland"
-    text="Fixum übernimmt laufende Betreuung, Kleinreparaturen und praktische Objektarbeiten für Eigentümer, Verwaltungen und Gewerbe."
-    image="/images/categories/hausmeister-winterdienst.png"
-  />
-  <section class="section">
-    <div class="container split">
-      <div>
-        <p class="eyebrow">Rahmenvertrag möglich</p>
-        <h2>Ein Ansprechpartner für laufende Aufgaben</h2>
-        <p class="muted">
-          Ob regelmäßige Kontrolle, Kleinreparatur, Außenanlage oder
-          Winterdienst: Fixum arbeitet mit klarer Absprache, dokumentiert nach
-          Wunsch und bleibt für Verwaltungen und Eigentümer erreichbar.
-        </p>
-      </div>
-      <ul class="card check-list">
-        <li>Objektkontrolle und Kleinreparaturen</li>
-        <li>Außenanlagen und einfache Pflegearbeiten</li>
-        <li>Winterdienst nach Vereinbarung</li>
-        <li>Rahmenvertrag mit festen Konditionen möglich</li>
-      </ul>
-    </div>
-  </section>
-  <section class="section section--mist">
-    <div class="container grid-3 detail-grid">
-      <article>
-        <h2>Für Eigentümer</h2><p>
-          Praktische Hilfe, wenn kleinere Arbeiten regelmäßig liegen bleiben.
-        </p>
-      </article>
-      <article>
-        <h2>Für Verwaltungen</h2><p>
-          Kurze Wege bei Mieterwechsel, Übergabe und laufender Objektpflege.
-        </p>
-      </article>
-      <article>
-        <h2>Für Gewerbe</h2><p>
-          Ordentliche Betreuung von Flächen, Nebenräumen und Außenbereichen.
-        </p>
-      </article>
-    </div>
-  </section>
-  <RelatedServices current="/hausmeisterservice" />
-  <CtaBand />
-</Base>
-
-<style>
-  .check-list {
-    padding: 30px 30px 30px 52px;
-  }
-  .detail-grid article {
-    padding: 26px;
-    border-radius: 18px;
-    background: #fff;
-    border: 1px solid var(--line);
-  }
-  .detail-grid h2 {
-    margin-bottom: 12px;
-    font-size: 24px;
-    text-transform: none;
-  }
-</style>
+<ServiceDetailPage
+  current={current}
+  crumb="Hausmeisterservice"
+  metaTitle="Hausmeisterservice Emden & Ostfriesland | Fixum Objektservice"
+  description="Hausmeisterservice und Objektbetreuung in Emden und Ostfriesland: Kleinreparaturen, Objektkontrolle, Außenanlagen und Winterdienst - einmalig oder als Rahmenvertrag mit festen Konditionen."
+  eyebrow="Hausmeisterservice"
+  title="Objektbetreuung für Emden und Ostfriesland"
+  heroText="Fixum übernimmt laufende Betreuung, Kleinreparaturen und praktische Objektarbeiten für Eigentümer, Verwaltungen und Gewerbe."
+  image="/images/categories/hausmeister-winterdienst.png"
+  imageAlt="Objektbetreuung und Kleinreparaturen durch Fixum Objektservice in Emden"
+  serviceType="Hausmeisterservice und Objektbetreuung"
+  areaTitle="Hausmeisterservice in Emden und Ostfriesland"
+  lead="Die meisten Objektprobleme sind klein, wenn man sie früh sieht - und teuer, wenn niemand hinschaut. Genau dafür ist eine laufende Betreuung da: regelmäßig vorbeischauen, kleine Sachen sofort erledigen, große rechtzeitig melden."
+  included={[
+    "Regelmäßige Objektkontrolle mit kurzer Rückmeldung",
+    "Kleinreparaturen an Türen, Schlössern, Beschlägen und Befestigungen",
+    "Silikonfugen erneuern und kleine Trockenbauschäden ausbessern",
+    "Pflege von Außenanlagen, Wegen und Grünflächen",
+    "Winterdienst nach schriftlicher Vereinbarung",
+    "Betreuung von Nebenräumen, Kellern und Gemeinschaftsflächen",
+    "Rahmenvertrag mit festen Stundensätzen und Reaktionszeiten",
+  ]}
+  process={[
+    [
+      "Bedarf klären",
+      "Wir gehen das Objekt einmal gemeinsam durch und legen fest, was regelmäßig anfällt und was auf Abruf erledigt werden soll.",
+    ],
+    [
+      "Vereinbarung",
+      "Leistungsumfang, Turnus, Reaktionszeit und Konditionen werden schriftlich festgehalten - kein Nachverhandeln bei jedem Einsatz.",
+    ],
+    [
+      "Laufende Betreuung",
+      "Wir kommen wie vereinbart, erledigen die Arbeiten und melden zurück. Was Fachbetriebe brauchen, sagen wir Ihnen rechtzeitig.",
+    ],
+  ]}
+  facts={[
+    ["Modell", "Einmalig auf Abruf oder als Rahmenvertrag."],
+    ["Reaktionszeit", "Im Rahmenvertrag schriftlich festgelegt."],
+    ["Umfang", "Handwerklicher Kleinbereich plus Außenanlagen."],
+    ["Grenze", "Keine Arbeiten an Strom, Gas, Wasser und Heizung."],
+  ]}
+  noteTitle="Für wen sich das rechnet"
+  noteText="Für Eigentümer, bei denen kleinere Arbeiten regelmäßig liegen bleiben. Für Verwaltungen, die bei Mieterwechsel, Übergabe und laufender Pflege kurze Wege brauchen. Und für Gewerbe mit Flächen, Nebenräumen und Außenbereichen, die ordentlich aussehen sollen, ohne dass jemand intern dafür abgestellt wird."
+  faq={serviceFaq[current]}
+/>

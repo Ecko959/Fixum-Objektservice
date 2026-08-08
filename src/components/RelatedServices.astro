@@ -1,28 +1,62 @@
 ---
-import { services } from "../data/services";
+import Icon from "./Icon.astro";
+import { allServiceMenuItems } from "../data/serviceMenu";
 
 interface Props {
   current?: string;
+  title?: string;
+  eyebrow?: string;
 }
 
-const { current = "" } = Astro.props;
-const related = services.filter((service) => service.href !== current);
+const {
+  current = "",
+  title = "Passt zusammen, spart Wege",
+  eyebrow = "Weitere Leistungen",
+} = Astro.props;
+
+/* Aus dem Leistungsmenü statt aus services.ts: dort gibt es keine
+   Doppeleinträge, die intern auf dasselbe Ziel zeigen würden. */
+const normalize = (href: string) => href.replace(/\/+$/, "");
+const related = allServiceMenuItems.filter(
+  (item) => normalize(item.href) !== normalize(current),
+);
+
+const icons = [
+  "recycle",
+  "home",
+  "truck",
+  "hammer",
+  "wall",
+  "layers",
+  "clipboard",
+  "snow",
+  "users",
+  "shield",
+  "star",
+  "spark",
+] as const;
 ---
 
-<section class="section related-services">
-  <div class="container related-head">
-    <p class="eyebrow">Weitere Leistungen</p>
-    <h2>Alles sauber verbunden</h2>
+<section class="section section--tight related-services">
+  <div class="container related-head" data-reveal>
+    <p class="eyebrow">{eyebrow}</p>
+    <h2>{title}</h2>
+    <p class="muted">
+      Die meisten Objekte brauchen mehr als einen Schritt. Jede Leistung ist
+      einzeln buchbar - zusammen wird sie günstiger und schneller.
+    </p>
   </div>
-  <div class="container related-grid">
+
+  <div class="container related-grid" data-reveal-group>
     {
-      related.map((service) => (
-        <a href={service.href} class="related-card">
-          <span>
-            <img src="/logo/fixum-icon.png" alt="" width="34" height="34" />
+      related.map((service, index) => (
+        <a href={service.href} class="related-card" data-reveal>
+          <span class="related-icon">
+            <Icon name={icons[index % icons.length]} size={22} />
           </span>
-          <strong>{service.title}</strong>
-          <small>Mehr erfahren</small>
+          <strong>{service.label}</strong>
+          <span class="related-text">{service.description}</span>
+          <span class="arrow-link">Mehr erfahren</span>
         </a>
       ))
     }
@@ -31,63 +65,84 @@ const related = services.filter((service) => service.href !== current);
 
 <style>
   .related-services {
-    background: #f7fbff;
+    background: var(--mist-soft);
+    border-top: 1px solid var(--line);
   }
 
   .related-head {
-    margin-bottom: 24px;
+    display: grid;
+    gap: 0.625rem;
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+
+  .related-head > * {
+    max-width: 62ch;
   }
 
   .related-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.875rem;
   }
 
   .related-card {
     display: grid;
-    grid-template-columns: 54px 1fr;
-    gap: 12px 16px;
-    align-items: center;
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0.35rem 0.875rem;
+    padding: 1.125rem;
     border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 18px;
+    border-radius: var(--radius-md);
     background: #fff;
-    box-shadow: 0 12px 30px rgba(16, 36, 78, 0.08);
+    box-shadow: var(--shadow-xs);
+    transition:
+      transform var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
   }
 
-  .related-card span {
-    grid-row: span 2;
+  .related-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  .related-icon {
+    grid-row: span 3;
     display: grid;
     place-items: center;
-    width: 54px;
-    height: 54px;
-    border-radius: 16px;
-    background: var(--navy-deep);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    color: var(--blue-light);
+    background: linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+    transition: color var(--dur) var(--ease-out);
   }
 
-  .related-card img {
-    width: 38px;
-    height: 38px;
-    object-fit: contain;
+  .related-card:hover .related-icon {
+    color: var(--amber);
   }
 
   .related-card strong {
-    color: var(--navy);
-    font-family: "Manrope", sans-serif;
-    line-height: 1.15;
-  }
-
-  .related-card small {
-    color: var(--blue);
-    font-family: "Barlow Condensed", sans-serif;
+    align-self: end;
+    font-size: 1.0625rem;
     font-weight: 700;
-    text-transform: uppercase;
+    line-height: 1.2;
+    color: var(--navy);
   }
 
-  @media (max-width: 900px) {
-    .related-grid {
-      grid-template-columns: 1fr;
-    }
+  .related-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .related-card .arrow-link {
+    margin-top: 0.35rem;
+    font-size: 0.8125rem;
+  }
+
+  .related-card:hover .arrow-link {
+    gap: 0.75rem;
   }
 </style>
