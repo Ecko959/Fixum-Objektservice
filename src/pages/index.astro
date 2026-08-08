@@ -41,29 +41,28 @@ const trust: Array<[string, string, "star" | "euro" | "clock" | "shield"]> = [
   ],
 ];
 
-const chain: Array<[string, string, "recycle" | "hammer" | "wall" | "check"]> =
+const chain: Array<[string, string, "crate" | "hammer" | "wall" | "check"]> = [
   [
-    [
-      "Räumen",
-      "Entrümpelung und Haushaltsauflösung. Getrennt nach Fraktionen entsorgt, besenrein übergeben.",
-      "recycle",
-    ],
-    [
-      "Rückbauen",
-      "Entkernung und nicht-tragender Rückbau. Alte Böden, Wände und Einbauten kommen raus.",
-      "hammer",
-    ],
-    [
-      "Ausbauen",
-      "Trockenbau, Decken, Dachschrägen, Spachtelung, Boden, Türen und Montage.",
-      "wall",
-    ],
-    [
-      "Übergeben",
-      "Sauber, termingerecht und vermietbar. Auf Wunsch mit Fotodokumentation und Entsorgungsnachweis.",
-      "check",
-    ],
-  ];
+    "Räumen",
+    "Entrümpelung und Haushaltsauflösung. Getrennt nach Fraktionen entsorgt, besenrein übergeben.",
+    "crate",
+  ],
+  [
+    "Rückbauen",
+    "Entkernung und nicht-tragender Rückbau. Alte Böden, Wände und Einbauten kommen raus.",
+    "hammer",
+  ],
+  [
+    "Ausbauen",
+    "Trockenbau, Decken, Dachschrägen, Spachtelung, Boden, Türen und Montage.",
+    "wall",
+  ],
+  [
+    "Übergeben",
+    "Sauber, termingerecht und vermietbar. Auf Wunsch mit Fotodokumentation und Entsorgungsnachweis.",
+    "check",
+  ],
+];
 
 const reasons: Array<[string, string]> = [
   [
@@ -422,7 +421,6 @@ const serviceChips: Array<[string, string]> = [
         <ul class="check-list audience-list">
           <li>Festpreis nach kostenloser Besichtigung</li>
           <li>Wertanrechnung auf verwertbaren Hausrat</li>
-          <li>20 % der Arbeitskosten nach § 35a EStG absetzbar</li>
         </ul>
         <Button href="/kontakt/">Besichtigung anfragen</Button>
       </article>
@@ -460,23 +458,6 @@ const serviceChips: Array<[string, string]> = [
         </ul>
         <Button href="/fuer-bauunternehmen/">Als Sub anfragen</Button>
       </article>
-    </div>
-  </section>
-
-  {/* ---------------------------------------------------- Steuerhinweis */}
-  <section class="section section--tight section--mist">
-    <div class="container tax-box card card--accent" data-reveal>
-      <span class="tax-icon"><Icon name="euro" size={24} /></span>
-      <div>
-        <h2>20 % zurück vom Finanzamt</h2>
-        <p class="muted">
-          Für Handwerkerleistungen in der selbst genutzten Wohnung sind 20 % der
-          Arbeitskosten direkt von der Steuerschuld absetzbar (§ 35a EStG), bis
-          zu 1.200 € im Jahr. Wir weisen Arbeits- und Fahrtkosten auf der
-          Rechnung getrennt aus, damit Sie das ohne Rückfragen geltend machen
-          können. Voraussetzung: Überweisung, keine Barzahlung.
-        </p>
-      </div>
     </div>
   </section>
 
@@ -901,32 +882,34 @@ const serviceChips: Array<[string, string]> = [
   }
 
   /* Karten auf dunklem Grund als Glasflächen */
-  .services-stage :global(.service-card.card) {
+  /* Die Karte setzt ihre Farben über Variablen - hier wird nur der dunkle
+     Kontext gesetzt, die Vererbung erledigt den Rest. */
+  .services-stage :global(.service-card) {
+    --sc-title: #fff;
+    --sc-text: var(--on-dark-soft);
+    --sc-bullet: #fff;
+    --sc-link: var(--blue-light);
+
     border-color: var(--on-dark-faint);
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.07);
     box-shadow: var(--shadow-dark);
     backdrop-filter: blur(12px);
   }
 
-  .services-stage :global(.service-card.card:hover) {
-    border-color: rgba(79, 160, 245, 0.45);
-    background: rgba(255, 255, 255, 0.1);
+  .services-stage :global(.service-card:hover) {
+    border-color: rgba(79, 160, 245, 0.5);
+    background: rgba(255, 255, 255, 0.12);
   }
 
-  .services-stage :global(.service-card h3 a) {
-    color: #fff;
+  /* Beim Hover wird die Fläche heller - der Fließtext geht auf reines Weiß,
+     damit der Kontrast dabei nicht abnimmt. */
+  .services-stage :global(.service-card:hover) {
+    --sc-text: #e8f1fd;
+    --sc-link: #fff;
   }
 
-  .services-stage :global(.service-card p) {
-    color: var(--on-dark-soft);
-  }
-
-  .services-stage :global(.service-card .arrow-link) {
-    color: var(--blue-light);
-  }
-
-  .services-stage :global(.service-bullets li) {
-    color: #fff;
+  .services-stage :global(.service-bullets li::before) {
+    background: var(--amber);
   }
 
   /* ---------------------------------------------------- Ablaufkette */
@@ -1011,15 +994,23 @@ const serviceChips: Array<[string, string]> = [
     padding: clamp(1.375rem, 2.4vw, 1.75rem);
   }
 
+  /* Akzentstrich sitzt innerhalb der Karte und ist an beiden Enden gerundet -
+     so folgt er der Kartenform, statt über die Ecken hinauszustehen. */
   .reason-card::before {
     content: "";
     position: absolute;
-    inset: 0 auto 0 0;
+    left: 0;
+    top: clamp(1.375rem, 2.4vw, 1.75rem);
+    bottom: clamp(1.375rem, 2.4vw, 1.75rem);
     width: 3px;
-    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    border-radius: var(--radius-pill);
     background: linear-gradient(180deg, var(--blue-light), var(--blue));
     opacity: 0;
-    transition: opacity var(--dur) var(--ease-out);
+    transform: scaleY(0.6);
+    transform-origin: center;
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
   }
 
   .reason-card:hover {
@@ -1029,6 +1020,7 @@ const serviceChips: Array<[string, string]> = [
 
   .reason-card:hover::before {
     opacity: 1;
+    transform: scaleY(1);
   }
 
   .reason-no {
@@ -1080,37 +1072,20 @@ const serviceChips: Array<[string, string]> = [
     color: var(--muted);
   }
 
+  /* Die Liste nimmt den freien Platz auf, damit der Button in allen drei
+     Karten auf derselben Höhe sitzt - unabhängig von der Textlänge.
+     :global, weil .btn aus der Button-Komponente kommt. */
   .audience-list {
     width: 100%;
-    padding: 0.875rem 0 0.25rem;
+    flex: 1;
+    align-content: start;
+    padding: 0.875rem 0 0;
     font-size: 0.9375rem;
   }
 
-  .audience-card .btn {
-    margin-top: auto;
-  }
-
-  /* ---------------------------------------------------- Steuerbox */
-  .tax-box {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.25rem;
-    padding: clamp(1.5rem, 3vw, 2.25rem);
-  }
-
-  .tax-icon {
-    display: grid;
-    place-items: center;
-    width: 52px;
-    height: 52px;
-    border-radius: var(--radius-sm);
-    color: var(--navy-deep);
-    background: var(--amber);
-  }
-
-  .tax-box h2 {
-    margin-bottom: 0.75rem;
-    font-size: var(--step-3);
+  .audience-card :global(.btn) {
+    width: 100%;
+    margin-top: 1.5rem;
   }
 
   /* ---------------------------------------------------- Ablauf */
@@ -1258,10 +1233,6 @@ const serviceChips: Array<[string, string]> = [
 
     .hero-form {
       max-width: none;
-    }
-
-    .tax-box {
-      grid-template-columns: 1fr;
     }
   }
 </style>

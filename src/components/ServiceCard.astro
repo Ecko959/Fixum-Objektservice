@@ -63,7 +63,14 @@ const {
 </article>
 
 <style>
+  /* Farben laufen über Variablen, damit ein dunkler Abschnitt sie durch
+     Vererbung umsetzen kann - ohne Spezifitätsduell mit dieser Komponente. */
   .service-card {
+    --sc-title: var(--navy);
+    --sc-text: var(--muted);
+    --sc-bullet: var(--navy);
+    --sc-link: var(--blue);
+
     position: relative;
     display: grid;
     grid-template-rows: auto 1fr;
@@ -79,7 +86,12 @@ const {
   }
 
   .service-card h3 {
+    color: var(--sc-title);
     text-wrap: balance;
+  }
+
+  .service-card h3 a {
+    color: inherit;
   }
 
   /* Der Link deckt die Karte ab, ohne die Semantik zu verändern. */
@@ -92,7 +104,7 @@ const {
   }
 
   .service-card p {
-    color: var(--muted);
+    color: var(--sc-text);
     font-size: 0.9375rem;
     line-height: 1.6;
   }
@@ -109,7 +121,7 @@ const {
     position: relative;
     padding-left: 1.25rem;
     font-size: 0.875rem;
-    color: var(--navy);
+    color: var(--sc-bullet);
     font-weight: 600;
   }
 
@@ -127,6 +139,7 @@ const {
   .service-card .arrow-link {
     margin-top: auto;
     padding-top: 0.5rem;
+    color: var(--sc-link);
   }
 
   .service-card :global(.photo) {
