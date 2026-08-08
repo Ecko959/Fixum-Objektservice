@@ -16,8 +16,6 @@
 
 - Aktuell verwendet die Seite mit Imagegen erzeugte, realistische
   Website-Bilder.
-- Das Vorher/Nachher-Bild aus der Anzeige liegt unter
-  `public/images/reference-before-after.png` und ist aktiv.
 - Echte Baustellenfotos sind der größte Qualitätssprung, der ohne
   Code-Änderung möglich ist. Sie ersetzen die generierten Bilder unter
   gleichem Dateinamen in `public/images/`; danach WebP und AVIF neu erzeugen
@@ -25,6 +23,31 @@
 - Mehrere Leistungen teilen sich derzeit ein Bild
   (Entrümpelung/Haushaltsauflösung sowie Boden/Möbelmontage). Eigene Motive
   wären besser, sind aber keine Voraussetzung.
+- Die alte Einzelabbildung `public/images/reference-before-after.*` wird seit
+  der Umstellung auf die Referenz-Galerie nicht mehr eingebunden und kann
+  gelöscht werden.
+
+## Referenzfotos - offener Punkt
+
+In `public/images/referenzen/` liegen derzeit **fünf beschriftete Platzhalter**.
+Die echten Vorher/Nachher-Fotos müssen noch eingesetzt werden:
+
+| Datei                                | Referenz                              |
+| ------------------------------------ | ------------------------------------- |
+| `dachgeschoss-raeumung-rueckbau.png` | Dachgeschoss geräumt und zurückgebaut |
+| `dachgeschoss-trockenbau.png`        | Dachgeschoss ausgebaut                |
+| `haushaltsaufloesung-wohnzimmer.png` | Haushalt vollständig aufgelöst        |
+| `wohnungsraeumung-neuvermietung.png` | Wohnung für die Neuvermietung geräumt |
+| `altbau-entkernung-ausbau.png`       | Altbau entkernt und neu ausgebaut     |
+
+Format: 4:3, vorher links, nachher rechts. Nach dem Einsetzen WebP und AVIF neu
+erzeugen (siehe README) und die Texte in `src/data/references.ts` gegenlesen -
+sie beschreiben, was auf den Fotos zu sehen sein soll.
+
+Solange die Platzhalter drin sind, darf die Seite nicht live gehen: Sie sind
+sichtbar als Platzhalter markiert, aber eine Referenzsektion ohne Referenzen
+wirkt schlechter als gar keine. Alternativ `showReferences` in
+`src/data/site.ts` bis dahin auf `false` setzen.
 
 ## Kundenstimmen
 

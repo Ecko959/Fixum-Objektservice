@@ -7,6 +7,7 @@ import CtaBand from "../components/CtaBand.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import Photo from "../components/Photo.astro";
+import ReferenceGallery from "../components/ReferenceGallery.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import { services } from "../data/services";
 import { site, telUrl, whatsappUrl } from "../data/site";
@@ -492,28 +493,28 @@ const serviceChips: Array<[string, string]> = [
   {/* ---------------------------------------------------- Referenz */}
   {
     site.showReferences && (
-      <section class="section section--soft references">
+      <section
+        class="section section--soft references"
+        aria-labelledby="referenzen-title"
+      >
         <div class="container section-head" data-reveal>
           <p class="eyebrow">Referenzen</p>
-          <h2>Vorher und Nachher</h2>
+          <h2 id="referenzen-title">Objekte, die wir übergeben haben</h2>
           <p class="muted">
-            Echte Baustellen aus Emden und Umgebung - kein Katalogbild.
+            Echte Baustellen aus Emden und Umgebung - eigene Fotos, keine
+            Katalogbilder. Jede Referenz zeigt den Zustand bei Auftragsbeginn
+            und das Ergebnis bei der Übergabe.
           </p>
         </div>
-        <figure class="container reference-figure" data-reveal>
-          <Photo
-            src="/images/reference-before-after.png"
-            alt="Vorher-Nachher-Vergleich einer von Fixum Objektservice renovierten Wohnung in Emden"
-            width={1600}
-            height={900}
-            sizes="(max-width: 1220px) 100vw, 1140px"
-            ratio="16 / 9"
-          />
-          <figcaption>
-            Räumung, Rückbau und Ausbau in einem Durchgang - Ergebnis nach
-            Übergabe.
-          </figcaption>
-        </figure>
+
+        <div class="container">
+          <ReferenceGallery />
+        </div>
+
+        <p class="container references-note">
+          Ihr Objekt sieht anders aus? Bei der Besichtigung sagen wir Ihnen
+          ehrlich, was möglich ist - <a href="/kontakt/">Termin anfragen</a>.
+        </p>
       </section>
     )
   }
@@ -1148,22 +1149,18 @@ const serviceChips: Array<[string, string]> = [
     color: var(--muted);
   }
 
-  /* ---------------------------------------------------- Referenz */
-  .reference-figure {
-    /* margin-inline von .container darf nicht überschrieben werden */
-    margin-block: 0;
-  }
-
-  .reference-figure :global(.photo) {
-    border: 8px solid #fff;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .reference-figure figcaption {
-    margin-top: 0.875rem;
+  /* ---------------------------------------------------- Referenzen */
+  .references-note {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
     text-align: center;
-    font-size: 0.875rem;
     color: var(--muted);
+  }
+
+  .references-note a {
+    color: var(--blue);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* ---------------------------------------------------- Responsive */

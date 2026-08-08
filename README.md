@@ -118,15 +118,33 @@ AVIF; die Komponenten liefern automatisch das beste Format aus. Wird ein PNG
 ersetzt, müssen WebP und AVIF neu erzeugt werden:
 
 ```bash
-node -e "const sharp=require('sharp'); const fs=require('fs'); const path=require('path'); const dirs=['public/images','public/images/categories']; Promise.all(dirs.flatMap(dir=>fs.readdirSync(dir).filter(f=>f.endsWith('.png')).flatMap(f=>{const p=path.join(dir,f); const b=p.replace(/\\.png\$/,''); return [sharp(p).webp({quality:82}).toFile(b+'.webp'), sharp(p).avif({quality:56}).toFile(b+'.avif')];}))).then(()=>console.log('converted images'))"
+node -e "const sharp=require('sharp'); const fs=require('fs'); const path=require('path'); const dirs=['public/images','public/images/categories','public/images/referenzen']; Promise.all(dirs.flatMap(dir=>fs.readdirSync(dir).filter(f=>f.endsWith('.png')).flatMap(f=>{const p=path.join(dir,f); const b=p.replace(/\\.png\$/,''); return [sharp(p).webp({quality:82}).toFile(b+'.webp'), sharp(p).avif({quality:56}).toFile(b+'.avif')];}))).then(()=>console.log('converted images'))"
 ```
 
 Danach `npm run build:og` ausführen, falls das Hero-Bild betroffen war.
 
-## Referenzen ein- oder ausschalten
+## Referenzen pflegen
 
-In `src/data/site.ts` steuert `showReferences`, ob die Vorher/Nachher-Sektion
-sichtbar ist.
+Die Referenzen auf der Startseite kommen aus `src/data/references.ts`. Jeder
+Eintrag besteht aus Bild, Alt-Text, Titel, kurzer Einordnung, Leistungs-Chip
+und Link auf die passende Leistungsseite. Über `showReferences` in
+`src/data/site.ts` lässt sich die ganze Sektion abschalten.
+
+### Ein Referenzfoto einsetzen
+
+Die Bilder liegen in `public/images/referenzen/`. Vorgesehen ist ein
+Vorher/Nachher-Bild im Seitenverhältnis 4:3 - **vorher links, nachher
+rechts**; die Galerie zeichnet die Trennlinie in der Bildmitte selbst.
+
+1. Foto als PNG unter dem in `references.ts` hinterlegten Dateinamen ablegen
+   und den vorhandenen Platzhalter überschreiben.
+2. WebP und AVIF neu erzeugen (Befehl unter "Fotos austauschen").
+3. Alt-Text und Beschreibung in `references.ts` an das Foto anpassen.
+
+Solange ein Platzhalter unter dem Namen liegt, zeigt die Karte deutlich
+sichtbar "PLATZHALTER" an. Neue Platzhalter erzeugt `npm run build:referenzen` -
+der Befehl überschreibt vorhandene Dateien, also nicht ausführen, wenn die
+echten Fotos schon eingesetzt sind.
 
 ## Rechtstexte
 
