@@ -21,20 +21,7 @@ const related = allServiceMenuItems.filter(
   (item) => normalize(item.href) !== normalize(current),
 );
 
-const icons = [
-  "recycle",
-  "home",
-  "truck",
-  "hammer",
-  "wall",
-  "layers",
-  "clipboard",
-  "snow",
-  "users",
-  "shield",
-  "star",
-  "spark",
-] as const;
+/* Das passende Icon steht am Menüeintrag - keine Zuordnung über den Index. */
 ---
 
 <section class="section section--tight related-services">
@@ -49,10 +36,10 @@ const icons = [
 
   <div class="container related-grid" data-reveal-group>
     {
-      related.map((service, index) => (
+      related.map((service) => (
         <a href={service.href} class="related-card" data-reveal>
           <span class="related-icon">
-            <Icon name={icons[index % icons.length]} size={22} />
+            <Icon name={service.icon} size={22} />
           </span>
           <strong>{service.label}</strong>
           <span class="related-text">{service.description}</span>

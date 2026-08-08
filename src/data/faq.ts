@@ -36,11 +36,6 @@ export const faq: FaqItem[] = [
       "Verwertbares wird verkauft oder gespendet, der Rest getrennt nach Fraktionen entsorgt. Metall, Papier und Glas kosten nichts oder bringen etwas ein - dieser Vorteil landet in Ihrem Angebot. Auf Wunsch bekommen Sie einen Entsorgungsnachweis.",
   },
   {
-    question: "Kann ich die Kosten steuerlich absetzen?",
-    answer:
-      "Bei Arbeiten in der selbst genutzten Wohnung sind 20 % der Arbeits- und Fahrtkosten direkt von der Steuerschuld absetzbar (§ 35a EStG), bis zu 1.200 € im Jahr. Wir weisen diese Posten auf der Rechnung getrennt aus. Voraussetzung ist die Zahlung per Überweisung - Barzahlung erkennt das Finanzamt nicht an.",
-  },
-  {
     question: "Arbeiten Sie auch als Nachunternehmer?",
     answer:
       "Ja. Für Bauunternehmen, Generalunternehmer und Zimmereien übernehmen wir Trockenbau und Rückbau nach m²-Preis oder Tagessatz, Material bauseits möglich. Wir sind haftpflichtversichert; die Freistellungsbescheinigung nach § 48b EStG legen wir auf Anfrage vor.",

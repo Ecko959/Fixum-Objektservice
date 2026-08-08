@@ -93,6 +93,10 @@
 
   --header-h: 92px;
 
+  /* Haken-Glyphe als Maske - wird von .check-list genutzt. */
+  --check-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 12.4 3.4 3.4L17.2 9'/%3E%3C/svg%3E")
+    center / 68% 68% no-repeat;
+
   color-scheme: light;
   scrollbar-color: var(--line-strong) transparent;
   /* Erlaubt das Animieren von auto-Höhen (Akkordeon), wo unterstützt. */
@@ -659,7 +663,9 @@ h4 {
   backdrop-filter: blur(10px);
 }
 
-/* Haken-Liste */
+/* Haken-Liste.
+   Der Haken ist ein echtes SVG als Maske, kein aus Verläufen gebauter Strich -
+   das bleibt bei jeder Größe und auf jedem Display sauber. */
 .check-list {
   display: grid;
   gap: 0.875rem;
@@ -670,53 +676,44 @@ h4 {
 
 .check-list li {
   position: relative;
-  padding-left: 2.125rem;
-  line-height: 1.5;
+  padding-left: 2.25rem;
+  line-height: 1.55;
 }
 
 .check-list li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.1em;
-  width: 1.375rem;
-  height: 1.375rem;
+  top: 0.12em;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: var(--radius-pill);
-  background:
-    /* Haken */
-    linear-gradient(45deg, transparent 45%, #fff 45%, #fff 55%, transparent 55%)
-      no-repeat 0.42rem 0.52rem / 0.5rem 0.14rem,
-    linear-gradient(
-        -45deg,
-        transparent 45%,
-        #fff 45%,
-        #fff 55%,
-        transparent 55%
-      )
-      no-repeat 0.6rem 0.34rem / 0.34rem 0.14rem,
-    linear-gradient(180deg, var(--blue-bright), var(--blue));
+  background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  box-shadow: 0 2px 6px rgba(22, 104, 196, 0.28);
 }
 
+.check-list li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #fff;
+  -webkit-mask: var(--check-mask);
+  mask: var(--check-mask);
+}
+
+/* Auf dunklem Grund trägt Amber den Akzent, der Haken wird dunkel. */
 .section--dark .check-list li::before,
 .section--chain .check-list li::before {
-  background:
-    linear-gradient(
-        45deg,
-        transparent 45%,
-        #071326 45%,
-        #071326 55%,
-        transparent 55%
-      )
-      no-repeat 0.42rem 0.52rem / 0.5rem 0.14rem,
-    linear-gradient(
-        -45deg,
-        transparent 45%,
-        #071326 45%,
-        #071326 55%,
-        transparent 55%
-      )
-      no-repeat 0.6rem 0.34rem / 0.34rem 0.14rem,
-    linear-gradient(180deg, var(--amber), var(--amber-deep));
+  background: linear-gradient(160deg, var(--amber), var(--amber-deep));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.section--dark .check-list li::after,
+.section--chain .check-list li::after {
+  background: var(--navy-ink);
 }
 
 /* Rechtstexte */
