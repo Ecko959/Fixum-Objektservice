@@ -86,6 +86,22 @@ weiterhin im Ordner und sind damit über ihre direkte URL erreichbar.
    zu übergeben (die AGB setzen das voraus), können sie im Ordner bleiben -
    dann aber bitte Punkt 1 vorher klären.
 
+### Offene Abwägung: Wertanrechnung in den AGB
+
+Die Werbung mit der Anrechnung verwertbaren Hausrats auf den Preis wurde auf
+Wunsch von allen Seiten entfernt - Startseite, Leistungsdaten, FAQ sowie den
+Seiten zu Entrümpelung und Haushaltsauflösung.
+
+In **§ 10 Abs. 2 der AGB** steht die Wertanrechnung weiterhin. Die Klausel ist
+bedingt formuliert ("Eine _vereinbarte_ Wertanrechnung wird im Angebot
+gesondert ausgewiesen") und regelt damit nur den Fall, dass sie im Einzelfall
+tatsächlich vereinbart wird. Das ist kein Widerspruch zur entfernten Werbung:
+Die Website verspricht nichts mehr, die AGB regeln den Einzelfall.
+
+Soll die Wertanrechnung vollständig entfallen, muss zuerst die geprüfte
+AGB-Fassung geändert werden - dann fallen § 10 Abs. 2 und der Zusatz in der
+Überschrift weg und die Seite wird nachgezogen.
+
 ### Offene Abwägung: § 35a EStG in den AGB
 
 Die Werbung mit "20 % zurück vom Finanzamt" wurde auf Wunsch von allen Seiten
