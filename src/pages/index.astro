@@ -92,24 +92,6 @@ const reasons: Array<[string, string]> = [
   ],
 ];
 
-const steps: Array<[string, string, "phone" | "home" | "check"]> = [
-  [
-    "Anrufen oder Fotos schicken",
-    "Kurze Einschätzung sofort am Telefon oder per WhatsApp, ganz ohne Termin.",
-    "phone",
-  ],
-  [
-    "Besichtigung vor Ort",
-    "Meist innerhalb von zwei Werktagen. Kostenlos und unverbindlich.",
-    "home",
-  ],
-  [
-    "Festpreis schriftlich",
-    "Sie bekommen ein Angebot mit Leistungsumfang und Preis. Danach entscheiden Sie in Ruhe.",
-    "check",
-  ],
-];
-
 const serviceChips: Array<[string, string]> = [
   ["Alle Leistungen", "/leistungen/"],
   ["Entrümpelung", "/entruempelung-haushaltsaufloesung/"],
@@ -421,7 +403,7 @@ const serviceChips: Array<[string, string]> = [
         </p>
         <ul class="check-list audience-list">
           <li>Festpreis nach kostenloser Besichtigung</li>
-          <li>Wertanrechnung auf verwertbaren Hausrat</li>
+          <li>Besenreine Übergabe, auf Wunsch mit Fotodokumentation</li>
         </ul>
         <Button href="/kontakt/">Besichtigung anfragen</Button>
       </article>
@@ -460,34 +442,6 @@ const serviceChips: Array<[string, string]> = [
         <Button href="/fuer-bauunternehmen/">Als Sub anfragen</Button>
       </article>
     </div>
-  </section>
-
-  {/* ---------------------------------------------------- Ablauf */}
-  <section id="ablauf" class="section" aria-labelledby="steps-title">
-    <div class="container section-head section-head--center" data-reveal>
-      <p class="eyebrow">Ablauf</p>
-      <h2 id="steps-title">In drei Schritten zum Festpreis</h2>
-    </div>
-
-    <ol class="container process" data-reveal-group>
-      {
-        steps.map(([headline, text, icon], index) => (
-          <li class="process-step" data-reveal>
-            <span class="process-icon">
-              <Icon name={icon} size={24} />
-              <em>{index + 1}</em>
-            </span>
-            <h3>{headline}</h3>
-            <p>{text}</p>
-          </li>
-        ))
-      }
-    </ol>
-
-    <p class="container process-note">
-      Kein Vertreterbesuch, kein Abschlussdruck, keine Unterschrift vor Ort
-      nötig.
-    </p>
   </section>
 
   {/* ---------------------------------------------------- Referenz */}
@@ -1087,66 +1041,6 @@ const serviceChips: Array<[string, string]> = [
   .audience-card :global(.btn) {
     width: 100%;
     margin-top: 1.5rem;
-  }
-
-  /* ---------------------------------------------------- Ablauf */
-  .process {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    margin-block: 0;
-    padding: 0;
-    list-style: none;
-    text-align: center;
-  }
-
-  .process-step {
-    display: grid;
-    justify-items: center;
-    gap: 0.5rem;
-  }
-
-  .process-icon {
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: 68px;
-    height: 68px;
-    margin-bottom: 0.5rem;
-    border-radius: var(--radius-pill);
-    color: #fff;
-    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
-    box-shadow: var(--glow-blue);
-  }
-
-  .process-icon em {
-    position: absolute;
-    right: -4px;
-    top: -4px;
-    display: grid;
-    place-items: center;
-    width: 26px;
-    height: 26px;
-    border-radius: var(--radius-pill);
-    background: var(--amber);
-    color: var(--navy-deep);
-    font-family: var(--font-utility);
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 700;
-  }
-
-  .process-step p {
-    max-width: 34ch;
-    color: var(--muted);
-    font-size: 0.9375rem;
-    line-height: 1.6;
-  }
-
-  .process-note {
-    margin-top: 2rem;
-    text-align: center;
-    color: var(--muted);
   }
 
   /* ---------------------------------------------------- Referenzen */

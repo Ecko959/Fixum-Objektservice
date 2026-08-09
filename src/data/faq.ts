@@ -8,7 +8,7 @@ export const faq: FaqItem[] = [
   {
     question: "Was kostet eine Entrümpelung in Emden?",
     answer:
-      "Das hängt vom Volumen ab, nicht allein von der Quadratmeterzahl - eine vollgestellte Zweizimmerwohnung kann mehr Aufwand sein als ein leergeräumtes Haus. Deshalb schauen wir uns das Objekt an und nennen danach einen Festpreis, der schriftlich gilt. Besichtigung und Angebot sind kostenlos. Verwertbarer Hausrat wird angerechnet und senkt den Preis.",
+      "Das hängt vom Volumen ab, nicht allein von der Quadratmeterzahl - eine vollgestellte Zweizimmerwohnung kann mehr Aufwand sein als ein leergeräumtes Haus. Deshalb schauen wir uns das Objekt an und nennen danach einen Festpreis, der schriftlich gilt. Besichtigung und Angebot sind kostenlos.",
   },
   {
     question: "Wie schnell bekomme ich einen Termin?",
@@ -33,7 +33,7 @@ export const faq: FaqItem[] = [
   {
     question: "Was passiert mit dem Hausrat?",
     answer:
-      "Verwertbares wird verkauft oder gespendet, der Rest getrennt nach Fraktionen entsorgt. Metall, Papier und Glas kosten nichts oder bringen etwas ein - dieser Vorteil landet in Ihrem Angebot. Auf Wunsch bekommen Sie einen Entsorgungsnachweis.",
+      "Brauchbares geben wir weiter oder führen es der Wiederverwertung zu, der Rest wird getrennt nach Fraktionen entsorgt - Holz, Metall, Elektro, Bauschutt und Restmüll. Auf Wunsch bekommen Sie einen Entsorgungsnachweis über die Fraktionen.",
   },
   {
     question: "Arbeiten Sie auch als Nachunternehmer?",
@@ -59,9 +59,9 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Sie rufen an oder schicken Fotos per WhatsApp. Wir kommen zur kostenlosen Besichtigung, meist innerhalb von zwei Werktagen, und nennen danach einen schriftlichen Festpreis. Am Ausführungstag räumen wir das Objekt, trennen die Abfälle sortenrein und übergeben besenrein.",
     },
     {
-      question: "Wird verwertbarer Hausrat angerechnet?",
+      question: "Was passiert mit Farben, Batterien oder Elektrogeräten?",
       answer:
-        "Ja. Möbel, Werkzeug, Metall oder Sammlerstücke mit Wiederverkaufswert ziehen wir vom Angebotspreis ab. Was das im Einzelfall bedeutet, sehen Sie transparent im Angebot - nicht erst auf der Schlussrechnung.",
+        "Diese Abfälle müssen gesondert entsorgt werden und sind deshalb nicht im normalen Volumenpreis enthalten. Wir sagen Ihnen vor der Ausführung, was zusammenkommt, und rechnen die tatsächlichen Entsorgungskosten zuzüglich Handlingpauschale ab - keine Überraschung auf der Schlussrechnung.",
     },
     {
       question: "Räumen Sie auch Messie-Wohnungen?",

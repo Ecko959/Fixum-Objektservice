@@ -157,21 +157,28 @@ const schema = [
     <div class="container section-head" data-reveal>
       <p class="eyebrow">Ablauf</p>
       <h2 id="ablauf-title">Vom Schlüssel zur vermietbaren Einheit</h2>
+      <p class="muted">
+        Jeder Schritt ist abgeschlossen, bevor der nächste beginnt - und der
+        Preis steht, bevor jemand anfängt.
+      </p>
     </div>
 
-    <ol class="container ablauf-list" data-reveal-group>
+    <ol class="container process-flow" data-reveal-group>
       {
-        ablauf.map(([title, text], index) => (
-          <li class="ablauf-step" data-reveal>
-            <span class="ablauf-no">{String(index + 1).padStart(2, "0")}</span>
-            <div>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </div>
+        ablauf.map(([title, text]) => (
+          <li class="flow-step" data-reveal>
+            <span class="flow-no" aria-hidden="true" />
+            <h3>{title}</h3>
+            <p>{text}</p>
           </li>
         ))
       }
     </ol>
+
+    <p class="container process-note">
+      Sie brauchen dafür nicht vor Ort zu sein - Schlüsselübergabe und Rückgabe
+      regeln wir nach Ihrer Vorgabe.
+    </p>
   </section>
 
   {/* Leistungspaket */}
@@ -287,52 +294,7 @@ const schema = [
     color: var(--muted);
   }
 
-  /* ---- Ablauf ---- */
-  .ablauf-list {
-    display: grid;
-    gap: 0.875rem;
-    margin-block: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .ablauf-step {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.25rem;
-    align-items: start;
-    padding: clamp(1.125rem, 2.2vw, 1.5rem);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    background: #fff;
-    box-shadow: var(--shadow-xs);
-    transition:
-      transform var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out);
-  }
-
-  .ablauf-step:hover {
-    transform: translateX(4px);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .ablauf-no {
-    font-family: var(--font-utility);
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--amber);
-  }
-
-  .ablauf-step h3 {
-    margin-bottom: 0.3rem;
-  }
-
-  .ablauf-step p {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--muted);
-  }
+  /* Ablauf: .process-flow steht im Designsystem (global.css). */
 
   /* ---- Paketliste ---- */
   .paket-list a {

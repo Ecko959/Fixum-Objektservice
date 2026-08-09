@@ -18,7 +18,11 @@ interface Props {
   imageAlt?: string;
   lead: string;
   included: string[];
+  /** Ablauf der Leistung als [Titel, Text]. Vorgesehen sind vier Schritte:
+      Anfrage, Aufnahme mit Festpreis, Ausführung, Übergabe. */
   process: Array<[string, string]>;
+  /** Einleitung über dem Ablauf, falls die Standardformulierung nicht passt. */
+  processLead?: string;
   noteTitle?: string;
   noteText?: string;
   /** Kurzer, sichtbarer Vertrauensblock rechts neben dem Leistungsumfang. */
@@ -43,6 +47,7 @@ const {
   lead,
   included,
   process,
+  processLead,
   noteTitle = "Klarer Umfang statt Ratespiel",
   noteText = "Nach Besichtigung oder aussagekräftigen Fotos bekommen Sie ein Angebot mit Leistungsumfang, Termin und Preis. Was nicht Teil der Leistung ist, steht genauso klar drin.",
   facts = [
@@ -115,23 +120,38 @@ const schema = [serviceSchema({ name: title, description, path, serviceType })];
     </div>
   </section>
 
-  {/* Ablauf in drei Schritten */}
-  <section class="section section--mist">
+  {
+    /* Ablauf - auf jeder Leistungsseite derselbe Bogen von der Anfrage
+      bis zur Übergabe, inhaltlich aber auf die Leistung gemünzt. */
+  }
+  <section class="section section--mist" aria-labelledby="ablauf-title">
     <div class="container section-head" data-reveal>
       <p class="eyebrow">Ablauf</p>
-      <h2>In drei Schritten zum Ergebnis</h2>
+      <h2 id="ablauf-title">Von der Anfrage bis zur Übergabe</h2>
+      <p class="muted">
+        {
+          processLead ??
+            "Jeder Schritt ist abgeschlossen, bevor der nächste beginnt - und Sie wissen vorher, was er kostet."
+        }
+      </p>
     </div>
-    <div class="container grid-3 detail-grid" data-reveal-group>
+
+    <ol class="container process-flow" data-reveal-group>
       {
-        process.map(([headline, text], index) => (
-          <article class="detail-step card" data-reveal>
-            <span class="step-no">{String(index + 1).padStart(2, "0")}</span>
+        process.map(([headline, text]) => (
+          <li class="flow-step" data-reveal>
+            <span class="flow-no" aria-hidden="true" />
             <h3>{headline}</h3>
             <p>{text}</p>
-          </article>
+          </li>
         ))
       }
-    </div>
+    </ol>
+
+    <p class="container process-note">
+      Kein Vertreterbesuch, kein Abschlussdruck, keine Unterschrift vor Ort
+      nötig.
+    </p>
   </section>
 
   {/* Leistungsgrenzen */}
@@ -236,27 +256,8 @@ const schema = [serviceSchema({ name: title, description, path, serviceType })];
     color: var(--muted);
   }
 
-  /* ---- Ablaufkarten ---- */
-  .detail-step {
-    display: grid;
-    align-content: start;
-    gap: 0.5rem;
-    padding: clamp(1.25rem, 2.4vw, 1.75rem);
-  }
-
-  .step-no {
-    font-family: var(--font-utility);
-    font-size: 2.25rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--amber);
-  }
-
-  .detail-step p {
-    color: var(--muted);
-    font-size: 0.9375rem;
-    line-height: 1.6;
-  }
+  /* Ablauf: .process-flow steht im Designsystem (global.css), damit alle
+     Seiten mit Ablauf dieselbe Darstellung benutzen. */
 
   /* ---- Hinweisblock ---- */
   .note-card {

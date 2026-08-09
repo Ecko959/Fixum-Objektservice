@@ -21,10 +21,10 @@ export const services: Service[] = [
     short: "Entrümpelung",
     href: "/entruempelung-haushaltsaufloesung/",
     image: "/images/categories/haushaltsaufloesung.png",
-    text: "Wohnung, Haus, Keller, Dachboden, Garage. Wir räumen, trennen sortenrein und übergeben besenrein - auf Wunsch mit Entsorgungsnachweis. Verwertbarer Hausrat wird angerechnet und senkt Ihren Preis.",
+    text: "Wohnung, Haus, Keller, Dachboden, Garage. Wir räumen, trennen sortenrein und übergeben besenrein - auf Wunsch mit Entsorgungsnachweis und Fotodokumentation.",
     bullets: [
       "Kostenlose Besichtigung",
-      "Wertanrechnung möglich",
+      "Sortenreine Entsorgung",
       "Besenreine Übergabe",
     ],
   },
@@ -78,7 +78,7 @@ export const services: Service[] = [
     href: "/haushaltsaufloesung/",
     image: "/images/categories/haushaltsaufloesung.png",
     text: "Diskrete Auflösung von Nachlässen und Haushalten - im Trauerfall oder beim Umzug ins Heim. Auf Wunsch komplett ohne Ihre Anwesenheit.",
-    bullets: ["Diskret und ruhig", "Auch ohne Anwesenheit", "Wertanrechnung"],
+    bullets: ["Diskret und ruhig", "Auch ohne Anwesenheit", "Feste Termine"],
   },
   {
     title: "Wohnungsräumung",
