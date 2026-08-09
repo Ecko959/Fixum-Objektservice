@@ -7,6 +7,9 @@ import { mailUrl, site, telUrl } from "../data/site";
 
 interface Props {
   title: string;
+  /** Nur fuer die sichtbare Ueberschrift: darf weiche Trennstellen (\u00AD)
+      enthalten. Brotkrumen und schema.org nutzen weiter `title`. */
+  titleDisplay?: string;
   metaTitle: string;
   description: string;
   path: string;
@@ -17,8 +20,16 @@ interface Props {
   sections: Array<[string, string]>;
 }
 
-const { title, metaTitle, description, path, stand, intro, sections } =
-  Astro.props;
+const {
+  title,
+  titleDisplay,
+  metaTitle,
+  description,
+  path,
+  stand,
+  intro,
+  sections,
+} = Astro.props;
 
 const clean = canonicalPath(path);
 const breadcrumbs: Array<[string, string]> = [[title, clean]];
@@ -32,13 +43,17 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
   pageType="WebPage"
 >
   <section class="section legal-page page-top section--mist">
-    <div class="container container--narrow">
+    {
+      /* Volle Containerbreite - so stehen Karte und Kopfleiste auf derselben
+        Kante. Die Zeilenlänge begrenzt der Textbereich selbst. */
+    }
+    <div class="container">
       <Breadcrumbs trail={breadcrumbs} class="legal-crumbs" />
 
       <article class="legal-card card">
         <header class="legal-head">
           <p class="eyebrow">Rechtliches</p>
-          <h1>{title}</h1>
+          <h1>{titleDisplay ?? title}</h1>
           <p class="legal-stand">
             <Icon name="clock" size={16} />
             <span>
@@ -48,23 +63,25 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
           {intro && <p class="lead">{intro}</p>}
         </header>
 
-        {
-          sections.length > 1 && (
-            <nav class="legal-toc" aria-label="Inhalt dieser Seite">
-              <p class="legal-toc-title">Inhalt</p>
-              <ol>
-                {sections.map(([id, label]) => (
-                  <li>
-                    <a href={`#${id}`}>{label}</a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          )
-        }
+        <div class="legal-layout">
+          {
+            sections.length > 1 && (
+              <nav class="legal-toc" aria-label="Inhalt dieser Seite">
+                <p class="legal-toc-title">Inhalt</p>
+                <ol>
+                  {sections.map(([id, label]) => (
+                    <li>
+                      <a href={`#${id}`}>{label}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
 
-        <div class="legal-copy legal-body">
-          <slot />
+          <div class="legal-copy legal-body">
+            <slot />
+          </div>
         </div>
 
         <footer class="legal-foot">
@@ -94,6 +111,7 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
 
   .legal-head {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.75rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--line);
@@ -115,13 +133,36 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
     color: var(--blue);
   }
 
+  /* ---- Spaltenlayout ---- */
+  .legal-layout {
+    display: grid;
+    /* minmax(0, …): ohne das waechst die Spur bis zur min-content-Breite
+       ihres breitesten Kindes und sprengt die Karte. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    margin-top: 1.75rem;
+  }
+
+  @media (min-width: 940px) {
+    .legal-layout {
+      grid-template-columns: 250px minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
   /* ---- Inhaltsverzeichnis ---- */
   .legal-toc {
-    margin: 1.75rem 0;
     padding: clamp(1.125rem, 2.5vw, 1.5rem);
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background: var(--mist-soft);
+  }
+
+  @media (min-width: 940px) {
+    .legal-toc {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
   }
 
   .legal-toc-title {
@@ -143,7 +184,8 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
     counter-reset: toc;
   }
 
-  @media (min-width: 700px) {
+  /* Nur solange das Verzeichnis über dem Text steht, lohnen zwei Spalten. */
+  @media (min-width: 700px) and (max-width: 939px) {
     .legal-toc ol {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -153,18 +195,20 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
     counter-increment: toc;
   }
 
+  /* Raster statt Einzug: umbrechende Titel stehen unter dem Text,
+     nicht unter der Nummer. */
   .legal-toc a {
-    display: inline-block;
-    padding: 0.15rem 0;
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    padding: 0.2rem 0;
     font-size: 0.9375rem;
+    line-height: 1.4;
     color: var(--navy);
     transition: color var(--dur) var(--ease-out);
   }
 
   .legal-toc a::before {
     content: counter(toc) ".";
-    display: inline-block;
-    min-width: 1.6rem;
     font-family: var(--font-utility);
     font-weight: 700;
     color: var(--blue);
@@ -175,6 +219,12 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
   }
 
   /* ---- Fließtext ---- */
+  .legal-body {
+    max-width: 72ch;
+    /* Fachbegriffe und Adressen sind laenger als schmale Spalten. */
+    overflow-wrap: break-word;
+  }
+
   .legal-body :global(section) {
     scroll-margin-top: calc(var(--header-h) + 24px);
   }
@@ -203,9 +253,22 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
     line-height: 1.7;
   }
 
+  /* Tailwinds Preflight nimmt Listen die Marker - im Rechtstext werden sie
+     gebraucht, dort gliedern die Aufzählungen den Wortlaut. */
   .legal-body :global(ul) {
     margin: 0 0 1.125rem;
     padding-left: 1.375rem;
+    list-style: disc;
+  }
+
+  .legal-body :global(ol) {
+    margin: 0 0 1.125rem;
+    padding-left: 1.5rem;
+    list-style: decimal;
+  }
+
+  .legal-body :global(li::marker) {
+    color: var(--blue);
   }
 
   .legal-body :global(li) {
@@ -240,6 +303,7 @@ const breadcrumbs: Array<[string, string]> = [[title, clean]];
     background: #fff;
     font-style: normal;
     line-height: 1.7;
+    overflow-wrap: anywhere;
   }
 
   .legal-body :global(strong) {

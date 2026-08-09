@@ -93,6 +93,13 @@ import { site, telUrl, whatsappUrl } from "../data/site";
     gap: 0.75rem;
     padding-left: 1.25rem;
     color: var(--muted);
+    /* Preflight nimmt der Liste sonst die Nummern - die tragen hier die Reihenfolge. */
+    list-style: decimal;
+  }
+
+  .thanks-next li::marker {
+    color: var(--blue);
+    font-weight: 700;
   }
 
   .thanks-links {

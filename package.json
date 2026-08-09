@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "build:og": "node scripts/build-og.mjs",
     "format": "prettier --write .",
-    "build:referenzen": "node scripts/build-reference-placeholders.mjs"
+    "build:referenzen": "node scripts/build-reference-placeholders.mjs",
+    "build:logos": "node scripts/build-logo-variants.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "latest",

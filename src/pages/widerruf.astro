@@ -22,6 +22,7 @@ const sections: Array<[string, string]> = [
 
 <LegalPage
   title="Widerrufsbelehrung"
+  titleDisplay="Widerrufs­belehrung"
   metaTitle="Widerrufsbelehrung | Fixum Objektservice Emden"
   description="Widerrufsbelehrung von Fixum Objektservice, Emden: Widerrufsfrist von 14 Tagen, Ausübung des Widerrufs, Folgen des Widerrufs und Muster-Widerrufsformular."
   path="/widerruf/"
@@ -168,15 +169,22 @@ const sections: Array<[string, string]> = [
     background: var(--line-strong);
   }
 
+  /* Die Linien fuellen den Rest der Zeile, statt eine feste Breite zu
+     erzwingen - sonst sprengen sie den Vordruck auf schmalen Displays. */
   .widerruf-formular .feld {
     display: inline-block;
-    min-width: 11rem;
+    min-width: min(11rem, 100%);
+    max-width: 100%;
     border-bottom: 1px solid var(--line-strong);
     vertical-align: baseline;
   }
 
   .widerruf-formular .feld--lang {
-    min-width: 17rem;
+    min-width: min(17rem, 100%);
+  }
+
+  .widerruf-formular p {
+    overflow-wrap: break-word;
   }
 
   .widerruf-formular .unterschrift {
