@@ -1,29 +1,216 @@
 ---
-import Base from "../layouts/Base.astro";
-import PdfLegal from "../components/PdfLegal.astro";
+import LegalPage from "../components/LegalPage.astro";
+import { mailUrl, site, telUrl } from "../data/site";
 
-const breadcrumbs: Array<[string, string]> = [
-  ["Widerrufsbelehrung", "/widerruf/"],
+/*
+  Wortlaut übernommen aus der geprüften Fassung (Fixum_Widerrufsbelehrung,
+  Stand 04.08.2026), Seiten 1 und 2.
+
+  Bewusst NICHT übernommen: die "Anlage: Textbaustein für Auftragsbestätigung
+  und Auftragsformular" ab Seite 3. Sie bezeichnet sich selbst als internes
+  Arbeitsmittel und ausdrücklich nicht als Bestandteil der Belehrung - sie
+  gehört nicht auf eine öffentliche Seite.
+*/
+
+const sections: Array<[string, string]> = [
+  ["widerrufsrecht", "Widerrufsrecht"],
+  ["folgen", "Folgen des Widerrufs"],
+  ["erloeschen", "Vorzeitiges Erlöschen des Widerrufsrechts"],
+  ["formular", "Muster-Widerrufsformular"],
 ];
 ---
 
-<Base
-  title="Widerrufsbelehrung | Fixum Objektservice"
-  description="Widerrufsbelehrung von Fixum Objektservice, Emden: Widerrufsfrist, Ausübung des Widerrufs und Folgen für Verbraucherverträge. Vollständige Fassung als PDF."
-  canonical="/widerruf/"
-  breadcrumbs={breadcrumbs}
-  pageType="WebPage"
+<LegalPage
+  title="Widerrufsbelehrung"
+  titleDisplay="Widerrufs­belehrung"
+  metaTitle="Widerrufsbelehrung | Fixum Objektservice Emden"
+  description="Widerrufsbelehrung von Fixum Objektservice, Emden: Widerrufsfrist von 14 Tagen, Ausübung des Widerrufs, Folgen des Widerrufs und Muster-Widerrufsformular."
+  path="/widerruf/"
+  stand="04.08.2026"
+  intro="Diese Belehrung gilt für Verträge mit Verbrauchern, die im Fernabsatz (z. B. telefonisch, per E-Mail, WhatsApp oder über ein Online-Portal) oder außerhalb von Geschäftsräumen (z. B. in der Wohnung des Kunden) geschlossen werden. Gegenüber Unternehmern besteht kein Widerrufsrecht."
+  sections={sections}
 >
-  <PdfLegal
-    title="Widerrufsbelehrung"
-    intro="Die geprüfte Widerrufsbelehrung liegt als PDF vor. Sie können sie hier ansehen oder herunterladen."
-    pdf="/docs/Fixum_Widerrufsbelehrung.pdf"
-    breadcrumbs={breadcrumbs}
-    summary={[
-      "Verbraucher können außerhalb von Geschäftsräumen geschlossene Verträge widerrufen.",
-      "Die Widerrufsfrist beträgt 14 Tage ab Vertragsschluss.",
-      "Der Widerruf ist formlos möglich - Telefon, E-Mail oder Brief genügen.",
-      "Die Einzelheiten und das Muster-Widerrufsformular stehen im PDF.",
-    ]}
-  />
-</Base>
+  <section id="widerrufsrecht">
+    <h2>Widerrufsrecht</h2>
+    <p>
+      Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen
+      Vertrag zu widerrufen.
+    </p>
+    <p>
+      Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des
+      Vertragsabschlusses.
+    </p>
+    <p>Um Ihr Widerrufsrecht auszuüben, müssen Sie uns</p>
+    <address>
+      {site.owner} – {site.name}<br />
+      Hermann-Allmers-Straße 13, {site.zip}
+      {site.city}<br />
+      Telefon: <a href={telUrl}>0151 29628025</a><br />
+      E-Mail: <a href={mailUrl}>{site.email}</a>
+    </address>
+    <p>
+      mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter
+      Brief oder eine E-Mail) über Ihren Entschluss, diesen Vertrag zu
+      widerrufen, informieren. Sie können dafür das <a href="#formular"
+        >Muster-Widerrufsformular</a
+      > verwenden, das jedoch nicht vorgeschrieben ist.
+    </p>
+    <p>
+      Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über
+      die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.
+    </p>
+  </section>
+
+  <section id="folgen">
+    <h2>Folgen des Widerrufs</h2>
+    <p>
+      Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die
+      wir von Ihnen erhalten haben, einschließlich der Lieferkosten (mit
+      Ausnahme der zusätzlichen Kosten, die sich daraus ergeben, dass Sie eine
+      andere Art der Lieferung als die von uns angebotene, günstigste
+      Standardlieferung gewählt haben), unverzüglich und spätestens binnen
+      vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren
+      Widerruf dieses Vertrags bei uns eingegangen ist. Für diese Rückzahlung
+      verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen
+      Transaktion eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich
+      etwas anderes vereinbart; in keinem Fall werden Ihnen wegen dieser
+      Rückzahlung Entgelte berechnet.
+    </p>
+    <p>
+      Haben Sie verlangt, dass die Dienstleistungen während der Widerrufsfrist
+      beginnen sollen, so haben Sie uns einen angemessenen Betrag zu zahlen, der
+      dem Anteil der bis zu dem Zeitpunkt, zu dem Sie uns von der Ausübung des
+      Widerrufsrechts hinsichtlich dieses Vertrags unterrichten, bereits
+      erbrachten Dienstleistungen im Vergleich zum Gesamtumfang der im Vertrag
+      vorgesehenen Dienstleistungen entspricht.
+    </p>
+  </section>
+
+  <section id="erloeschen">
+    <h2>Vorzeitiges Erlöschen des Widerrufsrechts</h2>
+    <p>
+      Das Widerrufsrecht erlischt bei einem Vertrag über die Erbringung von
+      Dienstleistungen, wenn wir die Dienstleistung vollständig erbracht haben
+      und mit der Ausführung der Dienstleistung erst begonnen haben, nachdem Sie
+      dazu Ihre ausdrückliche Zustimmung gegeben haben und gleichzeitig Ihre
+      Kenntnis davon bestätigt haben, dass Sie Ihr Widerrufsrecht bei
+      vollständiger Vertragserfüllung durch uns verlieren.
+    </p>
+    <div class="legal-note">
+      <p><strong>Ende der Widerrufsbelehrung</strong></p>
+    </div>
+  </section>
+
+  <section id="formular">
+    <h2>Muster-Widerrufsformular</h2>
+    <p>
+      (Wenn Sie den Vertrag widerrufen wollen, füllen Sie bitte dieses Formular
+      aus und senden Sie es zurück.)
+    </p>
+
+    <div class="widerruf-formular">
+      <p>
+        An: {site.owner} – {site.name}, Hermann-Allmers-Straße 13, {site.zip}
+        {site.city}, E-Mail: <a href={mailUrl}>{site.email}</a>
+      </p>
+      <p>
+        Hiermit widerrufe(n) ich/wir <span class="ast">(*)</span> den von mir/uns
+        <span class="ast">(*)</span> abgeschlossenen Vertrag über den Kauf der folgenden
+        Waren <span class="ast">(*)</span> / die Erbringung der folgenden Dienstleistung
+        <span class="ast">(*)</span>:
+      </p>
+      <p class="linie"></p>
+      <p class="linie"></p>
+      <p>
+        Bestellt am <span class="ast">(*)</span> / erhalten am
+        <span class="ast">(*)</span>: <span class="feld"></span>
+      </p>
+      <p>Name des/der Verbraucher(s): <span class="feld feld--lang"></span></p>
+      <p>Anschrift des/der Verbraucher(s):</p>
+      <p class="linie"></p>
+      <p class="unterschrift">
+        <span>
+          <span class="feld feld--lang"></span>
+          <small
+            >Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)</small
+          >
+        </span>
+        <span>
+          <span class="feld"></span>
+          <small>Datum</small>
+        </span>
+      </p>
+      <p class="hinweis">
+        <span class="ast">(*)</span> Unzutreffendes streichen.
+      </p>
+    </div>
+  </section>
+</LegalPage>
+
+<style is:global>
+  /* Formularblock im Stil eines ausfüllbaren Vordrucks */
+  .widerruf-formular {
+    margin: 1.25rem 0;
+    padding: clamp(1.125rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: var(--mist-soft);
+    font-size: 0.9375rem;
+  }
+
+  .widerruf-formular .ast {
+    color: var(--blue);
+    font-weight: 700;
+  }
+
+  .widerruf-formular .linie {
+    height: 1px;
+    margin: 1.25rem 0;
+    background: var(--line-strong);
+  }
+
+  /* Die Linien fuellen den Rest der Zeile, statt eine feste Breite zu
+     erzwingen - sonst sprengen sie den Vordruck auf schmalen Displays. */
+  .widerruf-formular .feld {
+    display: inline-block;
+    min-width: min(11rem, 100%);
+    max-width: 100%;
+    border-bottom: 1px solid var(--line-strong);
+    vertical-align: baseline;
+  }
+
+  .widerruf-formular .feld--lang {
+    min-width: min(17rem, 100%);
+  }
+
+  .widerruf-formular p {
+    overflow-wrap: break-word;
+  }
+
+  .widerruf-formular .unterschrift {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    margin-top: 2rem;
+  }
+
+  .widerruf-formular .unterschrift small {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .widerruf-formular .hinweis {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  @media print {
+    .widerruf-formular {
+      border-color: #000;
+      background: #fff;
+    }
+  }
+</style>

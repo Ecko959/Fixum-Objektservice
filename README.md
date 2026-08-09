@@ -26,7 +26,7 @@ src/
   pages/         Eine Datei pro URL
   styles/        global.css - Design-Tokens und Basis-Layout
 scripts/         build-og.mjs erzeugt die Social-Preview-Grafik
-public/          Bilder, Logos, PDFs, robots.txt
+public/          Bilder, Logos, Quell-PDFs der Rechtstexte, robots.txt
 ```
 
 ## Stammdaten ändern
@@ -118,22 +118,63 @@ AVIF; die Komponenten liefern automatisch das beste Format aus. Wird ein PNG
 ersetzt, müssen WebP und AVIF neu erzeugt werden:
 
 ```bash
-node -e "const sharp=require('sharp'); const fs=require('fs'); const path=require('path'); const dirs=['public/images','public/images/categories']; Promise.all(dirs.flatMap(dir=>fs.readdirSync(dir).filter(f=>f.endsWith('.png')).flatMap(f=>{const p=path.join(dir,f); const b=p.replace(/\\.png\$/,''); return [sharp(p).webp({quality:82}).toFile(b+'.webp'), sharp(p).avif({quality:56}).toFile(b+'.avif')];}))).then(()=>console.log('converted images'))"
+node -e "const sharp=require('sharp'); const fs=require('fs'); const path=require('path'); const dirs=['public/images','public/images/categories','public/images/referenzen']; Promise.all(dirs.flatMap(dir=>fs.readdirSync(dir).filter(f=>f.endsWith('.png')).flatMap(f=>{const p=path.join(dir,f); const b=p.replace(/\\.png\$/,''); return [sharp(p).webp({quality:82}).toFile(b+'.webp'), sharp(p).avif({quality:56}).toFile(b+'.avif')];}))).then(()=>console.log('converted images'))"
 ```
 
 Danach `npm run build:og` ausführen, falls das Hero-Bild betroffen war.
 
-## Referenzen ein- oder ausschalten
+## Referenzen pflegen
 
-In `src/data/site.ts` steuert `showReferences`, ob die Vorher/Nachher-Sektion
-sichtbar ist.
+Die Referenzen auf der Startseite kommen aus `src/data/references.ts`. Jeder
+Eintrag besteht aus Bild, Alt-Text, Titel, kurzer Einordnung, Leistungs-Chip
+und Link auf die passende Leistungsseite. Über `showReferences` in
+`src/data/site.ts` lässt sich die ganze Sektion abschalten.
+
+### Ein Referenzfoto einsetzen
+
+Die Bilder liegen in `public/images/referenzen/`. Vorgesehen ist ein
+Vorher/Nachher-Bild im Seitenverhältnis 4:3 - **vorher links, nachher
+rechts**; die Galerie zeichnet die Trennlinie in der Bildmitte selbst.
+
+1. Foto als PNG unter dem in `references.ts` hinterlegten Dateinamen ablegen
+   und den vorhandenen Platzhalter überschreiben.
+2. WebP und AVIF neu erzeugen (Befehl unter "Fotos austauschen").
+3. Alt-Text und Beschreibung in `references.ts` an das Foto anpassen.
+
+Solange ein Platzhalter unter dem Namen liegt, zeigt die Karte deutlich
+sichtbar "PLATZHALTER" an. Neue Platzhalter erzeugt `npm run build:referenzen` -
+der Befehl überschreibt vorhandene Dateien, also nicht ausführen, wenn die
+echten Fotos schon eingesetzt sind.
 
 ## Rechtstexte
 
-AGB, Datenschutzerklärung und Widerrufsbelehrung liegen als PDF in
-`public/docs/` und werden eingebettet. Zusätzlich steht auf jeder dieser Seiten
-eine kurze HTML-Zusammenfassung, damit der Inhalt auch indexierbar ist. Das
-Impressum ist vollständig als HTML umgesetzt.
+AGB, Datenschutzerklärung und Widerrufsbelehrung stehen vollständig als HTML
+auf den jeweiligen Seiten - kein PDF-Download, kein eingebettetes Dokument.
+Das Impressum ebenfalls.
+
+Gemeinsame Hülle ist `src/components/LegalPage.astro`: Brotkrumen, Kopfbereich
+mit Stand-Datum, Inhaltsverzeichnis mit Sprungmarken und die Typografie des
+Fließtexts. Jede Seite liefert nur die Abschnitte:
+
+```astro
+<LegalPage title="…" stand="04.08.2026" sections={[["p1", "Geltungsbereich"]]}>
+  <section id="p1">
+    <h2>§ 1 Geltungsbereich</h2>
+    <p>…</p>
+  </section>
+</LegalPage>
+```
+
+Die IDs im `sections`-Array müssen den `id`-Attributen der Abschnitte
+entsprechen - sonst zeigt das Inhaltsverzeichnis ins Leere.
+
+Für hervorgehobene Passagen (Rechtsgrundlagen, Schlusshinweise) gibt es
+`<div class="legal-note">`.
+
+**Wortlaut ändern:** Die Texte sind aus den geprüften Fassungen übernommen
+(Stand 04.08.2026, Quellen in `public/docs/`). Inhaltliche Änderungen gehören
+zuerst in das geprüfte Dokument und erst danach in die Seite - nicht
+umgekehrt.
 
 ## Cloudflare Pages
 

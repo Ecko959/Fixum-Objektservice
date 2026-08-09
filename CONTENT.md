@@ -16,8 +16,6 @@
 
 - Aktuell verwendet die Seite mit Imagegen erzeugte, realistische
   Website-Bilder.
-- Das Vorher/Nachher-Bild aus der Anzeige liegt unter
-  `public/images/reference-before-after.png` und ist aktiv.
 - Echte Baustellenfotos sind der größte Qualitätssprung, der ohne
   Code-Änderung möglich ist. Sie ersetzen die generierten Bilder unter
   gleichem Dateinamen in `public/images/`; danach WebP und AVIF neu erzeugen
@@ -25,6 +23,31 @@
 - Mehrere Leistungen teilen sich derzeit ein Bild
   (Entrümpelung/Haushaltsauflösung sowie Boden/Möbelmontage). Eigene Motive
   wären besser, sind aber keine Voraussetzung.
+- Die alte Einzelabbildung `public/images/reference-before-after.*` wird seit
+  der Umstellung auf die Referenz-Galerie nicht mehr eingebunden und kann
+  gelöscht werden.
+
+## Referenzfotos - offener Punkt
+
+In `public/images/referenzen/` liegen derzeit **fünf beschriftete Platzhalter**.
+Die echten Vorher/Nachher-Fotos müssen noch eingesetzt werden:
+
+| Datei                                | Referenz                              |
+| ------------------------------------ | ------------------------------------- |
+| `dachgeschoss-raeumung-rueckbau.png` | Dachgeschoss geräumt und zurückgebaut |
+| `dachgeschoss-trockenbau.png`        | Dachgeschoss ausgebaut                |
+| `haushaltsaufloesung-wohnzimmer.png` | Haushalt vollständig aufgelöst        |
+| `wohnungsraeumung-neuvermietung.png` | Wohnung für die Neuvermietung geräumt |
+| `altbau-entkernung-ausbau.png`       | Altbau entkernt und neu ausgebaut     |
+
+Format: 4:3, vorher links, nachher rechts. Nach dem Einsetzen WebP und AVIF neu
+erzeugen (siehe README) und die Texte in `src/data/references.ts` gegenlesen -
+sie beschreiben, was auf den Fotos zu sehen sein soll.
+
+Solange die Platzhalter drin sind, darf die Seite nicht live gehen: Sie sind
+sichtbar als Platzhalter markiert, aber eine Referenzsektion ohne Referenzen
+wirkt schlechter als gar keine. Alternativ `showReferences` in
+`src/data/site.ts` bis dahin auf `false` setzen.
 
 ## Kundenstimmen
 
@@ -37,13 +60,41 @@
 
 ## Rechtliches
 
-- AGB, Datenschutzerklärung und Widerrufsbelehrung sind als Original-PDFs
-  eingebunden und zusätzlich als kurze HTML-Zusammenfassung sichtbar.
-- Die Zusammenfassungen sind bewusst knapp gehalten und ersetzen die PDFs
-  nicht. Wenn die PDFs überarbeitet werden, die Stichpunkte in
-  `src/pages/agb.astro`, `datenschutz.astro` und `widerruf.astro` gegenprüfen.
+- AGB, Datenschutzerklärung und Widerrufsbelehrung stehen vollständig als
+  HTML-Text auf den Seiten. Der Wortlaut ist aus den geprüften Fassungen
+  übernommen (Stand 04.08.2026).
+- Werden die geprüften Dokumente überarbeitet, müssen `src/pages/agb.astro`,
+  `datenschutz.astro` und `widerruf.astro` nachgezogen werden. Das Stand-Datum
+  steht als `stand`-Attribut oben in jeder Seite.
 - Das Impressum enthält die bekannten Stammdaten sowie Hinweise zu
   EU-Streitschlichtung, Haftung und Urheberrecht.
+
+### Zwei Punkte zu den PDFs in `public/docs/`
+
+Die PDFs sind seit der Umstellung **nirgends mehr verlinkt**, liegen aber
+weiterhin im Ordner und sind damit über ihre direkte URL erreichbar.
+
+1. **`Fixum_Widerrufsbelehrung.pdf` enthält ab Seite 3 eine Anlage
+   ("Textbaustein für Auftragsbestätigung und Auftragsformular" nebst
+   Praxishinweisen).** Dieses Dokument bezeichnet sich selbst als internes
+   Arbeitsmittel und ausdrücklich nicht als Bestandteil der Belehrung. In die
+   HTML-Fassung wurde es deshalb nicht übernommen. Solange die PDF-Datei im
+   Ordner liegt, ist der interne Teil aber weiterhin öffentlich abrufbar und
+   möglicherweise bereits indexiert. Empfehlung: die Datei durch eine Fassung
+   ohne Anlage ersetzen oder ganz entfernen.
+2. Werden die PDFs weiterhin gebraucht, um Kunden die Unterlagen in Textform
+   zu übergeben (die AGB setzen das voraus), können sie im Ordner bleiben -
+   dann aber bitte Punkt 1 vorher klären.
+
+### Offene Abwägung: § 35a EStG in den AGB
+
+Die Werbung mit "20 % zurück vom Finanzamt" wurde auf Wunsch von allen Seiten
+entfernt. In **§ 5 Abs. 6 der AGB** steht weiterhin, dass Arbeits- und
+Fahrtkosten getrennt ausgewiesen werden, "damit die Steuerermäßigung nach
+§ 35a EStG in Anspruch genommen werden kann". Das ist keine Werbeaussage,
+sondern eine vertragliche Zusage zur Rechnungsstellung - deshalb steht sie
+noch drin. Soll sie ebenfalls raus, muss zuerst die geprüfte AGB-Fassung
+geändert werden.
 
 ## Seitenstruktur - offener Punkt
 

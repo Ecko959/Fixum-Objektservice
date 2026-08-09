@@ -1,0 +1,177 @@
+---
+import Photo from "./Photo.astro";
+import { references } from "../data/references";
+
+interface Props {
+  /** Auf Unterseiten reicht ein Ausschnitt. */
+  limit?: number;
+}
+
+const { limit } = Astro.props;
+const items = limit ? references.slice(0, limit) : references;
+---
+
+<div class="reference-grid" data-reveal-group>
+  {
+    items.map((item) => (
+      <figure class="reference-card" data-reveal>
+        <a href={item.href} class="reference-media">
+          <Photo
+            src={item.image}
+            alt={item.alt}
+            width={1600}
+            height={1200}
+            ratio="4 / 3"
+            sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+          />
+          {/* Der Streifen markiert die Bildmitte, an der Vorher und Nachher
+              aneinanderstoßen - sonst liest man das Bild als eine Aufnahme. */}
+          <span class="reference-split" aria-hidden="true">
+            <em>Vorher</em>
+            <em>Nachher</em>
+          </span>
+        </a>
+
+        <figcaption class="reference-body">
+          <p class="reference-tag">{item.tag}</p>
+          <h3>{item.title}</h3>
+          <p class="reference-text">{item.text}</p>
+          <a class="arrow-link" href={item.href}>
+            Zur Leistung
+          </a>
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .reference-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .reference-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+
+  .reference-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  .reference-media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+  }
+
+  .reference-card :global(.photo) {
+    border-radius: 0;
+  }
+
+  .reference-card:hover :global(.photo img) {
+    transform: scale(1.03);
+  }
+
+  /* Trennlinie in der Bildmitte plus Beschriftung beider Hälften */
+  .reference-split {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .reference-split::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    margin-left: -1px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 1px rgba(10, 23, 48, 0.18);
+  }
+
+  .reference-split em {
+    position: absolute;
+    bottom: 0.625rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background: rgba(7, 19, 38, 0.78);
+    color: #fff;
+    font-family: var(--font-utility);
+    font-size: 0.6875rem;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+  }
+
+  .reference-split em:first-child {
+    left: 0.625rem;
+  }
+
+  .reference-split em:last-child {
+    right: 0.625rem;
+    background: var(--blue);
+  }
+
+  .reference-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: clamp(1.125rem, 2.2vw, 1.5rem);
+  }
+
+  .reference-tag {
+    font-family: var(--font-utility);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .reference-body h3 {
+    font-size: var(--step-1);
+    text-wrap: balance;
+  }
+
+  .reference-text {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .reference-body .arrow-link {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .reference-card:hover .arrow-link {
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    .reference-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,330 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "./Breadcrumbs.astro";
+import Icon from "./Icon.astro";
+import { canonicalPath } from "../data/seo";
+import { mailUrl, site, telUrl } from "../data/site";
+
+interface Props {
+  title: string;
+  /** Nur fuer die sichtbare Ueberschrift: darf weiche Trennstellen (\u00AD)
+      enthalten. Brotkrumen und schema.org nutzen weiter `title`. */
+  titleDisplay?: string;
+  metaTitle: string;
+  description: string;
+  path: string;
+  /** Fassung des Dokuments, z. B. "04.08.2026". */
+  stand: string;
+  intro?: string;
+  /** Sprungmarken; die IDs müssen den Abschnitten im Slot entsprechen. */
+  sections: Array<[string, string]>;
+}
+
+const {
+  title,
+  titleDisplay,
+  metaTitle,
+  description,
+  path,
+  stand,
+  intro,
+  sections,
+} = Astro.props;
+
+const clean = canonicalPath(path);
+const breadcrumbs: Array<[string, string]> = [[title, clean]];
+---
+
+<Base
+  title={metaTitle}
+  description={description}
+  canonical={clean}
+  breadcrumbs={breadcrumbs}
+  pageType="WebPage"
+>
+  <section class="section legal-page page-top section--mist">
+    {
+      /* Volle Containerbreite - so stehen Karte und Kopfleiste auf derselben
+        Kante. Die Zeilenlänge begrenzt der Textbereich selbst. */
+    }
+    <div class="container">
+      <Breadcrumbs trail={breadcrumbs} class="legal-crumbs" />
+
+      <article class="legal-card card">
+        <header class="legal-head">
+          <p class="eyebrow">Rechtliches</p>
+          <h1>{titleDisplay ?? title}</h1>
+          <p class="legal-stand">
+            <Icon name="clock" size={16} />
+            <span>
+              {site.name} · Inhaber {site.owner} · Stand: {stand}
+            </span>
+          </p>
+          {intro && <p class="lead">{intro}</p>}
+        </header>
+
+        <div class="legal-layout">
+          {
+            sections.length > 1 && (
+              <nav class="legal-toc" aria-label="Inhalt dieser Seite">
+                <p class="legal-toc-title">Inhalt</p>
+                <ol>
+                  {sections.map(([id, label]) => (
+                    <li>
+                      <a href={`#${id}`}>{label}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
+
+          <div class="legal-copy legal-body">
+            <slot />
+          </div>
+        </div>
+
+        <footer class="legal-foot">
+          <p>
+            Fragen zu diesem Dokument? <a href={telUrl}>{site.phoneDisplay}</a> oder
+            <a href={mailUrl}>{site.email}</a>
+          </p>
+          <p class="legal-address">
+            {site.owner} – {site.name}, {site.street}, {site.zip}
+            {site.city}
+          </p>
+        </footer>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal-crumbs {
+    margin-bottom: 1.25rem;
+  }
+
+  .legal-card {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    box-shadow: var(--shadow-md);
+  }
+
+  .legal-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .legal-stand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .legal-stand :global(.icon) {
+    color: var(--blue);
+  }
+
+  /* ---- Spaltenlayout ---- */
+  .legal-layout {
+    display: grid;
+    /* minmax(0, …): ohne das waechst die Spur bis zur min-content-Breite
+       ihres breitesten Kindes und sprengt die Karte. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    margin-top: 1.75rem;
+  }
+
+  @media (min-width: 940px) {
+    .legal-layout {
+      grid-template-columns: 250px minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  /* ---- Inhaltsverzeichnis ---- */
+  .legal-toc {
+    padding: clamp(1.125rem, 2.5vw, 1.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--mist-soft);
+  }
+
+  @media (min-width: 940px) {
+    .legal-toc {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
+  }
+
+  .legal-toc-title {
+    margin-bottom: 0.75rem;
+    font-family: var(--font-utility);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .legal-toc ol {
+    display: grid;
+    gap: 0.3rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: toc;
+  }
+
+  /* Nur solange das Verzeichnis über dem Text steht, lohnen zwei Spalten. */
+  @media (min-width: 700px) and (max-width: 939px) {
+    .legal-toc ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .legal-toc li {
+    counter-increment: toc;
+  }
+
+  /* Raster statt Einzug: umbrechende Titel stehen unter dem Text,
+     nicht unter der Nummer. */
+  .legal-toc a {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    padding: 0.2rem 0;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: var(--navy);
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .legal-toc a::before {
+    content: counter(toc) ".";
+    font-family: var(--font-utility);
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .legal-toc a:hover {
+    color: var(--blue);
+  }
+
+  /* ---- Fließtext ---- */
+  .legal-body {
+    max-width: 72ch;
+    /* Fachbegriffe und Adressen sind laenger als schmale Spalten. */
+    overflow-wrap: break-word;
+  }
+
+  .legal-body :global(section) {
+    scroll-margin-top: calc(var(--header-h) + 24px);
+  }
+
+  .legal-body :global(section + section) {
+    margin-top: 2.5rem;
+  }
+
+  .legal-body :global(h2) {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--step-2);
+    text-transform: none;
+  }
+
+  .legal-body :global(h3) {
+    margin: 1.75rem 0 0.625rem;
+    font-size: var(--step-1);
+    color: var(--navy);
+  }
+
+  .legal-body :global(p) {
+    margin-bottom: 0.875rem;
+    line-height: 1.7;
+  }
+
+  /* Tailwinds Preflight nimmt Listen die Marker - im Rechtstext werden sie
+     gebraucht, dort gliedern die Aufzählungen den Wortlaut. */
+  .legal-body :global(ul) {
+    margin: 0 0 1.125rem;
+    padding-left: 1.375rem;
+    list-style: disc;
+  }
+
+  .legal-body :global(ol) {
+    margin: 0 0 1.125rem;
+    padding-left: 1.5rem;
+    list-style: decimal;
+  }
+
+  .legal-body :global(li::marker) {
+    color: var(--blue);
+  }
+
+  .legal-body :global(li) {
+    margin-bottom: 0.5rem;
+    line-height: 1.65;
+  }
+
+  /* Hervorgehobener Kasten für Rechtsgrundlagen und Hinweise */
+  .legal-body :global(.legal-note) {
+    margin: 1rem 0 1.25rem;
+    padding: 1rem 1.125rem;
+    border-left: 3px solid var(--blue);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--mist-soft);
+    font-size: 0.9375rem;
+  }
+
+  .legal-body :global(.legal-note p) {
+    margin-bottom: 0.375rem;
+    color: var(--ink);
+  }
+
+  .legal-body :global(.legal-note p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .legal-body :global(address) {
+    margin: 0 0 1.125rem;
+    padding: 1rem 1.125rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    font-style: normal;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+
+  .legal-body :global(strong) {
+    color: var(--navy);
+  }
+
+  .legal-foot {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  .legal-foot a {
+    color: var(--blue);
+    font-weight: 700;
+  }
+
+  .legal-address {
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+  }
+</style>

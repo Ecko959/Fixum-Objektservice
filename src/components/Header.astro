@@ -26,17 +26,18 @@ const servicesActive = serviceMenuGroups.some((group) =>
 <header class="site-header" data-header>
   <div class="container header-inner">
     <a class="brand" href="/" aria-label={`${site.name} - zur Startseite`}>
+      {
+        /* Original-Lockup statt nachgebautem Schriftzug - beschnittene Fassung,
+          damit sich das Logo an der Höhe der Kopfleiste ausrichten lässt. */
+      }
       <img
-        src="/logo/fixum-icon.png"
-        alt=""
-        width="48"
-        height="48"
+        src="/logo/fixum-lockup-blue-trim.png"
+        alt={site.name}
+        width="720"
+        height="161"
+        fetchpriority="high"
         decoding="async"
       />
-      <span class="brand-text">
-        <strong>FIXUM</strong>
-        <small>Objektservice</small>
-      </span>
     </a>
 
     <nav class="desktop-nav" aria-label="Hauptnavigation">
@@ -307,41 +308,24 @@ const servicesActive = serviceMenuGroups.some((group) =>
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.7rem;
-    min-width: max-content;
-    border-radius: var(--radius-pill);
+    flex: none;
+    border-radius: var(--radius-sm);
+    transition: opacity var(--dur) var(--ease-out);
   }
 
+  /* Höhe führt, Breite folgt dem Seitenverhältnis des Lockups. */
   .brand img {
-    width: 44px;
+    width: auto;
     height: 44px;
-    object-fit: contain;
-    transition: transform var(--dur) var(--ease-out);
+    transition: height var(--dur) var(--ease-out);
   }
 
-  .brand:hover img {
-    transform: rotate(-6deg) scale(1.05);
+  .is-scrolled .brand img {
+    height: 37px;
   }
 
-  .brand-text {
-    display: grid;
-    line-height: 1;
-  }
-
-  .brand strong {
-    font-size: 1.3rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--navy);
-  }
-
-  .brand small {
-    font-family: var(--font-utility);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--blue);
+  .brand:hover {
+    opacity: 0.85;
   }
 
   /* ---- Desktop-Navigation ---- */

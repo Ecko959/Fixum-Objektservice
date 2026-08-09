@@ -56,8 +56,8 @@
   --step-1: clamp(1.125rem, 1.05rem + 0.36vw, 1.3125rem);
   --step-2: clamp(1.3125rem, 1.18rem + 0.62vw, 1.625rem);
   --step-3: clamp(1.5rem, 1.28rem + 1.05vw, 2.125rem);
-  --step-4: clamp(1.875rem, 1.4rem + 2.2vw, 3rem);
-  --step-5: clamp(2.25rem, 1.5rem + 3.6vw, 4.25rem);
+  --step-4: clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem);
+  --step-5: clamp(1.75rem, 1.2rem + 2.6vw, 3.25rem);
 
   /* Raster */
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
@@ -253,7 +253,7 @@ ol {
 
 .split {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: clamp(1.75rem, 4vw, 3.25rem);
   align-items: center;
 }
@@ -280,8 +280,12 @@ ol {
   gap: clamp(1rem, 2vw, 1.5rem);
 }
 
+/* minmax(0, 1fr): ohne die Begrenzung waechst eine Grid-Spur bis zur
+   min-content-Breite ihres breitesten Kindes - bei langen deutschen
+   Komposita sprengt das die Spalte. */
 .stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.125rem;
   align-content: start;
 }
@@ -300,6 +304,11 @@ h4 {
   line-height: 1.08;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  /* Deutsche Komposita wie "Geschaeftsbedingungen" sprengen auf schmalen
+     Displays jede Spalte. Trennung nach Sprachregel (html lang="de"),
+     Umbruch im Wort nur als Notnagel, wenn keine Trennstelle passt. */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 h1 {
@@ -409,6 +418,7 @@ h4 {
    und der Block rutscht in die Mitte statt an den Gutter. */
 .section-head {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
   margin-bottom: clamp(2rem, 4vw, 3rem);
 }
@@ -737,6 +747,11 @@ h4 {
 
 .legal-copy ul {
   padding-left: 1.375rem;
+  list-style: disc;
+}
+
+.legal-copy li::marker {
+  color: var(--blue);
 }
 
 .legal-copy a {

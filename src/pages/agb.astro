@@ -1,27 +1,443 @@
 ---
-import Base from "../layouts/Base.astro";
-import PdfLegal from "../components/PdfLegal.astro";
+import LegalPage from "../components/LegalPage.astro";
 
-const breadcrumbs: Array<[string, string]> = [["AGB", "/agb/"]];
+/*
+  Wortlaut übernommen aus der geprüften Fassung (Fixum_AGB, Stand 04.08.2026).
+  Inhaltliche Änderungen gehören zuerst ins geprüfte Dokument, nicht hierher.
+*/
+
+const sections: Array<[string, string]> = [
+  ["p1", "Geltungsbereich"],
+  ["p2", "Angebot und Vertragsschluss"],
+  ["p3", "Leistungsumfang und ausgeschlossene Leistungen"],
+  ["p4", "Mitwirkungspflichten des Auftraggebers"],
+  ["p5", "Preise und Umsatzsteuer"],
+  ["p6", "Nachträge und Mehraufwand"],
+  ["p7", "Termine und Ausführung"],
+  ["p8", "Zahlungsbedingungen"],
+  ["p9", "Storno und Kündigung durch den Auftraggeber"],
+  ["p10", "Räumgut, Eigentumsübergang und Wertanrechnung"],
+  ["p11", "Abnahme"],
+  ["p12", "Mängelansprüche"],
+  ["p13", "Haftung"],
+  ["p14", "Schlussbestimmungen"],
+];
 ---
 
-<Base
-  title="AGB | Fixum Objektservice"
-  description="Allgemeine Geschäftsbedingungen von Fixum Objektservice, Emden: Vertragsschluss, Leistungsumfang, Preise und Abwicklung. Vollständige Fassung als PDF."
-  canonical="/agb/"
-  breadcrumbs={breadcrumbs}
-  pageType="WebPage"
+<LegalPage
+  title="Allgemeine Geschäftsbedingungen"
+  titleDisplay="Allgemeine Geschäfts­bedingungen"
+  metaTitle="AGB | Fixum Objektservice Emden"
+  description="Allgemeine Geschäftsbedingungen von Fixum Objektservice, Emden: Vertragsschluss, Leistungsumfang, ausgeschlossene Leistungen, Preise, Zahlung, Storno, Abnahme und Haftung."
+  path="/agb/"
+  stand="04.08.2026"
+  intro="Diese Bedingungen gelten für alle Aufträge an Fixum Objektservice. Sie regeln, was Bestandteil der Leistung ist, was ausdrücklich nicht, und wie Preise, Termine und Abnahme gehandhabt werden."
+  sections={sections}
 >
-  <PdfLegal
-    title="Allgemeine Geschäftsbedingungen"
-    intro="Die geprüften Allgemeinen Geschäftsbedingungen liegen als PDF vor. Sie können sie hier ansehen oder herunterladen."
-    pdf="/docs/Fixum_AGB.pdf"
-    breadcrumbs={breadcrumbs}
-    summary={[
-      "Angebote von Fixum Objektservice sind nach Besichtigung Festpreise in Textform.",
-      "Der Leistungsumfang und die ausdrücklich ausgenommenen Arbeiten stehen in jedem Angebot.",
-      "Zulassungspflichtige Gewerke werden koordiniert, aber nicht selbst ausgeführt.",
-      "Gemäß § 19 UStG wird keine Umsatzsteuer berechnet und daher nicht ausgewiesen.",
-    ]}
-  />
-</Base>
+  <section id="p1">
+    <h2>§ 1 Geltungsbereich</h2>
+    <p>
+      (1) Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge
+      zwischen Eckhard Singer, handelnd unter Fixum Objektservice,
+      Hermann-Allmers-Straße 13, 26721 Emden (nachfolgend „Auftragnehmer") und
+      dem Auftraggeber über Entrümpelungen, Haushaltsauflösungen,
+      Wohnungsräumungen, Demontage- und nicht-tragende Rückbauarbeiten,
+      Trockenbau- und Innenausbauarbeiten, Montagearbeiten, Bodenverlegung,
+      Umzüge und Transporte, Hausmeisterservice, Winterdienst sowie
+      Außenanlagenpflege.
+    </p>
+    <p>
+      (2) Abweichende, entgegenstehende oder ergänzende Bedingungen des
+      Auftraggebers werden nicht Vertragsbestandteil, es sei denn, der
+      Auftragnehmer stimmt ihrer Geltung ausdrücklich schriftlich zu. Dies gilt
+      auch dann, wenn der Auftragnehmer die Leistung in Kenntnis solcher
+      Bedingungen vorbehaltlos ausführt.
+    </p>
+    <p>
+      (3) Verbraucher ist jede natürliche Person, die den Vertrag zu Zwecken
+      abschließt, die überwiegend weder ihrer gewerblichen noch ihrer
+      selbständigen beruflichen Tätigkeit zugerechnet werden können (§ 13 BGB).
+      Unternehmer ist, wer in Ausübung einer gewerblichen oder selbständigen
+      beruflichen Tätigkeit handelt (§ 14 BGB).
+    </p>
+  </section>
+
+  <section id="p2">
+    <h2>§ 2 Angebot und Vertragsschluss</h2>
+    <p>
+      (1) Darstellungen von Leistungen in Anzeigen, auf der Website oder in
+      Portalen sind unverbindlich und stellen kein bindendes Angebot dar.
+    </p>
+    <p>
+      (2) Angebote des Auftragnehmers sind, sofern nicht ausdrücklich anders
+      angegeben, 14 Kalendertage ab Angebotsdatum gültig. Der Vertrag kommt
+      durch schriftliche, textliche (E-Mail, Messenger) oder mündliche Annahme
+      des Angebots durch den Auftraggeber zustande.
+    </p>
+    <p>
+      (3) Grundlage jedes Festpreisangebots sind die vom Auftraggeber
+      mitgeteilten Angaben sowie der bei einer Besichtigung oder anhand
+      übersandter Fotos erkennbare Zustand des Objekts. Weichen die
+      tatsächlichen Verhältnisse hiervon wesentlich ab (insbesondere Menge,
+      Zugänglichkeit, Beschaffenheit, Abfallart), gilt § 6.
+    </p>
+  </section>
+
+  <section id="p3">
+    <h2>§ 3 Leistungsumfang und ausdrücklich ausgeschlossene Leistungen</h2>
+    <p>
+      (1) Der Umfang der Leistung ergibt sich abschließend aus dem Angebot bzw.
+      der Auftragsbestätigung. Nicht ausdrücklich aufgeführte Leistungen sind
+      nicht geschuldet.
+    </p>
+    <p>
+      <strong>(2) Nicht Gegenstand des Vertrages sind in jedem Fall:</strong>
+    </p>
+    <ul>
+      <li>
+        Arbeiten an elektrischen Anlagen und Leitungen, Gas-, Wasser-, Abwasser-
+        und Heizungsinstallationen; Anschlussarbeiten dieser Art werden
+        ausschließlich durch zugelassene Fachbetriebe ausgeführt.
+      </li>
+      <li>
+        Eingriffe in tragende Bauteile, Statik, Brandschutz- und
+        Schallschutzkonstruktionen ohne vorliegende, vom Auftraggeber
+        beizubringende Freigabe eines Tragwerksplaners bzw. Statikers.
+      </li>
+      <li>
+        Erkennung, Beprobung, Behandlung, Ausbau oder Entsorgung von Gefahr- und
+        Schadstoffen jeder Art, insbesondere asbesthaltiger Materialien,
+        künstlicher Mineralfasern (KMF), PAK- und teerhaltiger Baustoffe,
+        Bleifarben sowie Schimmelpilzbefall.
+      </li>
+      <li>
+        Zulassungspflichtige Handwerksleistungen der Anlage A der
+        Handwerksordnung, insbesondere Maler- und Lackierarbeiten, Stuckateur-,
+        Putz- und Fliesenarbeiten sowie Maurer- und Betonbauarbeiten.
+      </li>
+      <li>Entsorgung gefährlicher Abfälle im Sinne des § 3 Abs. 5 KrWG.</li>
+    </ul>
+    <p>
+      (3) Ergibt sich während der Ausführung der begründete Verdacht auf
+      schadstoffhaltige Materialien, ist der Auftragnehmer berechtigt und
+      verpflichtet, die Arbeiten im betroffenen Bereich unverzüglich
+      einzustellen und den Auftraggeber zu informieren. Die hierdurch
+      entstehenden Wartezeiten und Mehraufwendungen trägt der Auftraggeber;
+      bereits erbrachte Leistungen sind zu vergüten. Die Beauftragung eines
+      zertifizierten Fachbetriebs sowie ein etwaiges Schadstoffgutachten
+      obliegen dem Auftraggeber.
+    </p>
+    <p>
+      (4) Der Auftragnehmer ist berechtigt, zur Vertragserfüllung geeignete
+      Subunternehmer und Fachbetriebe einzusetzen.
+    </p>
+  </section>
+
+  <section id="p4">
+    <h2>§ 4 Mitwirkungspflichten des Auftraggebers</h2>
+    <p>Der Auftraggeber stellt sicher und gewährleistet, dass:</p>
+    <ul>
+      <li>
+        er zur Beauftragung berechtigt ist, insbesondere Eigentümer, Erbe,
+        Verfügungsberechtigter oder wirksam bevollmächtigt ist; bei Räumungen
+        versichert er, dass keine Rechte Dritter an den zu räumenden
+        Gegenständen bestehen,
+      </li>
+      <li>
+        die Zugänglichkeit des Objekts zum vereinbarten Termin gewährleistet ist
+        (Schlüssel, Zufahrt, Halteverbot, Aufzugnutzung, Strom- und
+        Wasseranschluss),
+      </li>
+      <li>
+        persönliche Gegenstände, Wertsachen, Dokumente und Datenträger, die
+        nicht entsorgt werden sollen, vor Arbeitsbeginn entnommen oder eindeutig
+        und dauerhaft gekennzeichnet werden,
+      </li>
+      <li>
+        ihm bekannte Gefahrenquellen, Leitungsverläufe, Vorschäden,
+        Schadstoffvorkommen und Besonderheiten der Bausubstanz vor Arbeitsbeginn
+        unaufgefordert mitgeteilt werden,
+      </li>
+      <li>
+        erforderliche Genehmigungen Dritter (Vermieter, Eigentümergemeinschaft,
+        Behörden) vorliegen.
+      </li>
+    </ul>
+    <p>
+      Kommt der Auftraggeber diesen Pflichten nicht nach, trägt er die daraus
+      entstehenden Mehrkosten und Wartezeiten. Der Auftragnehmer haftet nicht
+      für Schäden, die auf unterlassenen oder unzutreffenden Angaben beruhen.
+    </p>
+  </section>
+
+  <section id="p5">
+    <h2>§ 5 Preise und Umsatzsteuer</h2>
+    <p>(1) Maßgeblich sind die im Angebot genannten Preise.</p>
+    <p>
+      (2) Der Auftragnehmer wendet derzeit die Kleinunternehmerregelung nach §
+      19 UStG an. Es wird daher keine Umsatzsteuer berechnet und in Rechnungen
+      nicht gesondert ausgewiesen. Die genannten Preise sind Endpreise.
+    </p>
+    <p>
+      (3) Entfällt die Anwendung der Kleinunternehmerregelung – insbesondere
+      durch Überschreiten der gesetzlichen Umsatzgrenzen oder durch Verzicht
+      nach § 19 Abs. 3 UStG –, verstehen sich sämtliche Preise als Nettopreise
+      zuzüglich der dann gesetzlich geschuldeten Umsatzsteuer. Der Auftragnehmer
+      wird den Auftraggeber hierüber vor Ausführung der Leistung informieren.
+      Ist der Auftraggeber Verbraucher und liegen zwischen Vertragsschluss und
+      Leistungserbringung weniger als vier Monate, verbleibt es beim
+      vereinbarten Endpreis.
+    </p>
+    <p>
+      (4) Erbringt der Auftragnehmer nach einem Wechsel in die Regelbesteuerung
+      Bauleistungen an einen Unternehmer, der selbst nachhaltig Bauleistungen
+      erbringt, geht die Steuerschuldnerschaft nach § 13b UStG auf den
+      Leistungsempfänger über; die Abrechnung erfolgt in diesem Fall netto mit
+      entsprechendem Hinweis.
+    </p>
+    <p>
+      (5) Wartezeiten, die der Auftraggeber zu vertreten hat, werden mit dem
+      vereinbarten Stundensatz, mangels Vereinbarung mit 55,00 EUR je
+      Mitarbeiter und angefangener halber Stunde berechnet.
+    </p>
+    <p>
+      (6) Bei Privatkunden werden Arbeits- und Fahrtkosten in der Rechnung
+      gesondert ausgewiesen, damit die Steuerermäßigung nach § 35a EStG in
+      Anspruch genommen werden kann.
+    </p>
+  </section>
+
+  <section id="p6">
+    <h2>§ 6 Nachträge und Mehraufwand</h2>
+    <p>
+      (1) Zusätzliche oder geänderte Leistungen bedürfen einer Vereinbarung in
+      Textform (E-Mail oder Messenger genügt) vor ihrer Ausführung. Der
+      Auftragnehmer teilt den hierfür anfallenden Preis vorab mit.
+    </p>
+    <p>
+      (2) Weichen Umfang, Menge, Zugänglichkeit oder Abfallart erheblich von den
+      der Kalkulation zugrunde liegenden Angaben ab, ist der Auftragnehmer
+      berechtigt, den Mehraufwand nach tatsächlichem Aufwand abzurechnen. Er
+      weist den Auftraggeber hierauf vor Ausführung der Mehrleistung hin. Der
+      Auftraggeber kann in diesem Fall vom betroffenen Leistungsteil
+      zurücktreten; bereits erbrachte Leistungen sind zu vergüten.
+    </p>
+    <p>
+      (3) Werden bei Räumungen Abfälle vorgefunden, die einer gesonderten
+      Entsorgung bedürfen (z. B. Altreifen, Farben und Lacke, Batterien,
+      Elektroaltgeräte, Sonderabfälle), werden die tatsächlichen
+      Entsorgungskosten zuzüglich Handlingpauschale gesondert berechnet.
+    </p>
+  </section>
+
+  <section id="p7">
+    <h2>§ 7 Termine und Ausführung</h2>
+    <p>
+      (1) Vereinbarte Termine sind verbindlich, sofern sie ausdrücklich als
+      solche bezeichnet sind. Die Ausführung erfolgt innerhalb des vereinbarten
+      Zeitfensters; eine taggenaue Uhrzeitzusage besteht nur bei ausdrücklicher
+      Vereinbarung.
+    </p>
+    <p>
+      (2) Bei höherer Gewalt, Witterungsverhältnissen, die eine ordnungsgemäße
+      Ausführung unmöglich machen, Krankheit oder Ausfall wesentlicher
+      Betriebsmittel verlängert sich die Ausführungsfrist angemessen. Der
+      Auftragnehmer informiert den Auftraggeber unverzüglich und bietet einen
+      Ersatztermin an.
+    </p>
+  </section>
+
+  <section id="p8">
+    <h2>§ 8 Zahlungsbedingungen</h2>
+    <p>
+      (1) Bei Aufträgen ab einem Auftragswert von 1.500,00 EUR ist eine
+      Anzahlung in Höhe von 30 % des Auftragswertes vor Ausführungsbeginn
+      fällig. Bei einer Projektdauer von mehr als fünf Arbeitstagen ist der
+      Auftragnehmer berechtigt, Abschlagsrechnungen entsprechend dem
+      Leistungsfortschritt zu stellen.
+    </p>
+    <p>
+      (2) Der Restbetrag ist bei Privatkunden mit Abnahme der Leistung, im
+      Übrigen innerhalb von 14 Tagen ab Rechnungsdatum ohne Abzug zur Zahlung
+      fällig. Bei Zahlung innerhalb von fünf Tagen ab Rechnungsdatum wird ein
+      Skonto von 2 % gewährt.
+    </p>
+    <p>
+      (3) Gerät der Auftraggeber in Verzug, ist der Auftragnehmer berechtigt,
+      Verzugszinsen in gesetzlicher Höhe zu verlangen (gegenüber Verbrauchern 5
+      Prozentpunkte, gegenüber Unternehmern 9 Prozentpunkte über dem
+      Basiszinssatz) sowie gegenüber Unternehmern eine Pauschale von 40,00 EUR
+      nach § 288 Abs. 5 BGB.
+    </p>
+    <p>
+      (4) Die Aufrechnung mit Gegenforderungen ist nur zulässig, soweit diese
+      unbestritten oder rechtskräftig festgestellt sind.
+    </p>
+    <p>
+      (5) Der Auftragnehmer ist berechtigt, die Herausgabe von Schlüsseln sowie
+      die Übergabe des Objekts bis zur vollständigen Zahlung fälliger Vergütung
+      zurückzuhalten, soweit dem keine überwiegenden Interessen des
+      Auftraggebers entgegenstehen.
+    </p>
+  </section>
+
+  <section id="p9">
+    <h2>§ 9 Storno und Kündigung durch den Auftraggeber</h2>
+    <p>
+      (1) Der Auftraggeber kann den Vertrag jederzeit kündigen. In diesem Fall
+      steht dem Auftragnehmer die vereinbarte Vergütung abzüglich ersparter
+      Aufwendungen zu (§ 648 BGB).
+    </p>
+    <p>
+      (2) Zur Vereinfachung der Abrechnung werden folgende pauschalierte
+      Entschädigungen vereinbart, bezogen auf den vereinbarten Auftragswert:
+    </p>
+    <ul>
+      <li>
+        bei Absage bis 7 Kalendertage vor dem vereinbarten Termin: kostenfrei,
+      </li>
+      <li>bei Absage 6 bis 3 Kalendertage vor dem Termin: 15 %,</li>
+      <li>bei Absage 2 Kalendertage vor dem Termin oder später: 30 %,</li>
+      <li>
+        bei Nichtzugänglichkeit des Objekts am Ausführungstag (vergebliche
+        Anfahrt): 30 %, mindestens jedoch 150,00 EUR.
+      </li>
+    </ul>
+    <p>
+      (3) Dem Auftraggeber bleibt der Nachweis vorbehalten, dass ein Schaden
+      überhaupt nicht entstanden oder wesentlich niedriger ist als die
+      Pauschale. Dem Auftragnehmer bleibt der Nachweis eines höheren Schadens
+      vorbehalten. Bereits angefallene Fremdkosten (insbesondere Container,
+      Halteverbotszonen, Materialbestellungen) sind in jedem Fall zu erstatten.
+    </p>
+    <p>
+      (4) Ein etwaiges gesetzliches Widerrufsrecht des Verbrauchers bleibt
+      unberührt; insoweit gilt vorrangig die gesondert erteilte
+      <a href="/widerruf/">Widerrufsbelehrung</a>.
+    </p>
+  </section>
+
+  <section id="p10">
+    <h2>§ 10 Räumgut, Eigentumsübergang und Wertanrechnung</h2>
+    <p>
+      (1) Mit der Aufnahme der Räumungsarbeiten überträgt der Auftraggeber das
+      Eigentum an sämtlichem zu räumenden Inventar auf den Auftragnehmer, soweit
+      es nicht ausdrücklich und in Textform von der Räumung ausgenommen wurde.
+      Der Auftragnehmer ist berechtigt, das Räumgut einer ordnungsgemäßen
+      Entsorgung oder einer Wiederverwertung zuzuführen.
+    </p>
+    <p>
+      (2) Eine vereinbarte Wertanrechnung wird im Angebot gesondert ausgewiesen.
+      Sie beruht auf einer Schätzung des zu erwartenden Verwertungserlöses; ein
+      darüber hinausgehender Anspruch des Auftraggebers auf Herausgabe
+      tatsächlich erzielter Erlöse besteht nicht.
+    </p>
+    <p>
+      (3) Werden Wertgegenstände, Bargeld oder Dokumente aufgefunden, die
+      erkennbar nicht der Entsorgung zugeführt werden sollten, informiert der
+      Auftragnehmer den Auftraggeber unverzüglich und verwahrt die Gegenstände
+      bis zur Klärung.
+    </p>
+    <p>
+      (4) Auf Wunsch stellt der Auftragnehmer einen Entsorgungsnachweis der
+      beauftragten Entsorgungseinrichtung zur Verfügung.
+    </p>
+  </section>
+
+  <section id="p11">
+    <h2>§ 11 Abnahme</h2>
+    <p>
+      (1) Der Auftraggeber ist zur Abnahme der vertragsgemäß erbrachten Leistung
+      verpflichtet. Die Abnahme erfolgt im unmittelbaren Anschluss an die
+      Fertigstellung, in der Regel durch gemeinsame Begehung.
+    </p>
+    <p>
+      (2) Nimmt der Auftraggeber die Leistung trotz Aufforderung nicht innerhalb
+      einer angemessenen Frist ab, obwohl er dazu verpflichtet ist, gilt die
+      Leistung nach Ablauf dieser Frist als abgenommen. Gleiches gilt bei
+      Ingebrauchnahme oder Weitervermietung des Objekts.
+    </p>
+    <p>
+      (3) Unwesentliche Mängel berechtigen nicht zur Verweigerung der Abnahme.
+    </p>
+  </section>
+
+  <section id="p12">
+    <h2>§ 12 Mängelansprüche</h2>
+    <p>
+      (1) Es gelten die gesetzlichen Bestimmungen. Der Auftraggeber hat dem
+      Auftragnehmer zunächst Gelegenheit zur Nacherfüllung innerhalb
+      angemessener Frist zu geben.
+    </p>
+    <p>
+      (2) Gegenüber Unternehmern beträgt die Verjährungsfrist für
+      Mängelansprüche ein Jahr ab Abnahme, bei Bauwerken die gesetzliche Frist.
+      Gegenüber Verbrauchern gelten die gesetzlichen Verjährungsfristen
+      unverändert.
+    </p>
+    <p>
+      (3) Ausgeschlossen sind Ansprüche wegen Schäden, die auf vorhandener
+      Bausubstanz, Vorschäden, nicht mitgeteilten Leitungsverläufen,
+      unsachgemäßer Vorarbeit Dritter oder auf Änderungen und Reparaturen
+      beruhen, die der Auftraggeber oder Dritte ohne Zustimmung des
+      Auftragnehmers vorgenommen haben.
+    </p>
+  </section>
+
+  <section id="p13">
+    <h2>§ 13 Haftung</h2>
+    <p>
+      (1) Der Auftragnehmer haftet unbeschränkt bei Vorsatz und grober
+      Fahrlässigkeit, bei Verletzung von Leben, Körper oder Gesundheit, bei
+      arglistigem Verschweigen eines Mangels, im Rahmen einer übernommenen
+      Garantie sowie nach dem Produkthaftungsgesetz.
+    </p>
+    <p>
+      (2) Bei einfacher Fahrlässigkeit haftet der Auftragnehmer nur für die
+      Verletzung wesentlicher Vertragspflichten – also solcher Pflichten, deren
+      Erfüllung die ordnungsgemäße Durchführung des Vertrages überhaupt erst
+      ermöglicht und auf deren Einhaltung der Auftraggeber regelmäßig vertrauen
+      darf. In diesem Fall ist die Haftung auf den bei Vertragsschluss
+      vorhersehbaren, vertragstypischen Schaden begrenzt.
+    </p>
+    <p>
+      (3) Eine weitergehende Haftung ist ausgeschlossen. Die vorstehenden
+      Haftungsbeschränkungen gelten auch zugunsten der Mitarbeiter,
+      Erfüllungsgehilfen und Subunternehmer des Auftragnehmers.
+    </p>
+    <p>
+      (4) Der Auftragnehmer unterhält eine Betriebshaftpflichtversicherung. Auf
+      Wunsch wird eine Versicherungsbestätigung vorgelegt.
+    </p>
+    <p>
+      (5) Für Schäden an Gegenständen, die der Auftraggeber entgegen § 4 nicht
+      entnommen oder nicht gekennzeichnet hat, wird nicht gehaftet.
+    </p>
+  </section>
+
+  <section id="p14">
+    <h2>§ 14 Schlussbestimmungen</h2>
+    <p>
+      (1) Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des
+      UN-Kaufrechts.
+    </p>
+    <p>
+      (2) Ist der Auftraggeber Kaufmann, juristische Person des öffentlichen
+      Rechts oder öffentlich-rechtliches Sondervermögen, ist ausschließlicher
+      Gerichtsstand für alle Streitigkeiten aus dem Vertragsverhältnis der Sitz
+      des Auftragnehmers.
+    </p>
+    <p>
+      (3) Sollte eine Bestimmung dieser AGB unwirksam sein oder werden, bleibt
+      die Wirksamkeit der übrigen Bestimmungen unberührt. An die Stelle der
+      unwirksamen Bestimmung treten die gesetzlichen Vorschriften.
+    </p>
+    <p>
+      (4) Der Auftragnehmer ist zur Teilnahme an einem Streitbeilegungsverfahren
+      vor einer Verbraucherschlichtungsstelle weder bereit noch verpflichtet.
+    </p>
+    <div class="legal-note">
+      <p><strong>Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.</strong></p>
+    </div>
+  </section>
+</LegalPage>
