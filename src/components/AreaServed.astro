@@ -45,15 +45,19 @@ const heading = title ?? `${service} in Emden und Ostfriesland`;
     border-top: 1px solid var(--line);
   }
 
+  /* minmax(0, …): sonst zieht ein langes Kompositum in der Überschrift
+     ("Nachunternehmereinsätze") die Spur auf seine min-content-Breite und
+     die Sektion laeuft auf schmalen Displays aus dem Viewport. */
   .area-inner {
     display: grid;
-    grid-template-columns: 0.95fr 1.05fr;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
     gap: clamp(1.75rem, 4vw, 3rem);
     align-items: center;
   }
 
   .area-copy {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.875rem;
   }
 
@@ -115,7 +119,7 @@ const heading = title ?? `${service} in Emden und Ostfriesland`;
 
   @media (max-width: 900px) {
     .area-inner {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

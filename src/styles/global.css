@@ -726,6 +726,121 @@ h4 {
   background: var(--navy-ink);
 }
 
+/* Ablauf-Kette.
+   Vier Schritte nebeneinander, die Nummern durch eine Linie verbunden.
+   Wird von allen Leistungsseiten und den beiden Zielgruppenseiten benutzt,
+   damit der Ablauf überall gleich aussieht. */
+.process-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  margin-block: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: flow;
+}
+
+.flow-step {
+  position: relative;
+  counter-increment: flow;
+}
+
+.flow-no {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 0.875rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  box-shadow: var(--glow-blue);
+  color: #fff;
+  font-family: var(--font-utility);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.flow-no::before {
+  content: "0" counter(flow);
+}
+
+/* Verbindungslinie zwischen den Nummern */
+.flow-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 23px;
+  left: 46px;
+  width: calc(100% - 46px + clamp(1.25rem, 2.5vw, 2rem));
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--line-strong),
+    var(--line-strong) 60%,
+    transparent
+  );
+}
+
+.flow-step h3 {
+  margin-bottom: 0.4rem;
+  font-size: var(--step-1);
+}
+
+.flow-step p {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.process-note {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  color: var(--muted);
+}
+
+@media (max-width: 1000px) {
+  .process-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* In zwei Spalten endet die Linie am Zeilenende */
+  .flow-step:nth-child(2n)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .process-flow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  /* Einspaltig laeuft die Linie senkrecht neben den Nummern */
+  .flow-step {
+    padding: 0 0 1.75rem 3.75rem;
+  }
+
+  .flow-no {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+  }
+
+  .flow-step:not(:last-child)::after {
+    top: 46px;
+    left: 22px;
+    width: 2px;
+    height: calc(100% - 46px);
+    background: linear-gradient(180deg, var(--line-strong), transparent);
+  }
+
+  .flow-step:last-child {
+    padding-bottom: 0;
+  }
+}
+
 /* Rechtstexte */
 .legal-copy {
   max-width: var(--measure);

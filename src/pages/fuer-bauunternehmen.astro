@@ -37,6 +37,25 @@ const punkte: Array<[string, string, "wall" | "euro" | "shield" | "clock"]> = [
   ],
 ];
 
+const ablauf: Array<[string, string]> = [
+  [
+    "Anfrage",
+    "Sie nennen Objekt, Bauabschnitt und Zeitfenster. Wir sagen zu oder ab - ohne Termin zu blockieren, den wir nicht halten können.",
+  ],
+  [
+    "Aufmaß und Angebot",
+    "Wir nehmen Flächen, Untergrund und Schnittstellen zu Ihren anderen Gewerken auf. Aufmaßmodus, Spachtelqualität und Materialstellung stehen vorher fest.",
+  ],
+  [
+    "Einsatz auf der Baustelle",
+    "Wir kommen zum zugesagten Tag, arbeiten den vereinbarten Abschnitt ab und melden Abweichungen sofort statt in der Schlussrechnung.",
+  ],
+  [
+    "Abnahme und Abrechnung",
+    "Gemeinsames Aufmaß, Übergabe der Fläche an Ihr Folgegewerk, Abrechnung nach dem vorher festgelegten Modus.",
+  ],
+];
+
 const subFaq = [
   {
     question: "Wie schnell können Sie einen Einsatz zusagen?",
@@ -155,6 +174,35 @@ const schema = [
         <li>Einsatz in Emden, Aurich, Leer und Umgebung</li>
       </ul>
     </div>
+  </section>
+
+  {/* Ablauf */}
+  <section class="section" aria-labelledby="ablauf-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Ablauf</p>
+      <h2 id="ablauf-title">Vom Anruf bis zur Abnahme</h2>
+      <p class="muted">
+        Derselbe Ablauf wie bei jedem anderen Auftrag - nur mit Ihnen als
+        Auftraggeber statt dem Endkunden.
+      </p>
+    </div>
+
+    <ol class="container process-flow" data-reveal-group>
+      {
+        ablauf.map(([title, text]) => (
+          <li class="flow-step" data-reveal>
+            <span class="flow-no" aria-hidden="true" />
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="container process-note">
+      Freistellungsbescheinigung nach § 48b EStG und Versicherungsnachweis legen
+      wir vor Beginn vor, nicht erst zur Rechnung.
+    </p>
   </section>
 
   {/* Abgrenzung */}

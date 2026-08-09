@@ -83,7 +83,6 @@ export const addressLines = [
 export const navItems = [
   { label: "Startseite", href: "/" },
   { label: "Leistungen", href: "/leistungen/" },
-  { label: "Ablauf", href: "/#ablauf" },
   { label: "Für Firmen", href: "/fuer-hausverwaltungen/" },
   { label: "Über uns", href: "/ueber-uns/" },
   { label: "Kontakt", href: "/kontakt/" },
