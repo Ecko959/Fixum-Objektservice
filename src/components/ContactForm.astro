@@ -1,5 +1,6 @@
 ---
 import Icon from "./Icon.astro";
+import WhatsAppMark from "./WhatsAppMark.astro";
 import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
 
 interface Props {
@@ -165,12 +166,12 @@ const topics = [
         <span>Jetzt anrufen</span>
       </a>
       <a
-        class="btn btn--secondary btn--wide"
+        class="btn btn--secondary btn--wa btn--wide"
         href={whatsappUrl()}
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Icon name="whatsapp" size={18} />
+        <WhatsAppMark size={24} />
         <span>Foto per WhatsApp schicken</span>
       </a>
       <a class="fallback-mail" href={mailUrl}>
