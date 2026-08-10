@@ -1,5 +1,6 @@
 ---
 import Icon from "./Icon.astro";
+import WhatsAppMark from "./WhatsAppMark.astro";
 import { mailUrl, sameAs, site, telUrl, whatsappUrl } from "../data/site";
 import { serviceMenuGroups } from "../data/serviceMenu";
 
@@ -79,7 +80,7 @@ const footerServices = serviceMenuGroups
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Icon name="whatsapp" size={18} />
+        <WhatsAppMark size={20} />
         <span>WhatsApp schreiben</span>
       </a>
       <a class="footer-contact" href={mailUrl}>

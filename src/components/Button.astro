@@ -1,5 +1,6 @@
 ---
 import Icon from "./Icon.astro";
+import WhatsAppMark from "./WhatsAppMark.astro";
 
 interface Props {
   href: string;
@@ -27,16 +28,22 @@ const variantClass =
       ? "btn btn--ghost"
       : "btn";
 
+/* WhatsApp bekommt die plastische Marke statt des Strich-Icons. */
+const isWhatsApp = icon === "whatsapp";
+
 /* WhatsApp-Links öffnen extern; noopener verhindert Zugriff auf window.opener. */
 const isExternal = external ?? /^https?:/.test(href);
 ---
 
 <a
-  class={`${variantClass} ${className}`.trim()}
+  class={`${variantClass} ${isWhatsApp ? "btn--wa" : ""} ${className}`
+    .replace(/\s+/g, " ")
+    .trim()}
   href={href}
   aria-label={ariaLabel}
   {...isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {}}
 >
-  {icon && <Icon name={icon} size={18} />}
+  {isWhatsApp && <WhatsAppMark size={24} />}
+  {icon && !isWhatsApp && <Icon name={icon} size={18} />}
   <span><slot /></span>
 </a>
