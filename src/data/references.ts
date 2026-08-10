@@ -24,7 +24,7 @@ export interface Reference {
 
 export const references: Reference[] = [
   {
-    image: "/images/referenzen/dachgeschoss-raeumung-rueckbau.png",
+    image: "/images/referenzen/dachgeschoss-raeumung-rueckbau-foto.png",
     alt: "Dachgeschoss in Ostfriesland vor und nach Räumung und nicht-tragendem Rückbau durch Fixum Objektservice",
     title: "Dachgeschoss geräumt und zurückgebaut",
     text: "Alter Ausbau, lose Dämmwolle und Hausrat raus, Dachstuhl freigelegt, Boden besenrein. Grundlage für den anschließenden Ausbau.",
@@ -32,7 +32,7 @@ export const references: Reference[] = [
     href: "/entkernung-emden/",
   },
   {
-    image: "/images/referenzen/dachgeschoss-trockenbau.png",
+    image: "/images/referenzen/dachgeschoss-trockenbau-foto.png",
     alt: "Dachgeschoss vor und nach dem Trockenbau mit neuer Ständerwand und eingebautem Dachfenster",
     title: "Dachgeschoss ausgebaut",
     text: "Nach dem Rückbau: Ständerwand gestellt, beplankt, Dachfenster eingesetzt. Aus dem Abstellboden wird nutzbarer Wohnraum.",
@@ -40,7 +40,7 @@ export const references: Reference[] = [
     href: "/trockenbau-emden/",
   },
   {
-    image: "/images/referenzen/haushaltsaufloesung-wohnzimmer.png",
+    image: "/images/referenzen/haushaltsaufloesung-wohnzimmer-foto.png",
     alt: "Vollständig eingerichtetes Wohnzimmer vor und nach der Haushaltsauflösung durch Fixum Objektservice",
     title: "Haushalt vollständig aufgelöst",
     text: "Komplette Einrichtung mit Schrankwand, Esstisch und Hausrat geräumt, sortenrein entsorgt und besenrein übergeben.",
@@ -48,7 +48,7 @@ export const references: Reference[] = [
     href: "/haushaltsaufloesung-emden/",
   },
   {
-    image: "/images/referenzen/wohnungsraeumung-neuvermietung.png",
+    image: "/images/referenzen/wohnungsraeumung-neuvermietung-foto.png",
     alt: "Wohnzimmer mit Restmöbeln und Umzugskartons vor und nach der Wohnungsräumung",
     title: "Wohnung für die Neuvermietung geräumt",
     text: "Restmöbel, Kartons und Sperrmüll raus, Boden gereinigt. Die Einheit war am selben Tag wieder übergabefähig.",
@@ -56,7 +56,7 @@ export const references: Reference[] = [
     href: "/wohnungsraeumung-emden/",
   },
   {
-    image: "/images/referenzen/altbau-entkernung-ausbau.png",
+    image: "/images/referenzen/altbau-entkernung-ausbau-foto.png",
     alt: "Entkernter Altbauraum mit freiliegendem Mauerwerk vor und nach dem Trockenbau mit gespachtelter Decke",
     title: "Altbau entkernt und neu ausgebaut",
     text: "Zurückgebaut bis auf das Mauerwerk, danach Vorsatzschalen und abgehängte Decke gestellt und gespachtelt.",
