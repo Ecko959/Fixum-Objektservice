@@ -114,22 +114,23 @@ geändert werden.
 
 ## Seitenstruktur - offener Punkt
 
-`/entkernung-trockenbau/` überschneidet sich thematisch mit
-`/entkernung-rueckbau/`, `/trockenbau-innenausbau/` und
-`/kernsanierung-vorbereiten/`. Die Seite wurde deshalb auf das Paket
+`/rueckbau-trockenbau-emden/` überschneidet sich thematisch mit
+`/entkernung-emden/`, `/trockenbau-emden/` und
+`/kernsanierung-emden/`. Die Seite wurde deshalb auf das Paket
 "beide Gewerke in einem Auftrag" umgestellt und zielt nicht mehr auf die
 Einzelkeywords.
 
 Wenn nach einigen Monaten aus der Search Console hervorgeht, dass die Seite
 kaum eigene Impressionen sammelt, ist eine Zusammenlegung sinnvoll: Inhalt in
-`/trockenbau-innenausbau/` überführen und `/entkernung-trockenbau/` per
+`/trockenbau-emden/` überführen und `/rueckbau-trockenbau-emden/` per
 301-Weiterleitung darauf zeigen lassen. Vorher nicht löschen - eine bestehende
 URL ohne Redirect zu entfernen kostet mehr, als sie einbringt.
 
 ## Nach dem Livegang
 
 - Google Search Console einrichten und die Sitemap
-  `https://fixum-objektservice.de/sitemap-index.xml` einreichen.
+  `https://www.fixum-objektservice.de/sitemap-index.xml` einreichen. In der
+  Search Console die `www`-Property anlegen - sie ist die kanonische Fassung.
 - Google-Unternehmensprofil anlegen. Name, Adresse und Telefonnummer müssen
   exakt so geschrieben sein wie in `src/data/site.ts` - Abweichungen bei
   Schreibweise oder Formatierung schwächen das lokale Ranking.

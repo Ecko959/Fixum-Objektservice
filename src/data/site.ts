@@ -14,7 +14,11 @@ export const site = {
   phoneLink: "+4915129628025",
   whatsapp: "4915129628025",
   email: "info@fixum-objektservice.de",
-  domain: "https://fixum-objektservice.de",
+  /* Bevorzugte Hauptdomain, ohne abschließenden Slash. Aus diesem Wert leiten
+     sich Canonical, Open Graph, Twitter und der gesamte schema.org-Graph ab -
+     er muss mit `site` in astro.config.mjs übereinstimmen, sonst zeigen
+     Sitemap und Canonical auf verschiedene Hosts. */
+  domain: "https://www.fixum-objektservice.de",
   taxId: "",
   chamber: "Handwerkskammer für Ostfriesland, Aurich",
   googleProfile: "",

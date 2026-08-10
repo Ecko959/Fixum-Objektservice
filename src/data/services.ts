@@ -19,7 +19,7 @@ export const services: Service[] = [
   {
     title: "Entrümpelung & Haushaltsauflösung",
     short: "Entrümpelung",
-    href: "/entruempelung-haushaltsaufloesung/",
+    href: "/entruempelung-emden/",
     image: "/images/categories/haushaltsaufloesung.png",
     text: "Wohnung, Haus, Keller, Dachboden, Garage. Wir räumen, trennen sortenrein und übergeben besenrein - auf Wunsch mit Entsorgungsnachweis und Fotodokumentation.",
     bullets: [
@@ -31,7 +31,7 @@ export const services: Service[] = [
   {
     title: "Entkernung & Rückbau",
     short: "Entkernung",
-    href: "/entkernung-rueckbau/",
+    href: "/entkernung-emden/",
     image: "/images/categories/entkernung-rueckbau.png",
     text: "Nicht-tragender Rückbau bis auf den Rohbau: alte Böden, Wände, Einbauten, Sanitärobjekte. Wir trennen direkt vor Ort nach Fraktionen - das spart Entsorgungskosten.",
     bullets: [
@@ -43,7 +43,7 @@ export const services: Service[] = [
   {
     title: "Trockenbau & Innenausbau",
     short: "Trockenbau",
-    href: "/trockenbau-innenausbau/",
+    href: "/trockenbau-emden/",
     image: "/images/categories/trockenbau-innenausbau.png",
     text: "Ständerwände, Vorsatzschalen, Schallschutz, abgehängte Decken, Dachschrägen, Spachtelung Q1 bis Q3. Für private Modernisierer und als Nachunternehmer.",
     bullets: ["Wände und Decken", "Spachtelung Q1-Q3", "Nachunternehmer"],
@@ -51,7 +51,7 @@ export const services: Service[] = [
   {
     title: "Bodenverlegung & Türmontage",
     short: "Boden & Türen",
-    href: "/montage-boden/",
+    href: "/bodenverlegung-emden/",
     image: "/images/categories/montage-boden.png",
     text: "Laminat, Vinyl und Teppich fachgerecht verlegt, Türen und Zargen sauber gesetzt - der Schritt, der aus einem leeren Raum wieder einen fertigen macht.",
     bullets: ["Laminat, Vinyl, Teppich", "Türen und Zargen", "Nach Aufmaß"],
@@ -59,7 +59,7 @@ export const services: Service[] = [
   {
     title: "Umzüge & Transporte",
     short: "Umzüge",
-    href: "/umzuege-transporte/",
+    href: "/umzug-emden/",
     image: "/images/categories/umzuege-transporte.png",
     text: "Privat- und Firmenumzüge bis 3,5 t, im Team und zum Festpreis. Kombinierbar mit Entrümpelung, damit nur eine Firma anrückt.",
     bullets: ["Bis 3,5 t", "Festpreis", "Mit Demontage"],
@@ -67,7 +67,7 @@ export const services: Service[] = [
   {
     title: "Hausmeisterservice",
     short: "Hausmeister",
-    href: "/hausmeisterservice/",
+    href: "/hausmeisterservice-emden/",
     image: "/images/categories/hausmeister-winterdienst.png",
     text: "Objektbetreuung, Kleinreparaturen, Außenanlagen und Winterdienst - einmalig oder als laufender Rahmenvertrag mit festen Konditionen.",
     bullets: ["Kleinreparaturen", "Objektkontrolle", "Rahmenvertrag"],
@@ -75,7 +75,7 @@ export const services: Service[] = [
   {
     title: "Haushaltsauflösung & Nachlass",
     short: "Nachlass",
-    href: "/haushaltsaufloesung/",
+    href: "/haushaltsaufloesung-emden/",
     image: "/images/categories/haushaltsaufloesung.png",
     text: "Diskrete Auflösung von Nachlässen und Haushalten - im Trauerfall oder beim Umzug ins Heim. Auf Wunsch komplett ohne Ihre Anwesenheit.",
     bullets: ["Diskret und ruhig", "Auch ohne Anwesenheit", "Feste Termine"],
@@ -83,7 +83,7 @@ export const services: Service[] = [
   {
     title: "Wohnungsräumung",
     short: "Wohnungsräumung",
-    href: "/wohnungsraeumung/",
+    href: "/wohnungsraeumung-emden/",
     image: "/images/categories/wohnungsraeumung.png",
     text: "Besenreine Räumung für Übergabe, Mieterwechsel, Verkauf oder Neuvermietung - mit Fotodokumentation zur Abnahme.",
     bullets: ["Für die Übergabe", "Fotodokumentation", "Feste Termine"],
@@ -91,7 +91,7 @@ export const services: Service[] = [
   {
     title: "Möbel- & Küchenmontage",
     short: "Möbelmontage",
-    href: "/moebel-kuechenmontage/",
+    href: "/kuechenmontage-emden/",
     image: "/images/categories/montage-boden.png",
     text: "Möbel und Küchen fachgerecht aufgebaut und ausgerichtet - ohne Elektro-, Gas- und Wasseranschlüsse, die gehören zugelassenen Fachbetrieben.",
     bullets: ["Möbel und Küchen", "Auch Demontage", "Klare Grenzen"],
@@ -99,7 +99,7 @@ export const services: Service[] = [
   {
     title: "Winterdienst & Außenanlagen",
     short: "Winterdienst",
-    href: "/winterdienst-aussenanlagen/",
+    href: "/winterdienst-emden/",
     image: "/images/categories/hausmeister-winterdienst.png",
     text: "Räum- und Streupflicht zuverlässig erfüllt, dazu einfache Außenpflege und laufende Objektarbeiten nach Vereinbarung.",
     bullets: ["Räum- und Streudienst", "Grünpflege", "Nach Vereinbarung"],
@@ -107,7 +107,7 @@ export const services: Service[] = [
   {
     title: "Kernsanierung vorbereiten",
     short: "Kernsanierung",
-    href: "/kernsanierung-vorbereiten/",
+    href: "/kernsanierung-emden/",
     image: "/images/categories/kernsanierung-vorbereiten.png",
     text: "Räumen, nicht-tragender Rückbau, Trockenbau und die Koordination zugelassener Fachbetriebe - die komplette Vorbereitung aus einer Hand.",
     bullets: [

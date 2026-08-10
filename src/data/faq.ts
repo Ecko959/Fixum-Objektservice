@@ -52,7 +52,7 @@ export const faq: FaqItem[] = [
  * Leistungsseite und erzeugen dort ein eigenes FAQ-Rich-Result.
  */
 export const serviceFaq: Record<string, FaqItem[]> = {
-  "/entruempelung-haushaltsaufloesung/": [
+  "/entruempelung-emden/": [
     {
       question: "Wie läuft eine Entrümpelung konkret ab?",
       answer:
@@ -74,7 +74,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Auf Wunsch ja. Für Hausverwaltungen und Nachlassabwicklungen ist das oft nötig. Wir dokumentieren die Fraktionen und legen die Belege der Entsorgungsstellen bei.",
     },
   ],
-  "/entkernung-rueckbau/": [
+  "/entkernung-emden/": [
     {
       question: "Was bedeutet nicht-tragender Rückbau?",
       answer:
@@ -91,7 +91,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Wir stoppen den betroffenen Bereich sofort. Bei Gebäuden vor 1993 sind Asbest, KMF oder PAK-Kleber möglich. Die Beprobung und Sanierung übernimmt ein zertifizierter Fachbetrieb - das ist gesetzlich vorgeschrieben und steht so in jedem unserer Angebote.",
     },
   ],
-  "/trockenbau-innenausbau/": [
+  "/trockenbau-emden/": [
     {
       question: "Welche Spachtelqualität brauche ich?",
       answer:
@@ -108,7 +108,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Schallschutzlösungen mit entsprechendem Aufbau und Dämmung ja. Geprüfte Brandschutzkonstruktionen mit Verwendbarkeitsnachweis führen wir nicht als eigene Leistung aus - dafür ist ein Betrieb mit passendem Nachweis zuständig.",
     },
   ],
-  "/haushaltsaufloesung/": [
+  "/haushaltsaufloesung-emden/": [
     {
       question: "Wie diskret läuft eine Nachlassauflösung ab?",
       answer:
@@ -125,7 +125,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Alles, was nach Dokument, Schmuck, Bargeld oder Erinnerungsstück aussieht, wird gesammelt und Ihnen übergeben. Das ist Teil des Auftrags und kostet nicht extra.",
     },
   ],
-  "/wohnungsraeumung/": [
+  "/wohnungsraeumung-emden/": [
     {
       question: "Was heißt besenrein genau?",
       answer:
@@ -142,7 +142,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Ja, auf Wunsch vor, während und nach der Räumung. Für Hausverwaltungen und Eigentümer ist das die einfachste Grundlage für die Abnahme und gegenüber dem Vormieter.",
     },
   ],
-  "/montage-boden/": [
+  "/bodenverlegung-emden/": [
     {
       question: "Muss der Untergrund vorbereitet werden?",
       answer:
@@ -159,7 +159,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Das ist sogar der bessere Weg. Zargen und Türblätter werden auf die spätere Bodenhöhe abgestimmt, sonst schleift die Tür oder es bleibt eine Fuge. Wir planen beides in einem Aufmaß.",
     },
   ],
-  "/moebel-kuechenmontage/": [
+  "/kuechenmontage-emden/": [
     {
       question: "Schließen Sie die Küchengeräte an?",
       answer:
@@ -171,7 +171,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Ja, Demontage und Entsorgung übernehmen wir gleich mit. In Kombination mit einer Entrümpelung oder einem Umzug ist das meist deutlich günstiger als zwei getrennte Aufträge.",
     },
   ],
-  "/umzuege-transporte/": [
+  "/umzug-emden/": [
     {
       question: "Bis zu welcher Größe machen Sie Umzüge?",
       answer:
@@ -183,7 +183,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Genau dafür ist der Ablauf gedacht: Was mitkommt, wird transportiert, der Rest direkt entsorgt. Ein Team, ein Termin, eine Rechnung - das spart gegenüber zwei getrennten Aufträgen spürbar.",
     },
   ],
-  "/hausmeisterservice/": [
+  "/hausmeisterservice-emden/": [
     {
       question: "Gibt es feste Konditionen im Rahmenvertrag?",
       answer:
@@ -195,7 +195,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Alles im handwerklichen Kleinbereich: Türen, Schlösser, Beschläge, Silikonfugen, Befestigungen, kleine Trockenbauschäden. Nicht dabei sind Arbeiten an Strom, Gas, Wasser und Heizung - die übernehmen zugelassene Fachbetriebe.",
     },
   ],
-  "/winterdienst-aussenanlagen/": [
+  "/winterdienst-emden/": [
     {
       question: "Erfüllt der Winterdienst meine Räum- und Streupflicht?",
       answer:
@@ -207,7 +207,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Werktags in der Regel bis 7 Uhr, sonn- und feiertags bis 9 Uhr, danach nach Bedarf. Bei anhaltendem Schneefall wird nachgeräumt. Die konkreten Zeiten halten wir in der Vereinbarung fest.",
     },
   ],
-  "/kernsanierung-vorbereiten/": [
+  "/kernsanierung-emden/": [
     {
       question: "Übernehmen Sie die komplette Kernsanierung?",
       answer:
@@ -219,7 +219,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Räumen, Rückbau, dann kommen die Fachbetriebe für Leitungen, danach Trockenbau, Boden und Montage. Wir planen die Übergabepunkte mit, damit niemand auf den anderen wartet oder doppelt anrücken muss.",
     },
   ],
-  "/entkernung-trockenbau/": [
+  "/rueckbau-trockenbau-emden/": [
     {
       question: "Was bringt es, Rückbau und Trockenbau zusammen zu vergeben?",
       answer:
