@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
-import { site, telUrl, whatsappUrl } from "../data/site";
+import { telUrl, whatsappUrl } from "../data/site";
 ---
 
 <Base
@@ -21,7 +21,7 @@ import { site, telUrl, whatsappUrl } from "../data/site";
       </p>
 
       <div class="btn-row thanks-actions">
-        <Button href={telUrl} icon="phone">{site.phoneDisplay}</Button>
+        <Button href={telUrl} icon="phone">Jetzt anrufen</Button>
         <Button href={whatsappUrl()} variant="secondary" icon="whatsapp">
           WhatsApp schreiben
         </Button>

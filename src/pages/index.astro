@@ -131,7 +131,7 @@ const serviceChips: Array<[string, string]> = [
           <Icon name="pin" size={15} />
           <span>Emden · Ostfriesland</span>
         </p>
-        <p class="script">{site.claim}</p>
+        <p class="script">{site.heroLine}</p>
         <h1>
           Entrümpelt, <span class="blue-word">ausgebaut</span>, übergabefertig.
         </h1>
@@ -141,8 +141,12 @@ const serviceChips: Array<[string, string]> = [
           Termin, der hält.
         </p>
 
-        <div class="btn-row">
-          <Button href={telUrl} icon="phone">{site.phoneDisplay}</Button>
+        {
+          /* Auf dem Handy steht direkt darunter die Kontaktkarte mit
+             denselben beiden Aktionen - deshalb hier nur ab Tablet. */
+        }
+        <div class="btn-row hero-actions">
+          <Button href={telUrl} icon="phone">Jetzt anrufen</Button>
           <Button
             href={whatsappUrl("Moin, ich habe eine Anfrage zu:")}
             variant="secondary"
@@ -1109,6 +1113,14 @@ const serviceChips: Array<[string, string]> = [
   @media (max-width: 900px) {
     .process {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* Drei CTA-Gruppen untereinander sind eine zu viel. Auf dem Handy
+       übernimmt die Kontaktkarte direkt darunter. */
+    .hero-actions {
+      display: none;
     }
   }
 

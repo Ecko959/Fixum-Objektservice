@@ -22,6 +22,9 @@ export const site = {
   radiusKm: 50,
   foundingYear: "2024",
   claim: "Alles aus einer Hand",
+  /* Kursive Zeile über der Hero-Überschrift. Bewusst nicht der Slogan:
+     der steht im Footer und als schema.org-slogan und soll nicht doppeln. */
+  heroLine: "Ihr Partner für zuverlässige Projekte",
   serviceLine: "Entrümpelung | Entkernung | Trockenbau | Montage",
   smallBusinessNote:
     "Gemäß § 19 UStG wird keine Umsatzsteuer berechnet und daher in Rechnungen nicht ausgewiesen.",
