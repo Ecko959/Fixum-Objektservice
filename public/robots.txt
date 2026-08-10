@@ -4,4 +4,4 @@ Allow: /
 # Seiten ohne Suchwert
 Disallow: /danke/
 
-Sitemap: https://fixum-objektservice.de/sitemap-index.xml
+Sitemap: https://www.fixum-objektservice.de/sitemap-index.xml

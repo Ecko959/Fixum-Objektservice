@@ -16,25 +16,25 @@ export const serviceMenuGroups: Array<{
     items: [
       {
         label: "Entrümpelung",
-        href: "/entruempelung-haushaltsaufloesung/",
+        href: "/entruempelung-emden/",
         icon: "crate",
         description: "Wohnung, Haus, Keller, Dachboden, Garage.",
       },
       {
         label: "Haushaltsauflösung",
-        href: "/haushaltsaufloesung/",
+        href: "/haushaltsaufloesung-emden/",
         icon: "home",
         description: "Nachlass, Umzug ins Heim, diskrete Abwicklung.",
       },
       {
         label: "Wohnungsräumung",
-        href: "/wohnungsraeumung/",
+        href: "/wohnungsraeumung-emden/",
         icon: "key",
         description: "Besenrein für Übergabe, Vermietung oder Verkauf.",
       },
       {
         label: "Umzüge & Transporte",
-        href: "/umzuege-transporte/",
+        href: "/umzug-emden/",
         icon: "truck",
         description: "Privat, Gewerbe und Objektfahrten bis 3,5 t.",
       },
@@ -45,25 +45,25 @@ export const serviceMenuGroups: Array<{
     items: [
       {
         label: "Entkernung",
-        href: "/entkernung-rueckbau/",
+        href: "/entkernung-emden/",
         icon: "hammer",
         description: "Nicht-tragender Rückbau, sortenrein getrennt.",
       },
       {
         label: "Trockenbau",
-        href: "/trockenbau-innenausbau/",
+        href: "/trockenbau-emden/",
         icon: "wall",
         description: "Wände, Decken, Dachschrägen, Q1 bis Q3.",
       },
       {
         label: "Rückbau + Trockenbau",
-        href: "/entkernung-trockenbau/",
+        href: "/rueckbau-trockenbau-emden/",
         icon: "layers",
         description: "Beide Gewerke in einem Durchgang, ein Angebot.",
       },
       {
         label: "Boden & Türen",
-        href: "/montage-boden/",
+        href: "/bodenverlegung-emden/",
         icon: "door",
         description: "Laminat, Vinyl, Teppich, Türen und Zargen.",
       },
@@ -74,25 +74,25 @@ export const serviceMenuGroups: Array<{
     items: [
       {
         label: "Möbel- & Küchenmontage",
-        href: "/moebel-kuechenmontage/",
+        href: "/kuechenmontage-emden/",
         icon: "wrench",
         description: "Ohne Elektro-, Gas- und Wasseranschlüsse.",
       },
       {
         label: "Hausmeisterservice",
-        href: "/hausmeisterservice/",
+        href: "/hausmeisterservice-emden/",
         icon: "clipboard",
         description: "Objektbetreuung, Kleinreparaturen, Rahmenvertrag.",
       },
       {
         label: "Winterdienst & Außenanlagen",
-        href: "/winterdienst-aussenanlagen/",
+        href: "/winterdienst-emden/",
         icon: "snow",
         description: "Räum- und Streupflicht zuverlässig erfüllt.",
       },
       {
         label: "Kernsanierung vorbereiten",
-        href: "/kernsanierung-vorbereiten/",
+        href: "/kernsanierung-emden/",
         icon: "building",
         description: "Räumen, Rückbau, Ausbau - Fachbetriebe koordiniert.",
       },

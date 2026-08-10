@@ -3,7 +3,9 @@ import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: "https://fixum-objektservice.de",
+  /* Muss identisch zu `domain` in src/data/site.ts sein - hieraus baut die
+     Sitemap ihre URLs, daraus baut Base.astro die Canonicals. */
+  site: "https://www.fixum-objektservice.de",
   output: "static",
   /* Verzeichnis-URLs mit abschließendem Slash - identisch zu Canonical und Sitemap. */
   build: { format: "directory", inlineStylesheets: "auto" },

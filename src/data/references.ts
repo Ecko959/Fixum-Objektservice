@@ -29,7 +29,7 @@ export const references: Reference[] = [
     title: "Dachgeschoss geräumt und zurückgebaut",
     text: "Alter Ausbau, lose Dämmwolle und Hausrat raus, Dachstuhl freigelegt, Boden besenrein. Grundlage für den anschließenden Ausbau.",
     tag: "Entrümpelung & Rückbau",
-    href: "/entkernung-rueckbau/",
+    href: "/entkernung-emden/",
   },
   {
     image: "/images/referenzen/dachgeschoss-trockenbau.png",
@@ -37,7 +37,7 @@ export const references: Reference[] = [
     title: "Dachgeschoss ausgebaut",
     text: "Nach dem Rückbau: Ständerwand gestellt, beplankt, Dachfenster eingesetzt. Aus dem Abstellboden wird nutzbarer Wohnraum.",
     tag: "Trockenbau",
-    href: "/trockenbau-innenausbau/",
+    href: "/trockenbau-emden/",
   },
   {
     image: "/images/referenzen/haushaltsaufloesung-wohnzimmer.png",
@@ -45,7 +45,7 @@ export const references: Reference[] = [
     title: "Haushalt vollständig aufgelöst",
     text: "Komplette Einrichtung mit Schrankwand, Esstisch und Hausrat geräumt, sortenrein entsorgt und besenrein übergeben.",
     tag: "Haushaltsauflösung",
-    href: "/haushaltsaufloesung/",
+    href: "/haushaltsaufloesung-emden/",
   },
   {
     image: "/images/referenzen/wohnungsraeumung-neuvermietung.png",
@@ -53,7 +53,7 @@ export const references: Reference[] = [
     title: "Wohnung für die Neuvermietung geräumt",
     text: "Restmöbel, Kartons und Sperrmüll raus, Boden gereinigt. Die Einheit war am selben Tag wieder übergabefähig.",
     tag: "Wohnungsräumung",
-    href: "/wohnungsraeumung/",
+    href: "/wohnungsraeumung-emden/",
   },
   {
     image: "/images/referenzen/altbau-entkernung-ausbau.png",
@@ -61,6 +61,6 @@ export const references: Reference[] = [
     title: "Altbau entkernt und neu ausgebaut",
     text: "Zurückgebaut bis auf das Mauerwerk, danach Vorsatzschalen und abgehängte Decke gestellt und gespachtelt.",
     tag: "Rückbau + Trockenbau",
-    href: "/entkernung-trockenbau/",
+    href: "/rueckbau-trockenbau-emden/",
   },
 ];
