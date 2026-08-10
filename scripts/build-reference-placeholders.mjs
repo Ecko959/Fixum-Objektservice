@@ -21,11 +21,20 @@ const H = 1200;
 
 /* Muss zu src/data/references.ts passen. */
 const files = [
-  ["dachgeschoss-raeumung-rueckbau", "Dachgeschoss geräumt und zurückgebaut"],
-  ["dachgeschoss-trockenbau", "Dachgeschoss ausgebaut"],
-  ["haushaltsaufloesung-wohnzimmer", "Haushalt vollständig aufgelöst"],
-  ["wohnungsraeumung-neuvermietung", "Wohnung für die Neuvermietung geräumt"],
-  ["altbau-entkernung-ausbau", "Altbau entkernt und neu ausgebaut"],
+  [
+    "dachgeschoss-raeumung-rueckbau-foto",
+    "Dachgeschoss geräumt und zurückgebaut",
+  ],
+  ["dachgeschoss-trockenbau-foto", "Dachgeschoss ausgebaut"],
+  [
+    "haushaltsaufloesung-wohnzimmer-foto",
+    "Haushalt vollständig aufgelöst",
+  ],
+  [
+    "wohnungsraeumung-neuvermietung-foto",
+    "Wohnung für die Neuvermietung geräumt",
+  ],
+  ["altbau-entkernung-ausbau-foto", "Altbau entkernt und neu ausgebaut"],
 ];
 
 const escapeXml = (value) =>

@@ -34,11 +34,11 @@ Die echten Vorher/Nachher-Fotos müssen noch eingesetzt werden:
 
 | Datei                                | Referenz                              |
 | ------------------------------------ | ------------------------------------- |
-| `dachgeschoss-raeumung-rueckbau.png` | Dachgeschoss geräumt und zurückgebaut |
-| `dachgeschoss-trockenbau.png`        | Dachgeschoss ausgebaut                |
-| `haushaltsaufloesung-wohnzimmer.png` | Haushalt vollständig aufgelöst        |
-| `wohnungsraeumung-neuvermietung.png` | Wohnung für die Neuvermietung geräumt |
-| `altbau-entkernung-ausbau.png`       | Altbau entkernt und neu ausgebaut     |
+| `dachgeschoss-raeumung-rueckbau-foto.png` | Dachgeschoss geräumt und zurückgebaut |
+| `dachgeschoss-trockenbau-foto.png`        | Dachgeschoss ausgebaut                |
+| `haushaltsaufloesung-wohnzimmer-foto.png` | Haushalt vollständig aufgelöst        |
+| `wohnungsraeumung-neuvermietung-foto.png` | Wohnung für die Neuvermietung geräumt |
+| `altbau-entkernung-ausbau-foto.png`       | Altbau entkernt und neu ausgebaut     |
 
 Format: 4:3, vorher links, nachher rechts. Nach dem Einsetzen WebP und AVIF neu
 erzeugen (siehe README) und die Texte in `src/data/references.ts` gegenlesen -
