@@ -34,6 +34,10 @@ import { telUrl, whatsappUrl } from "../data/site";
 </div>
 
 <style>
+  /* Deckende Fläche statt Milchglas: Ein backdrop-filter zwingt die fixierte
+     Leiste auf eine eigene Compositing-Ebene, und die läuft dem unteren
+     Rand hinterher, während Android und iOS ihre Adressleiste ein- und
+     ausblenden. Genau dann klafft ein Spalt und Seiteninhalt blitzt durch. */
   .sticky-call {
     position: fixed;
     inset: auto 0 0;
@@ -44,9 +48,22 @@ import { telUrl, whatsappUrl } from "../data/site";
     height: calc(66px + env(safe-area-inset-bottom));
     padding: 0.6rem 0.875rem calc(0.6rem + env(safe-area-inset-bottom));
     border-top: 1px solid var(--on-dark-hairline);
-    background: rgba(10, 23, 48, 0.95);
-    backdrop-filter: blur(16px);
+    background: var(--navy-deep);
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.28);
+  }
+
+  /* Zieht den Grund der Leiste nach unten weiter. Falls der Browser sie
+     während der Toolbar-Animation kurz anhebt, steht darunter trotzdem
+     dieselbe Fläche statt der Seite. */
+  .sticky-call::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 240px;
+    background: var(--navy-deep);
+    pointer-events: none;
   }
 
   .sticky-call a {
