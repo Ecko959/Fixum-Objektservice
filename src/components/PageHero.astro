@@ -2,7 +2,7 @@
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
-import { site, telUrl, whatsappUrl } from "../data/site";
+import { telUrl, whatsappUrl } from "../data/site";
 
 interface Props {
   eyebrow?: string;
@@ -63,7 +63,7 @@ const base = image.replace(/\.[a-zA-Z0-9]+$/, "");
       <p class="lead">{text}</p>
 
       <div class="btn-row">
-        <Button href={telUrl} icon="phone">{site.phoneDisplay}</Button>
+        <Button href={telUrl} icon="phone">Jetzt anrufen</Button>
         <Button href={whatsappUrl()} variant="secondary" icon="whatsapp">
           WhatsApp schreiben
         </Button>

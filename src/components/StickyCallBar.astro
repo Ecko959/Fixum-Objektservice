@@ -3,7 +3,20 @@ import Icon from "./Icon.astro";
 import { telUrl, whatsappUrl } from "../data/site";
 ---
 
-<div class="sticky-call" role="complementary" aria-label="Schnellkontakt">
+{
+  /* Setzt das Flag noch während des Parsens, damit die Leiste beim ersten
+     Bild gar nicht erst auftaucht und wieder wegspringt. */
+}
+<script is:inline>
+  document.documentElement.dataset.stickyArmed = "";
+</script>
+
+<div
+  class="sticky-call"
+  role="complementary"
+  aria-label="Schnellkontakt"
+  data-sticky-call
+>
   <a class="sticky-primary" href={telUrl}>
     <Icon name="phone" size={18} />
     <span>Anrufen</span>
@@ -68,5 +81,43 @@ import { telUrl, whatsappUrl } from "../data/site";
     .sticky-call {
       display: grid;
     }
+
+    /* Im Hero wäre die Leiste die dritte Aktionsgruppe auf einem Bildschirm.
+       Sie fährt erst hoch, wenn der erste Abschnitt durchgescrollt ist.
+       Ohne JavaScript greift das Flag nie - dann bleibt sie wie bisher da. */
+    :global(html[data-sticky-armed]) .sticky-call {
+      transform: translateY(110%);
+      visibility: hidden;
+      transition:
+        transform var(--dur) var(--ease-out),
+        visibility var(--dur) var(--ease-out);
+    }
+
+    :global(html[data-sticky-armed]) .sticky-call.is-visible {
+      transform: none;
+      visibility: visible;
+    }
   }
 </style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>("[data-sticky-call]");
+  const first = document.querySelector<HTMLElement>("#inhalt > section");
+
+  if (bar && first && "IntersectionObserver" in window) {
+    /* Sichtbar, sobald der erste Abschnitt oben aus dem Bild gelaufen ist -
+       also mit dem Eintritt in den zweiten. Wieder weg, wenn zurückgescrollt
+       wird, damit der Hero frei bleibt. */
+    new IntersectionObserver(
+      ([entry]) => {
+        const passed =
+          !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        bar.classList.toggle("is-visible", passed);
+      },
+      { threshold: 0 },
+    ).observe(first);
+  } else {
+    /* Kein Beobachter, keine Steuerung - dann lieber dauerhaft sichtbar. */
+    delete document.documentElement.dataset.stickyArmed;
+  }
+</script>
