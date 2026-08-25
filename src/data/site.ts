@@ -21,7 +21,11 @@ export const site = {
   domain: "https://www.fixum-objektservice.de",
   taxId: "",
   chamber: "Handwerkskammer für Ostfriesland, Aurich",
-  googleProfile: "",
+  /* Landet als sameAs im schema.org-Graph und als Link im Footer. Der
+     Kurzlink von Google funktioniert, die ausgeschriebene Profil-URL wäre
+     als Signal aber etwas stärker - sie lässt sich hier jederzeit
+     nachtragen. */
+  googleProfile: "https://share.google/hzDKeSFpvbowfRxhM",
   hours: "Mo-Sa, 7:00-19:00 Uhr",
   radiusKm: 50,
   foundingYear: "2024",

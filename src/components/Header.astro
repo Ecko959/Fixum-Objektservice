@@ -303,18 +303,21 @@ const servicesActive = serviceMenuGroups.some((group) =>
   .site-header {
     position: fixed;
     inset: 0 0 auto;
-    z-index: 100;
+    z-index: var(--z-header);
     color: var(--ink);
     padding-top: 18px;
     transition: padding var(--dur) var(--ease-out);
   }
 
   .site-header.is-scrolled {
-    padding-top: 8px;
+    padding-top: 0;
   }
 
   .header-inner {
     display: flex;
+    transition-property:
+      min-height, background, box-shadow, border-color, width, border-radius,
+      padding;
     align-items: center;
     gap: clamp(0.75rem, 1.6vw, 1.5rem);
     min-height: 74px;
@@ -332,10 +335,31 @@ const servicesActive = serviceMenuGroups.some((group) =>
       border-color var(--dur) var(--ease-out);
   }
 
+  /* Beim Scrollen wird aus der schwebenden Pille eine durchgehende Leiste.
+     Vorher lief der Fließtext im Streifen darüber und in den Randspalten
+     sichtbar vorbei. Ein Unschärfe-Schleier reicht dafür nicht: Große
+     Überschriften bleiben auch bei 30 px Unschärfe lesbar. Die Leiste
+     schließt den Streifen stattdessen ganz - unabhängig davon, ob der
+     Hintergrund gerade hell oder dunkel ist. */
   .is-scrolled .header-inner {
+    width: 100%;
+    max-width: none;
     min-height: 64px;
-    border-color: var(--line);
-    background: rgba(255, 255, 255, 0.96);
+    /* max(): auf schmalen Geraeten der knappe Innenabstand, ab 1220 px
+       richtet sich der Inhalt der Leiste am Textkoerper der Seite aus. */
+    padding-right: max(
+      calc(14px + env(safe-area-inset-right)),
+      calc((100% - 1220px) / 2)
+    );
+    padding-left: max(
+      calc(14px + env(safe-area-inset-left)),
+      calc((100% - 1220px) / 2)
+    );
+    border-color: transparent;
+    border-bottom-color: var(--line);
+    border-radius: 0;
+    /* Deckend, nicht 96 Prozent: Sonst schimmert der Text darunter durch. */
+    background: #fff;
     box-shadow: var(--shadow-lg);
   }
 
@@ -625,10 +649,13 @@ const servicesActive = serviceMenuGroups.some((group) =>
   .mobile-menu {
     position: fixed;
     inset: 0;
+    z-index: var(--z-menu);
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: calc(var(--header-h) + 24px) var(--gutter)
-      calc(2rem + env(safe-area-inset-bottom));
+    padding: calc(var(--header-h) + 24px)
+      calc(var(--gutter) + env(safe-area-inset-right))
+      calc(2rem + env(safe-area-inset-bottom))
+      calc(var(--gutter) + env(safe-area-inset-left));
     background:
       radial-gradient(
         90% 60% at 50% 0%,

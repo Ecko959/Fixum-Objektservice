@@ -91,7 +91,10 @@ const base = image.replace(/\.[a-zA-Z0-9]+$/, "");
     isolation: isolate;
     display: flex;
     align-items: center;
+    /* dvh folgt der Viewporthoehe, wenn iOS die Adressleiste ein- und
+       ausfaehrt. vh davor bleibt als Rueckfall fuer aeltere Browser. */
     min-height: clamp(440px, 56vh, 620px);
+    min-height: clamp(440px, 56dvh, 620px);
     padding: calc(var(--header-h) + clamp(2.5rem, 6vw, 4.5rem)) 0
       clamp(3rem, 6vw, 4.5rem);
     overflow: hidden;

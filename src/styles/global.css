@@ -92,6 +92,16 @@
   --dur-slow: 520ms;
 
   --header-h: 92px;
+  /* Höhe der festen Kontaktleiste ohne Sicherheitsbereich. */
+  --sticky-call-h: 66px;
+
+  /* Ebenen an einer Stelle, damit sich Kopfleiste, Menü und Kontaktleiste
+     nicht gegenseitig verdecken:
+     Kontaktleiste über dem Inhalt, Kopfleiste darüber, das geöffnete
+     Menü-Overlay ganz oben. */
+  --z-sticky-call: 90;
+  --z-header: 100;
+  --z-menu: 110;
 
   /* Haken-Glyphe als Maske - wird von .check-list genutzt. */
   --check-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 12.4 3.4 3.4L17.2 9'/%3E%3C/svg%3E")
@@ -189,8 +199,15 @@ ol {
    3. Layout
    --------------------------------------------------------------------------- */
 
+/* Mit viewport-fit=cover reicht das Layout in die Sicherheitsbereiche hinein.
+   Die Ränder nehmen sie wieder heraus, sonst steht Text im Querformat unter
+   der Notch. Auf Geräten ohne Aussparung sind die env()-Werte 0. */
 .container {
-  width: min(1220px, 100% - var(--gutter) * 2);
+  width: min(
+    1220px,
+    100% - var(--gutter) * 2 - env(safe-area-inset-left) -
+      env(safe-area-inset-right)
+  );
   margin-inline: auto;
 }
 
@@ -998,10 +1015,11 @@ html.js [data-reveal].is-revealed {
   }
 }
 
-/* Platz fuer die mobile Kontaktleiste */
+/* Platz fuer die mobile Kontaktleiste, damit der letzte Inhalt nicht
+   dahinter verschwindet - Hoehe der Leiste plus Sicherheitsbereich. */
 @media (max-width: 767px) {
   body {
-    padding-bottom: calc(66px + env(safe-area-inset-bottom));
+    padding-bottom: calc(var(--sticky-call-h) + env(safe-area-inset-bottom));
   }
 }
 

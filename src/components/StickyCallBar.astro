@@ -4,14 +4,6 @@ import WhatsAppMark from "./WhatsAppMark.astro";
 import { telUrl, whatsappUrl } from "../data/site";
 ---
 
-{
-  /* Setzt das Flag noch während des Parsens, damit die Leiste beim ersten
-     Bild gar nicht erst auftaucht und wieder wegspringt. */
-}
-<script is:inline>
-  document.documentElement.dataset.stickyArmed = "";
-</script>
-
 <div
   class="sticky-call"
   role="complementary"
@@ -34,27 +26,36 @@ import { telUrl, whatsappUrl } from "../data/site";
 </div>
 
 <style>
-  /* Deckende Fläche statt Milchglas: Ein backdrop-filter zwingt die fixierte
-     Leiste auf eine eigene Compositing-Ebene, und die läuft dem unteren
-     Rand hinterher, während Android und iOS ihre Adressleiste ein- und
-     ausblenden. Genau dann klafft ein Spalt und Seiteninhalt blitzt durch. */
+  /* Diese Leiste darf NIEMALS ein transform, filter, backdrop-filter oder
+     will-change bekommen. Jede dieser Eigenschaften hebt ein position: fixed
+     auf eine eigene Compositing-Ebene, und iOS führt die nicht synchron mit
+     dem Viewport nach, während Safari seine Adressleiste ein- und ausfährt -
+     die Leiste bleibt dann mitten im Bild stehen. Aus- und eingeblendet wird
+     ausschließlich über opacity.
+
+     Die Höhe steht als --sticky-call-h im Designsystem; global.css baut
+     daraus den Innenabstand des body, damit der letzte Inhalt frei bleibt. */
   .sticky-call {
     position: fixed;
-    inset: auto 0 0;
-    z-index: 90;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-sticky-call);
     display: none;
     grid-template-columns: 1fr 1fr;
     gap: 0.625rem;
-    height: calc(66px + env(safe-area-inset-bottom));
-    padding: 0.6rem 0.875rem calc(0.6rem + env(safe-area-inset-bottom));
+    height: calc(var(--sticky-call-h) + env(safe-area-inset-bottom));
+    padding: 0.6rem calc(0.875rem + env(safe-area-inset-right))
+      calc(0.6rem + env(safe-area-inset-bottom))
+      calc(0.875rem + env(safe-area-inset-left));
     border-top: 1px solid var(--on-dark-hairline);
     background: var(--navy-deep);
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.28);
   }
 
-  /* Zieht den Grund der Leiste nach unten weiter. Falls der Browser sie
-     während der Toolbar-Animation kurz anhebt, steht darunter trotzdem
-     dieselbe Fläche statt der Seite. */
+  /* Zieht den Grund der Leiste nach unten weiter. Hebt der Browser sie
+     während der Toolbar-Animation trotzdem kurz an, steht darunter dieselbe
+     Fläche statt der Seite. */
   .sticky-call::after {
     content: "";
     position: absolute;
@@ -101,41 +102,112 @@ import { telUrl, whatsappUrl } from "../data/site";
     }
 
     /* Im Hero wäre die Leiste die dritte Aktionsgruppe auf einem Bildschirm.
-       Sie fährt erst hoch, wenn der erste Abschnitt durchgescrollt ist.
-       Ohne JavaScript greift das Flag nie - dann bleibt sie wie bisher da. */
-    :global(html[data-sticky-armed]) .sticky-call {
-      transform: translateY(110%);
+       Sie blendet erst ein, wenn der erste Abschnitt durchgescrollt ist.
+
+       Der Ausgangszustand ist BEWUSST sichtbar: Fällt das Skript aus, ist die
+       Leiste einen Bildschirm zu früh da - das ist harmlos. Wäre der
+       Ausgangszustand versteckt, wäre sie bei einem Skriptfehler dauerhaft
+       weg, und ein fehlender Anrufknopf kostet Aufträge.
+
+       visibility wechselt ohne Dauer und erst nach der Blende. Ein echter
+       Übergang auf visibility bleibt auf iOS gelegentlich im Zwischenschritt
+       hängen - genau daher kam das "mal verschwindet sie ganz". */
+    :global(html[data-sticky-js]) .sticky-call[data-hidden] {
+      opacity: 0;
       visibility: hidden;
+      pointer-events: none;
       transition:
-        transform var(--dur) var(--ease-out),
-        visibility var(--dur) var(--ease-out);
+        opacity var(--dur) var(--ease-out),
+        visibility 0s linear var(--dur);
     }
 
-    :global(html[data-sticky-armed]) .sticky-call.is-visible {
-      transform: none;
+    :global(html[data-sticky-js]) .sticky-call {
+      opacity: 1;
       visibility: visible;
+      transition:
+        opacity var(--dur) var(--ease-out),
+        visibility 0s;
     }
   }
 </style>
 
-<script>
-  const bar = document.querySelector<HTMLElement>("[data-sticky-call]");
-  const first = document.querySelector<HTMLElement>("#inhalt > section");
+{
+  /* Bewusst is:inline und direkt hinter der Leiste: Das Skript läuft noch
+     während des Parsens, setzt den Anfangszustand ohne sichtbares Springen
+     und hängt nicht an einem gebündelten Modul, das später scheitern könnte. */
+}
+<script is:inline>
+  (() => {
+    const bar = document.querySelector("[data-sticky-call]");
+    const erste = document.querySelector("#inhalt > section");
+    if (!bar || !erste) return;
 
-  if (bar && first && "IntersectionObserver" in window) {
-    /* Sichtbar, sobald der erste Abschnitt oben aus dem Bild gelaufen ist -
-       also mit dem Eintritt in den zweiten. Wieder weg, wenn zurückgescrollt
-       wird, damit der Hero frei bleibt. */
-    new IntersectionObserver(
-      ([entry]) => {
-        const passed =
-          !entry.isIntersecting && entry.boundingClientRect.top < 0;
-        bar.classList.toggle("is-visible", passed);
-      },
-      { threshold: 0 },
-    ).observe(first);
-  } else {
-    /* Kein Beobachter, keine Steuerung - dann lieber dauerhaft sichtbar. */
-    delete document.documentElement.dataset.stickyArmed;
-  }
+    document.documentElement.dataset.stickyJs = "";
+
+    /* Hysterese: Ohne den Abstand zwischen Ein- und Ausblendpunkt schaltet
+       die Leiste am Rand des Hero bei jeder kleinen Bewegung um - das war
+       das Springen beim Scrollen. */
+    const PUFFER = 90;
+    let schwelle = 0;
+    let sichtbar = true;
+    let geplant = false;
+
+    const messen = () => {
+      schwelle = erste.offsetTop + erste.offsetHeight;
+    };
+
+    const anwenden = () => {
+      geplant = false;
+      // Bei geöffnetem Menü liegt die Leiste hinter dem Overlay - dann weg.
+      if (document.body.classList.contains("menu-open")) {
+        if (sichtbar) {
+          sichtbar = false;
+          bar.setAttribute("data-hidden", "");
+          bar.setAttribute("aria-hidden", "true");
+        }
+        return;
+      }
+      const y = window.scrollY;
+      const soll = sichtbar ? y > schwelle - PUFFER : y > schwelle;
+      if (soll === sichtbar) return;
+      sichtbar = soll;
+      if (soll) {
+        bar.removeAttribute("data-hidden");
+        bar.removeAttribute("aria-hidden");
+      } else {
+        bar.setAttribute("data-hidden", "");
+        bar.setAttribute("aria-hidden", "true");
+      }
+    };
+
+    /* Ein einziger Zeitgeber für alle Auslöser. Der Zustand wird jedes Mal
+       neu aus scrollY berechnet, nie fortgeschrieben - deshalb kann er auch
+       nach gesperrtem Body-Scroll oder einem Sprung nicht hängen bleiben. */
+    const planen = () => {
+      if (geplant) return;
+      geplant = true;
+      requestAnimationFrame(anwenden);
+    };
+
+    const neuMessen = () => {
+      messen();
+      planen();
+    };
+
+    messen();
+    anwenden();
+
+    addEventListener("scroll", planen, { passive: true });
+    addEventListener("resize", neuMessen, { passive: true });
+    addEventListener("orientationchange", neuMessen, { passive: true });
+    // Rückkehr über die Verlaufstasten stellt den Zustand wieder her.
+    addEventListener("pageshow", neuMessen);
+    if (document.fonts?.ready) document.fonts.ready.then(neuMessen);
+
+    // Menü auf und zu: der Body wechselt die Klasse, danach neu bewerten.
+    new MutationObserver(planen).observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  })();
 </script>

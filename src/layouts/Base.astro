@@ -102,7 +102,16 @@ const jsonLd = JSON.stringify({
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      /* viewport-fit=cover: ohne diesen Wert liefert env(safe-area-inset-*)
+         auf iOS immer 0, und die feste Kontaktleiste kann den Bereich um den
+         Home-Indicator nicht berücksichtigen. Die Seitenränder gleicht
+         .container über dieselben env()-Werte wieder aus. */
+    }
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
