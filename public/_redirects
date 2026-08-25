@@ -1,0 +1,10 @@
+# Eine Domain, ein Signal: alles ohne www dauerhaft auf die www-Fassung.
+# Ohne diese Regel bleiben beide Hosts erreichbar, Google sieht zwei Seiten
+# mit identischem Inhalt und verteilt die Signale auf beide.
+#
+# Diese Datei wird von Netlify und Cloudflare Pages gelesen. Auf anderen
+# Hostern ist sie wirkungslos - die passenden Regeln stehen in CONTENT.md.
+
+http://fixum-objektservice.de/*   https://www.fixum-objektservice.de/:splat   301!
+https://fixum-objektservice.de/*  https://www.fixum-objektservice.de/:splat   301!
+http://www.fixum-objektservice.de/*  https://www.fixum-objektservice.de/:splat  301!

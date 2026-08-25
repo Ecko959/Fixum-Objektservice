@@ -12,10 +12,12 @@ import ServiceCard from "../components/ServiceCard.astro";
 import { services } from "../data/services";
 import { site, telUrl, whatsappUrl } from "../data/site";
 
-const title =
-  "Entrümpelung, Entkernung & Trockenbau in Emden | Fixum Objektservice";
+/* Markenname zuerst: Google leitet den Quellennamen über dem Suchergebnis aus
+   dem Titel der Startseite, og:site_name und dem WebSite-Knoten ab. Auf den
+   Unterseiten steht die Leistung weiter vorn - dort zählt das Stichwort. */
+const title = "Fixum Objektservice Emden - Entrümpelung & Trockenbau";
 const description =
-  "Entrümpelung, Haushaltsauflösung, Entkernung, Trockenbau und Montage in Emden und Ostfriesland. Ein Ansprechpartner, ein Festpreis nach kostenloser Besichtigung, ein Termin, der hält.";
+  "Entrümpelung, Entkernung, Trockenbau und Montage in Emden und Ostfriesland. Ein Ansprechpartner, ein Festpreis nach kostenloser Besichtigung.";
 
 const heroImage = "/images/hero-renovation.png";
 

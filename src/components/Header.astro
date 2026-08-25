@@ -133,7 +133,24 @@ const servicesActive = serviceMenuGroups.some((group) =>
     </button>
   </div>
 
-  <div id="mobile-menu" class="mobile-menu" data-mobile-menu hidden>
+  <div
+    id="mobile-menu"
+    class="mobile-menu"
+    data-mobile-menu
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-label="Navigation"
+  >
+    <button
+      class="menu-close"
+      type="button"
+      aria-label="Menü schließen"
+      data-menu-close
+    >
+      <span class="menu-close-x" aria-hidden="true"></span>
+    </button>
+
     <nav class="mobile-nav" aria-label="Mobile Navigation">
       {
         navBeforeServices.map((item) => (
@@ -156,9 +173,7 @@ const servicesActive = serviceMenuGroups.some((group) =>
               </div>
             ))
           }
-          <a class="arrow-link mobile-all" href="/leistungen/">
-            Alle Leistungen
-          </a>
+          <a class="mobile-all" href="/leistungen/">Alle Leistungen</a>
         </div>
       </details>
 
@@ -205,6 +220,8 @@ const servicesActive = serviceMenuGroups.some((group) =>
   );
 
   /* ---- Mobiles Menü ---- */
+  const closeBtn = menu?.querySelector<HTMLButtonElement>("[data-menu-close]");
+
   const setMenu = (open: boolean) => {
     if (!toggle || !menu) return;
     toggle.setAttribute("aria-expanded", String(open));
@@ -213,7 +230,13 @@ const servicesActive = serviceMenuGroups.some((group) =>
     document.body.classList.toggle("menu-open", open);
     if (open) {
       menu.hidden = false;
+      // Fokus ins Panel, damit Tastatur und Screenreader dort landen.
+      window.requestAnimationFrame(() => closeBtn?.focus());
     } else {
+      /* Fokus zurück auf den Auslöser, sonst steht er im Nichts. Erst im
+         nächsten Frame: Ein Klick auf die freie Fläche setzt den Fokus sonst
+         danach wieder auf body zurück. */
+      window.requestAnimationFrame(() => toggle.focus());
       // Erst nach der Transition ausblenden, sonst springt das Panel weg.
       window.setTimeout(() => {
         if (!menu.classList.contains("is-open")) menu.hidden = true;
@@ -221,12 +244,24 @@ const servicesActive = serviceMenuGroups.some((group) =>
     }
   };
 
-  toggle?.addEventListener("click", () => {
-    setMenu(toggle.getAttribute("aria-expanded") !== "true");
-  });
+  const menuIsOpen = () => toggle?.getAttribute("aria-expanded") === "true";
+
+  toggle?.addEventListener("click", () => setMenu(!menuIsOpen()));
+  closeBtn?.addEventListener("click", () => setMenu(false));
 
   menu?.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => setMenu(false));
+  });
+
+  /* Klick auf die freie Fläche des Panels schließt ebenfalls. Das Panel füllt
+     den Bildschirm, ein Overlay daneben gibt es nicht - deshalb zählt nur ein
+     Treffer auf das Panel selbst, nicht auf Navigation oder Schaltflächen. */
+  menu?.addEventListener("click", (event) => {
+    if (event.target === menu) setMenu(false);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && menuIsOpen()) setMenu(false);
   });
 
   /* ---- Mega-Menü ---- */
@@ -613,6 +648,59 @@ const servicesActive = serviceMenuGroups.some((group) =>
     transform: none;
   }
 
+  /* Schliessen-Kreuz oben rechts. 48 px Kantenlaenge, damit das Ziel auch
+     mit dem Daumen sicher zu treffen ist. */
+  .menu-close {
+    position: absolute;
+    top: calc(env(safe-area-inset-top) + 14px);
+    right: var(--gutter);
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--on-dark-hairline);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .menu-close:hover,
+  .menu-close:focus-visible {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .menu-close-x {
+    position: relative;
+    width: 18px;
+    height: 18px;
+  }
+
+  .menu-close-x::before,
+  .menu-close-x::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  .menu-close-x::before {
+    transform: rotate(45deg);
+  }
+
+  .menu-close-x::after {
+    transform: rotate(-45deg);
+  }
+
   .mobile-nav {
     display: grid;
     gap: 0.5rem;
@@ -678,9 +766,18 @@ const servicesActive = serviceMenuGroups.some((group) =>
     font-weight: 600;
   }
 
+  /* Trug frueher zusaetzlich .arrow-link. Dessen Pfeil ist ein Flex-Kind,
+     hier setzt .mobile-service-groups a den Link aber auf display: block -
+     dann greifen Breite und Hoehe des Pseudoelements nicht mehr und von dem
+     gedrehten Winkel blieben nur die beiden Rahmenkanten stehen: ein
+     senkrechter Strich wie ein Textcursor. */
   .mobile-all {
     color: var(--amber) !important;
     margin-top: 0.5rem;
+    font-family: var(--font-utility);
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
   }
 
   .mobile-cta {

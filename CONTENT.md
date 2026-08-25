@@ -27,13 +27,12 @@
   der Umstellung auf die Referenz-Galerie nicht mehr eingebunden und kann
   gelöscht werden.
 
-## Referenzfotos - offener Punkt
+## Referenzfotos
 
-In `public/images/referenzen/` liegen derzeit **fünf beschriftete Platzhalter**.
-Die echten Vorher/Nachher-Fotos müssen noch eingesetzt werden:
+In `public/images/referenzen/` liegen die **echten Vorher/Nachher-Fotos**:
 
-| Datei                                | Referenz                              |
-| ------------------------------------ | ------------------------------------- |
+| Datei                                     | Referenz                              |
+| ----------------------------------------- | ------------------------------------- |
 | `dachgeschoss-raeumung-rueckbau-foto.png` | Dachgeschoss geräumt und zurückgebaut |
 | `dachgeschoss-trockenbau-foto.png`        | Dachgeschoss ausgebaut                |
 | `haushaltsaufloesung-wohnzimmer-foto.png` | Haushalt vollständig aufgelöst        |
@@ -44,10 +43,8 @@ Format: 4:3, vorher links, nachher rechts. Nach dem Einsetzen WebP und AVIF neu
 erzeugen (siehe README) und die Texte in `src/data/references.ts` gegenlesen -
 sie beschreiben, was auf den Fotos zu sehen sein soll.
 
-Solange die Platzhalter drin sind, darf die Seite nicht live gehen: Sie sind
-sichtbar als Platzhalter markiert, aber eine Referenzsektion ohne Referenzen
-wirkt schlechter als gar keine. Alternativ `showReferences` in
-`src/data/site.ts` bis dahin auf `false` setzen.
+Kommen weitere Referenzen dazu, gehören sie unter demselben Namensschema in
+den Ordner und als Eintrag in `src/data/references.ts`.
 
 ## Kundenstimmen
 
@@ -125,6 +122,52 @@ kaum eigene Impressionen sammelt, ist eine Zusammenlegung sinnvoll: Inhalt in
 `/trockenbau-emden/` überführen und `/rueckbau-trockenbau-emden/` per
 301-Weiterleitung darauf zeigen lassen. Vorher nicht löschen - eine bestehende
 URL ohne Redirect zu entfernen kostet mehr, als sie einbringt.
+
+## Weiterleitung von non-www auf www - muss beim Hoster passieren
+
+Kanonische Adresse ist `https://www.fixum-objektservice.de`. Canonical, Open
+Graph, Sitemap und schema.org geben ausschließlich diese Fassung aus. Solange
+`https://fixum-objektservice.de` aber weiterhin ausliefert statt
+weiterzuleiten, sieht Google zwei Seiten mit identischem Inhalt.
+
+In `public/_redirects` liegt die Regel für **Netlify und Cloudflare Pages**.
+Läuft die Seite woanders, gehört stattdessen eine der folgenden Fassungen in
+die Hoster-Konfiguration - die Datei kann dann gelöscht werden.
+
+**Vercel** (`vercel.json` im Projektwurzelverzeichnis):
+
+```json
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "fixum-objektservice.de" }],
+      "destination": "https://www.fixum-objektservice.de/:path*",
+      "permanent": true
+    }
+  ]
+}
+```
+
+**Apache / klassisches Webhosting** (`.htaccess` im Wurzelverzeichnis):
+
+```apache
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^fixum-objektservice\.de$ [NC]
+RewriteRule ^(.*)$ https://www.fixum-objektservice.de/$1 [R=301,L]
+```
+
+**nginx**:
+
+```nginx
+server {
+    server_name fixum-objektservice.de;
+    return 301 https://www.fixum-objektservice.de$request_uri;
+}
+```
+
+Nach dem Einrichten prüfen: `curl -I https://fixum-objektservice.de/` muss
+`301` und `Location: https://www.fixum-objektservice.de/` liefern.
 
 ## Nach dem Livegang
 

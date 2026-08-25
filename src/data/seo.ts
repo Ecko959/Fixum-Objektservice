@@ -130,11 +130,18 @@ export const businessSchema = {
   },
 };
 
+/**
+ * Aus diesem Knoten zieht Google den Quellennamen über dem Suchergebnis.
+ * Steht er nicht da, nimmt Google die Domain - genau der Fall, der behoben
+ * werden sollte. Entscheidend sind name, url auf der kanonischen Startseite
+ * und die Schreibweisen unter alternateName.
+ */
 export const websiteSchema = {
   "@type": "WebSite",
   "@id": ids.website,
   url: `${site.domain}/`,
   name: site.name,
+  alternateName: ["Fixum", "Fixum Objektservice Emden"],
   inLanguage: "de-DE",
   publisher: { "@id": ids.business },
 };

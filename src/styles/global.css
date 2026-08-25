@@ -617,8 +617,16 @@ h4 {
   transition: gap var(--dur) var(--ease-out);
 }
 
+/* display und flex sind hier keine Kosmetik: Als Inline-Kasten greifen weder
+   Breite noch Hoehe, dann bleiben von dem gedrehten Winkel nur zwei
+   Rahmenkanten als Strich stehen. Genau das passierte, wo eine Regel wie
+   ".mobile-service-groups a { display: block }" den Link aus dem Flex-Kontext
+   geholt hat. inline-block macht das Pseudoelement unabhaengig davon,
+   flex: none verhindert, dass es in engen Zeilen zusammengedrueckt wird. */
 .arrow-link::after {
   content: "";
+  display: inline-block;
+  flex: none;
   width: 0.5rem;
   height: 0.5rem;
   border-top: 2px solid currentColor;

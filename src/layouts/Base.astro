@@ -155,11 +155,35 @@ const jsonLd = JSON.stringify({
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={imageAlt} />
 
+    {
+      /* Google zeigt im Suchergebnis nur Favicons ab 48x48 - das frühere
+         32x32 war zu klein und blieb deshalb leer. Dateinamen bleiben ohne
+         Hash, damit die Icon-URLs dauerhaft stabil sind. */
+    }
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link
       rel="icon"
       type="image/png"
-      sizes="32x32"
-      href="/favicon/favicon-32x32.png"
+      sizes="48x48"
+      href="/favicon/favicon-48x48.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="/favicon/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/favicon/icon-192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/favicon/icon-512.png"
     />
     <link
       rel="apple-touch-icon"
