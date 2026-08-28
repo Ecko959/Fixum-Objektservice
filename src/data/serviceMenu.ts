@@ -62,6 +62,12 @@ export const serviceMenuGroups: Array<{
         description: "Beide Gewerke in einem Durchgang, ein Angebot.",
       },
       {
+        label: "Renovierung",
+        href: "/renovierung-emden/",
+        icon: "pen",
+        description: "Boden, Wände, Türen - ohne Eingriff in den Rohbau.",
+      },
+      {
         label: "Boden & Türen",
         href: "/bodenverlegung-emden/",
         icon: "door",

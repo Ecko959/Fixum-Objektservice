@@ -105,6 +105,14 @@ export const services: Service[] = [
     bullets: ["Räum- und Streudienst", "Grünpflege", "Nach Vereinbarung"],
   },
   {
+    title: "Renovierung",
+    short: "Renovierung",
+    href: "/renovierung-emden/",
+    image: "/images/categories/trockenbau-innenausbau.png",
+    text: "Wände und Decken herrichten, Böden erneuern, Türen tauschen - ohne Eingriff in Leitungen oder Statik. Der schnellere Weg, wenn keine Kernsanierung nötig ist.",
+    bullets: ["Boden, Wand, Türen", "Ohne Rohbau", "Festpreis nach Aufmaß"],
+  },
+  {
     title: "Kernsanierung vorbereiten",
     short: "Kernsanierung",
     href: "/kernsanierung-emden/",

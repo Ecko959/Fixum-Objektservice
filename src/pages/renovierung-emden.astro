@@ -1,0 +1,64 @@
+---
+import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { serviceFaq } from "../data/faq";
+
+/**
+ * Bewusst gegen /kernsanierung-emden/ abgegrenzt, damit sich die beiden
+ * Seiten nicht dasselbe Hauptkeyword streitig machen:
+ * Renovierung = bewohnbarer Raum wird aufgefrischt, Wände, Böden, Türen.
+ * Kernsanierung = alles raus bis auf den Rohbau, Fachbetriebe koordiniert.
+ */
+const current = "/renovierung-emden/";
+---
+
+<ServiceDetailPage
+  current={current}
+  crumb="Renovierung"
+  metaTitle="Renovierung Emden - Wände, Böden, Türen | Fixum"
+  description="Renovierung in Emden und Ostfriesland: Wände und Decken herrichten, Böden verlegen, Türen setzen, Kleinreparaturen. Zum Festpreis nach Besichtigung."
+  eyebrow="Renovierung"
+  title="Renovierung in Emden und Ostfriesland"
+  heroText="Wenn ein Raum nicht entkernt werden muss, sondern nur wieder ordentlich aussehen soll: Wände herrichten, Boden erneuern, Türen tauschen - in einem Durchgang und zum Festpreis."
+  image="/images/categories/trockenbau-innenausbau.png"
+  imageAlt="Renovierte Wohnung in Emden mit neuem Boden und hergerichteten Wänden"
+  serviceType="Renovierung und Modernisierung von Innenräumen"
+  areaTitle="Renovierung in Emden und Ostfriesland"
+  lead="Renovieren heißt: Der Raum bleibt, wie er ist, wird aber wieder ansehnlich und nutzbar. Das ist der kleinere Bruder der Kernsanierung - ohne Rohbau, ohne Leitungen, ohne monatelange Baustelle. Für Eigentümer vor dem Einzug, für Vermieter zwischen zwei Mietern und für alle, die eine Wohnung übergeben müssen."
+  included={[
+    "Alte Bodenbeläge raus, Untergrund prüfen und ausgleichen",
+    "Laminat, Vinyl oder Teppich verlegen, Leisten und Übergänge setzen",
+    "Wände und Decken für den Anstrich vorbereiten, Spachtelung Q1 bis Q3",
+    "Vorsatzschalen und Trockenbauwände, wo ein Raum neu geteilt werden soll",
+    "Türen, Zargen und Beschläge tauschen oder neu setzen",
+    "Einbauten, Regale und alte Möbel demontieren und entsorgen",
+    "Kleinreparaturen, die beim Renovieren mit anfallen",
+    "Besenreine Übergabe, auf Wunsch mit Fotodokumentation",
+  ]}
+  process={[
+    [
+      "Anfrage",
+      "Sie nennen Räume, Flächen und was Sie sich vorstellen. Fotos des Ist-Zustands reichen für eine erste Einschätzung.",
+    ],
+    [
+      "Besichtigung und Festpreis",
+      "Wir sehen uns Untergrund, Wandzustand, Türsituation und Feuchte an. Danach steht der Preis schriftlich fest, samt der Positionen, die nicht dazugehören.",
+    ],
+    [
+      "Renovierung",
+      "Alte Beläge und Einbauten raus, Untergrund vorbereitet, Flächen hergerichtet, Boden verlegt, Türen gesetzt - mit Staubschutz für die Bereiche, die bleiben.",
+    ],
+    [
+      "Übergabe",
+      "Der Raum ist nutzbar, Verschnitt und Verpackung nehmen wir mit. Auf Wunsch mit Fotodokumentation für die Abnahme.",
+    ],
+  ]}
+  facts={[
+    ["Abgrenzung", "Renovierung statt Kernsanierung: kein Rohbau."],
+    ["Dauer", "Eine durchschnittliche Wohnung in wenigen Tagen."],
+    ["Preis", "Festpreis nach Besichtigung, schriftlich."],
+    ["Anschluss", "Möbel- und Küchenmontage direkt danach möglich."],
+  ]}
+  noteTitle="Wo Renovierung aufhört und Sanierung anfängt"
+  noteText="Wir renovieren, was ohne Eingriff in Leitungen, Statik oder Gebäudehülle geht: Böden, Wandflächen, Trockenbau, Türen, Montage. Elektro, Sanitär und Heizung führen zugelassene Fachbetriebe aus - genauso Fenster, Dach, Fassade und alles, was mit Schadstoffen zu tun hat. Muss ein Objekt komplett entkernt werden, ist das keine Renovierung mehr; dafür gibt es die Seite zur Kernsanierung. Was Sie brauchen, sagen wir Ihnen bei der Besichtigung ehrlich - auch wenn die Antwort lautet, dass weniger reicht als gedacht."
+  faq={serviceFaq[current]}
+/>

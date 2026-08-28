@@ -173,6 +173,17 @@ export const serviceFaq: Record<string, FaqItem[]> = {
   ],
   "/umzug-emden/": [
     {
+      question: "Was kostet ein Umzug in Emden?",
+      answer:
+        "Der Preis hängt an Volumen, Etagen, Laufwegen, Parkmöglichkeit und Entfernung. Für einen Umzug innerhalb von Emden ist das schnell eingeschätzt - oft reicht ein Telefonat oder ein paar Fotos. Sie bekommen danach einen Festpreis für Team, Fahrzeug und Fahrten, keinen Stundensatz mit offenem Ende.",
+    },
+    {
+      question: "Ziehen Sie auch von Emden aus über weitere Strecken um?",
+      answer:
+        "Ja. Innerhalb Ostfrieslands ist das Alltagsgeschäft, bundesweite Umzüge fahren wir auf Anfrage. Die Anfahrt wird im Angebot gesondert ausgewiesen, damit Sie sehen, was der Weg kostet.",
+    },
+
+    {
       question: "Bis zu welcher Größe machen Sie Umzüge?",
       answer:
         "Bis 3,5 t Fahrzeuggröße - also Wohnungen, kleinere Häuser, Büros und Objektfahrten. Für Fernumzüge mit großem LKW sind wir der falsche Ansprechpartner und sagen das auch gleich.",
@@ -209,6 +220,17 @@ export const serviceFaq: Record<string, FaqItem[]> = {
   ],
   "/kernsanierung-emden/": [
     {
+      question: "Was kostet die Vorbereitung einer Kernsanierung in Emden?",
+      answer:
+        "Bei ganzen Objekten hängt das so stark an Baujahr, Zustand und Umfang, dass eine Zahl ohne Besichtigung nichts wert wäre. Wir kommen vorbei, nehmen den Bestand auf und schicken ein Angebot, in dem Räumung, Rückbau und Ausbau als getrennte Positionen stehen - so sehen Sie, welcher Schritt was kostet.",
+    },
+    {
+      question: "Brauche ich wirklich eine Kernsanierung?",
+      answer:
+        "Nicht immer. Wenn Leitungen, Statik und Gebäudehülle in Ordnung sind und es nur um Böden, Wände und Türen geht, reicht eine Renovierung - das ist deutlich schneller und günstiger. Was Ihr Objekt braucht, sagen wir bei der Besichtigung ehrlich, auch wenn die Antwort gegen den größeren Auftrag spricht.",
+    },
+
+    {
       question: "Übernehmen Sie die komplette Kernsanierung?",
       answer:
         "Nein, und das sagen wir bewusst deutlich. Wir übernehmen die Vorbereitung: Räumen, nicht-tragenden Rückbau, Trockenbau, Boden und Montage. Strom, Wasser, Heizung, Statik, Fenster und Schadstoffe liegen bei zugelassenen Fachbetrieben, die wir für Sie koordinieren.",
@@ -217,6 +239,33 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       question: "In welcher Reihenfolge läuft so ein Projekt?",
       answer:
         "Räumen, Rückbau, dann kommen die Fachbetriebe für Leitungen, danach Trockenbau, Boden und Montage. Wir planen die Übergabepunkte mit, damit niemand auf den anderen wartet oder doppelt anrücken muss.",
+    },
+  ],
+  "/renovierung-emden/": [
+    {
+      question: "Was kostet eine Renovierung in Emden?",
+      answer:
+        "Das hängt an Fläche, Zustand und Umfang - eine Wohnung mit neuem Boden und hergerichteten Wänden liegt in einer anderen Größenordnung als ein einzelner Raum. Deshalb nennen wir keinen Quadratmeterpreis ins Blaue, sondern kommen vorbei, sehen uns Untergrund und Wände an und schicken danach einen Festpreis. Die Besichtigung ist kostenlos.",
+    },
+    {
+      question: "Worin unterscheidet sich Renovierung von Kernsanierung?",
+      answer:
+        "Bei der Renovierung bleibt der Raum, wie er ist, und wird aufgefrischt: Boden, Wandflächen, Türen, kleinere Trockenbauarbeiten. Bei der Kernsanierung wird alles bis auf den Rohbau zurückgebaut, inklusive Leitungen. Wenn Sie unsicher sind, was Ihr Objekt braucht, sagen wir es Ihnen bei der Besichtigung - auch wenn weniger reicht als gedacht.",
+    },
+    {
+      question: "Renovieren Sie auch nur einzelne Räume?",
+      answer:
+        "Ja. Ein Zimmer mit neuem Boden und frisch gespachtelten Wänden ist ein normaler Auftrag. Der Aufwand pro Quadratmeter ist bei kleinen Flächen etwas höher, weil An- und Abfahrt sowie Baustelleneinrichtung gleich bleiben - das steht aber vorher im Angebot.",
+    },
+    {
+      question: "Streichen Sie auch?",
+      answer:
+        "Wir bereiten Wände und Decken so vor, dass gestrichen werden kann - spachteln, schleifen, Q1 bis Q3. Den Anstrich selbst führen wir nicht aus. Wenn Sie das aus einer Hand möchten, stimmen wir den Termin mit einem Malerbetrieb ab, sodass die Flächen zur richtigen Zeit fertig sind.",
+    },
+    {
+      question: "Wie lange dauert die Renovierung einer Wohnung?",
+      answer:
+        "Eine durchschnittliche Wohnung mit Boden, Wandvorbereitung und Türen schaffen wir in wenigen Tagen. Den genauen Zeitraum nennen wir im Angebot - und der zugesagte Termin gilt.",
     },
   ],
   "/rueckbau-trockenbau-emden/": [
