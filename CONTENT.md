@@ -111,29 +111,51 @@ geändert werden.
 
 ## Seitenstruktur - offener Punkt
 
-`/rueckbau-trockenbau-emden/` überschneidet sich thematisch mit
-`/entkernung-emden/`, `/trockenbau-emden/` und
-`/kernsanierung-emden/`. Die Seite wurde deshalb auf das Paket
+`/rueckbau-trockenbau/` überschneidet sich thematisch mit
+`/entkernung/`, `/trockenbau/` und
+`/kernsanierung/`. Die Seite wurde deshalb auf das Paket
 "beide Gewerke in einem Auftrag" umgestellt und zielt nicht mehr auf die
 Einzelkeywords.
 
 Wenn nach einigen Monaten aus der Search Console hervorgeht, dass die Seite
 kaum eigene Impressionen sammelt, ist eine Zusammenlegung sinnvoll: Inhalt in
-`/trockenbau-emden/` überführen und `/rueckbau-trockenbau-emden/` per
+`/trockenbau/` überführen und `/rueckbau-trockenbau/` per
 301-Weiterleitung darauf zeigen lassen. Vorher nicht löschen - eine bestehende
 URL ohne Redirect zu entfernen kostet mehr, als sie einbringt.
 
-## Einsatzgebiet-Seiten - vor dem Livegang prüfen
+## Seitenstruktur: Leistung ortsneutral, Ort als Unterseite
 
-Neu sind 22 Seiten: `/einsatzgebiet/` als Übersicht, 15 Ortsseiten und sechs
-Leistungs-Stadt-Seiten (`/entruempelung-aurich/`, `/trockenbau-aurich/` und
-dieselben für Leer und Norden). Die Texte stehen in `src/data/staedte.ts`.
+Seit dem Umbau gilt eine klare Trennung:
+
+| Ebene | Beispiel | Aufgabe |
+| --- | --- | --- |
+| Leistung | `/trockenbau/` | Was Fixum macht, ortsneutral. Voller Leistungsumfang, Ablauf, Grenzen. |
+| Leistung × Ort | `/trockenbau/aurich/` | Was an diesem Ort anders ist: Bausubstanz, Zufahrt, Entsorgung, örtliche Fragen. |
+| Ort | `/einsatzgebiet/aurich/` | Der Ort als Ganzes, Einstieg in alle 13 Leistungen. |
+
+Die Leistungsseiten hießen vorher `/leistung-emden/` und trugen "in Emden" in
+der H1. Beides ist weg: Der Ortsbezug gehört auf die Ortsseiten, sonst
+konkurrieren Leistungsseite und Ortsseite um dasselbe Keyword.
+
+**Im `<title>` steht "Emden" weiterhin** - anders als in der H1. Der Titel ist
+der Text, den Google im Suchergebnis zeigt, und "Trockenbau Emden" ist der
+Suchbegriff. Wer das auch entfernt, verliert den lokalen Bezug genau dort, wo
+er zählt. Wenn das nicht gewünscht ist, stehen die Titel in den
+`metaTitle`-Zeilen der 13 Dateien unter `src/pages/`.
+
+## Einsatzgebiet- und Ortsseiten - vor dem Livegang prüfen
+
+Es gibt 36 solcher Seiten: `/einsatzgebiet/` als Übersicht, 15 Ortsseiten
+(Texte in `src/data/staedte.ts`) und 20 Leistungs-Ort-Seiten (Texte in
+`src/data/leistungsseiten.ts`) - Entrümpelung, Entkernung, Trockenbau und Umzug
+für Aurich, Leer, Norden, Moormerland und Krummhörn.
 
 Bewusst **nicht** 15 × 13 automatisch erzeugte Kombinationen: Seiten, die sich
 nur im Ortsnamen unterscheiden, wertet Google als Doorway-Pages - im Zweifel
 zulasten der ganzen Domain. Weitere Kombinationen erst ergänzen, wenn die
 Search Console Impressionen für den Suchbegriff zeigt, und dann mit eigenem
-Text.
+Text. Ein neuer Eintrag in `leistungsseiten.ts` erzeugt die Seite automatisch,
+inklusive Verlinkung von Leistungs- und Ortsseite.
 
 Diese Angaben stammen aus der Vorlage und sind **nicht verifiziert**:
 
@@ -147,7 +169,39 @@ Diese Angaben stammen aus der Vorlage und sind **nicht verifiziert**:
       und Wiesmoor gegen die tatsächliche Preispolitik halten. Auf der
       Papenburg-Seite steht zum Beispiel, dass sich kleine Privataufträge bei
       der Entfernung selten lohnen.
-- [ ] Rich-Results-Test für eine Ortsseite und eine Leistungs-Stadt-Seite.
+- [ ] Rich-Results-Test für eine Ortsseite und eine Leistungs-Ort-Seite.
+- [ ] Die 20 Leistungs-Ort-Texte einmal gegenlesen. Sie beschreiben, was in
+      Aurich, Leer, Norden, Moormerland und Krummhörn baulich typisch ist -
+      Altbau in Leer, Ferienobjekte in Norden, Gulfhöfe in der Krummhörn,
+      Fehnsiedlungen in Moormerland. Das ist allgemeines Ortswissen und keine
+      Aussage über bereits ausgeführte Aufträge, sollte aber zur eigenen
+      Erfahrung passen.
+
+## Weiterleitung der alten Leistungs-URLs - beim Hoster nachziehen
+
+`astro.config.mjs` erzeugt für die 13 alten Adressen Weiterleitungsseiten per
+Meta-Refresh mit `noindex` und Canonical auf das neue Ziel. Das fängt Links und
+Lesezeichen ab, ist für Google aber nur ein schwaches Signal. Eine echte 301
+am Server ist besser:
+
+```
+/entruempelung-emden/       -> /entruempelung/
+/entkernung-emden/          -> /entkernung/
+/trockenbau-emden/          -> /trockenbau/
+/bodenverlegung-emden/      -> /bodenverlegung/
+/umzug-emden/               -> /umzug/
+/haushaltsaufloesung-emden/ -> /haushaltsaufloesung/
+/wohnungsraeumung-emden/    -> /wohnungsraeumung/
+/kernsanierung-emden/       -> /kernsanierung/
+/renovierung-emden/         -> /renovierung/
+/hausmeisterservice-emden/  -> /hausmeisterservice/
+/kuechenmontage-emden/      -> /kuechenmontage/
+/winterdienst-emden/        -> /winterdienst/
+/rueckbau-trockenbau-emden/ -> /rueckbau-trockenbau/
+```
+
+Sind die 301er eingerichtet, kann der `redirects`-Block in `astro.config.mjs`
+weg - dann verschwinden auch die 13 Weiterleitungsseiten aus dem Build.
 
 ## Freistellungsbescheinigung § 48b EStG
 

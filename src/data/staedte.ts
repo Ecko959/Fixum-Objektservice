@@ -31,22 +31,17 @@ export type Stadt = {
   entsorgung: string;
   faq: Faq[];
   nachbarn: string[];
-  // Stufe 2: eigene Leistungs-Stadt-Seiten, nur wo Suchvolumen es rechtfertigt
-  leistungsseiten?: {
-    entruempelung?: { intro: string; faq: Faq[] };
-    trockenbau?: { intro: string; faq: Faq[] };
-  };
 };
 
 const L = {
-  entruempelung: "/entruempelung-emden/",
-  haushalt: "/haushaltsaufloesung-emden/",
-  raeumung: "/wohnungsraeumung-emden/",
-  entkernung: "/entkernung-emden/",
-  trockenbau: "/trockenbau-emden/",
-  renovierung: "/renovierung-emden/",
-  hausmeister: "/hausmeisterservice-emden/",
-  umzug: "/umzug-emden/",
+  entruempelung: "/entruempelung/",
+  haushalt: "/haushaltsaufloesung/",
+  raeumung: "/wohnungsraeumung/",
+  entkernung: "/entkernung/",
+  trockenbau: "/trockenbau/",
+  renovierung: "/renovierung/",
+  hausmeister: "/hausmeisterservice/",
+  umzug: "/umzug/",
   verwaltung: "/fuer-hausverwaltungen/",
   bau: "/fuer-bauunternehmen/",
 };
@@ -117,40 +112,6 @@ export const staedte: Stadt[] = [
       anfahrtFaq("Aurich", 26),
     ],
     nachbarn: ["ihlow", "suedbrookmerland", "grossefehn", "wiesmoor"],
-    leistungsseiten: {
-      entruempelung: {
-        intro:
-          "Eine Entrümpelung in Aurich beginnt bei uns mit einer kostenlosen Besichtigung – meist innerhalb von zwei Werktagen. Danach bekommen Sie einen Festpreis, der gilt, auch wenn Keller oder Dachboden voller sind als gedacht. Wir räumen Wohnungen in der Kernstadt ebenso wie Häuser mit Garage, Schuppen und Dachboden in den Ortsteilen und übergeben besenrein.",
-        faq: [
-          {
-            frage: "Wie schnell kann eine Entrümpelung in Aurich stattfinden?",
-            antwort:
-              "Die Besichtigung schaffen wir meist innerhalb von zwei Werktagen, die Ausführung je nach Umfang mit ein bis zwei Wochen Vorlauf. Bei fester Übergabefrist sagen Sie es beim ersten Anruf.",
-          },
-          {
-            frage: "Wird Brauchbares angerechnet?",
-            antwort:
-              "Verwertbares geben wir weiter oder führen es der Wiederverwertung zu. Ob sich eine Anrechnung auf den Preis lohnt, sehen wir bei der Besichtigung und schreiben es ins Angebot.",
-          },
-        ],
-      },
-      trockenbau: {
-        intro:
-          "Trockenbau in Aurich: Ständerwände, Vorsatzschalen, abgehängte Decken und Dachschrägen für private Modernisierer – und als Nachunternehmer für Bau- und Ausbaubetriebe im Landkreis. Privat rechnen wir als Festpreis nach Aufmaß ab, gewerblich nach m² oder Tagessatz.",
-        faq: [
-          {
-            frage: "Übernehmen Sie Trockenbau als Sub für Betriebe aus Aurich?",
-            antwort:
-              "Ja, nach m²-Preis oder Tagessatz, Material auf Wunsch bauseits. Wir sind haftpflichtversichert und sprechen Termine verbindlich zu.",
-          },
-          {
-            frage: "Welche Spachtelqualität ist im Preis enthalten?",
-            antwort:
-              "Die Stufe steht im Angebot – Q2 für Tapete, Q3 für glatte Anstriche. Q4 bieten wir nicht an.",
-          },
-        ],
-      },
-    },
   },
   {
     slug: "leer",
@@ -207,40 +168,6 @@ export const staedte: Stadt[] = [
       anfahrtFaq("Leer", 30),
     ],
     nachbarn: ["moormerland", "westoverledingen", "weener", "uplengen"],
-    leistungsseiten: {
-      entruempelung: {
-        intro:
-          "Entrümpelung in Leer – für Privatleute, Erben und Vermieter. Wir räumen Wohnungen, Häuser, Keller und Dachböden, trennen sortenrein und übergeben besenrein. Den Preis nennen wir nach einer kostenlosen Besichtigung schriftlich, und er gilt.",
-        faq: [
-          {
-            frage: "Was kostet eine Wohnungsräumung in Leer?",
-            antwort:
-              "Das hängt vom Volumen ab, nicht nur von den Quadratmetern. Nach der Besichtigung bekommen Sie einen schriftlichen Festpreis; die Anfahrt steht darin als eigene Position.",
-          },
-          {
-            frage: "Bekomme ich einen Nachweis für die Übergabe?",
-            antwort:
-              "Auf Wunsch mit Fotodokumentation und Entsorgungsnachweis nach Fraktionen – hilfreich für die Abnahme mit Vermieter oder Verwaltung.",
-          },
-        ],
-      },
-      trockenbau: {
-        intro:
-          "Trockenbau in Leer: Wände, Decken, Dachschrägen und Schallschutz im Bestand und als Nachunternehmer. Gerade bei Mietobjekten kombinieren wir Rückbau und Trockenbau, damit zwischen Auszug und Neuvermietung keine Wartezeit zwischen zwei Firmen entsteht.",
-        faq: [
-          {
-            frage: "Machen Sie Schallschutzwände in Mehrfamilienhäusern?",
-            antwort:
-              "Ja, mit passender Dämmung und Entkopplung. Geprüfte Brandschutzkonstruktionen mit Verwendbarkeitsnachweis führen wir nicht aus.",
-          },
-          {
-            frage: "Kann Material bauseits gestellt werden?",
-            antwort:
-              "Ja, bei gewerblichen Auftraggebern ist das üblich. Privat liefern wir auf Wunsch alles mit.",
-          },
-        ],
-      },
-    },
   },
   {
     slug: "norden",
@@ -298,40 +225,6 @@ export const staedte: Stadt[] = [
       anfahrtFaq("Norden", 32),
     ],
     nachbarn: ["krummhoern", "suedbrookmerland", "hinte", "aurich"],
-    leistungsseiten: {
-      entruempelung: {
-        intro:
-          "Entrümpelung in Norden und Norddeich: Wohnungen, Häuser, Ferienwohnungen, Keller und Dachböden. Wir besichtigen kostenlos, nennen einen schriftlichen Festpreis und räumen zum zugesagten Tag – auch wenn Sie selbst nicht vor Ort sind.",
-        faq: [
-          {
-            frage: "Räumen Sie auch möblierte Ferienwohnungen komplett?",
-            antwort:
-              "Ja, inklusive Küche (ohne Anschlussarbeiten), Textilien und Deko. Auf Wunsch schließt direkt die Renovierung an.",
-          },
-          {
-            frage: "Kann ich per WhatsApp Fotos schicken?",
-            antwort:
-              "Ja. Fotos helfen für eine erste Einschätzung; den verbindlichen Festpreis nennen wir nach der Besichtigung.",
-          },
-        ],
-      },
-      trockenbau: {
-        intro:
-          "Trockenbau in Norden und Norddeich: aus einem großen Raum zwei machen, eine Decke abhängen, das Dachgeschoss ausbauen. Für Ferienwohnungen planen wir die Arbeiten auf die Buchungslücke; für Bau- und Ausbaubetriebe arbeiten wir als Nachunternehmer.",
-        faq: [
-          {
-            frage: "Wie lange dauert eine neue Trennwand?",
-            antwort:
-              "Eine einzelne Ständerwand mit Spachtelung ist oft in wenigen Tagen fertig, abhängig von Trocknungszeiten und Spachtelstufe. Den Zeitplan schreiben wir ins Angebot.",
-          },
-          {
-            frage: "Bauen Sie auch Dachgeschosse aus?",
-            antwort:
-              "Ja: Dachschrägen, Kehlbalkenlage, Drempel und Vorsatzschalen. Eingriffe in tragende Teile nur mit Statiker-Freigabe.",
-          },
-        ],
-      },
-    },
   },
   {
     slug: "krummhoern",
@@ -487,12 +380,12 @@ export const staedte: Stadt[] = [
       {
         titel: "Rückbau + Trockenbau",
         text: "Beide Gewerke in einem Durchgang und einem Angebot.",
-        href: "/rueckbau-trockenbau-emden/",
+        href: "/rueckbau-trockenbau/",
       },
       {
         titel: "Böden & Türen",
         text: "Laminat, Vinyl, Türen und Zargen als letzter Schritt vor dem Einzug.",
-        href: "/bodenverlegung-emden/",
+        href: "/bodenverlegung/",
       },
     ],
     entsorgung:
@@ -789,7 +682,7 @@ export const staedte: Stadt[] = [
       {
         titel: "Rückbau & Ausbau",
         text: "Wenn das Haus anschließend modernisiert werden soll.",
-        href: "/rueckbau-trockenbau-emden/",
+        href: "/rueckbau-trockenbau/",
       },
     ],
     entsorgung:
@@ -849,7 +742,7 @@ export const staedte: Stadt[] = [
       {
         titel: "Kernsanierung vorbereiten",
         text: "Räumen, Rückbau, Ausbau – Fachbetriebe koordiniert.",
-        href: "/kernsanierung-emden/",
+        href: "/kernsanierung/",
       },
     ],
     entsorgung:
@@ -1046,9 +939,6 @@ export const findeStadt = (slug: string) =>
 
 export const landkreise = Array.from(new Set(staedte.map((s) => s.landkreis)));
 
-// Stufe 2: /entruempelung-aurich/, /trockenbau-leer/ usw.
-export const leistungsStadtSeiten = staedte.flatMap((s) =>
-  (["entruempelung", "trockenbau"] as const)
-    .filter((l) => s.leistungsseiten?.[l])
-    .map((l) => ({ leistung: l, stadt: s, slug: `${l}-${s.slug}` })),
-);
+/* Die Leistungs-Stadt-Seiten (/trockenbau/aurich/ und die übrigen 19) stehen
+   in src/data/leistungsseiten.ts. Getrennt, weil diese Datei die Orte
+   beschreibt und jene das, was Fixum dort konkret macht. */

@@ -1,0 +1,369 @@
+---
+/**
+ * /trockenbau/aurich/ und die 19 weiteren Leistung-Ort-Seiten.
+ *
+ * Als Unterseite der Leistung, nicht als eigener Slug: Die Leistung ist
+ * ortsneutral, der Ort hängt darunter. Das macht die Beziehung schon in der
+ * Adresse sichtbar und hält die Brotkrumen ehrlich.
+ *
+ * Statische Routen wie /trockenbau/ haben in Astro Vorrang, diese Catch-all
+ * erzeugt ausschließlich die Pfade aus getStaticPaths - es entsteht also
+ * nichts, was nicht in leistungsseiten.ts steht.
+ */
+import Base from "../../layouts/Base.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import FaqAccordion from "../../components/FaqAccordion.astro";
+import Icon from "../../components/Icon.astro";
+import PageHero from "../../components/PageHero.astro";
+import RelatedServices from "../../components/RelatedServices.astro";
+import { canonicalPath, stadtServiceSchema } from "../../data/seo";
+import {
+  leistungen,
+  leistungsStadtSeiten,
+  seitenFuerStadt,
+  staedteFuerLeistung,
+} from "../../data/leistungsseiten";
+import { findeStadt } from "../../data/staedte";
+
+export function getStaticPaths() {
+  return leistungsStadtSeiten.map((eintrag) => ({
+    params: { leistung: eintrag.leistung, stadt: eintrag.stadtSlug },
+    props: eintrag,
+  }));
+}
+
+const { leistung, stadtSlug, inhalt, pfad } = Astro.props;
+const stadt = findeStadt(stadtSlug)!;
+const ist = leistungen[leistung];
+
+/* "Norden & Norddeich" als voller Name sprengt Titel und Beschreibung. */
+const ort = stadt.kurzName ?? stadt.name;
+
+const metaTitle = ist.titel.replace("{ort}", ort);
+const description = inhalt.meta;
+
+const breadcrumbs: Array<[string, string]> = [
+  ["Leistungen", "/leistungen/"],
+  [ist.label, ist.hauptseite],
+  [stadt.name, pfad],
+];
+
+/* Sichtbares FAQ und FAQPage-Auszeichnung kommen aus derselben Quelle -
+   alles andere wertet Google als Auszeichnung ohne Entsprechung. */
+const faq = inhalt.faq.map((f) => ({ question: f.frage, answer: f.antwort }));
+
+/* Dieselbe Leistung in anderen Orten, und andere Leistungen in diesem Ort.
+   Zwei Achsen, damit man sich im Netz der Seiten in beide Richtungen
+   bewegen kann statt immer über die Hauptseite zurück zu müssen. */
+const andereOrte = staedteFuerLeistung(leistung)
+  .filter((s) => s.stadtSlug !== stadtSlug)
+  .map((s) => ({ pfad: s.pfad, name: findeStadt(s.stadtSlug)!.name }));
+
+const andereLeistungen = seitenFuerStadt(stadtSlug)
+  .filter((s) => s.leistung !== leistung)
+  .map((s) => ({ pfad: s.pfad, label: leistungen[s.leistung].label }));
+
+const schema = [
+  stadtServiceSchema({
+    name: `${ist.serviceType} in ${stadt.name}`,
+    description,
+    path: canonicalPath(pfad),
+    stadt: stadt.name,
+    landkreis: stadt.landkreis,
+    serviceType: ist.serviceType,
+  }),
+  {
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+];
+---
+
+<Base
+  title={metaTitle}
+  description={description}
+  canonical={pfad}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage={ist.bild}
+>
+  <PageHero
+    eyebrow={`${ist.label} · ${stadt.landkreis} · ca. ${stadt.entfernungKm} km ab Emden`}
+    title={`${ist.label} in ${stadt.name}`}
+    text={inhalt.intro}
+    image={ist.bild}
+    imageAlt={`${ist.label} durch Fixum Objektservice in ${stadt.name}`}
+    breadcrumbs={breadcrumbs}
+    badges={ist.badges}
+  />
+
+  {/* Lage vor Ort + konkrete Arbeiten */}
+  <section class="section" aria-labelledby="lage-title">
+    <div class="container split split--top">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Vor Ort</p>
+        <h2 id="lage-title">
+          Was {ist.label.toLowerCase() === "umzug" ? "einen Umzug" : ist.label} in {
+            stadt.name
+          } ausmacht
+        </h2>
+        <p class="lead">{inhalt.lage}</p>
+        {
+          stadt.ortsteile.length > 0 && (
+            <p class="muted ortsteile">
+              <strong>Unter anderem in:</strong> {stadt.ortsteile.join(", ")}.
+            </p>
+          )
+        }
+      </div>
+
+      <div class="leistungsliste card" data-reveal>
+        <p class="eyebrow">Das gehört dazu</p>
+        <ul>
+          {
+            inhalt.punkte.map((p) => (
+              <li>
+                <span class="haken">
+                  <Icon name="check" size={14} />
+                </span>
+                <span>{p}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {/* Ablauf - der örtliche Teil, der jede Seite eigenständig macht */}
+  <section class="section section--tight">
+    <div class="container card card--accent ablauf" data-reveal>
+      <span class="ablauf-icon"><Icon name="pin" size={24} /></span>
+      <div>
+        <p class="eyebrow">Ablauf und Entsorgung</p>
+        <h2>Was in {stadt.name} zu beachten ist</h2>
+        <p class="muted">{inhalt.ablauf}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* FAQ */}
+  <section class="section section--soft" aria-labelledby="faq-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="faq-title">{ist.label} in {stadt.name} - was Auftraggeber fragen</h2>
+    </div>
+    <div class="container container--narrow" data-reveal>
+      <FaqAccordion items={faq} />
+    </div>
+  </section>
+
+  {
+    /* Der Verweis auf die Hauptseite ist wichtiger als er aussieht: Er hält
+      die vollständige Leistungsbeschreibung an einer Stelle und verhindert,
+      dass Ortsseite und Leistungsseite dasselbe Keyword gegeneinander
+      ausspielen. */
+  }
+  <section class="section" aria-labelledby="mehr-title">
+    <div class="container weiter" data-reveal>
+      <div>
+        <p class="eyebrow">Weiterlesen</p>
+        <h2 id="mehr-title">Leistungsumfang und Grenzen im Detail</h2>
+        <p class="muted">
+          Was genau dazugehört, wie der Ablauf Schritt für Schritt aussieht und
+          was ausdrücklich nicht enthalten ist, steht vollständig auf der
+          Leistungsseite. Alles zum Ort - typische Objekte, Ortsteile und
+          Zuständigkeit für die Entsorgung - finden Sie auf der Seite zu {
+            stadt.name
+          }.
+        </p>
+      </div>
+      <ul class="weiter-liste">
+        <li>
+          <a class="arrow-link" href={ist.hauptseite}>
+            {ist.label}: der vollständige Leistungsumfang
+          </a>
+        </li>
+        <li>
+          <a class="arrow-link" href={`/einsatzgebiet/${stadt.slug}/`}>
+            Einsatzgebiet {stadt.name}
+          </a>
+        </li>
+        {
+          andereLeistungen.map((a) => (
+            <li>
+              <a class="arrow-link" href={a.pfad}>
+                {a.label} in {stadt.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    andereOrte.length > 0 && (
+      <section class="section section--tight" aria-labelledby="orte-title">
+        <div class="container" data-reveal>
+          <p class="eyebrow">In der Nähe</p>
+          <h2 id="orte-title">{ist.label} auch in</h2>
+          <ul class="ort-liste">
+            {andereOrte.map((o) => (
+              <li>
+                <a href={o.pfad}>{o.name}</a>
+              </li>
+            ))}
+            <li>
+              <a href="/einsatzgebiet/">Alle Orte</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <RelatedServices current={ist.hauptseite} />
+  <CtaBand
+    eyebrow={`${ist.label} in ${stadt.name}`}
+    title="Festpreis statt Schätzung"
+    text="Nach der kostenlosen Besichtigung bekommen Sie einen Preis, der schriftlich gilt - samt der Positionen, die ausdrücklich nicht dazugehören."
+  />
+</Base>
+
+<style>
+  .ortsteile {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+
+  .ortsteile strong {
+    color: var(--navy);
+  }
+
+  .leistungsliste {
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    align-self: start;
+  }
+
+  .leistungsliste ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .leistungsliste li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .haken {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin-top: 0.1rem;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--blue);
+  }
+
+  .ablauf {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--mist-soft);
+  }
+
+  .ablauf-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .ablauf h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  .weiter {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .weiter h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  .weiter-liste {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--mist-soft);
+    list-style: none;
+  }
+
+  .ort-liste {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ort-liste a {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--navy);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .ort-liste a:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  @media (max-width: 860px) {
+    .weiter {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .ablauf {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

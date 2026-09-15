@@ -5,6 +5,8 @@ import FaqAccordion from "../../components/FaqAccordion.astro";
 import Icon from "../../components/Icon.astro";
 import PageHero from "../../components/PageHero.astro";
 import { canonicalPath, stadtServiceSchema } from "../../data/seo";
+import { leistungen, seitenFuerStadt } from "../../data/leistungsseiten";
+import { serviceMenuGroups } from "../../data/serviceMenu";
 import { findeStadt, staedte } from "../../data/staedte";
 
 export function getStaticPaths() {
@@ -29,12 +31,12 @@ const nachbarn = stadt.nachbarn
   .map((slug) => findeStadt(slug))
   .filter((s): s is NonNullable<typeof s> => Boolean(s));
 
-const kombis = (["entruempelung", "trockenbau"] as const)
-  .filter((l) => stadt.leistungsseiten?.[l])
-  .map((l) => ({
-    href: `/${l}-${stadt.slug}/`,
-    label: l === "entruempelung" ? "Entrümpelung" : "Trockenbau",
-  }));
+/* Leistungen, für die es zu diesem Ort eine eigene, ausführliche Seite gibt. */
+const kombis = seitenFuerStadt(stadt.slug).map((s) => ({
+  href: s.pfad,
+  label: leistungen[s.leistung].label,
+  text: leistungen[s.leistung].serviceType,
+}));
 
 const schema = [
   stadtServiceSchema({
@@ -128,8 +130,10 @@ const schema = [
           <p class="eyebrow">Im Detail</p>
           <h2 id="kombi-title">Eigene Seiten für {stadt.name}</h2>
           <p class="muted">
-            Für die beiden meistgefragten Leistungen steht der Ablauf für{" "}
-            {stadt.name} ausführlich auf einer eigenen Seite.
+            Für die meistgefragten Leistungen steht alles Örtliche - Ablauf,
+            Bausubstanz, Zufahrt, Entsorgung und die Fragen, die uns aus{" "}
+            {stadt.name} tatsächlich gestellt werden - ausführlich auf einer
+            eigenen Seite.
           </p>
         </div>
         <div class="container kombi-grid" data-reveal-group>
@@ -138,6 +142,7 @@ const schema = [
               <strong>
                 {k.label} in {stadt.name}
               </strong>
+              <span class="kombi-text">{k.text}</span>
               <span class="arrow-link">Zur Seite</span>
             </a>
           ))}
@@ -145,6 +150,90 @@ const schema = [
       </section>
     )
   }
+
+  {/* Vollständige Leistungsübersicht - die Ortsseite ist der Einstieg für
+      alles, was Fixum hier macht, nicht nur für die vier mit eigener Seite. */}
+  <section class="section" aria-labelledby="alles-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Leistungen</p>
+      <h2 id="alles-title">Was wir in {stadt.name} übernehmen</h2>
+      <p class="muted">
+        Räumen, zurückbauen, ausbauen und betreuen - alles von einem Betrieb
+        mit einem Ansprechpartner. Was im Einzelnen dazugehört und wo die
+        Grenze verläuft, steht auf der jeweiligen Leistungsseite.
+      </p>
+    </div>
+    <div class="container alles-grid" data-reveal-group>
+      {
+        serviceMenuGroups.map((gruppe) => (
+          <div class="alles-gruppe" data-reveal>
+            <h3>{gruppe.title}</h3>
+            <ul>
+              {gruppe.items.map((item) => (
+                <li>
+                  <a href={item.href}>
+                    <span class="alles-icon">
+                      <Icon name={item.icon} size={16} />
+                    </span>
+                    <span>
+                      <strong>{item.label}</strong>
+                      <span class="alles-text">{item.description}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Ablauf - was ein Auftrag aus diesem Ort konkret bedeutet */}
+  <section class="section section--mist" aria-labelledby="ablauf-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Ablauf</p>
+      <h2 id="ablauf-title">Von der Anfrage bis zur Übergabe</h2>
+    </div>
+    <ol class="container ablauf-liste" data-reveal-group>
+      <li class="card" data-reveal>
+        <span class="schritt">1</span>
+        <strong>Anfrage</strong>
+        <span>
+          Sie schildern kurz, worum es geht - Objekt, Umfang, Termin. Fotos
+          helfen bei der ersten Einschätzung, ersetzen die Besichtigung aber
+          nicht.
+        </span>
+      </li>
+      <li class="card" data-reveal>
+        <span class="schritt">2</span>
+        <strong>Besichtigung vor Ort</strong>
+        <span>
+          Kostenlos und unverbindlich, in {stadt.name} meist innerhalb von zwei
+          Werktagen. Wir sehen uns auch Zufahrt, Tragweg und Nebengebäude an -
+          daran hängt der Aufwand.
+        </span>
+      </li>
+      <li class="card" data-reveal>
+        <span class="schritt">3</span>
+        <strong>Festpreis in Textform</strong>
+        <span>
+          Mit Leistungsumfang, Termin und Anfahrt als eigener Position. Was
+          nicht dazugehört, steht genauso deutlich drin - das erspart die
+          Diskussion hinterher.
+        </span>
+      </li>
+      <li class="card" data-reveal>
+        <span class="schritt">4</span>
+        <strong>Ausführung und Übergabe</strong>
+        <span>
+          Zum vereinbarten Termin, mit sortenreiner Trennung vor Ort und
+          besenreiner Übergabe. Auf Wunsch mit Fotodokumentation, wenn Sie
+          nicht vor Ort sein können.
+        </span>
+      </li>
+    </ol>
+  </section>
 
   {/* FAQ */}
   <section class="section section--soft" aria-labelledby="faq-title">
@@ -262,6 +351,115 @@ const schema = [
   .kombi-karte strong {
     font-size: 1.125rem;
     color: var(--navy);
+  }
+
+  .kombi-text {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .alles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: clamp(1.25rem, 3vw, 2.25rem);
+  }
+
+  .alles-gruppe h3 {
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+
+  .alles-gruppe ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .alles-gruppe a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .alles-gruppe a:hover {
+    background: var(--mist-soft);
+  }
+
+  .alles-gruppe strong {
+    display: block;
+    font-size: 0.9375rem;
+    color: var(--navy);
+  }
+
+  .alles-icon {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    color: var(--blue);
+    background: var(--mist-soft);
+  }
+
+  .alles-text {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .ablauf-liste {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    gap: 0.875rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+
+  .ablauf-liste li {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    padding: clamp(1.125rem, 2.2vw, 1.5rem);
+  }
+
+  .schritt {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .ablauf-liste strong {
+    font-size: 1.0625rem;
+    color: var(--navy);
+  }
+
+  .ablauf-liste span:not(.schritt) {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
   }
 
   .nachbar-liste {
