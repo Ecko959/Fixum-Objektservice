@@ -1,0 +1,502 @@
+---
+import Base from "../../layouts/Base.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import FaqAccordion from "../../components/FaqAccordion.astro";
+import Icon from "../../components/Icon.astro";
+import PageHero from "../../components/PageHero.astro";
+import { canonicalPath, stadtServiceSchema } from "../../data/seo";
+import { leistungen, seitenFuerStadt } from "../../data/leistungsseiten";
+import { serviceMenuGroups } from "../../data/serviceMenu";
+import { findeStadt, staedte } from "../../data/staedte";
+
+export function getStaticPaths() {
+  return staedte.map((stadt) => ({
+    params: { slug: stadt.slug },
+    props: { stadt },
+  }));
+}
+
+const { stadt } = Astro.props;
+const path = `/einsatzgebiet/${stadt.slug}/`;
+const breadcrumbs: Array<[string, string]> = [
+  ["Einsatzgebiet", "/einsatzgebiet/"],
+  [stadt.name, path],
+];
+
+/* Die Fragen werden sichtbar gerendert UND als FAQPage ausgespielt - Google
+   verlangt, dass beides aus derselben Quelle kommt. */
+const faq = stadt.faq.map((f) => ({ question: f.frage, answer: f.antwort }));
+
+const nachbarn = stadt.nachbarn
+  .map((slug) => findeStadt(slug))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s));
+
+/* Leistungen, für die es zu diesem Ort eine eigene, ausführliche Seite gibt. */
+const kombis = seitenFuerStadt(stadt.slug).map((s) => ({
+  href: s.pfad,
+  label: leistungen[s.leistung].label,
+  text: leistungen[s.leistung].serviceType,
+}));
+
+const schema = [
+  stadtServiceSchema({
+    name: stadt.h1,
+    description: stadt.metaDescription,
+    path: canonicalPath(path),
+    stadt: stadt.name,
+    landkreis: stadt.landkreis,
+    serviceType: "Entrümpelung, Haushaltsauflösung, Entkernung und Trockenbau",
+  }),
+  {
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+];
+---
+
+<Base
+  title={stadt.metaTitle}
+  description={stadt.metaDescription}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage="/images/team-van.png"
+>
+  <PageHero
+    eyebrow={`${stadt.landkreis} · ca. ${stadt.entfernungKm} km ab Emden`}
+    title={stadt.h1}
+    text={stadt.intro}
+    image="/images/team-van.png"
+    imageAlt={`Fixum Objektservice im Einsatz in ${stadt.name}`}
+    breadcrumbs={breadcrumbs}
+    badges={[
+      "Besichtigung kostenlos",
+      "Festpreis schriftlich",
+      "Anfahrt separat ausgewiesen",
+    ]}
+  />
+
+  {/* Objektlage + Schwerpunkte */}
+  <section class="section" aria-labelledby="lage-title">
+    <div class="container split split--top">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Vor Ort</p>
+        <h2 id="lage-title">Was in {stadt.name} typisch anfällt</h2>
+        <p class="lead">{stadt.objektlage}</p>
+        {
+          stadt.ortsteile.length > 0 && (
+            <p class="muted ortsteile">
+              <strong>Wir arbeiten unter anderem in:</strong>{" "}
+              {stadt.ortsteile.join(", ")}.
+            </p>
+          )
+        }
+      </div>
+
+      <div class="schwerpunkte" data-reveal-group>
+        {
+          stadt.schwerpunkte.map((s) => (
+            <a class="card card--hover schwerpunkt" href={s.href} data-reveal>
+              <strong>{s.titel}</strong>
+              <span>{s.text}</span>
+              <span class="arrow-link schwerpunkt-mehr">Mehr erfahren</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* Entsorgung - der Teil, der jede Ortsseite eigenständig macht */}
+  <section class="section section--tight">
+    <div class="container card card--accent entsorgung" data-reveal>
+      <span class="entsorgung-icon"><Icon name="crate" size={24} /></span>
+      <div>
+        <p class="eyebrow">Entsorgung</p>
+        <h2>Wer in {stadt.name} zuständig ist</h2>
+        <p class="muted">{stadt.entsorgung}</p>
+      </div>
+    </div>
+  </section>
+
+  {
+    kombis.length > 0 && (
+      <section class="section section--mist" aria-labelledby="kombi-title">
+        <div class="container section-head" data-reveal>
+          <p class="eyebrow">Im Detail</p>
+          <h2 id="kombi-title">Eigene Seiten für {stadt.name}</h2>
+          <p class="muted">
+            Für die meistgefragten Leistungen steht alles Örtliche - Ablauf,
+            Bausubstanz, Zufahrt, Entsorgung und die Fragen, die uns aus{" "}
+            {stadt.name} tatsächlich gestellt werden - ausführlich auf einer
+            eigenen Seite.
+          </p>
+        </div>
+        <div class="container kombi-grid" data-reveal-group>
+          {kombis.map((k) => (
+            <a class="card card--hover kombi-karte" href={k.href} data-reveal>
+              <strong>
+                {k.label} in {stadt.name}
+              </strong>
+              <span class="kombi-text">{k.text}</span>
+              <span class="arrow-link">Zur Seite</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {/* Vollständige Leistungsübersicht - die Ortsseite ist der Einstieg für
+      alles, was Fixum hier macht, nicht nur für die vier mit eigener Seite. */}
+  <section class="section" aria-labelledby="alles-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Leistungen</p>
+      <h2 id="alles-title">Was wir in {stadt.name} übernehmen</h2>
+      <p class="muted">
+        Räumen, zurückbauen, ausbauen und betreuen - alles von einem Betrieb
+        mit einem Ansprechpartner. Was im Einzelnen dazugehört und wo die
+        Grenze verläuft, steht auf der jeweiligen Leistungsseite.
+      </p>
+    </div>
+    <div class="container alles-grid" data-reveal-group>
+      {
+        serviceMenuGroups.map((gruppe) => (
+          <div class="alles-gruppe" data-reveal>
+            <h3>{gruppe.title}</h3>
+            <ul>
+              {gruppe.items.map((item) => (
+                <li>
+                  <a href={item.href}>
+                    <span class="alles-icon">
+                      <Icon name={item.icon} size={16} />
+                    </span>
+                    <span>
+                      <strong>{item.label}</strong>
+                      <span class="alles-text">{item.description}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Ablauf - was ein Auftrag aus diesem Ort konkret bedeutet */}
+  <section class="section section--mist" aria-labelledby="ablauf-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Ablauf</p>
+      <h2 id="ablauf-title">Von der Anfrage bis zur Übergabe</h2>
+    </div>
+    <ol class="container ablauf-liste" data-reveal-group>
+      <li class="card" data-reveal>
+        <span class="schritt">1</span>
+        <strong>Anfrage</strong>
+        <span>
+          Sie schildern kurz, worum es geht - Objekt, Umfang, Termin. Fotos
+          helfen bei der ersten Einschätzung, ersetzen die Besichtigung aber
+          nicht.
+        </span>
+      </li>
+      <li class="card" data-reveal>
+        <span class="schritt">2</span>
+        <strong>Besichtigung vor Ort</strong>
+        <span>
+          Kostenlos und unverbindlich, in {stadt.name} meist innerhalb von zwei
+          Werktagen. Wir sehen uns auch Zufahrt, Tragweg und Nebengebäude an -
+          daran hängt der Aufwand.
+        </span>
+      </li>
+      <li class="card" data-reveal>
+        <span class="schritt">3</span>
+        <strong>Festpreis in Textform</strong>
+        <span>
+          Mit Leistungsumfang, Termin und Anfahrt als eigener Position. Was
+          nicht dazugehört, steht genauso deutlich drin - das erspart die
+          Diskussion hinterher.
+        </span>
+      </li>
+      <li class="card" data-reveal>
+        <span class="schritt">4</span>
+        <strong>Ausführung und Übergabe</strong>
+        <span>
+          Zum vereinbarten Termin, mit sortenreiner Trennung vor Ort und
+          besenreiner Übergabe. Auf Wunsch mit Fotodokumentation, wenn Sie
+          nicht vor Ort sein können.
+        </span>
+      </li>
+    </ol>
+  </section>
+
+  {/* FAQ */}
+  <section class="section section--soft" aria-labelledby="faq-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="faq-title">Fragen zu Aufträgen in {stadt.name}</h2>
+    </div>
+    <div class="container container--narrow" data-reveal>
+      <FaqAccordion items={faq} />
+    </div>
+  </section>
+
+  {/* Nachbarorte */}
+  {
+    nachbarn.length > 0 && (
+      <section class="section section--tight" aria-labelledby="nachbarn-title">
+        <div class="container" data-reveal>
+          <p class="eyebrow">In der Nähe</p>
+          <h2 id="nachbarn-title">Auch rund um {stadt.name}</h2>
+          <ul class="nachbar-liste">
+            {nachbarn.map((n) => (
+              <li>
+                <a href={`/einsatzgebiet/${n.slug}/`}>{n.name}</a>
+              </li>
+            ))}
+            <li>
+              <a href="/einsatzgebiet/">Alle Orte</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBand
+    eyebrow={`Anfrage aus ${stadt.name}`}
+    title="Sagen Sie kurz, worum es geht"
+    text="Sie bekommen eine ehrliche Einschätzung - auch wenn sie lautet, dass weniger reicht als gedacht. Die Besichtigung ist kostenlos, der Festpreis danach schriftlich."
+  />
+</Base>
+
+<style>
+  .ortsteile {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+
+  .ortsteile strong {
+    color: var(--navy);
+  }
+
+  .schwerpunkte {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+
+  .schwerpunkt {
+    display: grid;
+    gap: 0.3rem;
+    padding: clamp(1.125rem, 2.2vw, 1.5rem);
+  }
+
+  .schwerpunkt strong {
+    font-size: 1.0625rem;
+    color: var(--navy);
+  }
+
+  .schwerpunkt span:not(.arrow-link) {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .schwerpunkt-mehr {
+    margin-top: 0.35rem;
+  }
+
+  .entsorgung {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--mist-soft);
+  }
+
+  .entsorgung-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .entsorgung h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  .kombi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 0.875rem;
+  }
+
+  .kombi-karte {
+    display: grid;
+    gap: 0.5rem;
+    padding: clamp(1.125rem, 2.2vw, 1.5rem);
+  }
+
+  .kombi-karte strong {
+    font-size: 1.125rem;
+    color: var(--navy);
+  }
+
+  .kombi-text {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .alles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: clamp(1.25rem, 3vw, 2.25rem);
+  }
+
+  .alles-gruppe h3 {
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+
+  .alles-gruppe ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .alles-gruppe a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .alles-gruppe a:hover {
+    background: var(--mist-soft);
+  }
+
+  .alles-gruppe strong {
+    display: block;
+    font-size: 0.9375rem;
+    color: var(--navy);
+  }
+
+  .alles-icon {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    color: var(--blue);
+    background: var(--mist-soft);
+  }
+
+  .alles-text {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  /* margin-block statt margin: Die Kurzform würde auch margin-inline
+     überschreiben - und damit das margin-inline: auto von .container, das
+     den Block überhaupt erst mittig ins Raster setzt. Die Liste stand
+     sonst linksbündig am Fensterrand statt bei den übrigen Abschnitten. */
+  .ablauf-liste {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    gap: 0.875rem;
+    margin-block: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ablauf-liste li {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    padding: clamp(1.125rem, 2.2vw, 1.5rem);
+  }
+
+  .schritt {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .ablauf-liste strong {
+    font-size: 1.0625rem;
+    color: var(--navy);
+  }
+
+  .ablauf-liste span:not(.schritt) {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .nachbar-liste {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nachbar-liste a {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--navy);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .nachbar-liste a:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  @media (max-width: 560px) {
+    .entsorgung {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

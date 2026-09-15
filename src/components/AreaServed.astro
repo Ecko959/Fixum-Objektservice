@@ -1,6 +1,7 @@
 ---
 import Icon from "./Icon.astro";
 import { site } from "../data/site";
+import { findeStadt } from "../data/staedte";
 
 interface Props {
   /** Leistung im Satz, z. B. "Entrümpelung". */
@@ -10,6 +11,29 @@ interface Props {
 
 const { service = "Objektservice", title } = Astro.props;
 const heading = title ?? `${service} in Emden und Ostfriesland`;
+
+/* Norddeich ist Stadtteil von Norden - eine Seite statt einer Dublette. */
+const sonderziele: Record<string, string> = {
+  Emden: "/",
+  Norddeich: "/einsatzgebiet/norden/",
+};
+
+const gebiet = site.areaServed.map((name) => {
+  const treffer = findeStadt(
+    name
+      .toLowerCase()
+      .replace(/ö/g, "oe")
+      .replace(/ü/g, "ue")
+      .replace(/ä/g, "ae")
+      .replace(/ß/g, "ss"),
+  );
+  return {
+    name,
+    href:
+      sonderziele[name] ??
+      (treffer ? `/einsatzgebiet/${treffer.slug}/` : "/einsatzgebiet/"),
+  };
+});
 ---
 
 <section class="section section--tight area-served">
@@ -33,8 +57,19 @@ const heading = title ?? `${service} in Emden und Ostfriesland`;
       </p>
     </div>
 
+    {
+      /* Die Ortsliste stand sitewide als reiner Text und hatte damit keinen
+        Ranking-Wert. Jetzt führt jeder Ort auf seine eigene Seite - Emden auf
+        die Startseite, Norddeich als Ortsteil auf Norden. */
+    }
     <ul class="area-chips" data-reveal>
-      {site.areaServed.map((city) => <li>{city}</li>)}
+      {
+        gebiet.map((ort) => (
+          <li>
+            <a href={ort.href}>{ort.name}</a>
+          </li>
+        ))
+      }
     </ul>
   </div>
 </section>
@@ -96,8 +131,14 @@ const heading = title ?? `${service} in Emden und Ostfriesland`;
     background: linear-gradient(160deg, var(--mist-soft), var(--mist));
   }
 
-  .area-chips li {
+  .area-chips a {
+    display: block;
     padding: 0.35rem 0.85rem;
+    color: inherit;
+  }
+
+  .area-chips li {
+    overflow: hidden;
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-pill);
     background: #fff;
@@ -109,12 +150,14 @@ const heading = title ?? `${service} in Emden und Ostfriesland`;
     box-shadow: var(--shadow-xs);
     transition:
       transform var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
   }
 
   .area-chips li:hover {
     transform: translateY(-2px);
     border-color: var(--blue-light);
+    color: var(--blue);
   }
 
   @media (max-width: 900px) {

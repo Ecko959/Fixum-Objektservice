@@ -99,15 +99,63 @@ const servicesActive = serviceMenuGroups.some((group) =>
       </div>
 
       {
-        navAfterServices.map((item) => (
-          <a
-            href={item.href}
-            class="nav-link"
-            aria-current={isActive(item.href) ? "page" : undefined}
-          >
-            {item.label}
-          </a>
-        ))
+        navAfterServices.map((item) =>
+          item.children ? (
+            <div class="mega-wrap firmen-wrap" data-mega>
+              <span class="mega-head">
+                <a
+                  href={item.href}
+                  class="nav-link"
+                  aria-current={
+                    item.children.some((k) => isActive(k.href))
+                      ? "page"
+                      : undefined
+                  }
+                >
+                  {item.label}
+                </a>
+                <button
+                  type="button"
+                  class="mega-toggle"
+                  aria-expanded="false"
+                  aria-controls="firmenmenue"
+                  data-mega-toggle
+                >
+                  <span class="sr-only">{item.label} öffnen</span>
+                  <span class="chevron" aria-hidden="true" />
+                </button>
+              </span>
+
+              <div
+                class="mega-menu firmen-menu"
+                id="firmenmenue"
+                data-mega-panel
+              >
+                <div class="mega-grid">
+                  <div class="mega-col">
+                    {item.children.map((kind) => (
+                      <a
+                        href={kind.href}
+                        aria-current={isActive(kind.href) ? "page" : undefined}
+                      >
+                        <strong>{kind.label}</strong>
+                        <span>{kind.description}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <a
+              href={item.href}
+              class="nav-link"
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ),
+        )
       }
     </nav>
 
@@ -178,11 +226,24 @@ const servicesActive = serviceMenuGroups.some((group) =>
       </details>
 
       {
-        navAfterServices.map((item) => (
-          <a class="mobile-link" href={item.href}>
-            {item.label}
-          </a>
-        ))
+        navAfterServices.map((item) =>
+          item.children ? (
+            <details class="mobile-services">
+              <summary>{item.label}</summary>
+              <div class="mobile-service-groups">
+                <div>
+                  {item.children.map((kind) => (
+                    <a href={kind.href}>{kind.label}</a>
+                  ))}
+                </div>
+              </div>
+            </details>
+          ) : (
+            <a class="mobile-link" href={item.href}>
+              {item.label}
+            </a>
+          ),
+        )
       }
 
       <div class="mobile-cta">
@@ -198,9 +259,9 @@ const servicesActive = serviceMenuGroups.some((group) =>
   const toggle =
     document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const menu = document.querySelector<HTMLElement>("[data-mobile-menu]");
-  const mega = document.querySelector<HTMLElement>("[data-mega]");
-  const megaToggle =
-    mega?.querySelector<HTMLButtonElement>("[data-mega-toggle]");
+  /* Mehrere Dropdowns: Leistungen und Für Firmen teilen sich dieselbe
+     Mechanik, deshalb alle einsammeln statt nur das erste. */
+  const megas = [...document.querySelectorAll<HTMLElement>("[data-mega]")];
 
   /* Scroll-Zustand über rAF entkoppeln, damit das Scrollen flüssig bleibt. */
   let ticking = false;
@@ -264,33 +325,43 @@ const servicesActive = serviceMenuGroups.some((group) =>
     if (event.key === "Escape" && menuIsOpen()) setMenu(false);
   });
 
-  /* ---- Mega-Menü ---- */
-  const setMega = (open: boolean) => {
-    if (!mega || !megaToggle) return;
-    mega.classList.toggle("is-open", open);
-    megaToggle.setAttribute("aria-expanded", String(open));
+  /* ---- Aufklappmenüs in der Kopfzeile ---- */
+  const hatHover = window.matchMedia("(hover: hover)").matches;
+
+  const setMega = (wrap: HTMLElement, open: boolean) => {
+    const knopf = wrap.querySelector<HTMLButtonElement>("[data-mega-toggle]");
+    wrap.classList.toggle("is-open", open);
+    knopf?.setAttribute("aria-expanded", String(open));
+    // Immer nur eines offen, sonst überlappen die Panels.
+    if (open) {
+      megas.filter((m) => m !== wrap).forEach((m) => setMega(m, false));
+    }
   };
 
-  megaToggle?.addEventListener("click", () => {
-    setMega(megaToggle.getAttribute("aria-expanded") !== "true");
-  });
+  megas.forEach((wrap) => {
+    const knopf = wrap.querySelector<HTMLButtonElement>("[data-mega-toggle]");
+    knopf?.addEventListener("click", () => {
+      setMega(wrap, knopf.getAttribute("aria-expanded") !== "true");
+    });
 
-  // Zeigergesteuerte Öffnung nur für Geräte mit echtem Hover.
-  if (window.matchMedia("(hover: hover)").matches) {
-    mega?.addEventListener("mouseenter", () => setMega(true));
-    mega?.addEventListener("mouseleave", () => setMega(false));
-  }
+    // Zeigergesteuerte Öffnung nur für Geräte mit echtem Hover.
+    if (hatHover) {
+      wrap.addEventListener("mouseenter", () => setMega(wrap, true));
+      wrap.addEventListener("mouseleave", () => setMega(wrap, false));
+    }
 
-  mega?.addEventListener("focusout", (event) => {
-    const next = (event as FocusEvent).relatedTarget as Node | null;
-    if (!next || !mega.contains(next)) setMega(false);
+    wrap.addEventListener("focusout", (event) => {
+      const next = (event as FocusEvent).relatedTarget as Node | null;
+      if (!next || !wrap.contains(next)) setMega(wrap, false);
+    });
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
-    if (mega?.classList.contains("is-open")) {
-      setMega(false);
-      megaToggle?.focus();
+    const offen = megas.find((m) => m.classList.contains("is-open"));
+    if (offen) {
+      setMega(offen, false);
+      offen.querySelector<HTMLButtonElement>("[data-mega-toggle]")?.focus();
     }
     if (menu?.classList.contains("is-open")) {
       setMenu(false);
@@ -510,6 +581,34 @@ const servicesActive = serviceMenuGroups.some((group) =>
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  /* Das Firmen-Panel trägt nur zwei Einträge und braucht deshalb weder die
+     Breite noch das dreispaltige Raster des Leistungsmenüs. Die Regeln stehen
+     bewusst nach .mega-menu und .mega-grid - bei gleicher Spezifität
+     entscheidet die Quellposition. */
+  .firmen-menu {
+    left: auto;
+    right: 0;
+    width: min(340px, calc(100vw - 2rem));
+    padding: 0.75rem;
+    transform: none;
+  }
+
+  /* .mega-wrap.is-open .mega-menu setzt translateX(-50%) und ist mit drei
+     Klassen spezifischer - der Öffnen-Zustand braucht deshalb eine eigene
+     Regel, sonst rutscht das Panel um seine halbe Breite nach links. */
+  .firmen-wrap .firmen-menu {
+    transform: translateY(10px);
+  }
+
+  .firmen-wrap.is-open .firmen-menu {
+    transform: translateY(0);
+  }
+
+  .firmen-menu .mega-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
   }
 
   .mega-col {

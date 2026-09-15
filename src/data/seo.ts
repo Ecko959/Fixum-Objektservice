@@ -168,6 +168,42 @@ export const breadcrumbSchema = (trail: Array<[string, string]>) => ({
   ),
 });
 
+/**
+ * Service-Knoten einer Stadt- oder Leistungs-Stadt-Seite.
+ *
+ * Der Unterschied zu serviceSchema: areaServed ist hier genau ein Ort statt
+ * der ganzen Liste. Die Anschrift bleibt Emden - eine erfundene Adresse pro
+ * Stadt wäre nicht nur falsch, sondern ein Verstoß gegen Googles Richtlinien
+ * für lokale Unternehmen.
+ */
+export const stadtServiceSchema = ({
+  name,
+  description,
+  path,
+  stadt,
+  landkreis,
+  serviceType,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  stadt: string;
+  landkreis: string;
+  serviceType?: string;
+}) => ({
+  "@type": "Service",
+  name,
+  description,
+  serviceType: serviceType ?? name,
+  url: absolute(canonicalPath(path)),
+  provider: { "@id": ids.business },
+  areaServed: {
+    "@type": "City",
+    name: stadt,
+    containedInPlace: { "@type": "AdministrativeArea", name: landkreis },
+  },
+});
+
 /** Service-Knoten für eine einzelne Leistungsseite. */
 export const serviceSchema = ({
   name,

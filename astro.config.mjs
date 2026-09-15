@@ -7,14 +7,45 @@ export default defineConfig({
      Sitemap ihre URLs, daraus baut Base.astro die Canonicals. */
   site: "https://www.fixum-objektservice.de",
   output: "static",
+  /* Canonical, Sitemap und interne Links enden alle auf einen Slash. Ohne
+     diese Zeile liefert der Hoster je nach Konfiguration auch die Fassung
+     ohne Slash aus - dann zeigt das Canonical auf eine Weiterleitung. */
+  trailingSlash: "always",
   /* Verzeichnis-URLs mit abschließendem Slash - identisch zu Canonical und Sitemap. */
   build: { format: "directory", inlineStylesheets: "auto" },
   compressHTML: true,
+  /* Die Leistungsseiten hießen bis zum Umbau /leistung-emden/. Der Ort steht
+     jetzt auf den eigenen Stadtseiten, die Leistung selbst ist ortsneutral.
+     Astro legt hierfür bei `output: "static"` Weiterleitungsseiten per
+     Meta-Refresh an - das fängt alte Links und Lesezeichen ab.
+
+     Eine echte 301 am Server ist trotzdem besser, weil Google Meta-Refresh
+     nur als schwaches Signal wertet. Die Regeln dafür stehen in CONTENT.md
+     und müssen einmal beim Hoster eingetragen werden. */
+  redirects: Object.fromEntries(
+    [
+      "entruempelung",
+      "entkernung",
+      "trockenbau",
+      "bodenverlegung",
+      "umzug",
+      "haushaltsaufloesung",
+      "wohnungsraeumung",
+      "kernsanierung",
+      "renovierung",
+      "hausmeisterservice",
+      "kuechenmontage",
+      "winterdienst",
+      "rueckbau-trockenbau",
+    ].map((slug) => [`/${slug}-emden/`, `/${slug}/`]),
+  ),
   integrations: [
     tailwind({ applyBaseStyles: false }),
     sitemap({
-      // Seiten ohne Suchwert gehören nicht in die Sitemap.
-      filter: (page) => !/\/(danke|404)\/?$/.test(page),
+      /* Seiten ohne Suchwert gehören nicht in die Sitemap - und die alten
+         -emden-Adressen erst recht nicht: Eine Sitemap, die auf
+         Weiterleitungen zeigt, hält die veraltete URL künstlich am Leben. */
+      filter: (page) => !/\/(danke|404)\/?$/.test(page) && !/-emden\/?$/.test(page),
       changefreq: "monthly",
       lastmod: new Date(),
       serialize(item) {

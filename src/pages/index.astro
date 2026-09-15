@@ -15,7 +15,10 @@ import { site, telUrl, whatsappUrl } from "../data/site";
 /* Markenname zuerst: Google leitet den Quellennamen über dem Suchergebnis aus
    dem Titel der Startseite, og:site_name und dem WebSite-Knoten ab. Auf den
    Unterseiten steht die Leistung weiter vorn - dort zählt das Stichwort. */
-const title = "Fixum Objektservice Emden - Entrümpelung & Trockenbau";
+/* Keyword vorn, Marke hinten. Die Startseite behält den vollen Firmennamen:
+   Aus ihr zieht Google den Quellennamen über dem Suchergebnis, und dort soll
+   "Fixum Objektservice" stehen und nicht die nackte Domain. */
+const title = "Entrümpelung & Trockenbau Emden | Fixum Objektservice";
 const description =
   "Entrümpelung, Entkernung, Trockenbau und Montage in Emden und Ostfriesland. Ein Ansprechpartner, ein Festpreis nach kostenloser Besichtigung.";
 
@@ -96,11 +99,11 @@ const reasons: Array<[string, string]> = [
 
 const serviceChips: Array<[string, string]> = [
   ["Alle Leistungen", "/leistungen/"],
-  ["Entrümpelung", "/entruempelung-emden/"],
-  ["Entkernung", "/entkernung-emden/"],
-  ["Trockenbau", "/trockenbau-emden/"],
-  ["Boden & Türen", "/bodenverlegung-emden/"],
-  ["Hausmeister", "/hausmeisterservice-emden/"],
+  ["Entrümpelung", "/entruempelung/"],
+  ["Entkernung", "/entkernung/"],
+  ["Trockenbau", "/trockenbau/"],
+  ["Boden & Türen", "/bodenverlegung/"],
+  ["Hausmeister", "/hausmeisterservice/"],
 ];
 ---
 
@@ -134,9 +137,16 @@ const serviceChips: Array<[string, string]> = [
           <span>Emden · Ostfriesland</span>
         </p>
         <p class="script">{site.heroLine}</p>
+        {
+          /* Die H1 trägt jetzt Leistung und Ort - das ist die Zeile, die
+             Google einer lokalen Suche zuordnet. Der Claim steht als
+             Unterzeile darunter und bleibt damit sichtbar. */
+        }
         <h1>
-          Entrümpelt, <span class="blue-word">ausgebaut</span>, übergabefertig.
+          <span class="blue-word">Entrümpelung</span>, Entkernung & Trockenbau
+          in Emden
         </h1>
+        <p class="hero-claim">Entrümpelt, ausgebaut, übergabefertig.</p>
         <p class="lead">
           Entrümpelung, Haushaltsauflösung, Entkernung, Trockenbau und Montage
           in Emden und Ostfriesland. Ein Ansprechpartner, ein Festpreis, ein
@@ -222,11 +232,11 @@ const serviceChips: Array<[string, string]> = [
         </p>
         <p class="muted">
           Fixum Objektservice unterstützt Privatkunden, Hausverwaltungen und
-          Bauunternehmen bei <a href="/entruempelung-emden/">Entrümpelung</a>, <a
-            href="/entkernung-emden/">Entkernung</a
+          Bauunternehmen bei <a href="/entruempelung/">Entrümpelung</a>, <a
+            href="/entkernung/">Entkernung</a
           >,
-          <a href="/trockenbau-emden/">Trockenbau</a> und
-          <a href="/bodenverlegung-emden/">Montage</a>. Unser Ziel ist nicht
+          <a href="/trockenbau/">Trockenbau</a> und
+          <a href="/bodenverlegung/">Montage</a>. Unser Ziel ist nicht
           nur, Arbeit abzunehmen, sondern ein Ergebnis zu liefern, auf das Sie
           sich verlassen können.
         </p>
@@ -294,7 +304,7 @@ const serviceChips: Array<[string, string]> = [
 
   {/* ---------------------------------------------------- Leistungen */}
   <section id="leistungen" class="section services-stage section--dark">
-    <div class="container section-head section-head--center" data-reveal>
+    <div class="container section-head" data-reveal>
       <p class="script">Zwei Bereiche, eine Rechnung</p>
       <p class="eyebrow">Leistungen</p>
       <h2>Das machen <span class="blue-word">wir</span></h2>
@@ -331,7 +341,7 @@ const serviceChips: Array<[string, string]> = [
 
   {/* ---------------------------------------------------- Ablaufkette */}
   <section class="section section--chain" aria-labelledby="chain-title">
-    <div class="container section-head section-head--center" data-reveal>
+    <div class="container section-head" data-reveal>
       <p class="script">So läuft ein Objekt bei uns durch</p>
       <p class="eyebrow">Unser Weg</p>
       <h2 id="chain-title">Vom vollen Haus zur fertigen Wohnung</h2>
@@ -443,7 +453,11 @@ const serviceChips: Array<[string, string]> = [
         <ul class="check-list audience-list">
           <li>Abrechnung nach m² oder Tagessatz</li>
           <li>Betriebshaftpflicht mit Subunternehmer-Klausel</li>
-          <li>Freistellungsbescheinigung nach § 48b EStG auf Anfrage</li>
+          <li>
+            Freistellungsbescheinigung nach § 48b EStG {
+              site.freistellung48b ? "auf Anfrage" : "beantragt"
+            }
+          </li>
         </ul>
         <Button href="/fuer-bauunternehmen/">Als Sub anfragen</Button>
       </article>
@@ -570,6 +584,16 @@ const serviceChips: Array<[string, string]> = [
 
   .hero .btn-row {
     margin-top: 0.5rem;
+  }
+
+  /* Unterzeile unter der H1 - trägt den bisherigen Claim weiter. */
+  .hero-claim {
+    margin-top: 0.5rem;
+    font-family: var(--font-utility);
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--on-dark-soft);
   }
 
   .hero-proof {

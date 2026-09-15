@@ -38,7 +38,7 @@ export const faq: FaqItem[] = [
   {
     question: "Arbeiten Sie auch als Nachunternehmer?",
     answer:
-      "Ja. Für Bauunternehmen, Generalunternehmer und Zimmereien übernehmen wir Trockenbau und Rückbau nach m²-Preis oder Tagessatz, Material bauseits möglich. Wir sind haftpflichtversichert; die Freistellungsbescheinigung nach § 48b EStG legen wir auf Anfrage vor.",
+      "Ja. Für Bauunternehmen, Generalunternehmer und Zimmereien übernehmen wir Trockenbau und Rückbau nach m²-Preis oder Tagessatz, Material bauseits möglich. Wir sind haftpflichtversichert. Die Freistellungsbescheinigung nach § 48b EStG ist beantragt - den aktuellen Stand nennen wir offen, wenn Sie danach fragen.",
   },
   {
     question: "In welchem Gebiet sind Sie unterwegs?",
@@ -52,7 +52,7 @@ export const faq: FaqItem[] = [
  * Leistungsseite und erzeugen dort ein eigenes FAQ-Rich-Result.
  */
 export const serviceFaq: Record<string, FaqItem[]> = {
-  "/entruempelung-emden/": [
+  "/entruempelung/": [
     {
       question: "Wie läuft eine Entrümpelung konkret ab?",
       answer:
@@ -74,7 +74,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Auf Wunsch ja. Für Hausverwaltungen und Nachlassabwicklungen ist das oft nötig. Wir dokumentieren die Fraktionen und legen die Belege der Entsorgungsstellen bei.",
     },
   ],
-  "/entkernung-emden/": [
+  "/entkernung/": [
     {
       question: "Was bedeutet nicht-tragender Rückbau?",
       answer:
@@ -91,7 +91,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Wir stoppen den betroffenen Bereich sofort. Bei Gebäuden vor 1993 sind Asbest, KMF oder PAK-Kleber möglich. Die Beprobung und Sanierung übernimmt ein zertifizierter Fachbetrieb - das ist gesetzlich vorgeschrieben und steht so in jedem unserer Angebote.",
     },
   ],
-  "/trockenbau-emden/": [
+  "/trockenbau/": [
     {
       question: "Welche Spachtelqualität brauche ich?",
       answer:
@@ -108,7 +108,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Schallschutzlösungen mit entsprechendem Aufbau und Dämmung ja. Geprüfte Brandschutzkonstruktionen mit Verwendbarkeitsnachweis führen wir nicht als eigene Leistung aus - dafür ist ein Betrieb mit passendem Nachweis zuständig.",
     },
   ],
-  "/haushaltsaufloesung-emden/": [
+  "/haushaltsaufloesung/": [
     {
       question: "Wie diskret läuft eine Nachlassauflösung ab?",
       answer:
@@ -125,7 +125,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Alles, was nach Dokument, Schmuck, Bargeld oder Erinnerungsstück aussieht, wird gesammelt und Ihnen übergeben. Das ist Teil des Auftrags und kostet nicht extra.",
     },
   ],
-  "/wohnungsraeumung-emden/": [
+  "/wohnungsraeumung/": [
     {
       question: "Was heißt besenrein genau?",
       answer:
@@ -142,7 +142,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Ja, auf Wunsch vor, während und nach der Räumung. Für Hausverwaltungen und Eigentümer ist das die einfachste Grundlage für die Abnahme und gegenüber dem Vormieter.",
     },
   ],
-  "/bodenverlegung-emden/": [
+  "/bodenverlegung/": [
     {
       question: "Muss der Untergrund vorbereitet werden?",
       answer:
@@ -159,7 +159,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Das ist sogar der bessere Weg. Zargen und Türblätter werden auf die spätere Bodenhöhe abgestimmt, sonst schleift die Tür oder es bleibt eine Fuge. Wir planen beides in einem Aufmaß.",
     },
   ],
-  "/kuechenmontage-emden/": [
+  "/kuechenmontage/": [
     {
       question: "Schließen Sie die Küchengeräte an?",
       answer:
@@ -171,7 +171,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Ja, Demontage und Entsorgung übernehmen wir gleich mit. In Kombination mit einer Entrümpelung oder einem Umzug ist das meist deutlich günstiger als zwei getrennte Aufträge.",
     },
   ],
-  "/umzug-emden/": [
+  "/umzug/": [
     {
       question: "Was kostet ein Umzug in Emden?",
       answer:
@@ -194,7 +194,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Genau dafür ist der Ablauf gedacht: Was mitkommt, wird transportiert, der Rest direkt entsorgt. Ein Team, ein Termin, eine Rechnung - das spart gegenüber zwei getrennten Aufträgen spürbar.",
     },
   ],
-  "/hausmeisterservice-emden/": [
+  "/hausmeisterservice/": [
     {
       question: "Gibt es feste Konditionen im Rahmenvertrag?",
       answer:
@@ -206,7 +206,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Alles im handwerklichen Kleinbereich: Türen, Schlösser, Beschläge, Silikonfugen, Befestigungen, kleine Trockenbauschäden. Nicht dabei sind Arbeiten an Strom, Gas, Wasser und Heizung - die übernehmen zugelassene Fachbetriebe.",
     },
   ],
-  "/winterdienst-emden/": [
+  "/winterdienst/": [
     {
       question: "Erfüllt der Winterdienst meine Räum- und Streupflicht?",
       answer:
@@ -218,7 +218,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Werktags in der Regel bis 7 Uhr, sonn- und feiertags bis 9 Uhr, danach nach Bedarf. Bei anhaltendem Schneefall wird nachgeräumt. Die konkreten Zeiten halten wir in der Vereinbarung fest.",
     },
   ],
-  "/kernsanierung-emden/": [
+  "/kernsanierung/": [
     {
       question: "Was kostet die Vorbereitung einer Kernsanierung in Emden?",
       answer:
@@ -241,7 +241,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Räumen, Rückbau, dann kommen die Fachbetriebe für Leitungen, danach Trockenbau, Boden und Montage. Wir planen die Übergabepunkte mit, damit niemand auf den anderen wartet oder doppelt anrücken muss.",
     },
   ],
-  "/renovierung-emden/": [
+  "/renovierung/": [
     {
       question: "Was kostet eine Renovierung in Emden?",
       answer:
@@ -268,7 +268,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
         "Eine durchschnittliche Wohnung mit Boden, Wandvorbereitung und Türen schaffen wir in wenigen Tagen. Den genauen Zeitraum nennen wir im Angebot - und der zugesagte Termin gilt.",
     },
   ],
-  "/rueckbau-trockenbau-emden/": [
+  "/rueckbau-trockenbau/": [
     {
       question: "Was bringt es, Rückbau und Trockenbau zusammen zu vergeben?",
       answer:

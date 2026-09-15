@@ -111,17 +111,144 @@ geändert werden.
 
 ## Seitenstruktur - offener Punkt
 
-`/rueckbau-trockenbau-emden/` überschneidet sich thematisch mit
-`/entkernung-emden/`, `/trockenbau-emden/` und
-`/kernsanierung-emden/`. Die Seite wurde deshalb auf das Paket
+`/rueckbau-trockenbau/` überschneidet sich thematisch mit
+`/entkernung/`, `/trockenbau/` und
+`/kernsanierung/`. Die Seite wurde deshalb auf das Paket
 "beide Gewerke in einem Auftrag" umgestellt und zielt nicht mehr auf die
 Einzelkeywords.
 
 Wenn nach einigen Monaten aus der Search Console hervorgeht, dass die Seite
 kaum eigene Impressionen sammelt, ist eine Zusammenlegung sinnvoll: Inhalt in
-`/trockenbau-emden/` überführen und `/rueckbau-trockenbau-emden/` per
+`/trockenbau/` überführen und `/rueckbau-trockenbau/` per
 301-Weiterleitung darauf zeigen lassen. Vorher nicht löschen - eine bestehende
 URL ohne Redirect zu entfernen kostet mehr, als sie einbringt.
+
+## Seitenstruktur: Leistung ortsneutral, Ort als Unterseite
+
+Seit dem Umbau gilt eine klare Trennung:
+
+| Ebene | Beispiel | Aufgabe |
+| --- | --- | --- |
+| Leistung | `/trockenbau/` | Was Fixum macht, ortsneutral. Voller Leistungsumfang, Ablauf, Grenzen. |
+| Leistung × Ort | `/trockenbau/aurich/` | Was an diesem Ort anders ist: Bausubstanz, Zufahrt, Entsorgung, örtliche Fragen. |
+| Ort | `/einsatzgebiet/aurich/` | Der Ort als Ganzes, Einstieg in alle 13 Leistungen. |
+
+Die Leistungsseiten hießen vorher `/leistung-emden/` und trugen "in Emden" in
+der H1. Beides ist weg: Der Ortsbezug gehört auf die Ortsseiten, sonst
+konkurrieren Leistungsseite und Ortsseite um dasselbe Keyword.
+
+**Im `<title>` steht "Emden" weiterhin** - anders als in der H1. Der Titel ist
+der Text, den Google im Suchergebnis zeigt, und "Trockenbau Emden" ist der
+Suchbegriff. Wer das auch entfernt, verliert den lokalen Bezug genau dort, wo
+er zählt. Wenn das nicht gewünscht ist, stehen die Titel in den
+`metaTitle`-Zeilen der 13 Dateien unter `src/pages/`.
+
+Muster für alle Titel: **Keyword + Emden vorn, Marke hinten, kein "in".**
+Also `Renovierung Emden: Wände, Böden, Türen | Fixum` statt
+`Renovierung in Emden - ... | Fixum Objektservice`. Das Füllwort "in" kostet
+drei Zeichen von sechzig und bringt nichts. Grenze sind 60 Zeichen - danach
+schneidet Google ab und schreibt den Titel oft selbst um.
+
+## Der Quellenname über dem Suchergebnis
+
+Google zeigt dort teils noch `fixum-objektservice.de` statt
+`Fixum Objektservice`. **Am Code liegt das nicht** - die Signale sind
+vollständig gesetzt und im Build nachgewiesen:
+
+- `WebSite`-Knoten mit `name: "Fixum Objektservice"`, `url` auf der
+  kanonischen Startseite und `alternateName` (`src/data/seo.ts`)
+- `<meta property="og:site_name" content="Fixum Objektservice">` auf jeder
+  Seite (`src/layouts/Base.astro`)
+
+Den Quellennamen aktualisiert Google in eigenen Intervallen, erfahrungsgemäß
+über Wochen, und er gilt für die ganze Domain statt je Seite. Ohne weitere
+Änderung abwarten. Ändert sich nach ein paar Monaten nichts, gibt es in der
+Search Console eine Rückmeldefunktion dafür.
+
+## Einsatzgebiet- und Ortsseiten - vor dem Livegang prüfen
+
+Es gibt 36 solcher Seiten: `/einsatzgebiet/` als Übersicht, 15 Ortsseiten
+(Texte in `src/data/staedte.ts`) und 20 Leistungs-Ort-Seiten (Texte in
+`src/data/leistungsseiten.ts`) - Entrümpelung, Entkernung, Trockenbau und Umzug
+für Aurich, Leer, Norden, Moormerland und Krummhörn.
+
+Bewusst **nicht** 15 × 13 automatisch erzeugte Kombinationen: Seiten, die sich
+nur im Ortsnamen unterscheiden, wertet Google als Doorway-Pages - im Zweifel
+zulasten der ganzen Domain. Weitere Kombinationen erst ergänzen, wenn die
+Search Console Impressionen für den Suchbegriff zeigt, und dann mit eigenem
+Text. Ein neuer Eintrag in `leistungsseiten.ts` erzeugt die Seite automatisch,
+inklusive Verlinkung von Leistungs- und Ortsseite.
+
+Diese Angaben stammen aus der Vorlage und sind **nicht verifiziert**:
+
+- [ ] `entfernungKm` je Ort per Google Maps ab Hermann-Allmers-Str. 13
+      bestätigen. Die Zahl steht sichtbar auf jeder Ortsseite und in der
+      Anfahrts-FAQ.
+- [ ] Ortsteil-Listen stichprobenartig gegenlesen.
+- [ ] Zuständige Abfallwirtschaft je Landkreis bestätigen - der Absatz
+      "Entsorgung" nennt sie beim Namen.
+- [ ] Aussagen zu Anfahrt und Mindestauftrag bei Wittmund, Papenburg, Weener
+      und Wiesmoor gegen die tatsächliche Preispolitik halten. Auf der
+      Papenburg-Seite steht zum Beispiel, dass sich kleine Privataufträge bei
+      der Entfernung selten lohnen.
+- [ ] Rich-Results-Test für eine Ortsseite und eine Leistungs-Ort-Seite.
+- [ ] Die 20 Leistungs-Ort-Texte einmal gegenlesen. Sie beschreiben, was in
+      Aurich, Leer, Norden, Moormerland und Krummhörn baulich typisch ist -
+      Altbau in Leer, Ferienobjekte in Norden, Gulfhöfe in der Krummhörn,
+      Fehnsiedlungen in Moormerland. Das ist allgemeines Ortswissen und keine
+      Aussage über bereits ausgeführte Aufträge, sollte aber zur eigenen
+      Erfahrung passen.
+
+## Weiterleitung der alten Leistungs-URLs - beim Hoster nachziehen
+
+`astro.config.mjs` erzeugt für die 13 alten Adressen Weiterleitungsseiten per
+Meta-Refresh mit `noindex` und Canonical auf das neue Ziel. Das fängt Links und
+Lesezeichen ab, ist für Google aber nur ein schwaches Signal. Eine echte 301
+am Server ist besser:
+
+```
+/entruempelung-emden/       -> /entruempelung/
+/entkernung-emden/          -> /entkernung/
+/trockenbau-emden/          -> /trockenbau/
+/bodenverlegung-emden/      -> /bodenverlegung/
+/umzug-emden/               -> /umzug/
+/haushaltsaufloesung-emden/ -> /haushaltsaufloesung/
+/wohnungsraeumung-emden/    -> /wohnungsraeumung/
+/kernsanierung-emden/       -> /kernsanierung/
+/renovierung-emden/         -> /renovierung/
+/hausmeisterservice-emden/  -> /hausmeisterservice/
+/kuechenmontage-emden/      -> /kuechenmontage/
+/winterdienst-emden/        -> /winterdienst/
+/rueckbau-trockenbau-emden/ -> /rueckbau-trockenbau/
+```
+
+Sind die 301er eingerichtet, kann der `redirects`-Block in `astro.config.mjs`
+weg - dann verschwinden auch die 13 Weiterleitungsseiten aus dem Build.
+
+## Freistellungsbescheinigung § 48b EStG
+
+`site.freistellung48b` steht auf `false`. Solange das so ist, schreibt die
+Seite überall "beantragt" statt "auf Anfrage". Nach Erteilung die eine Zeile in
+`src/data/site.ts` auf `true` setzen - Hero-Badge, Leistungsprofil, FAQ,
+Startseite und die Meta-Beschreibung ziehen automatisch nach.
+
+## Offen aus dem SEO-Audit - bewusst nicht umgesetzt
+
+- **Kostenratgeber `/entruempelung-kosten-emden/`**: Das ist der Suchbegriff
+  mit der höchsten Kaufnähe, aber eine Seite mit erfundenen Marktspannen wäre
+  irreführende Werbung. Die Seite braucht echte eigene Zahlen - Preisspanne je
+  m³ oder je Zimmergröße aus abgerechneten Aufträgen. Sobald die vorliegen,
+  ist die Seite in einer Stunde gebaut.
+- **Umzug "bis 3,5 t"**: Steht an acht Stellen auf der Seite. Wenn tatsächlich
+  ein 7,5-Tonner eingesetzt wird, müssen die Angaben vereinheitlicht werden -
+  und gewerbliche Transporte über 3,5 t zGG sind nach GüKG in der Regel
+  erlaubnispflichtig. Vorher klären, dann anpassen.
+- **"Eigene Fotos, keine Katalogbilder"** auf der Startseite: Die Aussage ist
+  nur haltbar, wenn wirklich alle Referenzbilder von eigenen Baustellen
+  stammen. Falls nicht, muss der Satz weg.
+- **Leerstandsrechner, Kapazitätsanzeige, Ratgeberartikel**: sinnvoll, aber
+  eigene Bausteine. Die Kapazitätsanzeige nur einbauen, wenn sie wöchentlich
+  gepflegt wird - eine veraltete Angabe schadet mehr, als sie bringt.
 
 ## Weiterleitung von non-www auf www - muss beim Hoster passieren
 
