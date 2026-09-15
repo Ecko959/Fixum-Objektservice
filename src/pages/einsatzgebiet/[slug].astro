@@ -421,14 +421,17 @@ const schema = [
     color: var(--muted);
   }
 
+  /* margin-block statt margin: Die Kurzform würde auch margin-inline
+     überschreiben - und damit das margin-inline: auto von .container, das
+     den Block überhaupt erst mittig ins Raster setzt. Die Liste stand
+     sonst linksbündig am Fensterrand statt bei den übrigen Abschnitten. */
   .ablauf-liste {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
     gap: 0.875rem;
-    margin: 0;
+    margin-block: 0;
     padding: 0;
     list-style: none;
-    counter-reset: none;
   }
 
   .ablauf-liste li {

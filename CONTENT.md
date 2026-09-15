@@ -143,6 +143,28 @@ Suchbegriff. Wer das auch entfernt, verliert den lokalen Bezug genau dort, wo
 er zählt. Wenn das nicht gewünscht ist, stehen die Titel in den
 `metaTitle`-Zeilen der 13 Dateien unter `src/pages/`.
 
+Muster für alle Titel: **Keyword + Emden vorn, Marke hinten, kein "in".**
+Also `Renovierung Emden: Wände, Böden, Türen | Fixum` statt
+`Renovierung in Emden - ... | Fixum Objektservice`. Das Füllwort "in" kostet
+drei Zeichen von sechzig und bringt nichts. Grenze sind 60 Zeichen - danach
+schneidet Google ab und schreibt den Titel oft selbst um.
+
+## Der Quellenname über dem Suchergebnis
+
+Google zeigt dort teils noch `fixum-objektservice.de` statt
+`Fixum Objektservice`. **Am Code liegt das nicht** - die Signale sind
+vollständig gesetzt und im Build nachgewiesen:
+
+- `WebSite`-Knoten mit `name: "Fixum Objektservice"`, `url` auf der
+  kanonischen Startseite und `alternateName` (`src/data/seo.ts`)
+- `<meta property="og:site_name" content="Fixum Objektservice">` auf jeder
+  Seite (`src/layouts/Base.astro`)
+
+Den Quellennamen aktualisiert Google in eigenen Intervallen, erfahrungsgemäß
+über Wochen, und er gilt für die ganze Domain statt je Seite. Ohne weitere
+Änderung abwarten. Ändert sich nach ein paar Monaten nichts, gibt es in der
+Search Console eine Rückmeldefunktion dafür.
+
 ## Einsatzgebiet- und Ortsseiten - vor dem Livegang prüfen
 
 Es gibt 36 solcher Seiten: `/einsatzgebiet/` als Übersicht, 15 Ortsseiten
