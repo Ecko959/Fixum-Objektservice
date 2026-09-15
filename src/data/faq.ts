@@ -38,7 +38,7 @@ export const faq: FaqItem[] = [
   {
     question: "Arbeiten Sie auch als Nachunternehmer?",
     answer:
-      "Ja. Für Bauunternehmen, Generalunternehmer und Zimmereien übernehmen wir Trockenbau und Rückbau nach m²-Preis oder Tagessatz, Material bauseits möglich. Wir sind haftpflichtversichert; die Freistellungsbescheinigung nach § 48b EStG legen wir auf Anfrage vor.",
+      "Ja. Für Bauunternehmen, Generalunternehmer und Zimmereien übernehmen wir Trockenbau und Rückbau nach m²-Preis oder Tagessatz, Material bauseits möglich. Wir sind haftpflichtversichert. Die Freistellungsbescheinigung nach § 48b EStG ist beantragt - den aktuellen Stand nennen wir offen, wenn Sie danach fragen.",
   },
   {
     question: "In welchem Gebiet sind Sie unterwegs?",

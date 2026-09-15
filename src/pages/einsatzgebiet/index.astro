@@ -1,0 +1,203 @@
+---
+import Base from "../../layouts/Base.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import Icon from "../../components/Icon.astro";
+import PageHero from "../../components/PageHero.astro";
+import { canonicalPath, serviceSchema } from "../../data/seo";
+import { site } from "../../data/site";
+import { landkreise, staedte } from "../../data/staedte";
+
+const path = "/einsatzgebiet/";
+const breadcrumbs: Array<[string, string]> = [["Einsatzgebiet", path]];
+const heroImage = "/images/team-van.png";
+
+const description =
+  "Entrümpelung, Entkernung, Trockenbau und Montage in Emden, Aurich, Leer, Norden und ganz Ostfriesland. Alle Orte im Einsatzgebiet mit Entfernung im Überblick.";
+
+const schema = [
+  serviceSchema({
+    name: "Objektservice in Ostfriesland",
+    description,
+    path: canonicalPath(path),
+    serviceType: "Entrümpelung, Entkernung, Trockenbau und Montage",
+  }),
+];
+---
+
+<Base
+  title="Einsatzgebiet: Emden und 50 km Umkreis | Fixum Objektservice"
+  description={description}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage={heroImage}
+>
+  <PageHero
+    eyebrow="Einsatzgebiet"
+    title="Von Emden aus in ganz Ostfriesland"
+    text="Wir arbeiten von Emden aus in einem Umkreis von rund 50 Kilometern. Die Anfahrt steht in jedem Angebot als eigene Position, getrennt von der Arbeitszeit - Sie sehen also, was der Weg kostet."
+    image={heroImage}
+    imageAlt="Fahrzeug von Fixum Objektservice im Einsatz in Ostfriesland"
+    breadcrumbs={breadcrumbs}
+    badges={[
+      "Besichtigung kostenlos",
+      "Anfahrt separat ausgewiesen",
+      "Festpreis schriftlich",
+    ]}
+  />
+
+  <section class="section" aria-labelledby="orte-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Alle Orte</p>
+      <h2 id="orte-title">Wo wir regelmäßig arbeiten</h2>
+      <p class="muted">
+        Nach Landkreis sortiert, innerhalb des Landkreises nach Entfernung. Für
+        jeden Ort steht auf der eigenen Seite, welche Objekte dort typisch sind
+        und wer für die Entsorgung zuständig ist.
+      </p>
+    </div>
+
+    <div class="container standort" data-reveal>
+      <span class="standort-icon"><Icon name="pin" size={22} /></span>
+      <div>
+        <p class="standort-titel">
+          {site.city} ist unser Standort
+        </p>
+        <p class="muted">
+          Für Aufträge in Emden selbst geht es direkt zu den Leistungen - eine
+          eigene Ortsseite braucht es dafür nicht.
+        </p>
+        <p>
+          <a class="arrow-link" href="/leistungen/">Leistungen ansehen</a>
+        </p>
+      </div>
+    </div>
+
+    {
+      landkreise.map((kreis) => (
+        <div class="container kreis" data-reveal-group>
+          <h3 class="kreis-titel" data-reveal>
+            {kreis}
+          </h3>
+          <ul class="ort-grid">
+            {staedte
+              .filter((stadt) => stadt.landkreis === kreis)
+              .sort((a, b) => a.entfernungKm - b.entfernungKm)
+              .map((stadt) => (
+                <li data-reveal>
+                  <a
+                    class="ort-karte card card--hover"
+                    href={`/einsatzgebiet/${stadt.slug}/`}
+                  >
+                    <strong>{stadt.name}</strong>
+                    <span class="ort-km">
+                      ca. {stadt.entfernungKm} km ab Emden
+                    </span>
+                    <span class="ort-pfeil" aria-hidden="true" />
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </div>
+      ))
+    }
+  </section>
+
+  <CtaBand
+    eyebrow="Ihr Ort ist nicht dabei?"
+    title="Fragen Sie trotzdem an"
+    text="Die Liste zeigt, wo wir regelmäßig arbeiten - nicht, wo wir aufhören. Bei größeren Projekten fahren wir auf Anfrage auch weiter. Sagen Sie kurz, worum es geht."
+  />
+</Base>
+
+<style>
+  .standort {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.25rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--mist-soft);
+  }
+
+  .standort-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  }
+
+  .standort-titel {
+    margin-bottom: 0.25rem;
+    font-family: var(--font-utility);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+
+  .kreis + .kreis {
+    margin-top: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .kreis-titel {
+    margin-bottom: 1rem;
+    font-size: var(--step-2);
+    color: var(--blue);
+  }
+
+  .ort-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ort-karte {
+    position: relative;
+    display: grid;
+    gap: 0.15rem;
+    padding: 1rem 2.25rem 1rem 1.125rem;
+  }
+
+  .ort-karte strong {
+    font-size: 1.0625rem;
+    color: var(--navy);
+  }
+
+  .ort-km {
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  /* Gleicher Winkel wie .arrow-link, nur rechtsbündig in der Karte. */
+  .ort-pfeil {
+    position: absolute;
+    top: 50%;
+    right: 1.125rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: -0.35rem;
+    border-top: 2px solid var(--blue);
+    border-right: 2px solid var(--blue);
+    transform: rotate(45deg);
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .ort-karte:hover .ort-pfeil {
+    transform: rotate(45deg) translate(2px, -2px);
+  }
+
+  @media (max-width: 560px) {
+    .standort {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

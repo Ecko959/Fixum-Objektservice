@@ -3,6 +3,7 @@ import Icon from "./Icon.astro";
 import WhatsAppMark from "./WhatsAppMark.astro";
 import { mailUrl, sameAs, site, telUrl, whatsappUrl } from "../data/site";
 import { serviceMenuGroups } from "../data/serviceMenu";
+import { findeStadt } from "../data/staedte";
 
 const year = new Date().getFullYear();
 
@@ -17,15 +18,37 @@ const legalLinks = [
 const companyLinks = [
   ["Über uns", "/ueber-uns/"],
   ["Alle Leistungen", "/leistungen/"],
+  ["Einsatzgebiet", "/einsatzgebiet/"],
   ["Für Hausverwaltungen", "/fuer-hausverwaltungen/"],
   ["Für Bauunternehmen", "/fuer-bauunternehmen/"],
 ];
 
-/* Erste zwei Menügruppen als Leistungsspalte - hält den Footer kompakt
-   und die interne Verlinkung auf die wichtigsten Seiten fokussiert. */
-const footerServices = serviceMenuGroups
-  .flatMap((group) => group.items)
-  .slice(0, 8);
+/* Alle Leistungen statt der ersten acht: Eine unvollständige Liste im Footer
+   lässt fünf Seiten ohne sitewide-Link stehen - genau die, die ihn am
+   nötigsten hätten. */
+const footerServices = serviceMenuGroups.flatMap((group) => group.items);
+
+/* Auch hier Links statt Text - dieselbe Zuordnung wie in AreaServed. */
+const sonderziele: Record<string, string> = {
+  Emden: "/",
+  Norddeich: "/einsatzgebiet/norden/",
+};
+const gebiet = site.areaServed.map((name) => {
+  const treffer = findeStadt(
+    name
+      .toLowerCase()
+      .replace(/ö/g, "oe")
+      .replace(/ü/g, "ue")
+      .replace(/ä/g, "ae")
+      .replace(/ß/g, "ss"),
+  );
+  return {
+    name,
+    href:
+      sonderziele[name] ??
+      (treffer ? `/einsatzgebiet/${treffer.slug}/` : "/einsatzgebiet/"),
+  };
+});
 ---
 
 <footer class="footer">
@@ -111,9 +134,17 @@ const footerServices = serviceMenuGroups
   </div>
 
   <div class="container area-block">
-    <h2 class="footer-title">Einsatzgebiet</h2>
+    <h2 class="footer-title">
+      <a href="/einsatzgebiet/">Einsatzgebiet</a>
+    </h2>
     <ul class="area-list">
-      {site.areaServed.map((area) => <li>{area}</li>)}
+      {
+        gebiet.map((ort) => (
+          <li>
+            <a href={ort.href}>{ort.name}</a>
+          </li>
+        ))
+      }
     </ul>
   </div>
 
@@ -254,8 +285,14 @@ const footerServices = serviceMenuGroups
     list-style: none;
   }
 
-  .area-list li {
+  .area-list a {
+    display: block;
     padding: 0.3rem 0.8rem;
+    color: inherit;
+  }
+
+  .area-list li {
+    overflow: hidden;
     border: 1px solid rgba(79, 160, 245, 0.3);
     border-radius: var(--radius-pill);
     font-size: 0.875rem;
@@ -267,6 +304,15 @@ const footerServices = serviceMenuGroups
   .area-list li:hover {
     border-color: var(--blue-light);
     background: rgba(79, 160, 245, 0.12);
+    color: #fff;
+  }
+
+  .footer-title a {
+    color: inherit;
+  }
+
+  .footer-title a:hover {
+    color: var(--blue-light);
   }
 
   /* ---- Fußzeile ---- */

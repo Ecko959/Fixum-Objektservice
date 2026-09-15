@@ -1,0 +1,190 @@
+---
+/**
+ * Stufe 2: /entruempelung-aurich/, /trockenbau-leer/ und die vier weiteren.
+ *
+ * Bewusst nur die sechs Kombinationen mit eigenem Text in staedte.ts, nicht
+ * 15 x 13 automatisch erzeugte Seiten - das wäre ein Doorway-Muster.
+ * Statische Routen wie /entruempelung-emden/ haben in Astro Vorrang und
+ * werden von dieser Catch-all-Route nicht überschrieben.
+ */
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import PageHero from "../components/PageHero.astro";
+import RelatedServices from "../components/RelatedServices.astro";
+import { canonicalPath, stadtServiceSchema } from "../data/seo";
+import { leistungsStadtSeiten } from "../data/staedte";
+
+export function getStaticPaths() {
+  return leistungsStadtSeiten.map((eintrag) => ({
+    params: { kombi: eintrag.slug },
+    props: eintrag,
+  }));
+}
+
+const { leistung, stadt } = Astro.props;
+/* "Norden & Norddeich" als voller Name sprengt Titel und Beschreibung. */
+const ort = stadt.kurzName ?? stadt.name;
+const inhalt = stadt.leistungsseiten![leistung]!;
+
+const ist = {
+  entruempelung: {
+    label: "Entrümpelung",
+    metaTitle: `Entrümpelung ${ort} zum Festpreis | Fixum Objektservice`,
+    description: `Entrümpelung in ${ort}: Wohnung, Haus, Keller, Dachboden. Kostenlose Besichtigung, schriftlicher Festpreis, besenreine Übergabe.`,
+    hauptseite: "/entruempelung-emden/",
+    bild: "/images/categories/haushaltsaufloesung.png",
+    badges: ["Besichtigung kostenlos", "Festpreis schriftlich", "Besenrein"],
+  },
+  trockenbau: {
+    label: "Trockenbau",
+    metaTitle: `Trockenbau ${ort}: Wände, Decken, Dachausbau | Fixum`,
+    description: `Trockenbau in ${ort}: Ständerwände, abgehängte Decken, Dachschrägen und Spachtelung Q1 bis Q3. Privat zum Festpreis, gewerblich nach m².`,
+    hauptseite: "/trockenbau-emden/",
+    bild: "/images/categories/trockenbau-innenausbau.png",
+    badges: ["Spachtelung Q1-Q3", "Festpreis nach Aufmaß", "Auch als Sub"],
+  },
+}[leistung];
+
+const path = `/${leistung}-${stadt.slug}/`;
+const breadcrumbs: Array<[string, string]> = [
+  ["Einsatzgebiet", "/einsatzgebiet/"],
+  [stadt.name, `/einsatzgebiet/${stadt.slug}/`],
+  [ist.label, path],
+];
+
+const faq = inhalt.faq.map((f) => ({ question: f.frage, answer: f.antwort }));
+
+const nachbarn = leistungsStadtSeiten
+  .filter((e) => e.leistung === leistung && e.stadt.slug !== stadt.slug)
+  .map((e) => ({ href: `/${e.slug}/`, name: e.stadt.name }));
+
+const schema = [
+  stadtServiceSchema({
+    name: `${ist.label} in ${stadt.name}`,
+    description: ist.description,
+    path: canonicalPath(path),
+    stadt: stadt.name,
+    landkreis: stadt.landkreis,
+    serviceType: ist.label,
+  }),
+  {
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+];
+---
+
+<Base
+  title={ist.metaTitle}
+  description={ist.description}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage={ist.bild}
+>
+  <PageHero
+    eyebrow={`${ist.label} · ${stadt.landkreis}`}
+    title={`${ist.label} in ${stadt.name}`}
+    text={inhalt.intro}
+    image={ist.bild}
+    imageAlt={`${ist.label} durch Fixum Objektservice in ${stadt.name}`}
+    breadcrumbs={breadcrumbs}
+    badges={ist.badges}
+  />
+
+  <section class="section section--soft" aria-labelledby="faq-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="faq-title">
+        {ist.label} in {stadt.name} - was Auftraggeber fragen
+      </h2>
+    </div>
+    <div class="container container--narrow" data-reveal>
+      <FaqAccordion items={faq} />
+    </div>
+  </section>
+
+  {
+    /* Der Verweis auf die Hauptseite ist wichtiger als er aussieht: Er hält
+      die ausführliche Leistungsbeschreibung an einer Stelle und verhindert,
+      dass sich Ortsseite und Leistungsseite dasselbe Keyword streitig machen. */
+  }
+  <section class="section" aria-labelledby="mehr-title">
+    <div class="container weiter" data-reveal>
+      <div>
+        <p class="eyebrow">Weiterlesen</p>
+        <h2 id="mehr-title">Leistungsumfang und Grenzen im Detail</h2>
+        <p class="muted">
+          Was genau dazugehört, wie der Ablauf aussieht und was ausdrücklich
+          nicht enthalten ist, steht vollständig auf der Leistungsseite. Alles
+          zum Ort - typische Objekte, Ortsteile und Entsorgung - finden Sie auf
+          der Seite zu {stadt.name}.
+        </p>
+      </div>
+      <ul class="weiter-liste">
+        <li>
+          <a class="arrow-link" href={ist.hauptseite}>
+            {ist.label}: alle Leistungen
+          </a>
+        </li>
+        <li>
+          <a class="arrow-link" href={`/einsatzgebiet/${stadt.slug}/`}>
+            Einsatzgebiet {stadt.name}
+          </a>
+        </li>
+        {
+          nachbarn.map((n) => (
+            <li>
+              <a class="arrow-link" href={n.href}>
+                {ist.label} in {n.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <RelatedServices current={ist.hauptseite} />
+  <CtaBand
+    eyebrow={`${ist.label} in ${stadt.name}`}
+    title="Festpreis statt Schätzung"
+    text="Nach der kostenlosen Besichtigung bekommen Sie einen Preis, der schriftlich gilt - samt der Positionen, die nicht dazugehören."
+  />
+</Base>
+
+<style>
+  .weiter {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .weiter h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  .weiter-liste {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--mist-soft);
+    list-style: none;
+  }
+
+  @media (max-width: 860px) {
+    .weiter {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

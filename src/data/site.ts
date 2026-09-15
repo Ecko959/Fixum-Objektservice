@@ -21,6 +21,11 @@ export const site = {
   domain: "https://www.fixum-objektservice.de",
   taxId: "",
   chamber: "Handwerkskammer für Ostfriesland, Aurich",
+  /* Solange die Freistellungsbescheinigung nach § 48b EStG nicht erteilt ist,
+     darf sie nicht als vorhanden beworben werden - das wäre wettbewerbsrechtlich
+     angreifbar und fällt beim ersten Nachfragen eines GU sofort auf.
+     Nach Erteilung auf true setzen, der Wortlaut zieht überall nach. */
+  freistellung48b: false,
   /* Landet als sameAs im schema.org-Graph und als Link im Footer. Der
      Kurzlink von Google funktioniert, die ausgeschriebene Profil-URL wäre
      als Signal aber etwas stärker - sie lässt sich hier jederzeit
@@ -94,7 +99,24 @@ export const addressLines = [
 export const navItems = [
   { label: "Startseite", href: "/" },
   { label: "Leistungen", href: "/leistungen/" },
-  { label: "Für Firmen", href: "/fuer-hausverwaltungen/" },
+  {
+    label: "Für Firmen",
+    href: "/fuer-hausverwaltungen/",
+    /* Die Bauunternehmen-Seite war nur über den Footer erreichbar. Beide
+       Zielgruppen gehören auf dieselbe Ebene. */
+    children: [
+      {
+        label: "Für Hausverwaltungen",
+        href: "/fuer-hausverwaltungen/",
+        description: "Mieterwechsel aus einer Hand, weniger Leerstandstage.",
+      },
+      {
+        label: "Für Bauunternehmen",
+        href: "/fuer-bauunternehmen/",
+        description: "Trockenbau und Rückbau als Nachunternehmer.",
+      },
+    ],
+  },
   { label: "Über uns", href: "/ueber-uns/" },
   { label: "Kontakt", href: "/kontakt/" },
 ];

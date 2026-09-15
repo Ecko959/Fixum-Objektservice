@@ -82,19 +82,23 @@ const items: Array<[string, string]> = [["Startseite", "/"], ...trail];
     color: var(--navy);
   }
 
-  /* Auf dunklem Grund */
-  .section--dark .breadcrumbs li,
-  .page-hero .breadcrumbs li {
-    color: rgba(211, 227, 249, 0.8);
+  /* Auf dunklem Grund.
+     :global() ist hier zwingend: .page-hero und .section--dark stehen in
+     anderen Komponenten. Ohne :global() hängt Astro die Scope-Kennung dieser
+     Datei auch an sie - und dann trifft der Selektor nie. Die Folge war
+     Navy-Text auf dunklem Hero, also praktisch unsichtbar. */
+  :global(.section--dark) .breadcrumbs li,
+  :global(.page-hero) .breadcrumbs li {
+    color: rgba(211, 227, 249, 0.85);
   }
 
-  .section--dark .breadcrumbs a:hover,
-  .page-hero .breadcrumbs a:hover {
+  :global(.section--dark) .breadcrumbs a:hover,
+  :global(.page-hero) .breadcrumbs a:hover {
     color: #fff;
   }
 
-  .section--dark .breadcrumbs [aria-current="page"],
-  .page-hero .breadcrumbs [aria-current="page"] {
+  :global(.section--dark) .breadcrumbs [aria-current="page"],
+  :global(.page-hero) .breadcrumbs [aria-current="page"] {
     color: var(--blue-light);
   }
 </style>

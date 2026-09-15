@@ -6,13 +6,19 @@ import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
 import { canonicalPath, serviceSchema } from "../data/seo";
+import { site } from "../data/site";
+
+/* Wortlaut aus einem Flag, damit nach Erteilung eine Zeile in site.ts reicht.
+   Eine noch nicht erteilte Bescheinigung als vorhanden zu bewerben, ist
+   wettbewerbsrechtlich angreifbar. */
+const f48b = site.freistellung48b;
+const f48bKurz = f48b ? "§ 48b auf Anfrage" : "§ 48b beantragt";
 
 const path = "/fuer-bauunternehmen/";
 const breadcrumbs: Array<[string, string]> = [["Für Bauunternehmen", path]];
 const heroImage = "/images/service-drywall.png";
 
-const description =
-  "Trockenbau und Rückbau als Nachunternehmer in Ostfriesland: Abrechnung nach m² oder Tagessatz, Material bauseits möglich, § 48b EStG auf Anfrage.";
+const description = `Trockenbau und Rückbau als Nachunternehmer in Ostfriesland: Abrechnung nach m² oder Tagessatz, Material bauseits, § 48b EStG ${f48b ? "auf Anfrage" : "beantragt"}.`;
 
 const punkte: Array<[string, string, "wall" | "euro" | "shield" | "clock"]> = [
   [
@@ -27,7 +33,7 @@ const punkte: Array<[string, string, "wall" | "euro" | "shield" | "clock"]> = [
   ],
   [
     "Versicherung und Nachweise",
-    "Betriebshaftpflicht mit Subunternehmer-Klausel. Freistellungsbescheinigung nach § 48b EStG legen wir auf Anfrage vor.",
+    `Betriebshaftpflicht mit Subunternehmer-Klausel. Die Freistellungsbescheinigung nach § 48b EStG ist ${f48b ? "erteilt und wird auf Anfrage vorgelegt" : "beantragt - den Stand nennen wir Ihnen offen, sobald Sie fragen"}.`,
     "shield",
   ],
   [
@@ -117,7 +123,7 @@ const schema = [
     image={heroImage}
     imageAlt="Trockenbauarbeiten im Nachunternehmereinsatz auf einer Baustelle in Ostfriesland"
     breadcrumbs={breadcrumbs}
-    badges={["m² oder Tagessatz", "§ 48b auf Anfrage", "Material bauseits"]}
+    badges={["m² oder Tagessatz", f48bKurz, "Material bauseits"]}
   />
 
   {/* Leistungsprofil */}
@@ -200,8 +206,10 @@ const schema = [
     </ol>
 
     <p class="container process-note">
-      Freistellungsbescheinigung nach § 48b EStG und Versicherungsnachweis legen
-      wir vor Beginn vor, nicht erst zur Rechnung.
+      Versicherungsnachweis legen wir vor Beginn vor, nicht erst zur Rechnung.
+      Die Freistellungsbescheinigung nach § 48b EStG ist {
+        f48b ? "erteilt" : "beantragt"
+      } - wir sagen Ihnen den Stand, bevor Sie danach fragen müssen.
     </p>
   </section>
 

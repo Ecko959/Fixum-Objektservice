@@ -123,6 +123,57 @@ kaum eigene Impressionen sammelt, ist eine Zusammenlegung sinnvoll: Inhalt in
 301-Weiterleitung darauf zeigen lassen. Vorher nicht löschen - eine bestehende
 URL ohne Redirect zu entfernen kostet mehr, als sie einbringt.
 
+## Einsatzgebiet-Seiten - vor dem Livegang prüfen
+
+Neu sind 22 Seiten: `/einsatzgebiet/` als Übersicht, 15 Ortsseiten und sechs
+Leistungs-Stadt-Seiten (`/entruempelung-aurich/`, `/trockenbau-aurich/` und
+dieselben für Leer und Norden). Die Texte stehen in `src/data/staedte.ts`.
+
+Bewusst **nicht** 15 × 13 automatisch erzeugte Kombinationen: Seiten, die sich
+nur im Ortsnamen unterscheiden, wertet Google als Doorway-Pages - im Zweifel
+zulasten der ganzen Domain. Weitere Kombinationen erst ergänzen, wenn die
+Search Console Impressionen für den Suchbegriff zeigt, und dann mit eigenem
+Text.
+
+Diese Angaben stammen aus der Vorlage und sind **nicht verifiziert**:
+
+- [ ] `entfernungKm` je Ort per Google Maps ab Hermann-Allmers-Str. 13
+      bestätigen. Die Zahl steht sichtbar auf jeder Ortsseite und in der
+      Anfahrts-FAQ.
+- [ ] Ortsteil-Listen stichprobenartig gegenlesen.
+- [ ] Zuständige Abfallwirtschaft je Landkreis bestätigen - der Absatz
+      "Entsorgung" nennt sie beim Namen.
+- [ ] Aussagen zu Anfahrt und Mindestauftrag bei Wittmund, Papenburg, Weener
+      und Wiesmoor gegen die tatsächliche Preispolitik halten. Auf der
+      Papenburg-Seite steht zum Beispiel, dass sich kleine Privataufträge bei
+      der Entfernung selten lohnen.
+- [ ] Rich-Results-Test für eine Ortsseite und eine Leistungs-Stadt-Seite.
+
+## Freistellungsbescheinigung § 48b EStG
+
+`site.freistellung48b` steht auf `false`. Solange das so ist, schreibt die
+Seite überall "beantragt" statt "auf Anfrage". Nach Erteilung die eine Zeile in
+`src/data/site.ts` auf `true` setzen - Hero-Badge, Leistungsprofil, FAQ,
+Startseite und die Meta-Beschreibung ziehen automatisch nach.
+
+## Offen aus dem SEO-Audit - bewusst nicht umgesetzt
+
+- **Kostenratgeber `/entruempelung-kosten-emden/`**: Das ist der Suchbegriff
+  mit der höchsten Kaufnähe, aber eine Seite mit erfundenen Marktspannen wäre
+  irreführende Werbung. Die Seite braucht echte eigene Zahlen - Preisspanne je
+  m³ oder je Zimmergröße aus abgerechneten Aufträgen. Sobald die vorliegen,
+  ist die Seite in einer Stunde gebaut.
+- **Umzug "bis 3,5 t"**: Steht an acht Stellen auf der Seite. Wenn tatsächlich
+  ein 7,5-Tonner eingesetzt wird, müssen die Angaben vereinheitlicht werden -
+  und gewerbliche Transporte über 3,5 t zGG sind nach GüKG in der Regel
+  erlaubnispflichtig. Vorher klären, dann anpassen.
+- **"Eigene Fotos, keine Katalogbilder"** auf der Startseite: Die Aussage ist
+  nur haltbar, wenn wirklich alle Referenzbilder von eigenen Baustellen
+  stammen. Falls nicht, muss der Satz weg.
+- **Leerstandsrechner, Kapazitätsanzeige, Ratgeberartikel**: sinnvoll, aber
+  eigene Bausteine. Die Kapazitätsanzeige nur einbauen, wenn sie wöchentlich
+  gepflegt wird - eine veraltete Angabe schadet mehr, als sie bringt.
+
 ## Weiterleitung von non-www auf www - muss beim Hoster passieren
 
 Kanonische Adresse ist `https://www.fixum-objektservice.de`. Canonical, Open

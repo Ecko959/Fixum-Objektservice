@@ -134,9 +134,16 @@ const serviceChips: Array<[string, string]> = [
           <span>Emden · Ostfriesland</span>
         </p>
         <p class="script">{site.heroLine}</p>
+        {
+          /* Die H1 trägt jetzt Leistung und Ort - das ist die Zeile, die
+             Google einer lokalen Suche zuordnet. Der Claim steht als
+             Unterzeile darunter und bleibt damit sichtbar. */
+        }
         <h1>
-          Entrümpelt, <span class="blue-word">ausgebaut</span>, übergabefertig.
+          <span class="blue-word">Entrümpelung</span>, Entkernung & Trockenbau
+          in Emden
         </h1>
+        <p class="hero-claim">Entrümpelt, ausgebaut, übergabefertig.</p>
         <p class="lead">
           Entrümpelung, Haushaltsauflösung, Entkernung, Trockenbau und Montage
           in Emden und Ostfriesland. Ein Ansprechpartner, ein Festpreis, ein
@@ -443,7 +450,11 @@ const serviceChips: Array<[string, string]> = [
         <ul class="check-list audience-list">
           <li>Abrechnung nach m² oder Tagessatz</li>
           <li>Betriebshaftpflicht mit Subunternehmer-Klausel</li>
-          <li>Freistellungsbescheinigung nach § 48b EStG auf Anfrage</li>
+          <li>
+            Freistellungsbescheinigung nach § 48b EStG {
+              site.freistellung48b ? "auf Anfrage" : "beantragt"
+            }
+          </li>
         </ul>
         <Button href="/fuer-bauunternehmen/">Als Sub anfragen</Button>
       </article>
@@ -570,6 +581,16 @@ const serviceChips: Array<[string, string]> = [
 
   .hero .btn-row {
     margin-top: 0.5rem;
+  }
+
+  /* Unterzeile unter der H1 - trägt den bisherigen Claim weiter. */
+  .hero-claim {
+    margin-top: 0.5rem;
+    font-family: var(--font-utility);
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--on-dark-soft);
   }
 
   .hero-proof {

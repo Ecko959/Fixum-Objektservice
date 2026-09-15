@@ -7,6 +7,10 @@ export default defineConfig({
      Sitemap ihre URLs, daraus baut Base.astro die Canonicals. */
   site: "https://www.fixum-objektservice.de",
   output: "static",
+  /* Canonical, Sitemap und interne Links enden alle auf einen Slash. Ohne
+     diese Zeile liefert der Hoster je nach Konfiguration auch die Fassung
+     ohne Slash aus - dann zeigt das Canonical auf eine Weiterleitung. */
+  trailingSlash: "always",
   /* Verzeichnis-URLs mit abschließendem Slash - identisch zu Canonical und Sitemap. */
   build: { format: "directory", inlineStylesheets: "auto" },
   compressHTML: true,
