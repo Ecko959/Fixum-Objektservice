@@ -1,8 +1,14 @@
 ---
+import { Picture } from "astro:assets";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
+import { findeBild } from "../data/bilder";
 import { telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+
+/* Betreff je Seite - siehe src/data/whatsapp.ts. */
+const waThema = whatsappThema(Astro.url.pathname);
 
 interface Props {
   eyebrow?: string;
@@ -29,7 +35,8 @@ const {
   ],
 } = Astro.props;
 
-const base = image.replace(/\.[a-zA-Z0-9]+$/, "");
+/* Hero-Bild aus src/assets - siehe src/data/bilder.ts. */
+const heroBild = findeBild(image);
 ---
 
 <section class="page-hero section--dark">
@@ -37,18 +44,25 @@ const base = image.replace(/\.[a-zA-Z0-9]+$/, "");
     /* Echtes <img> statt CSS-Hintergrund: das LCP-Element ist so für den
       Browser priorisierbar und wird als AVIF/WebP ausgeliefert. */
   }
-  <picture class="page-hero-media" aria-hidden={imageAlt ? undefined : "true"}>
-    <source srcset={`${base}.avif`} type="image/avif" />
-    <source srcset={`${base}.webp`} type="image/webp" />
-    <img
-      src={image}
-      alt={imageAlt}
-      width="1600"
-      height="900"
-      fetchpriority="high"
-      decoding="sync"
-    />
-  </picture>
+  {
+    heroBild && (
+      <Picture
+        pictureAttributes={{
+          class: "page-hero-media",
+          "aria-hidden": imageAlt ? undefined : "true",
+        }}
+        src={heroBild}
+        alt={imageAlt}
+        widths={[640, 1024, 1600]}
+        sizes="100vw"
+        formats={["avif", "webp"]}
+        fallbackFormat="jpeg"
+        loading="eager"
+        fetchpriority="high"
+        decoding="sync"
+      />
+    )
+  }
   <div class="page-hero-scrim" aria-hidden="true"></div>
 
   <div class="container">
@@ -64,7 +78,7 @@ const base = image.replace(/\.[a-zA-Z0-9]+$/, "");
 
       <div class="btn-row">
         <Button href={telUrl} icon="phone">Jetzt anrufen</Button>
-        <Button href={whatsappUrl()} variant="secondary" icon="whatsapp">
+        <Button href={whatsappUrl(waThema)} variant="secondary" icon="whatsapp">
           WhatsApp schreiben
         </Button>
       </div>

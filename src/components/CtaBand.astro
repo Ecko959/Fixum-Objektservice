@@ -2,6 +2,10 @@
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 import { site, telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+
+/* Betreff je Seite - siehe src/data/whatsapp.ts. */
+const waThema = whatsappThema(Astro.url.pathname);
 
 interface Props {
   eyebrow?: string;
@@ -26,7 +30,7 @@ const {
 
     <div class="btn-row cta-actions">
       <Button href={telUrl} icon="phone">Jetzt anrufen</Button>
-      <Button href={whatsappUrl()} variant="secondary" icon="whatsapp">
+      <Button href={whatsappUrl(waThema)} variant="secondary" icon="whatsapp">
         WhatsApp schreiben
       </Button>
     </div>

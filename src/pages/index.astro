@@ -1,4 +1,5 @@
 ---
+import { Picture } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import AreaServed from "../components/AreaServed.astro";
 import Button from "../components/Button.astro";
@@ -9,12 +10,13 @@ import Icon from "../components/Icon.astro";
 import Photo from "../components/Photo.astro";
 import ReferenceGallery from "../components/ReferenceGallery.astro";
 import ServiceCard from "../components/ServiceCard.astro";
+import { findeBild } from "../data/bilder";
 import { services } from "../data/services";
 import { site, telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
 
-/* Markenname zuerst: Google leitet den Quellennamen über dem Suchergebnis aus
-   dem Titel der Startseite, og:site_name und dem WebSite-Knoten ab. Auf den
-   Unterseiten steht die Leistung weiter vorn - dort zählt das Stichwort. */
+const waThema = whatsappThema(Astro.url.pathname);
+
 /* Keyword vorn, Marke hinten. Die Startseite behält den vollen Firmennamen:
    Aus ihr zieht Google den Quellennamen über dem Suchergebnis, und dort soll
    "Fixum Objektservice" stehen und nicht die nackte Domain. */
@@ -23,6 +25,7 @@ const description =
   "Entrümpelung, Entkernung, Trockenbau und Montage in Emden und Ostfriesland. Ein Ansprechpartner, ein Festpreis nach kostenloser Besichtigung.";
 
 const heroImage = "/images/hero-renovation.png";
+const heroBild = findeBild(heroImage);
 
 const trust: Array<[string, string, "star" | "euro" | "clock" | "shield"]> = [
   [
@@ -116,18 +119,22 @@ const serviceChips: Array<[string, string]> = [
 >
   {/* ---------------------------------------------------- Hero */}
   <section class="hero section--dark">
-    <picture class="hero-media" aria-hidden="true">
-      <source srcset="/images/hero-renovation.avif" type="image/avif" />
-      <source srcset="/images/hero-renovation.webp" type="image/webp" />
-      <img
-        src={heroImage}
-        alt=""
-        width="1920"
-        height="1080"
-        fetchpriority="high"
-        decoding="sync"
-      />
-    </picture>
+    {
+      heroBild && (
+        <Picture
+          pictureAttributes={{ class: "hero-media", "aria-hidden": "true" }}
+          src={heroBild}
+          alt=""
+          widths={[640, 1024, 1600]}
+          sizes="100vw"
+          formats={["avif", "webp"]}
+          fallbackFormat="jpeg"
+          loading="eager"
+          fetchpriority="high"
+          decoding="sync"
+        />
+      )
+    }
     <div class="hero-scrim" aria-hidden="true"></div>
 
     <div class="container hero-grid">
@@ -160,7 +167,7 @@ const serviceChips: Array<[string, string]> = [
         <div class="btn-row hero-actions">
           <Button href={telUrl} icon="phone">Jetzt anrufen</Button>
           <Button
-            href={whatsappUrl("Moin, ich habe eine Anfrage zu:")}
+            href={whatsappUrl(waThema)}
             variant="secondary"
             icon="whatsapp"
           >
@@ -497,7 +504,7 @@ const serviceChips: Array<[string, string]> = [
   <section class="section section--mist" aria-labelledby="faq-title">
     <div class="container section-head" data-reveal>
       <p class="eyebrow">FAQ</p>
-      <h2 id="faq-title">Die häufigsten Fragen</h2>
+      <h2 id="faq-title">Fragen und Antworten</h2>
       <p class="muted">
         Wenn Ihre Frage nicht dabei ist: einmal anrufen reicht.
       </p>

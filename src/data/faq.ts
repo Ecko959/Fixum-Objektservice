@@ -1,3 +1,5 @@
+import { site } from "./site";
+
 export interface FaqItem {
   question: string;
   answer: string;
@@ -61,7 +63,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
     {
       question: "Was passiert mit Farben, Batterien oder Elektrogeräten?",
       answer:
-        "Diese Abfälle müssen gesondert entsorgt werden und sind deshalb nicht im normalen Volumenpreis enthalten. Wir sagen Ihnen vor der Ausführung, was zusammenkommt, und rechnen die tatsächlichen Entsorgungskosten zuzüglich Handlingpauschale ab - keine Überraschung auf der Schlussrechnung.",
+        "Diese Abfälle müssen gesondert entsorgt werden. Wir erfassen sie bei der Besichtigung und weisen sie als eigene Position im Festpreis aus - Sie sehen also, was dieser Teil kostet, und der Preis gilt. Taucht bei der Räumung Sonderabfall auf, der vorher nicht sichtbar war, sagen wir Ihnen das vor der Entsorgung und stimmen das weitere Vorgehen mit Ihnen ab.",
     },
     {
       question: "Räumen Sie auch Messie-Wohnungen?",
@@ -180,13 +182,13 @@ export const serviceFaq: Record<string, FaqItem[]> = {
     {
       question: "Ziehen Sie auch von Emden aus über weitere Strecken um?",
       answer:
-        "Ja. Innerhalb Ostfrieslands ist das Alltagsgeschäft, bundesweite Umzüge fahren wir auf Anfrage. Die Anfahrt wird im Angebot gesondert ausgewiesen, damit Sie sehen, was der Weg kostet.",
+        "Ja, innerhalb Ostfrieslands. Die Anfahrt wird im Angebot gesondert ausgewiesen, damit Sie sehen, was der Weg kostet.",
     },
 
     {
       question: "Bis zu welcher Größe machen Sie Umzüge?",
       answer:
-        "Bis 3,5 t Fahrzeuggröße - also Wohnungen, kleinere Häuser, Büros und Objektfahrten. Für Fernumzüge mit großem LKW sind wir der falsche Ansprechpartner und sagen das auch gleich.",
+        `Bis ${site.maxTonnage} Fahrzeuggröße - also Wohnungen, kleinere Häuser, Büros und Objektfahrten. Für Fernumzüge mit großem LKW sind wir der falsche Ansprechpartner und sagen das auch gleich.`,
     },
     {
       question: "Kann ich Umzug und Entrümpelung kombinieren?",

@@ -1,10 +1,86 @@
+# Weiterleitungen fuer Cloudflare Pages. Die Datei wird unveraendert nach
+# dist/ kopiert und dort vom Hoster gelesen; Netlify versteht dasselbe Format.
+# Auf anderen Hostern ist sie wirkungslos - die Regeln stehen in CONTENT.md.
+#
+# Die Reihenfolge entscheidet: Es gewinnt die erste passende Zeile.
+
+
+# --------------------------------------------------------------------------
+# 1. Host normalisieren
+#
 # Eine Domain, ein Signal: alles ohne www dauerhaft auf die www-Fassung.
 # Ohne diese Regel bleiben beide Hosts erreichbar, Google sieht zwei Seiten
 # mit identischem Inhalt und verteilt die Signale auf beide.
 #
-# Diese Datei wird von Netlify und Cloudflare Pages gelesen. Auf anderen
-# Hostern ist sie wirkungslos - die passenden Regeln stehen in CONTENT.md.
+# Diese Regeln stehen zuerst, damit ein Aufruf erst beim richtigen Host
+# landet und die Slug-Regeln darunter dann greifen koennen.
+# --------------------------------------------------------------------------
 
-http://fixum-objektservice.de/*   https://www.fixum-objektservice.de/:splat   301!
-https://fixum-objektservice.de/*  https://www.fixum-objektservice.de/:splat   301!
-http://www.fixum-objektservice.de/*  https://www.fixum-objektservice.de/:splat  301!
+http://fixum-objektservice.de/*      https://www.fixum-objektservice.de/:splat   301!
+https://fixum-objektservice.de/*     https://www.fixum-objektservice.de/:splat   301!
+http://www.fixum-objektservice.de/*  https://www.fixum-objektservice.de/:splat   301!
+
+
+# --------------------------------------------------------------------------
+# 2. Alte Leistungs-URLs
+#
+# Bis zum Umbau hiessen die Leistungsseiten /leistung-emden/. Der Ortsbezug
+# steht jetzt auf den eigenen Stadtseiten, die Leistung selbst ist
+# ortsneutral. Das hier sind echte 301 - Astro hatte zuvor nur
+# Meta-Refresh-Seiten erzeugt, und die wertet Google bloss als schwaches
+# Signal, nicht als Umzug.
+#
+# Jeweils zwei Zeilen: Die Seite wird mit abschliessendem Slash
+# ausgeliefert (trailingSlash "always"), alte Links koennen aber beides
+# enthalten.
+# --------------------------------------------------------------------------
+
+/entruempelung-emden/         /entruempelung/         301
+/entruempelung-emden          /entruempelung/         301
+
+/entkernung-emden/            /entkernung/            301
+/entkernung-emden             /entkernung/            301
+
+/trockenbau-emden/            /trockenbau/            301
+/trockenbau-emden             /trockenbau/            301
+
+/bodenverlegung-emden/        /bodenverlegung/        301
+/bodenverlegung-emden         /bodenverlegung/        301
+
+/umzug-emden/                 /umzug/                 301
+/umzug-emden                  /umzug/                 301
+
+/haushaltsaufloesung-emden/   /haushaltsaufloesung/   301
+/haushaltsaufloesung-emden    /haushaltsaufloesung/   301
+
+/wohnungsraeumung-emden/      /wohnungsraeumung/      301
+/wohnungsraeumung-emden       /wohnungsraeumung/      301
+
+/kernsanierung-emden/         /kernsanierung/         301
+/kernsanierung-emden          /kernsanierung/         301
+
+/renovierung-emden/           /renovierung/           301
+/renovierung-emden            /renovierung/           301
+
+/hausmeisterservice-emden/    /hausmeisterservice/    301
+/hausmeisterservice-emden     /hausmeisterservice/    301
+
+/kuechenmontage-emden/        /kuechenmontage/        301
+/kuechenmontage-emden         /kuechenmontage/        301
+
+/winterdienst-emden/          /winterdienst/          301
+/winterdienst-emden           /winterdienst/          301
+
+/rueckbau-trockenbau-emden/   /rueckbau-trockenbau/   301
+/rueckbau-trockenbau-emden    /rueckbau-trockenbau/   301
+
+
+# --------------------------------------------------------------------------
+# 3. Entfallene Seite
+#
+# Die Ablauf-Seite wurde aufgeloest, der Ablauf steht jetzt auf jeder
+# Leistungsseite. Ohne diese Regel liefe der alte Link ins Leere.
+# --------------------------------------------------------------------------
+
+/ablauf/                      /leistungen/            301
+/ablauf                       /leistungen/            301

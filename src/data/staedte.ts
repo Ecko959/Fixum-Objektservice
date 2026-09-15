@@ -1,5 +1,5 @@
 /**
- * Einsatzgebiet-Daten für /einsatzgebiet/[slug]/ und /[leistung]-[stadt]/.
+ * Einsatzgebiet-Daten für /einsatzgebiet/[slug]/ und /[leistung]/[stadt]/.
  *
  * Jeder Ort hat eigenen Text zu Objektlage, Entsorgungszuständigkeit und
  * eigene Fragen. Seiten, die sich nur im Ortsnamen unterscheiden, wertet
@@ -76,7 +76,7 @@ export const staedte: Stadt[] = [
       "Entrümpelung, Haushaltsauflösung, Entkernung und Trockenbau in Aurich und allen Ortsteilen. Festpreis nach kostenloser Besichtigung, ein Ansprechpartner.",
     h1: "Entrümpelung, Entkernung und Trockenbau in Aurich",
     intro:
-      "Aurich ist Kreisstadt und mit rund 26 km eines unserer häufigsten Ziele. Ob Haushaltsauflösung in Sandhorst, Wohnungsräumung in der Innenstadt oder Trockenbau im Einfamilienhaus in Walle – Sie bekommen denselben Ablauf wie in Emden: Besichtigung, schriftlicher Festpreis, gehaltener Termin.",
+      "Aurich ist Kreisstadt und liegt rund 26 km von Emden entfernt. Ob Haushaltsauflösung in Sandhorst, Wohnungsräumung in der Innenstadt oder Trockenbau im Einfamilienhaus in Walle – Sie bekommen denselben Ablauf wie in Emden: Besichtigung, schriftlicher Festpreis, gehaltener Termin.",
     objektlage:
       "In Aurich treffen Mehrfamilienhäuser in der Kernstadt auf viele Einfamilienhäuser aus den 60er- bis 80er-Jahren in den Ortsteilen. Genau dort fällt oft beides an: Ein Haus wird nach Jahrzehnten geräumt, und der neue Eigentümer will Wände versetzen, Decken abhängen oder das Dachgeschoss ausbauen. Diese Kette machen wir in einem Durchgang.",
     schwerpunkte: [

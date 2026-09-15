@@ -1,8 +1,14 @@
 ---
+import { Picture } from "astro:assets";
+import { findeBild } from "../data/bilder";
+
 interface Props {
   src?: string;
   alt?: string;
   label?: string;
+  /** Seitenverhältnis des Ausschnitts. astro:assets leitet die tatsächlichen
+      Maße aus der Datei ab; diese Angaben bestimmen nur, wie hoch der Platz
+      im Layout reserviert wird, damit beim Laden nichts springt. */
   width?: number;
   height?: number;
   /** LCP-Bilder eager laden und priorisieren. */
@@ -25,27 +31,32 @@ const {
   class: className = "",
 } = Astro.props;
 
-/* Die Bilder liegen als PNG plus vorgerenderte AVIF- und WebP-Varianten vor. */
-const srcBase = src?.replace(/\.[a-zA-Z0-9]+$/, "");
-const style = ratio ? `--photo-ratio:${ratio}` : undefined;
+/* astro:assets erzeugt die Formate beim Bauen. AVIF zuerst, WebP als
+   zweite Wahl - der Browser nimmt das erste, das er kann.
+
+   Der Rueckfall im <img> ist JPEG, nicht PNG: Er greift nur bei Browsern,
+   die weder AVIF noch WebP koennen, und fuer Fotos ist PNG das falsche
+   Format - als Rueckfall in drei Breiten waren das 154 MB im Build. */
+const bild = findeBild(src);
+/* Ohne ausdrückliches Verhältnis aus den übergebenen Maßen ableiten - die
+   reservierte Fläche steht damit schon fest, bevor das Bild geladen ist. */
+const style = `--photo-ratio:${ratio ?? `${width} / ${height}`}`;
 ---
 
 {
-  src ? (
-    <picture class={`photo ${className}`.trim()} style={style}>
-      <source srcset={`${srcBase}.avif`} type="image/avif" sizes={sizes} />
-      <source srcset={`${srcBase}.webp`} type="image/webp" sizes={sizes} />
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        sizes={sizes}
-        loading={eager ? "eager" : "lazy"}
-        fetchpriority={eager ? "high" : "auto"}
-        decoding={eager ? "sync" : "async"}
-      />
-    </picture>
+  bild ? (
+    <Picture
+      pictureAttributes={{ class: `photo ${className}`.trim(), style }}
+      src={bild}
+      alt={alt}
+      widths={[480, 800, 1200]}
+      sizes={sizes ?? "(max-width: 900px) 100vw, 50vw"}
+      formats={["avif", "webp"]}
+      fallbackFormat="jpeg"
+      loading={eager ? "eager" : "lazy"}
+      fetchpriority={eager ? "high" : "auto"}
+      decoding={eager ? "sync" : "async"}
+    />
   ) : (
     <div
       class={`photo photo--placeholder ${className}`.trim()}

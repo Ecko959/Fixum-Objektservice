@@ -2,6 +2,10 @@
 import Icon from "./Icon.astro";
 import WhatsAppMark from "./WhatsAppMark.astro";
 import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+
+/* Betreff je Seite - siehe src/data/whatsapp.ts. */
+const waThema = whatsappThema(Astro.url.pathname);
 
 interface Props {
   /** Vorbelegtes Thema, z. B. von einer Leistungsseite aus. */
@@ -167,7 +171,7 @@ const topics = [
       </a>
       <a
         class="btn btn--secondary btn--wa btn--wide"
-        href={whatsappUrl()}
+        href={whatsappUrl(waThema)}
         target="_blank"
         rel="noopener noreferrer"
       >
