@@ -18,18 +18,20 @@
   Website-Bilder.
 - Echte Baustellenfotos sind der größte Qualitätssprung, der ohne
   Code-Änderung möglich ist. Sie ersetzen die generierten Bilder unter
-  gleichem Dateinamen in `public/images/`; danach WebP und AVIF neu erzeugen
-  (siehe README) und `npm run build:og` laufen lassen.
+  gleichem Dateinamen in `src/assets/images/`. WebP und AVIF müssen **nicht**
+  mehr von Hand erzeugt werden - das macht astro:assets beim Bauen. Danach
+  nur noch `npm run build:og` laufen lassen.
 - Mehrere Leistungen teilen sich derzeit ein Bild
   (Entrümpelung/Haushaltsauflösung sowie Boden/Möbelmontage). Eigene Motive
   wären besser, sind aber keine Voraussetzung.
-- Die alte Einzelabbildung `public/images/reference-before-after.*` wird seit
-  der Umstellung auf die Referenz-Galerie nicht mehr eingebunden und kann
-  gelöscht werden.
+- Die alte Einzelabbildung `src/assets/images/reference-before-after.png`
+  wird seit der Umstellung auf die Referenz-Galerie nicht mehr eingebunden.
+  Sie kostet im Build nichts mehr, weil astro:assets nur verarbeitet, was
+  auch verwendet wird - sie kann trotzdem gelöscht werden.
 
 ## Referenzfotos
 
-In `public/images/referenzen/` liegen die **echten Vorher/Nachher-Fotos**:
+In `src/assets/images/referenzen/` liegen die **echten Vorher/Nachher-Fotos**:
 
 | Datei                                     | Referenz                              |
 | ----------------------------------------- | ------------------------------------- |
@@ -39,9 +41,9 @@ In `public/images/referenzen/` liegen die **echten Vorher/Nachher-Fotos**:
 | `wohnungsraeumung-neuvermietung-foto.png` | Wohnung für die Neuvermietung geräumt |
 | `altbau-entkernung-ausbau-foto.png`       | Altbau entkernt und neu ausgebaut     |
 
-Format: 4:3, vorher links, nachher rechts. Nach dem Einsetzen WebP und AVIF neu
-erzeugen (siehe README) und die Texte in `src/data/references.ts` gegenlesen -
-sie beschreiben, was auf den Fotos zu sehen sein soll.
+Format: 4:3, vorher links, nachher rechts. Nach dem Einsetzen die Texte in
+`src/data/references.ts` gegenlesen - sie beschreiben, was auf den Fotos zu
+sehen sein soll. WebP und AVIF entstehen beim Bauen von selbst.
 
 Kommen weitere Referenzen dazu, gehören sie unter demselben Namensschema in
 den Ordner und als Eintrag in `src/data/references.ts`.
@@ -199,31 +201,43 @@ Diese Angaben stammen aus der Vorlage und sind **nicht verifiziert**:
       Aussage über bereits ausgeführte Aufträge, sollte aber zur eigenen
       Erfahrung passen.
 
-## Weiterleitung der alten Leistungs-URLs - beim Hoster nachziehen
+## Weiterleitungen - erledigt, laufen über public/_redirects
 
-`astro.config.mjs` erzeugt für die 13 alten Adressen Weiterleitungsseiten per
-Meta-Refresh mit `noindex` und Canonical auf das neue Ziel. Das fängt Links und
-Lesezeichen ab, ist für Google aber nur ein schwaches Signal. Eine echte 301
-am Server ist besser:
+Die 13 alten `/leistung-emden/`-Adressen leiten per **echter 301** auf die
+neuen Adressen weiter, jeweils mit und ohne abschließenden Slash. Die Regeln
+stehen in `public/_redirects`; Cloudflare Pages liest die Datei aus dem
+Build-Verzeichnis, Netlify versteht dasselbe Format.
 
-```
-/entruempelung-emden/       -> /entruempelung/
-/entkernung-emden/          -> /entkernung/
-/trockenbau-emden/          -> /trockenbau/
-/bodenverlegung-emden/      -> /bodenverlegung/
-/umzug-emden/               -> /umzug/
-/haushaltsaufloesung-emden/ -> /haushaltsaufloesung/
-/wohnungsraeumung-emden/    -> /wohnungsraeumung/
-/kernsanierung-emden/       -> /kernsanierung/
-/renovierung-emden/         -> /renovierung/
-/hausmeisterservice-emden/  -> /hausmeisterservice/
-/kuechenmontage-emden/      -> /kuechenmontage/
-/winterdienst-emden/        -> /winterdienst/
-/rueckbau-trockenbau-emden/ -> /rueckbau-trockenbau/
-```
+Vorher erzeugte `astro.config.mjs` dafür Seiten mit Meta-Refresh. Die wertet
+Google nur als schwaches Signal und nicht als Umzug - der `redirects`-Block
+ist deshalb entfernt.
 
-Sind die 301er eingerichtet, kann der `redirects`-Block in `astro.config.mjs`
-weg - dann verschwinden auch die 13 Weiterleitungsseiten aus dem Build.
+Reihenfolge in der Datei beachten: Zuerst die drei Regeln, die den Host auf
+`https://www.` normalisieren, danach die Slug-Regeln. Es gewinnt die erste
+passende Zeile.
+
+Geprüft mit `wrangler pages dev` und `curl -sI`: alle 26 Slug-Regeln liefern
+301 auf das richtige Ziel. Adressen ohne Slash beantwortet Cloudflare selbst
+mit 308 auf die Fassung mit Slash - das passt zu `trailingSlash: "always"`
+und zum Canonical.
+
+## Widerspruch zwischen FAQ und AGB - bitte entscheiden
+
+Die FAQ auf `/entruempelung/` sagt jetzt: Sonderabfälle wie Farben, Batterien
+und Elektrogeräte werden **bei der Besichtigung erfasst und als eigene
+Position im Festpreis ausgewiesen**; taucht bei der Räumung unerwartet
+Sonderabfall auf, wird das vor der Entsorgung mitgeteilt und abgestimmt.
+
+In den AGB steht dagegen weiterhin, dass Entsorgungskosten für solche Abfälle
+"zuzüglich Handlingpauschale gesondert berechnet" werden (Abschnitt zu den
+Entsorgungskosten).
+
+Beides zusammen ist widersprüchlich, und im Streitfall zählt die AGB-Klausel.
+**An den AGB wurde nichts geändert** - Rechtstexte bleiben unangetastet. Diese
+Stelle muss der Inhaber mit seinem Rechtsbeistand angleichen: entweder die
+Klausel an die FAQ anpassen oder die FAQ zurück auf die Abrechnung nach
+tatsächlichem Aufwand.
+
 
 ## Freistellungsbescheinigung § 48b EStG
 
@@ -307,3 +321,27 @@ Nach dem Einrichten prüfen: `curl -I https://fixum-objektservice.de/` muss
 - Rich-Result-Test für Startseite und eine Leistungsseite laufen lassen
   (LocalBusiness, BreadcrumbList, FAQPage, Service).
 - Social-Preview mit dem Sharing-Debugger von Facebook und LinkedIn prüfen.
+
+## Bilder laufen über astro:assets
+
+Die Quelldateien liegen als PNG in `src/assets/images/`, nicht mehr in
+`public/images/`. Beim Bauen erzeugt Astro daraus AVIF und WebP in drei
+Breiten (480/800/1200, Hero 640/1024/1600) und hängt einen Inhalts-Hash an
+den Dateinamen - damit ist eine dauerhafte Cache-Regel möglich.
+
+`src/data/bilder.ts` bildet die alten Pfade (`/images/categories/x.png`) auf
+die verarbeiteten Bilder ab. Deshalb konnten die Datendateien und die 16
+Seiten unverändert bleiben; nur `Photo.astro`, `PageHero.astro`, der Hero in
+`index.astro` und der Preload in `Base.astro` wurden angefasst.
+
+Der Rückfall im `<img>` ist **JPEG, nicht PNG**. Er greift nur bei Browsern
+ohne AVIF und ohne WebP. Mit PNG als Rückfall wog der Build 154 MB, mit JPEG
+sind es 35 MB.
+
+Ein neues Motiv braucht nur als PNG in den Ordner gelegt zu werden - Formate,
+Größen und Hash entstehen beim nächsten Build.
+
+**Noch offen:** Das Logo (`public/logo/fixum-lockup-blue-trim.png`, 72 KB) ist
+inzwischen das größte Bild auf der Startseite - größer als das Hero-Foto.
+Es liegt in `public/` und wird deshalb nicht verarbeitet. Eine WebP-Fassung
+mit Transparenz würde dort noch einmal spürbar sparen.

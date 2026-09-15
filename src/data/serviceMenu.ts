@@ -1,4 +1,5 @@
 import type { IconName } from "./icons";
+import { site } from "./site";
 
 export interface ServiceMenuItem {
   label: string;
@@ -36,7 +37,7 @@ export const serviceMenuGroups: Array<{
         label: "Umzüge & Transporte",
         href: "/umzug/",
         icon: "truck",
-        description: "Privat, Gewerbe und Objektfahrten bis 3,5 t.",
+        description: `Privat, Gewerbe und Objektfahrten bis ${site.maxTonnage}.`,
       },
     ],
   },

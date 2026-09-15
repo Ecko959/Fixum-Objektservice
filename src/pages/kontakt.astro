@@ -5,6 +5,9 @@ import ContactForm from "../components/ContactForm.astro";
 import Icon from "../components/Icon.astro";
 import WhatsAppMark from "../components/WhatsAppMark.astro";
 import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+
+const waThema = whatsappThema(Astro.url.pathname);
 
 const path = "/kontakt/";
 const breadcrumbs: Array<[string, string]> = [["Kontakt", path]];
@@ -15,7 +18,7 @@ const channels: Array<[string, string, string, "phone" | "whatsapp" | "mail"]> =
     [
       "WhatsApp",
       "Fotos direkt schicken",
-      whatsappUrl("Moin, ich habe eine Anfrage zu:"),
+      whatsappUrl(waThema),
       "whatsapp",
     ],
     ["E-Mail", site.email, mailUrl, "mail"],

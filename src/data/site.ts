@@ -33,6 +33,14 @@ export const site = {
   googleProfile: "https://share.google/hzDKeSFpvbowfRxhM",
   hours: "Mo-Sa, 7:00-19:00 Uhr",
   radiusKm: 50,
+  /* Zulässige Gesamtmasse der eingesetzten Fahrzeuge. Steht an sieben
+     Stellen auf der Seite und wird überall aus diesem Wert gerendert -
+     ändert sich der Fuhrpark, genügt diese Zeile.
+
+     Die Angabe hat rechtliches Gewicht: Über 3,5 t greift das
+     Güterkraftverkehrsgesetz mit Erlaubnispflicht. Der Wert muss deshalb
+     zum tatsächlichen Fahrzeug und zur vorhandenen Erlaubnis passen. */
+  maxTonnage: "3,5 t",
   foundingYear: "2024",
   claim: "Alles aus einer Hand",
   /* Kursive Zeile über der Hero-Überschrift. Bewusst nicht der Slogan:

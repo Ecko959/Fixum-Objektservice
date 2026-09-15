@@ -1,6 +1,7 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
 import { serviceFaq } from "../data/faq";
+import { site } from "../data/site";
 
 const current = "/umzug/";
 ---
@@ -9,7 +10,7 @@ const current = "/umzug/";
   current={current}
   crumb="Umzüge & Transporte"
   metaTitle="Umzug Emden: privat, Gewerbe, Senioren | Fixum Objektservice"
-  description="Privat- und Firmenumzüge sowie Transporte bis 3,5 t in Emden und Ostfriesland. Im Team, zum Festpreis, mit Demontage und auf Wunsch mit Entrümpelung."
+  description={`Privat- und Firmenumzüge sowie Transporte bis ${site.maxTonnage} in Emden und Ostfriesland. Im Team, zum Festpreis, mit Demontage und auf Wunsch mit Entrümpelung.`}
   eyebrow="Umzüge & Transporte"
   title="Umzüge und Transporte mit festem Termin"
   heroText="Für private Umzüge, kleinere Firmenumzüge und Objekttransporte planen wir den Ablauf vorher durch - Etagen, Laufwege, Parken und Demontage inklusive."
@@ -21,7 +22,7 @@ const current = "/umzug/";
   included={[
     "Privatumzüge innerhalb von Emden und Ostfriesland",
     "Kleinere Büro- und Firmenumzüge mit fester Terminabsprache",
-    "Objekt- und Materialtransporte bis 3,5 t Fahrzeuggröße",
+    `Objekt- und Materialtransporte bis ${site.maxTonnage} Fahrzeuggröße`,
     "Demontage und Wiederaufbau von Möbeln nach Absprache",
     "Absicherung von Treppenhaus, Türzargen und Böden",
     "Entsorgungsfahrten für alles, was nicht mitkommt",
@@ -46,12 +47,12 @@ const current = "/umzug/";
     ],
   ]}
   facts={[
-    ["Größe", "Bis 3,5 t Fahrzeuge - Wohnungen, Büros, Objektfahrten."],
+    ["Größe", `Bis ${site.maxTonnage} Fahrzeuge - Wohnungen, Büros, Objektfahrten.`],
     ["Preis", "Festpreis nach Planung, keine Stundenüberraschung."],
     ["Extras", "Demontage, Aufbau und Entsorgung kombinierbar."],
     ["Gebiet", "Emden und rund 50 km Umkreis."],
   ]}
   noteTitle="Umzug und Entrümpelung in einem Termin"
-  noteText="Der häufigste Fall bei uns: Ein Teil des Hausstands zieht mit um, der Rest muss weg. Wenn beides derselbe Betrieb macht, fährt ein Fahrzeug einmal statt zwei Firmen zweimal. Das ist spürbar günstiger als zwei getrennte Aufträge und spart Ihnen einen kompletten Koordinationstermin."
+  noteText="Oft zieht ein Teil des Hausstands mit um, der Rest muss weg. Wenn beides derselbe Betrieb macht, fährt ein Fahrzeug einmal statt zwei Firmen zweimal. Das ist spürbar günstiger als zwei getrennte Aufträge und spart Ihnen einen kompletten Koordinationstermin."
   faq={serviceFaq[current]}
 />

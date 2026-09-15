@@ -2,6 +2,10 @@
 import Icon from "./Icon.astro";
 import WhatsAppMark from "./WhatsAppMark.astro";
 import { telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+
+/* Betreff je Seite - siehe src/data/whatsapp.ts. */
+const waThema = whatsappThema(Astro.url.pathname);
 ---
 
 <div
@@ -16,7 +20,7 @@ import { telUrl, whatsappUrl } from "../data/site";
   </a>
   <a
     class="sticky-secondary"
-    href={whatsappUrl()}
+    href={whatsappUrl(waThema)}
     target="_blank"
     rel="noopener noreferrer"
   >

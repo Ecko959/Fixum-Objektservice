@@ -1,3 +1,5 @@
+import { site } from "./site";
+
 export interface Service {
   title: string;
   href: string;
@@ -61,8 +63,8 @@ export const services: Service[] = [
     short: "Umzüge",
     href: "/umzug/",
     image: "/images/categories/umzuege-transporte.png",
-    text: "Privat- und Firmenumzüge bis 3,5 t, im Team und zum Festpreis. Kombinierbar mit Entrümpelung, damit nur eine Firma anrückt.",
-    bullets: ["Bis 3,5 t", "Festpreis", "Mit Demontage"],
+    text: `Privat- und Firmenumzüge bis ${site.maxTonnage}, im Team und zum Festpreis. Kombinierbar mit Entrümpelung, damit nur eine Firma anrückt.`,
+    bullets: [`Bis ${site.maxTonnage}`, "Festpreis", "Mit Demontage"],
   },
   {
     title: "Hausmeisterservice",

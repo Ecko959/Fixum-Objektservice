@@ -2,6 +2,10 @@
 import Icon from "./Icon.astro";
 import WhatsAppMark from "./WhatsAppMark.astro";
 import { mailUrl, sameAs, site, telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+
+/* Betreff je Seite - siehe src/data/whatsapp.ts. */
+const waThema = whatsappThema(Astro.url.pathname);
 import { serviceMenuGroups } from "../data/serviceMenu";
 import { findeStadt } from "../data/staedte";
 
@@ -28,27 +32,16 @@ const companyLinks = [
    nötigsten hätten. */
 const footerServices = serviceMenuGroups.flatMap((group) => group.items);
 
-/* Auch hier Links statt Text - dieselbe Zuordnung wie in AreaServed. */
-const sonderziele: Record<string, string> = {
-  Emden: "/",
-  Norddeich: "/einsatzgebiet/norden/",
-};
-const gebiet = site.areaServed.map((name) => {
-  const treffer = findeStadt(
-    name
-      .toLowerCase()
-      .replace(/ö/g, "oe")
-      .replace(/ü/g, "ue")
-      .replace(/ä/g, "ae")
-      .replace(/ß/g, "ss"),
-  );
-  return {
-    name,
-    href:
-      sonderziele[name] ??
-      (treffer ? `/einsatzgebiet/${treffer.slug}/` : "/einsatzgebiet/"),
-  };
-});
+/* Nur fünf Orte statt der ganzen Liste.
+   Die vollständige Aufstellung steht im Einsatzgebiet-Abschnitt der Seite;
+   sie ein zweites Mal in die Fußzeile zu setzen, wiederholt auf jeder Seite
+   denselben Block, ohne etwas hinzuzufügen. Der Link auf die Übersicht führt
+   zu allen übrigen Orten. */
+const hauptorte = ["aurich", "leer", "norden", "moormerland", "krummhoern"];
+const gebiet = hauptorte
+  .map((slug) => findeStadt(slug))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s))
+  .map((s) => ({ name: s.kurzName ?? s.name, href: `/einsatzgebiet/${s.slug}/` }));
 ---
 
 <footer class="footer">
@@ -99,7 +92,7 @@ const gebiet = site.areaServed.map((name) => {
       </a>
       <a
         class="footer-contact"
-        href={whatsappUrl()}
+        href={whatsappUrl(waThema)}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -145,6 +138,9 @@ const gebiet = site.areaServed.map((name) => {
           </li>
         ))
       }
+      <li>
+        <a href="/einsatzgebiet/">Alle Orte</a>
+      </li>
     </ul>
   </div>
 

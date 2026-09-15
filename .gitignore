@@ -4,3 +4,6 @@ dist/
 .env
 .DS_Store
 npm-debug.log*
+
+# Lokaler Zustand von 'wrangler pages dev' - gehoert nicht ins Repo.
+.wrangler/

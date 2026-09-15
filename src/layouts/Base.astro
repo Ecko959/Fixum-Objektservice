@@ -13,6 +13,8 @@ import {
   logoSchema,
   websiteSchema,
 } from "../data/seo";
+import { getImage } from "astro:assets";
+import { findeBild } from "../data/bilder";
 import { site } from "../data/site";
 
 interface Props {
@@ -57,7 +59,20 @@ const socialImage = absolute(image ?? site.ogImage);
 const robots = noindex
   ? "noindex, nofollow"
   : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
-const preloadBase = preloadImage?.replace(/\.[a-zA-Z0-9]+$/, "");
+/* Das Hero-Bild ist das LCP-Element. Der Preload nennt genau die Datei, die
+   PageHero als erste Wahl anbietet - dieselbe Breite, dasselbe Format -,
+   sonst lädt der Browser zwei Fassungen statt einer.
+   Die Adresse entsteht erst beim Bauen, deshalb getImage statt Pfadstring. */
+const heroQuelle = findeBild(preloadImage);
+const preloadUrl = heroQuelle
+  ? (
+      await getImage({
+        src: heroQuelle,
+        width: 1600,
+        format: "avif",
+      })
+    ).src
+  : undefined;
 
 const pageNode: Record<string, unknown> = {
   "@type": pageType,
@@ -125,11 +140,11 @@ const jsonLd = JSON.stringify({
     </script>
 
     {
-      preloadBase && (
+      preloadUrl && (
         <link
           rel="preload"
           as="image"
-          href={`${preloadBase}.avif`}
+          href={preloadUrl}
           type="image/avif"
           fetchpriority="high"
         />

@@ -14,38 +14,21 @@ export default defineConfig({
   /* Verzeichnis-URLs mit abschließendem Slash - identisch zu Canonical und Sitemap. */
   build: { format: "directory", inlineStylesheets: "auto" },
   compressHTML: true,
-  /* Die Leistungsseiten hießen bis zum Umbau /leistung-emden/. Der Ort steht
-     jetzt auf den eigenen Stadtseiten, die Leistung selbst ist ortsneutral.
-     Astro legt hierfür bei `output: "static"` Weiterleitungsseiten per
-     Meta-Refresh an - das fängt alte Links und Lesezeichen ab.
-
-     Eine echte 301 am Server ist trotzdem besser, weil Google Meta-Refresh
-     nur als schwaches Signal wertet. Die Regeln dafür stehen in CONTENT.md
-     und müssen einmal beim Hoster eingetragen werden. */
-  redirects: Object.fromEntries(
-    [
-      "entruempelung",
-      "entkernung",
-      "trockenbau",
-      "bodenverlegung",
-      "umzug",
-      "haushaltsaufloesung",
-      "wohnungsraeumung",
-      "kernsanierung",
-      "renovierung",
-      "hausmeisterservice",
-      "kuechenmontage",
-      "winterdienst",
-      "rueckbau-trockenbau",
-    ].map((slug) => [`/${slug}-emden/`, `/${slug}/`]),
-  ),
+  /* Hier steht bewusst kein `redirects`. Astro erzeugt daraus bei
+     `output: "static"` nur Seiten mit Meta-Refresh, und die wertet Google
+     als schwaches Signal statt als Umzug. Die alten /leistung-emden/-Adressen
+     leiten deshalb per echter 301 weiter - die Regeln stehen in
+     public/_redirects und werden von Cloudflare Pages ausgeführt. */
   integrations: [
     tailwind({ applyBaseStyles: false }),
     sitemap({
-      /* Seiten ohne Suchwert gehören nicht in die Sitemap - und die alten
-         -emden-Adressen erst recht nicht: Eine Sitemap, die auf
-         Weiterleitungen zeigt, hält die veraltete URL künstlich am Leben. */
-      filter: (page) => !/\/(danke|404)\/?$/.test(page) && !/-emden\/?$/.test(page),
+      /* Seiten ohne Suchwert gehören nicht in die Sitemap. Die alten
+         -emden-Adressen entstehen im Build gar nicht mehr, seit die
+         Weiterleitung über public/_redirects läuft - die Prüfung bleibt
+         trotzdem stehen, damit eine versehentlich wieder eingeführte
+         Altadresse nicht unbemerkt in die Sitemap rutscht. */
+      filter: (page) =>
+        !/\/(danke|404)\/?$/.test(page) && !/-emden\/?$/.test(page),
       changefreq: "monthly",
       lastmod: new Date(),
       serialize(item) {

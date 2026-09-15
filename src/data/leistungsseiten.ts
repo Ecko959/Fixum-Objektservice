@@ -74,7 +74,7 @@ export type LeistungsStadtInhalt = {
   intro: string;
   /** Was an diesem Ort baulich oder organisatorisch typisch ist. */
   lage: string;
-  /** Konkrete Arbeiten, die hier regelmäßig anfallen. */
+  /** Konkrete Arbeiten, die zu dieser Leistung an diesem Ort gehören. */
   punkte: string[];
   /** Anfahrt, Entsorgungsweg, Terminlage - das Örtliche am Ablauf. */
   ablauf: string;
@@ -194,7 +194,7 @@ const inhalte: Record<string, Karte> = {
       intro:
         "Umzug in Aurich oder zwischen Aurich und Emden: ein Team, ein Ansprechpartner, ein Termin, der schriftlich steht. Auf Wunsch mit Ab- und Aufbau der Möbel und mit der Räumung dessen, was nicht mitkommt.",
       lage:
-        "Die Strecke Emden - Aurich gehört zu unseren häufigsten Umzugswegen, in beide Richtungen. In der Kernstadt ist die Frage meist das Treppenhaus: Altbau ohne Aufzug, enge Wendelung, schmale Podeste. In den Ortsteilen ist es eher die Zufahrt - lange Einfahrten, weicher Untergrund im Winter, Carports, die einen großen Transporter nicht durchlassen. Beides klären wir bei der Besichtigung, nicht am Umzugstag.",
+        "Zwischen Emden und Aurich liegen rund 26 km. In der Kernstadt ist die Frage meist das Treppenhaus: Altbau ohne Aufzug, enge Wendelung, schmale Podeste. In den Ortsteilen ist es eher die Zufahrt - lange Einfahrten, weicher Untergrund im Winter, Carports, die einen großen Transporter nicht durchlassen. Beides klären wir bei der Besichtigung, nicht am Umzugstag.",
       punkte: [
         "Verpacken auf Wunsch, oder nur Tragen und Fahren, wenn Sie selbst packen",
         "Möbel demontieren und am Zielort wieder aufbauen",
@@ -358,7 +358,7 @@ const inhalte: Record<string, Karte> = {
         {
           frage: "Können Sie die alte Wohnung nach dem Umzug räumen?",
           antwort:
-            "Ja, das ist der häufigste Fall. Was mitkommt, wird transportiert, der Rest im selben Durchgang geräumt und sortenrein entsorgt, und die Wohnung geht besenrein zurück an den Vermieter. Ein Auftrag, ein Angebot, ein Ansprechpartner.",
+            "Ja. Was mitkommt, wird transportiert, der Rest im selben Durchgang geräumt und sortenrein entsorgt, und die Wohnung geht besenrein zurück an den Vermieter. Ein Auftrag, ein Angebot, ein Ansprechpartner.",
         },
       ],
     },
@@ -406,7 +406,7 @@ const inhalte: Record<string, Karte> = {
       intro:
         "Rückbau in Norden und Norddeich, meistens dann, wenn aus einem in die Jahre gekommenen Objekt wieder etwas Vermietbares werden soll. Wir nehmen alles Nicht-Tragende heraus und übergeben ausbaufertig.",
       lage:
-        "Der typische Auftrag hier ist die Modernisierung einer Ferienwohnung, und der entscheidende Faktor ist Zeit. Zwischen Ende der einen und Beginn der nächsten Saison liegt ein festes Fenster, und wer darin Rückbau, Ausbau und Ausstattung unterbringen will, kann sich keine Wartetage zwischen den Gewerken leisten. Dazu kommt die Lage an der Küste: In Objekten nahe am Deich ist Feuchtigkeit ein Thema, das beim Öffnen von Bodenaufbauten regelmäßig sichtbar wird.",
+        "Der typische Auftrag hier ist die Modernisierung einer Ferienwohnung, und der entscheidende Faktor ist Zeit. Zwischen Ende der einen und Beginn der nächsten Saison liegt ein festes Fenster, und wer darin Rückbau, Ausbau und Ausstattung unterbringen will, kann sich keine Wartetage zwischen den Gewerken leisten. Dazu kommt die Lage an der Küste: In Objekten nahe am Deich ist Feuchtigkeit ein Thema, das beim Öffnen von Bodenaufbauten sichtbar werden kann.",
       punkte: [
         "Bäder und Küchen vollständig zurückbauen, ohne Anschlüsse zu trennen",
         "Bodenbeläge und Estrichaufbauten entfernen, Untergrund beurteilen",
@@ -474,7 +474,7 @@ const inhalte: Record<string, Karte> = {
       intro:
         "Umzug in Norden und Norddeich: fester Termin, klarer Preis, Möbelmontage auf Wunsch. Auch für Zweitwohnungen und für den Wechsel zwischen Küste und Festland.",
       lage:
-        "Umzüge in Norden haben oft eine Besonderheit: Es zieht nicht ein ganzer Haushalt um, sondern ein halber. Zweitwohnungen werden aufgelöst oder bezogen, Möbel gehen in die eine Richtung und Hausrat in die andere. Das lässt sich gut planen, wenn man vorher weiß, was wohin gehört - und schlecht, wenn es am Umzugstag entschieden wird. In Norddeich kommt die Nähe zum Fährhafen hinzu, was regelmäßig die Frage nach den Inseln aufwirft.",
+        "Umzüge in Norden haben eine Besonderheit: Oft zieht nicht ein ganzer Haushalt um, sondern ein halber. Zweitwohnungen werden aufgelöst oder bezogen, Möbel gehen in die eine Richtung und Hausrat in die andere. Das lässt sich gut planen, wenn man vorher weiß, was wohin gehört - und schlecht, wenn es am Umzugstag entschieden wird. In Norddeich kommt die Nähe zum Fährhafen hinzu, und damit die Frage nach den Inseln.",
       punkte: [
         "Umzüge innerhalb von Norden und zwischen Norden und Emden",
         "Auflösung oder Einrichtung von Zweitwohnungen, auch in Teilen",
@@ -521,7 +521,7 @@ const inhalte: Record<string, Karte> = {
         "Fachgerechte Abgabe von Altreifen, Farbresten und Elektrogeräten",
       ],
       ablauf:
-        "Für die Entsorgung ist die Abfallwirtschaft des Landkreises Leer zuständig. Auf älteren Grundstücken taucht regelmäßig auf, was über Jahrzehnte in der Werkstatt liegen blieb: Altöl, Farb- und Lackreste, alte Batterien, manchmal Reifen. Das sind Sonderabfälle mit eigenen Annahmestellen - wir erfassen sie bei der Besichtigung und weisen sie im Angebot getrennt aus, statt sie im Container verschwinden zu lassen.",
+        "Für die Entsorgung ist die Abfallwirtschaft des Landkreises Leer zuständig. Auf älteren Grundstücken kann auftauchen, was über Jahrzehnte in der Werkstatt liegen blieb: Altöl, Farb- und Lackreste, alte Batterien, manchmal Reifen. Das sind Sonderabfälle mit eigenen Annahmestellen - wir erfassen sie bei der Besichtigung und weisen sie im Angebot getrennt aus, statt sie im Container verschwinden zu lassen.",
       faq: [
         {
           frage: "Räumen Sie auch Werkstatt und Stall mit?",
@@ -614,7 +614,7 @@ const inhalte: Record<string, Karte> = {
       intro:
         "Umzug in Moormerland oder zwischen Moormerland und Emden: kurze Wege, fester Termin, Möbelmontage auf Wunsch. Auf Wunsch räumen wir die alte Adresse im selben Auftrag.",
       lage:
-        "Moormerland liegt für einen Umzug fast ideal: 20 km nach Emden, kurze Wege nach Leer, und die meisten Objekte sind Einfamilienhäuser mit ebenerdigem Zugang. Das macht Umzüge hier planbar. Was regelmäßig unterschätzt wird, ist das Volumen - wer zwanzig Jahre in einem Haus mit Keller, Dachboden und Garage gewohnt hat, zieht mit deutlich mehr um als jemand aus einer Wohnung. Deshalb schauen wir uns vorher an, was tatsächlich mitkommt.",
+        "Moormerland liegt für einen Umzug fast ideal: 20 km nach Emden, kurze Wege nach Leer, und die meisten Objekte sind Einfamilienhäuser mit ebenerdigem Zugang. Das macht Umzüge hier planbar. Leicht unterschätzt wird das Volumen - wer zwanzig Jahre in einem Haus mit Keller, Dachboden und Garage gewohnt hat, zieht mit deutlich mehr um als jemand aus einer Wohnung. Deshalb schauen wir uns vorher an, was tatsächlich mitkommt.",
       punkte: [
         "Umzüge innerhalb der Gemeinde und in Richtung Emden oder Leer",
         "Möbel demontieren, transportieren und am Zielort wieder aufbauen",
@@ -638,7 +638,7 @@ const inhalte: Record<string, Karte> = {
         {
           frage: "Wie viel Vorlauf brauchen Sie?",
           antwort:
-            "Je nach Umfang ein bis zwei Wochen. Zum Monatsende und zu den Schulferien wird es erfahrungsgemäß enger, weil dann die meisten Mietverhältnisse wechseln. Wenn Ihr Termin feststeht, melden Sie sich gern früher.",
+            "Je nach Umfang ein bis zwei Wochen. Zum Monatsende und zu den Schulferien wird es enger, weil dann die meisten Mietverhältnisse wechseln. Wenn Ihr Termin feststeht, melden Sie sich gern früher.",
         },
       ],
     },
@@ -686,7 +686,7 @@ const inhalte: Record<string, Karte> = {
       intro:
         "Rückbau in der Krummhörn, häufig in alter Bausubstanz: Wir nehmen heraus, was spätere Jahrzehnte hineingebaut haben, und lassen unangetastet, was das Gebäude trägt.",
       lage:
-        "Die alten Häuser und Höfe der Krummhörn sind baulich etwas anderes als ein Nachkriegsbau, und das hat Folgen für den Rückbau. Bei einem Gulfhof übernimmt ein hölzernes Ständergerüst im Inneren die Last des Daches - was dort aussieht wie eine gewöhnliche Wand, kann Teil der Konstruktion sein. Dazu kommen Einbauten aus mehreren Umbauphasen, hinter denen der ursprüngliche Aufbau steckt. Und die Außenwände haben oft keine Sperrschicht, weshalb beim Öffnen des Bodens regelmäßig Feuchtigkeit sichtbar wird.",
+        "Die alten Häuser und Höfe der Krummhörn sind baulich etwas anderes als ein Nachkriegsbau, und das hat Folgen für den Rückbau. Bei einem Gulfhof übernimmt ein hölzernes Ständergerüst im Inneren die Last des Daches - was dort aussieht wie eine gewöhnliche Wand, kann Teil der Konstruktion sein. Dazu kommen Einbauten aus mehreren Umbauphasen, hinter denen der ursprüngliche Aufbau steckt. Und die Außenwände haben oft keine Sperrschicht, weshalb beim Öffnen des Bodens Feuchtigkeit sichtbar werden kann.",
       punkte: [
         "Einbauten und Verkleidungen späterer Umbauphasen entfernen",
         "Bodenaufbauten schichtweise öffnen und den Untergrund beurteilen",
@@ -739,7 +739,7 @@ const inhalte: Record<string, Karte> = {
         {
           frage: "Lässt sich ein großer Raum im alten Hof sinnvoll teilen?",
           antwort:
-            "Ja, das ist einer der häufigsten Aufträge hier. Wichtig sind Anschlüsse an Bestandswände und Decke, die selten gerade sind - deshalb messen wir vorher auf, statt nach Standardmaß zu kalkulieren. Tragende Teile bleiben unangetastet.",
+            "Ja. Wichtig sind Anschlüsse an Bestandswände und Decke, die selten gerade sind - deshalb messen wir vorher auf, statt nach Standardmaß zu kalkulieren. Tragende Teile bleiben unangetastet.",
         },
         {
           frage: "Wie nah ist die Krummhörn für Sie?",
