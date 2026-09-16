@@ -91,9 +91,12 @@ function Schritt({
   return (
     <div
       ref={bereich}
+      /* Die Mindesthöhe ist bewusst knapp über der Bildhöhe. Mit 70vh stand
+         zwischen den Zeilen mehr Leerraum als Inhalt; die Animation braucht
+         die Höhe nicht, weil ihr Weg ohnehin vom Fenster bestimmt wird. */
       className={[
-        "grid items-center gap-8 py-10",
-        "md:min-h-[70vh] md:grid-cols-2 md:gap-16 md:py-16",
+        "grid items-center gap-6 py-6",
+        "md:min-h-[46vh] md:grid-cols-2 md:gap-14 md:py-8",
         gespiegelt ? "md:[&>*:first-child]:order-2" : "",
       ].join(" ")}
     >
