@@ -18,10 +18,11 @@ import { whatsappThema } from "../data/whatsapp";
 
 const waThema = whatsappThema(Astro.url.pathname);
 
-/* Keyword vorn, Marke hinten. Die Startseite behält den vollen Firmennamen:
-   Aus ihr zieht Google den Quellennamen über dem Suchergebnis, und dort soll
-   "Fixum Objektservice" stehen und nicht die nackte Domain. */
-const title = "Entrümpelung & Trockenbau Emden | Fixum Objektservice";
+/* Markenname vorn, Leistung dahinter - dasselbe Muster auf allen Seiten.
+   Zwei Gründe: Im Suchergebnis steht damit sofort, von wem die Seite ist,
+   und Google zieht den Quellennamen über dem Treffer unter anderem aus dem
+   Titel der Startseite. Beides zahlt auf denselben Punkt ein. */
+const title = "Fixum Objektservice: Entrümpelung & Trockenbau Emden";
 const description =
   "Entrümpelung, Entkernung, Trockenbau und Montage in Emden und Ostfriesland. Ein Ansprechpartner, ein Festpreis nach kostenloser Besichtigung.";
 
