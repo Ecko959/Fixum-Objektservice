@@ -103,12 +103,24 @@ const ablaufRoh: Array<{
 ];
 
 /* WebP über astro:assets. Die React-Komponente kann <Picture> nicht nutzen,
-   deshalb wird die URL hier erzeugt und als Zeichenkette übergeben. */
+   deshalb wird die URL hier erzeugt und als Zeichenkette übergeben.
+
+   Quadratisch zugeschnitten, weil die Sektion die Bilder quadratisch zeigt.
+   Der Zuschnitt beim Bauen ist zweimal besser als object-cover allein: Es
+   wandert nur ein Achtel der Bytes über die Leitung, und beschnitten wird
+   mit sharp statt vom Browser. 832 px sind das Doppelte der größten
+   Anzeigegröße, damit es auf feinen Bildschirmen scharf bleibt. */
 const ablaufSchritte = await Promise.all(
   ablaufRoh.map(async (s) => {
     const quelle = findeBild(s.bild) ?? findeBild(s.ersatz)!;
     const vorhanden = Boolean(findeBild(s.bild));
-    const web = await getImage({ src: quelle, width: 1600, format: "webp" });
+    const web = await getImage({
+      src: quelle,
+      width: 832,
+      height: 832,
+      fit: "cover",
+      format: "webp",
+    });
     return {
       titel: s.titel,
       text: s.text,

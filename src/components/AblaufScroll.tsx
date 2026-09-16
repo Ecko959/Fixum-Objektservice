@@ -1,24 +1,32 @@
 /**
- * Die Ablaufkette der Startseite als Scroll-Sequenz.
+ * Die Ablaufkette der Startseite als Parallax-Scroll-Sequenz.
  *
- * Aufbau: Pro Schritt eine Zeile, Text und Bild wechseln die Seite. Beim
- * Hereinscrollen wird das Bild per clip-path von links aufgedeckt, der Text
- * laeuft leicht versetzt mit.
+ * Technik und Geometrie folgen der Vorlage "parallax-scroll-feature-section":
+ * eine volle Bildschirmhöhe je Zeile, Text und quadratisches Bild mittig
+ * nebeneinander, die Seiten wechseln von Zeile zu Zeile. Drei Werte hängen
+ * am Scrollfortschritt:
  *
- * Drei Dinge, die den Aufbau bestimmen:
+ *   opacity   0 -> 1                              über [0, 0.7]
+ *   clipPath  inset(0 100% 0 0) -> inset(0 0 0 0) über [0, 0.7]
+ *   y         -50 -> 0                            über [0, 1]
  *
- * 1. Jeder Schritt ist eine eigene Komponente. Hooks duerfen nicht in einer
- *    .map()-Schleife stehen - React erkennt Hooks ueber ihre Aufrufreihenfolge,
- *    und die waere bei einer wechselnden Anzahl von Schritten nicht stabil.
+ * Der y-Wert liegt sowohl auf dem Textblock als auch noch einmal auf dem
+ * Absatz darin. Transformationen verschachteln sich, der Absatz läuft also
+ * doppelt so weit - das ist der leichte Versatz zwischen Überschrift und
+ * Fließtext, und er ist in der Vorlage genauso gemeint.
  *
- * 2. Der Ausgangszustand ist der sichtbare. Die Komponente haengt sich erst
- *    mit client:visible ein; waere das Bild vorher weggeblendet oder
- *    beschnitten, sähe man bis zur Hydration nichts - und ohne JavaScript
- *    dauerhaft nichts.
+ * Drei Dinge weichen bewusst ab, weil sie vorher ausdrücklich gefordert
+ * waren und die Vorlage sie nicht kennt:
  *
- * 3. Animiert wird nur auf grossen Zeigegeraeten und nur, wenn niemand
- *    reduzierte Bewegung eingestellt hat. Auf dem Handy stehen die Schritte
- *    schlicht untereinander.
+ * 1. Auf dem Handy stehen Bild und Text untereinander und die Zeile ist
+ *    nicht bildschirmhoch. Ein 320er Quadrat neben Text passt auf 390 px
+ *    Breite nicht nebeneinander.
+ *
+ * 2. Bei prefers-reduced-motion und ohne JavaScript ist der Ausgangszustand
+ *    der fertige. Die Vorlage startet mit opacity 0 und vollem clip - ohne
+ *    Hydration bliebe die Sektion sonst dauerhaft leer.
+ *
+ * 3. Farben, Schriften und Rundungen stammen aus dem Design der Seite.
  */
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
@@ -27,7 +35,7 @@ import { Phone, MessageCircle } from "lucide-react";
 export type AblaufSchritt = {
   titel: string;
   text: string;
-  /** Fertige Bild-URL. Erzeugt astro:assets, uebergibt die Astro-Seite. */
+  /** Fertige Bild-URL. Erzeugt astro:assets, übergibt die Astro-Seite. */
   bild: string;
   alt: string;
 };
@@ -69,21 +77,21 @@ function Schritt({
 }) {
   const bereich = useRef<HTMLDivElement>(null);
 
-  /* "start end" = Oberkante der Zeile erreicht die Unterkante des Fensters,
-     "center center" = Zeile steht mittig. Dazwischen laeuft die Animation ab,
-     sie ist also fertig, bevor die Zeile den oberen Rand erreicht. */
+  /* Wie in der Vorlage: von "Oberkante erreicht den unteren Fensterrand" bis
+     "Mitte erreicht den oberen Fensterrand". Das ist ein langer Weg, deshalb
+     läuft die Aufdeckung ruhig statt sprunghaft. */
   const { scrollYProgress } = useScroll({
     target: bereich,
-    offset: ["start end", "center center"],
+    offset: ["start end", "center start"],
   });
 
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
   const clip = useTransform(
     scrollYProgress,
-    [0, 0.75],
+    [0, 0.7],
     ["inset(0 100% 0 0)", "inset(0 0% 0 0)"],
   );
-  const textY = useTransform(scrollYProgress, [0, 1], [40, 0]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [-50, 0]);
 
   const gespiegelt = index % 2 === 1;
   const nummer = String(index + 1).padStart(2, "0");
@@ -91,40 +99,39 @@ function Schritt({
   return (
     <div
       ref={bereich}
-      /* Die Mindesthöhe ist bewusst knapp über der Bildhöhe. Mit 70vh stand
-         zwischen den Zeilen mehr Leerraum als Inhalt; die Animation braucht
-         die Höhe nicht, weil ihr Weg ohnehin vom Fenster bestimmt wird. */
       className={[
-        "grid items-center gap-6 py-6",
-        "md:min-h-[46vh] md:grid-cols-2 md:gap-14 md:py-8",
-        gespiegelt ? "md:[&>*:first-child]:order-2" : "",
+        "flex flex-col items-center justify-center gap-10",
+        "md:h-screen md:flex-row md:gap-40",
+        gespiegelt ? "md:flex-row-reverse" : "",
       ].join(" ")}
     >
-      <motion.div
-        style={animiert ? { y: textY, opacity: textOpacity } : undefined}
-        className="max-w-lg"
-      >
+      <motion.div style={animiert ? { y } : undefined} className="max-w-sm">
         <p className="font-utility text-sm font-bold uppercase tracking-[0.18em] text-blue">
           Schritt {nummer}
         </p>
-        <h3 className="mt-2 font-display text-3xl font-extrabold leading-tight text-navy md:text-4xl">
+        <h3 className="mt-2 font-display text-4xl font-extrabold leading-[1.05] text-navy md:text-6xl">
           {schritt.titel}
         </h3>
-        <p className="mt-4 text-base leading-relaxed text-muted">{schritt.text}</p>
+        <motion.p
+          style={animiert ? { y } : undefined}
+          className="mt-6 text-base leading-relaxed text-muted md:mt-10"
+        >
+          {schritt.text}
+        </motion.p>
       </motion.div>
 
       <motion.div
-        style={animiert ? { clipPath: clip } : undefined}
-        className="overflow-hidden rounded-2xl border border-line bg-mist shadow-[0_18px_50px_-24px_rgba(19,42,92,0.45)]"
+        style={animiert ? { opacity, clipPath: clip } : undefined}
+        className="relative shrink-0"
       >
         <img
           src={schritt.bild}
           alt={schritt.alt}
-          width={1600}
-          height={1000}
+          width={640}
+          height={640}
           loading="lazy"
           decoding="async"
-          className="block aspect-[8/5] w-full object-cover"
+          className="size-72 rounded-2xl object-cover shadow-[0_18px_50px_-24px_rgba(19,42,92,0.45)] sm:size-80 lg:size-[26rem]"
         />
       </motion.div>
     </div>
@@ -135,7 +142,7 @@ export default function AblaufScroll({ steps, telHref, whatsappHref }: Props) {
   const animiert = useAnimationErlaubt();
 
   return (
-    <div>
+    <div className="flex flex-col">
       {steps.map((schritt, i) => (
         <Schritt
           key={schritt.titel}
@@ -145,7 +152,7 @@ export default function AblaufScroll({ steps, telHref, whatsappHref }: Props) {
         />
       ))}
 
-      <div className="mt-6 rounded-2xl border border-line bg-mist px-6 py-10 text-center md:px-10 md:py-12">
+      <div className="mt-10 rounded-2xl border border-line bg-mist px-6 py-10 text-center md:mt-16 md:px-10 md:py-12">
         <h3 className="font-display text-2xl font-extrabold text-navy md:text-3xl">
           Kostenlose Besichtigung anfragen
         </h3>
