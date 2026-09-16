@@ -99,9 +99,16 @@ function Schritt({
   return (
     <div
       ref={bereich}
+      /* Zeilenhoehe: nicht h-screen, aber grosszuegig.
+         Der Scrollweg fuer den vollen Effektverlauf ist Fensterhoehe plus
+         halbe Zeilenhoehe - die Fensterhoehe dominiert. Eine kuerzere Zeile
+         macht die Animation also kaum schneller, nimmt aber den Leerraum
+         zwischen Bild und Text heraus. clamp deckelt nach oben, damit auf
+         hohen Bildschirmen keine leeren Flaechen entstehen, und haelt unten
+         genug Platz fuer das 416er Bild. */
       className={[
-        "flex flex-col items-center justify-center gap-10",
-        "md:h-screen md:flex-row md:gap-40",
+        "flex flex-col items-center justify-center gap-10 py-4",
+        "md:min-h-[clamp(30rem,68vh,42rem)] md:flex-row md:gap-24 md:py-8 lg:gap-32",
         gespiegelt ? "md:flex-row-reverse" : "",
       ].join(" ")}
     >
