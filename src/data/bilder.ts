@@ -19,13 +19,29 @@ const dateien = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
-/* "../assets/images/categories/x.png" -> "/images/categories/x.png" */
-export const bilder: Record<string, ImageMetadata> = Object.fromEntries(
-  Object.entries(dateien).map(([pfad, modul]) => [
-    pfad.replace("../assets/images", "/images"),
-    modul.default,
-  ]),
+/* Erzeugte Motive liegen getrennt, damit auf einen Blick erkennbar bleibt,
+   was Foto ist und was nicht. Der Ordner darf leer sein. */
+const erzeugt = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/generated/*.png",
+  { eager: true },
 );
+
+/* "../assets/images/categories/x.png" -> "/images/categories/x.png"
+   "../assets/generated/y.png"         -> "/generated/y.png"          */
+export const bilder: Record<string, ImageMetadata> = {
+  ...Object.fromEntries(
+    Object.entries(dateien).map(([pfad, modul]) => [
+      pfad.replace("../assets/images", "/images"),
+      modul.default,
+    ]),
+  ),
+  ...Object.fromEntries(
+    Object.entries(erzeugt).map(([pfad, modul]) => [
+      pfad.replace("../assets/generated", "/generated"),
+      modul.default,
+    ]),
+  ),
+};
 
 /**
  * Bild zu einem Pfad. Gibt undefined zurück, wenn es das Bild nicht gibt -

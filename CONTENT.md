@@ -345,3 +345,70 @@ Größen und Hash entstehen beim nächsten Build.
 inzwischen das größte Bild auf der Startseite - größer als das Hero-Foto.
 Es liegt in `public/` und wird deshalb nicht verarbeitet. Eine WebP-Fassung
 mit Transparenz würde dort noch einmal spürbar sparen.
+
+## Ablauf-Sektion der Startseite (React + Framer Motion)
+
+Die Sektion "Vom vollen Haus zur fertigen Wohnung" ist seit dem Umbau eine
+React-Komponente: `src/components/AblaufScroll.tsx`, eingebunden in
+`src/pages/index.astro` mit `client:visible`.
+
+Verhalten, jeweils nachgemessen:
+
+| Fall | Verhalten |
+| --- | --- |
+| Desktop ab 900 px, echter Zeiger | Bild wird per `clip-path` aufgedeckt, Text laeuft versetzt mit |
+| Handy | Schritte gestapelt, `clip-path: none`, keine Animation |
+| `prefers-reduced-motion: reduce` | Animation komplett aus |
+| Ohne JavaScript | Alle vier Schritte mit Bild und Text sichtbar |
+
+### Preis in JavaScript
+
+Vorher lud die Startseite **0 KB JavaScript** - die Seite kam ganz ohne
+Framework aus. Jetzt sind es **358 KB** (React 212 KB, Framer Motion 140 KB),
+die aber erst geladen werden, wenn die Sektion in Sichtweite kommt. Der LCP
+auf dem Handy bleibt dadurch unveraendert (2216 ms vorher, 2132 ms nachher,
+gemessen mit 4x CPU-Drosselung und langsamem 4G).
+
+**Offener Punkt:** Auf dem Handy laufen diese 358 KB trotzdem ueber die
+Leitung, sobald jemand bis zur Sektion scrollt - obwohl dort gar nichts
+animiert wird. Wer das sparen will, ersetzt in `index.astro`
+`client:visible` durch `client:media="(min-width: 900px)"`. Dann laedt das
+Buendel auf Telefonen nie, dafuer auf dem Desktop schon beim Seitenaufbau
+statt erst beim Scrollen.
+
+### Die vier Bilder fehlen noch
+
+Punkt 4 der Aufgabe verlangte die Bilder ueber den MCP-Server `codex` mit
+`$imagegen`. Der ist in der Arbeitsumgebung nicht installiert
+(`Executable not found in $PATH: codex`). Die Motive wurden stattdessen mit
+Knightvision erzeugt, konnten aus der Umgebung aber nicht heruntergeladen
+werden - der Egress-Proxy lehnt `knightvision.tech` mit 403 ab.
+
+Solange die Dateien fehlen, greift ein Rueckfall auf vorhandene
+Kategoriebilder, damit die Sektion steht. Der Alternativtext wechselt
+automatisch mit und beschreibt dann das Ersatzbild, nicht das geplante.
+
+Zum Nachruesten die vier Dateien nach `src/assets/generated/` legen:
+
+| Datei | Quelle |
+| --- | --- |
+| `ablauf-raeumen.png` | https://knightvision.tech/static/generated_images/kv-0c0f0e20.png |
+| `ablauf-rueckbauen.png` | https://knightvision.tech/static/generated_images/kv-1d8930ed.png |
+| `ablauf-ausbauen.png` | https://knightvision.tech/static/generated_images/kv-3f127b2d.png |
+| `ablauf-uebergeben.png` | https://knightvision.tech/static/generated_images/kv-0f1b7ed4.png |
+
+Vorher auf 1600x1000 beschneiden (die Quellen sind 3:2). Danach genuegt
+`npm run build` - `src/data/bilder.ts` findet sie von selbst, und die
+ausfuehrlichen Alternativtexte in `index.astro` werden automatisch aktiv.
+
+Die Bilder sind erzeugt, nicht fotografiert. Sie duerfen deshalb nicht als
+Referenz oder als Vorher/Nachher ausgewiesen werden - die Alternativtexte
+beschreiben nur, was zu sehen ist, ohne Behauptung ueber eigene Baustellen.
+
+### Nebeneffekt: .section--chain wird nicht mehr benutzt
+
+Die Sektion stand auf dunklem Grund. Weil dort Fotos gezeigt werden und die
+Vorgabe einen hellen Hintergrund verlangte, laeuft sie jetzt als
+`section--mist`. Die Regeln zu `.section--chain` in `src/styles/global.css`
+greifen damit nirgends mehr; sie wurden nicht entfernt, weil die Klasse als
+Bestandteil des Design-Systems wiederverwendbar bleibt.

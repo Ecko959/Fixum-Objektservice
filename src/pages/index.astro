@@ -1,5 +1,6 @@
 ---
-import { Picture } from "astro:assets";
+import { getImage, Picture } from "astro:assets";
+import AblaufScroll from "../components/AblaufScroll.tsx";
 import Base from "../layouts/Base.astro";
 import AreaServed from "../components/AreaServed.astro";
 import Button from "../components/Button.astro";
@@ -50,28 +51,84 @@ const trust: Array<[string, string, "star" | "euro" | "clock" | "shield"]> = [
   ],
 ];
 
-const chain: Array<[string, string, "crate" | "hammer" | "wall" | "check"]> = [
-  [
-    "Räumen",
-    "Entrümpelung und Haushaltsauflösung. Getrennt nach Fraktionen entsorgt, besenrein übergeben.",
-    "crate",
-  ],
-  [
-    "Rückbauen",
-    "Entkernung und nicht-tragender Rückbau. Alte Böden, Wände und Einbauten kommen raus.",
-    "hammer",
-  ],
-  [
-    "Ausbauen",
-    "Trockenbau, Decken, Dachschrägen, Spachtelung, Boden, Türen und Montage.",
-    "wall",
-  ],
-  [
-    "Übergeben",
-    "Sauber, termingerecht und vermietbar. Auf Wunsch mit Fotodokumentation und Entsorgungsnachweis.",
-    "check",
-  ],
+/* Die vier Schritte der Ablauf-Sektion.
+
+   `bild` nennt das gewünschte Motiv unter src/assets/generated/. Liegt die
+   Datei noch nicht vor, greift `ersatz` - ein vorhandenes Motiv, damit die
+   Sektion trotzdem steht. Sobald die erzeugten Bilder im Ordner liegen,
+   nimmt der Build sie automatisch. */
+const ablaufRoh: Array<{
+  titel: string;
+  text: string;
+  bild: string;
+  ersatz: string;
+  alt: string;
+  altErsatz: string;
+}> = [
+  {
+    titel: "Räumen",
+    text: "Entrümpelung und Haushaltsauflösung. Getrennt nach Fraktionen entsorgt, besenrein übergeben.",
+    bild: "/generated/ablauf-raeumen.png",
+    ersatz: "/images/categories/haushaltsaufloesung.png",
+    alt: "Halb geräumtes Wohnzimmer: Umzugskartons an der Wand, daneben getrennte Stapel aus Holz, Metall und Elektrogeräten.",
+    altErsatz: "Wohnraum während einer Haushaltsauflösung, Hausrat zum Abtransport vorbereitet.",
+  },
+  {
+    titel: "Rückbauen",
+    text: "Entkernung und nicht-tragender Rückbau. Alte Böden, Wände und Einbauten kommen raus.",
+    bild: "/generated/ablauf-rueckbauen.png",
+    ersatz: "/images/categories/entkernung-rueckbau.png",
+    alt: "Leerer Altbauraum nach dem Rückbau: Bodenbelag entfernt, Estrich sichtbar, Bauschutt in Säcken, Staubschutzfolie vor der Tür.",
+    altErsatz: "Raum während des nicht-tragenden Rückbaus, Bodenbelag und Einbauten entfernt.",
+  },
+  {
+    titel: "Ausbauen",
+    text: "Trockenbau, Decken, Dachschrägen, Spachtelung, Boden, Türen und Montage.",
+    bild: "/generated/ablauf-ausbauen.png",
+    ersatz: "/images/categories/trockenbau-innenausbau.png",
+    alt: "Ständerwand aus Metallprofilen, zur Hälfte mit Gipskartonplatten beplankt, Plattenheber und geordnetes Werkzeug daneben.",
+    altErsatz: "Trockenbauwand im Innenausbau, Ständerwerk teilweise beplankt.",
+  },
+  {
+    titel: "Übergeben",
+    text: "Sauber, termingerecht und vermietbar. Auf Wunsch mit Fotodokumentation und Entsorgungsnachweis.",
+    bild: "/generated/ablauf-uebergeben.png",
+    /* Nicht montage-boden: Das Motiv zeigt jemanden beim Verlegen und
+       gehört damit zu Schritt 3. Für die Übergabe passt der geräumte,
+       besenreine Raum. */
+    ersatz: "/images/categories/wohnungsraeumung.png",
+    alt: "Fertig renovierter, leerer Raum mit hellem Vinylboden, glatten weißen Wänden und neuer Tür bei Tageslicht.",
+    altErsatz: "Leergeräumter heller Wohnraum, der für die Übergabe besenrein gefegt wird.",
+  },
 ];
+
+/* WebP über astro:assets. Die React-Komponente kann <Picture> nicht nutzen,
+   deshalb wird die URL hier erzeugt und als Zeichenkette übergeben.
+
+   Quadratisch zugeschnitten, weil die Sektion die Bilder quadratisch zeigt.
+   Der Zuschnitt beim Bauen ist zweimal besser als object-cover allein: Es
+   wandert nur ein Achtel der Bytes über die Leitung, und beschnitten wird
+   mit sharp statt vom Browser. 832 px sind das Doppelte der größten
+   Anzeigegröße, damit es auf feinen Bildschirmen scharf bleibt. */
+const ablaufSchritte = await Promise.all(
+  ablaufRoh.map(async (s) => {
+    const quelle = findeBild(s.bild) ?? findeBild(s.ersatz)!;
+    const vorhanden = Boolean(findeBild(s.bild));
+    const web = await getImage({
+      src: quelle,
+      width: 832,
+      height: 832,
+      fit: "cover",
+      format: "webp",
+    });
+    return {
+      titel: s.titel,
+      text: s.text,
+      bild: web.src,
+      alt: vorhanden ? s.alt : s.altErsatz,
+    };
+  }),
+);
 
 const reasons: Array<[string, string]> = [
   [
@@ -347,7 +404,14 @@ const serviceChips: Array<[string, string]> = [
   </section>
 
   {/* ---------------------------------------------------- Ablaufkette */}
-  <section class="section section--chain" aria-labelledby="chain-title">
+  {
+    /* Heller Grund statt des früheren dunklen Verlaufs: Die Sektion zeigt
+       jetzt Fotos, und die stehen auf hellem Untergrund besser. Nebenbei
+       entfällt der Zwang zu weißer Schrift - .section--chain setzte alle
+       Überschriften per :is(h1,h2,h3,h4) auf Weiß und hätte die Farben der
+       Komponente überschrieben. */
+  }
+  <section class="section section--mist" aria-labelledby="chain-title">
     <div class="container section-head" data-reveal>
       <p class="script">So läuft ein Objekt bei uns durch</p>
       <p class="eyebrow">Unser Weg</p>
@@ -358,20 +422,20 @@ const serviceChips: Array<[string, string]> = [
       </p>
     </div>
 
-    <ol class="container chain-grid" data-reveal-group>
-      {
-        chain.map(([headline, text, icon], index) => (
-          <li class="chain-item" data-reveal>
-            <span class="chain-no">{String(index + 1).padStart(2, "0")}</span>
-            <span class="chain-icon">
-              <Icon name={icon} size={20} />
-            </span>
-            <h3>{headline}</h3>
-            <p>{text}</p>
-          </li>
-        ))
-      }
-    </ol>
+    {
+      /* client:visible statt client:load: Die Sektion steht weit unten, das
+         React-Bündel wird erst geladen, wenn sie in Sichtweite kommt - der
+         erste Bildaufbau bleibt davon unberührt. Ohne JavaScript stehen die
+         vier Schritte trotzdem vollständig da, nur ohne Animation. */
+    }
+    <div class="container">
+      <AblaufScroll
+        client:visible
+        steps={ablaufSchritte}
+        telHref={telUrl}
+        whatsappHref={whatsappUrl(waThema)}
+      />
+    </div>
 
     <p class="container chain-note">
       Sie brauchen nur einen Teil davon? Auch gut - jeder Schritt ist einzeln
@@ -972,10 +1036,11 @@ const serviceChips: Array<[string, string]> = [
     color: var(--on-dark-soft);
   }
 
+  /* Farbe für hellen Grund - die Sektion war früher dunkel. */
   .chain-note {
     margin-top: 1.75rem;
     text-align: center;
-    color: var(--on-dark-soft);
+    color: var(--muted);
   }
 
   /* ---------------------------------------------------- Gründe */
