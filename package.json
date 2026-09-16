@@ -13,12 +13,19 @@
     "build:logos": "node scripts/build-logo-variants.mjs"
   },
   "dependencies": {
+    "@astrojs/react": "^6.0.5",
     "@astrojs/sitemap": "latest",
     "@astrojs/tailwind": "latest",
     "@fontsource/barlow-condensed": "latest",
     "@fontsource/kaushan-script": "latest",
     "@fontsource/manrope": "^5.3.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "astro": "latest",
+    "framer-motion": "^13.3.0",
+    "lucide-react": "^1.46.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "tailwindcss": "latest"
   },
   "devDependencies": {

@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{astro,html,js,ts}"],
+  /* jsx und tsx gehören dazu, seit die Ablauf-Sektion eine React-Komponente
+     ist. Ohne die Endungen sieht Tailwind ihre Klassen nicht und entfernt sie
+     beim Aufräumen - die Komponente käme ohne jede Formatierung an. */
+  content: ["./src/**/*.{astro,html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {

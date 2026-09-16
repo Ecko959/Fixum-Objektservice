@@ -2,6 +2,8 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 
+import react from "@astrojs/react";
+
 export default defineConfig({
   /* Muss identisch zu `domain` in src/data/site.ts sein - hieraus baut die
      Sitemap ihre URLs, daraus baut Base.astro die Canonicals. */
@@ -19,34 +21,31 @@ export default defineConfig({
      als schwaches Signal statt als Umzug. Die alten /leistung-emden/-Adressen
      leiten deshalb per echter 301 weiter - die Regeln stehen in
      public/_redirects und werden von Cloudflare Pages ausgeführt. */
-  integrations: [
-    tailwind({ applyBaseStyles: false }),
-    sitemap({
-      /* Seiten ohne Suchwert gehören nicht in die Sitemap. Die alten
-         -emden-Adressen entstehen im Build gar nicht mehr, seit die
-         Weiterleitung über public/_redirects läuft - die Prüfung bleibt
-         trotzdem stehen, damit eine versehentlich wieder eingeführte
-         Altadresse nicht unbemerkt in die Sitemap rutscht. */
-      filter: (page) =>
-        !/\/(danke|404)\/?$/.test(page) && !/-emden\/?$/.test(page),
-      changefreq: "monthly",
-      lastmod: new Date(),
-      serialize(item) {
-        const path = new URL(item.url).pathname;
+  integrations: [tailwind({ applyBaseStyles: false }), sitemap({
+    /* Seiten ohne Suchwert gehören nicht in die Sitemap. Die alten
+       -emden-Adressen entstehen im Build gar nicht mehr, seit die
+       Weiterleitung über public/_redirects läuft - die Prüfung bleibt
+       trotzdem stehen, damit eine versehentlich wieder eingeführte
+       Altadresse nicht unbemerkt in die Sitemap rutscht. */
+    filter: (page) =>
+      !/\/(danke|404)\/?$/.test(page) && !/-emden\/?$/.test(page),
+    changefreq: "monthly",
+    lastmod: new Date(),
+    serialize(item) {
+      const path = new URL(item.url).pathname;
 
-        // Startseite und Leistungsübersicht sind die Einstiegspunkte,
-        // Rechtstexte tragen am wenigsten zur Suche bei.
-        if (path === "/")
-          return { ...item, priority: 1.0, changefreq: "weekly" };
-        if (path === "/leistungen/") return { ...item, priority: 0.9 };
-        if (/^\/(impressum|datenschutz|agb|widerruf)\//.test(path)) {
-          return { ...item, priority: 0.3, changefreq: "yearly" };
-        }
-        if (/^\/(kontakt|ueber-uns|fuer-)/.test(path)) {
-          return { ...item, priority: 0.7 };
-        }
-        return { ...item, priority: 0.8 };
-      },
-    }),
-  ],
+      // Startseite und Leistungsübersicht sind die Einstiegspunkte,
+      // Rechtstexte tragen am wenigsten zur Suche bei.
+      if (path === "/")
+        return { ...item, priority: 1.0, changefreq: "weekly" };
+      if (path === "/leistungen/") return { ...item, priority: 0.9 };
+      if (/^\/(impressum|datenschutz|agb|widerruf)\//.test(path)) {
+        return { ...item, priority: 0.3, changefreq: "yearly" };
+      }
+      if (/^\/(kontakt|ueber-uns|fuer-)/.test(path)) {
+        return { ...item, priority: 0.7 };
+      }
+      return { ...item, priority: 0.8 };
+    },
+  }), react()],
 });
