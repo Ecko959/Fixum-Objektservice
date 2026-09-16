@@ -71,7 +71,7 @@ export const staedte: Stadt[] = [
       "Schirum",
       "Tannenhausen",
     ],
-    metaTitle: "Entrümpelung & Trockenbau Aurich | Fixum Objektservice",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Aurich",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung, Entkernung und Trockenbau in Aurich und allen Ortsteilen. Festpreis nach kostenloser Besichtigung, ein Ansprechpartner.",
     h1: "Entrümpelung, Entkernung und Trockenbau in Aurich",
@@ -127,7 +127,7 @@ export const staedte: Stadt[] = [
       "Nüttermoor",
       "Innenstadt",
     ],
-    metaTitle: "Entrümpelung & Trockenbau Leer (Ostfriesland) | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Leer",
     metaDescription:
       "Entrümpelung, Wohnungsräumung, Entkernung und Trockenbau in Leer, Loga, Heisfelde und Bingum. Festpreis nach Besichtigung – auch für Vermieter und Verwaltungen.",
     h1: "Entrümpelung, Entkernung und Trockenbau in Leer",
@@ -183,7 +183,7 @@ export const staedte: Stadt[] = [
       "Tidofeld",
       "Innenstadt",
     ],
-    metaTitle: "Entrümpelung & Renovierung Norden / Norddeich | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung Norden & Norddeich",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung und Renovierung in Norden und Norddeich – auch für Ferienwohnungen zwischen zwei Saisons. Festpreis nach Besichtigung.",
     h1: "Entrümpelung, Trockenbau und Renovierung in Norden und Norddeich",
@@ -247,7 +247,7 @@ export const staedte: Stadt[] = [
       "Woquard",
       "Eilsum",
     ],
-    metaTitle: "Entrümpelung Krummhörn, Greetsiel & Pewsum | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Krummhörn",
     metaDescription:
       "Entrümpelung von Häusern, Scheunen und Dachböden in der Krummhörn – Pewsum, Greetsiel und alle Warfendörfer. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Ausbau in der Krummhörn",
@@ -303,7 +303,7 @@ export const staedte: Stadt[] = [
       "Westerhusen",
       "Canhusen",
     ],
-    metaTitle: "Entrümpelung & Trockenbau in Hinte | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Hinte",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung und Trockenbau in Hinte und allen Ortsteilen – direkt an der Stadtgrenze Emden. Kurze Anfahrt, Festpreis nach Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Hinte",
@@ -363,7 +363,7 @@ export const staedte: Stadt[] = [
       "Rorichum",
       "Terborg",
     ],
-    metaTitle: "Entrümpelung & Trockenbau Moormerland, Warsingsfehn | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Moormerland",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Moormerland – Warsingsfehn, Neermoor, Veenhusen, Oldersum. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Moormerland",
@@ -422,7 +422,7 @@ export const staedte: Stadt[] = [
       "Lübbertsfehn",
       "Fahne",
     ],
-    metaTitle: "Entrümpelung & Trockenbau in Ihlow | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Ihlow",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung und Trockenbau in Ihlow – Ihlowerfehn, Simonswolde, Riepe, Ochtelbur. Festpreis nach Besichtigung, ein Ansprechpartner.",
     h1: "Entrümpelung und Haushaltsauflösung in Ihlow",
@@ -482,7 +482,7 @@ export const staedte: Stadt[] = [
       "Oldeborg",
       "Forlitz-Blaukirchen",
     ],
-    metaTitle: "Entrümpelung & Trockenbau Südbrookmerland, Moordorf | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Ausbau Südbrookmerland",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Südbrookmerland – Moordorf, Victorbur, Münkeboe, Theene. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Südbrookmerland",
@@ -543,7 +543,7 @@ export const staedte: Stadt[] = [
       "Ulbargen",
       "Akelsbarg",
     ],
-    metaTitle: "Entrümpelung & Ausbau Großefehn, Timmel, Spetzerfehn | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Ausbau Großefehn",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Großefehn – Ostgroßefehn, Timmel, Holtrop, Spetzerfehn. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Ausbau in Großefehn",
@@ -603,7 +603,7 @@ export const staedte: Stadt[] = [
       "Esklum",
       "Großwolde",
     ],
-    metaTitle: "Entrümpelung & Trockenbau Westoverledingen, Ihrhove | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Ausbau Westoverledingen",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung und Trockenbau in Westoverledingen – Ihrhove, Flachsmeer, Steenfelde, Völlen. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Westoverledingen",
@@ -660,7 +660,7 @@ export const staedte: Stadt[] = [
       "Vellage",
       "Tichelwarf",
     ],
-    metaTitle: "Entrümpelung & Rückbau in Weener | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Rückbau Weener",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Weener und im Rheiderland. Festpreis nach kostenloser Besichtigung, Anfahrt transparent ausgewiesen.",
     h1: "Entrümpelung und Haushaltsauflösung in Weener",
@@ -720,7 +720,7 @@ export const staedte: Stadt[] = [
       "Südgeorgsfehn",
       "Bühren",
     ],
-    metaTitle: "Entrümpelung & Trockenbau Uplengen, Remels | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Uplengen",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung und Trockenbau in Uplengen – Remels, Hollen, Jübberde, Stapel. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Uplengen",
@@ -775,7 +775,7 @@ export const staedte: Stadt[] = [
       "Zwischenbergen",
       "Auricher Wiesmoor",
     ],
-    metaTitle: "Entrümpelung & Trockenbau Wiesmoor | Fixum Objektservice",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Wiesmoor",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Wiesmoor und Ortsteilen wie Hinrichsfehn und Marcardsmoor. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Wiesmoor",
@@ -833,7 +833,7 @@ export const staedte: Stadt[] = [
       "Blersum",
       "Buttforde",
     ],
-    metaTitle: "Entrümpelung & Renovierung Wittmund, Carolinensiel | Fixum",
+    metaTitle: "Fixum Objektservice: Entrümpelung & Renovierung Wittmund",
     metaDescription:
       "Entrümpelung, Haushaltsauflösung und Renovierung in Wittmund, Carolinensiel und Harlesiel – auch für Ferienwohnungen. Festpreis nach kostenloser Besichtigung.",
     h1: "Entrümpelung und Renovierung in Wittmund",
@@ -890,7 +890,7 @@ export const staedte: Stadt[] = [
       "Nenndorf",
       "Papenburg-Umland",
     ],
-    metaTitle: "Trockenbau & Entrümpelung Papenburg | Fixum Objektservice",
+    metaTitle: "Fixum Objektservice: Trockenbau & Entrümpelung Papenburg",
     metaDescription:
       "Trockenbau als Nachunternehmer, Entkernung und größere Räumungen in Papenburg und Aschendorf. Verbindliche Termine, Abrechnung nach m² oder Tagessatz.",
     h1: "Trockenbau, Entkernung und Räumung in Papenburg",

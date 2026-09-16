@@ -145,11 +145,26 @@ Suchbegriff. Wer das auch entfernt, verliert den lokalen Bezug genau dort, wo
 er zählt. Wenn das nicht gewünscht ist, stehen die Titel in den
 `metaTitle`-Zeilen der 13 Dateien unter `src/pages/`.
 
-Muster für alle Titel: **Keyword + Emden vorn, Marke hinten, kein "in".**
-Also `Renovierung Emden: Wände, Böden, Türen | Fixum` statt
-`Renovierung in Emden - ... | Fixum Objektservice`. Das Füllwort "in" kostet
-drei Zeichen von sechzig und bringt nichts. Grenze sind 60 Zeichen - danach
-schneidet Google ab und schreibt den Titel oft selbst um.
+Muster für alle Titel: **`Fixum Objektservice: <Leistung> <Ort>`.**
+Also `Fixum Objektservice: Hausmeisterservice Emden`. Der Markenname steht
+auf jeder der 61 Seiten vorn, die Grenze liegt bei 60 Zeichen.
+
+Zwei Gründe für die Marke vorn:
+
+1. Im Suchergebnis steht sofort, von wem die Seite ist. Google hatte den
+   Titel der Startseite ohnehin von selbst umgeschrieben und die Marke nach
+   vorn gezogen - das Muster folgt jetzt dem, was Google dort bevorzugt.
+2. Den Quellennamen über dem Treffer leitet Google unter anderem aus dem
+   Titel der Startseite ab. Ein Titel, der mit "Fixum Objektservice"
+   beginnt, stützt also genau das Signal, das dort noch die nackte Domain
+   zeigt.
+
+Der Preis dafür: Die ersten 21 Zeichen sind auf allen Seiten gleich. Wenn
+mehrere Fixum-Treffer nebeneinander stehen, rückt das Unterscheidende nach
+rechts. Wer lieber das Stichwort vorn hätte, dreht das Muster um - die
+Titel stehen in den `metaTitle`-Zeilen unter `src/pages/`, in `staedte.ts`
+(15 Ortsseiten) und in `leistungsseiten.ts` (4 Muster für die 20
+Leistung-Ort-Seiten).
 
 ## Der Quellenname über dem Suchergebnis
 

@@ -37,7 +37,7 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     serviceType: "Entrümpelung und Haushaltsauflösung",
     bild: "/images/categories/haushaltsaufloesung.png",
     badges: ["Besichtigung kostenlos", "Festpreis schriftlich", "Besenrein"],
-    titel: "Entrümpelung {ort} zum Festpreis | Fixum Objektservice",
+    titel: "Fixum Objektservice: Entrümpelung {ort}",
   },
   entkernung: {
     label: "Entkernung",
@@ -45,7 +45,7 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     serviceType: "Entkernung und nicht-tragender Rückbau",
     bild: "/images/categories/entkernung-rueckbau.png",
     badges: ["Sortenrein getrennt", "Klare Leistungsgrenze", "Ohne Statik"],
-    titel: "Entkernung & Rückbau {ort} | Fixum Objektservice",
+    titel: "Fixum Objektservice: Entkernung & Rückbau {ort}",
   },
   trockenbau: {
     label: "Trockenbau",
@@ -53,7 +53,7 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     serviceType: "Trockenbau und Innenausbau",
     bild: "/images/categories/trockenbau-innenausbau.png",
     badges: ["Spachtelung Q1-Q3", "Festpreis nach Aufmaß", "Auch als Sub"],
-    titel: "Trockenbau {ort}: Wände, Decken, Dachausbau | Fixum",
+    titel: "Fixum Objektservice: Trockenbau {ort}",
   },
   umzug: {
     label: "Umzug",
@@ -61,7 +61,7 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     serviceType: "Umzüge und Transporte",
     bild: "/images/categories/umzuege-transporte.png",
     badges: ["Fester Termin", "Möbelmontage", "Ein Ansprechpartner"],
-    titel: "Umzug {ort} - Termin steht schriftlich | Fixum",
+    titel: "Fixum Objektservice: Umzug {ort}",
   },
 };
 
