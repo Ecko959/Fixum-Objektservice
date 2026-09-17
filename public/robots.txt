@@ -1,7 +1,16 @@
 User-agent: *
 Allow: /
 
-# Seiten ohne Suchwert
-Disallow: /danke/
-
 Sitemap: https://www.fixum-objektservice.de/sitemap-index.xml
+
+# Hier steht bewusst kein Disallow.
+#
+# Die Danke-Seite und die 404 tragen <meta name="robots" content="noindex">.
+# Wer eine Seite zusaetzlich per robots.txt sperrt, erreicht das Gegenteil:
+# Google darf sie dann nicht mehr abrufen, sieht das noindex nie und kann
+# die Adresse trotzdem ohne Textauszug in den Index nehmen. Ein noindex
+# wirkt nur, wenn die Seite crawlbar bleibt.
+#
+# Impressum, Datenschutz, AGB und Widerruf stehen nicht in der Sitemap,
+# sind aber ausdruecklich erlaubt und verlinkt - ein Ausschluss aus der
+# Sitemap ist keine Sperre.
