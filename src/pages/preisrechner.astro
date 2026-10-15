@@ -27,42 +27,42 @@ const auswahl: Array<{
     id: "entruempelung",
     label: "Entrümpelung",
     text: "Wohnung, Haus, Keller, Nachlass",
-    icon: "crate",
+    icon: "karton",
     seite: "/entruempelung/",
   },
   {
     id: "umzug",
     label: "Umzug",
-    text: "Wohnung im Nahbereich",
-    icon: "truck",
+    text: "Wohnung oder Haus",
+    icon: "transporter",
     seite: "/umzug/",
   },
   {
     id: "trockenbau",
     label: "Trockenbau",
     text: "Wände, Decken, Dachschrägen",
-    icon: "wall",
+    icon: "platten",
     seite: "/trockenbau/",
   },
   {
     id: "montage",
     label: "Montage",
     text: "Türen, Möbel, Küchen",
-    icon: "wrench",
+    icon: "akkuschrauber",
     seite: "/kuechenmontage/",
   },
   {
     id: "boden",
     label: "Boden",
     text: "Laminat, Vinyl, Teppich",
-    icon: "door",
+    icon: "dielen",
     seite: "/bodenverlegung/",
   },
   {
     id: "entkernung",
     label: "Entkernung",
     text: "Festpreis nach Besichtigung",
-    icon: "hammer",
+    icon: "vorschlaghammer",
     seite: "/entkernung/",
   },
 ];
@@ -80,7 +80,7 @@ const namensliste =
 
 <Base
   title="Fixum Objektservice: Preisrechner"
-  description={`Preisrechner für ${namensliste} in Emden und Ostfriesland. Unverbindlicher Richtwert als Spanne, verbindlicher Festpreis nach Besichtigung.`}
+  description={`Preisrechner für ${namensliste} in Emden und Ostfriesland: Richtwert in einer Minute, Festpreis nach Besichtigung.`}
   canonical={path}
   breadcrumbs={breadcrumbs}
 >
@@ -208,7 +208,7 @@ const namensliste =
 
   .leistungswahl {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 0.75rem;
     margin: 0 0 clamp(1.5rem, 3vw, 2rem);
     padding: 0;
@@ -233,21 +233,27 @@ const namensliste =
     gap: 0.25rem;
     height: 100%;
     padding: 1rem;
-    border: 2px solid var(--line);
-    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+    border-radius: 12px;
     background: #fff;
     box-shadow: var(--shadow-xs);
+    transition:
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
   }
 
   .lw-icon {
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
-    margin-bottom: 0.35rem;
-    border-radius: var(--radius-sm);
-    color: #fff;
-    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0.4rem;
+    border-radius: 10px;
+    color: var(--navy);
+    background: var(--mist);
+    transition:
+      color var(--dur) var(--ease-out),
+      background var(--dur) var(--ease-out);
   }
 
   .lw-label {
@@ -267,13 +273,35 @@ const namensliste =
 
   .lw-input:checked + .lw-box {
     border-color: var(--navy);
-    background: var(--mist);
     box-shadow: inset 0 0 0 1px var(--navy);
   }
 
   .lw-input:checked + .lw-box .lw-icon {
-    color: var(--navy-deep);
-    background: var(--amber);
+    color: #fff;
+    background: var(--navy);
+  }
+
+  @media (max-width: 1100px) {
+    .leistungswahl {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Handy: zwei Spalten statt sechs Karten untereinander */
+  @media (max-width: 640px) {
+    .leistungswahl {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    .lw-box {
+      padding: 0.75rem;
+    }
+
+    .lw-icon {
+      width: 40px;
+      height: 40px;
+    }
   }
 
   .lw-input:focus-visible + .lw-box {

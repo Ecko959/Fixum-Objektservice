@@ -127,7 +127,7 @@ const zielgruppen: Array<{
   text: string;
   href: string;
   linkText: string;
-  icon: "clipboard" | "home" | "wall";
+  icon: "clipboard" | "home" | "platten";
 }> = [
   {
     titel: "Hausverwaltungen",
@@ -148,7 +148,7 @@ const zielgruppen: Array<{
     text: "Vor einer Kernsanierung übernehmen wir Räumung, nicht-tragenden Rückbau und Ausbau und takten die Fachbetriebe so, dass niemand wartet.",
     href: "/kernsanierung/",
     linkText: "Kernsanierung vorbereiten",
-    icon: "wall",
+    icon: "platten",
   },
 ];
 
@@ -517,9 +517,9 @@ const schema = [
     place-items: center;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-sm);
-    color: #fff;
-    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+    border-radius: 10px;
+    color: var(--navy);
+    background: var(--mist);
   }
 
   @media (max-width: 900px) {

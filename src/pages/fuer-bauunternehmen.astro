@@ -20,28 +20,29 @@ const heroImage = "/images/service-drywall.png";
 
 const description = `Trockenbau und Rückbau als Nachunternehmer in Ostfriesland: Abrechnung nach m² oder Tagessatz, Material bauseits, § 48b EStG ${f48b ? "auf Anfrage" : "beantragt"}.`;
 
-const punkte: Array<[string, string, "wall" | "euro" | "shield" | "clock"]> = [
+const punkte: Array<[string, string, "platten" | "euro" | "shield" | "clock"]> =
   [
-    "Trockenbau und Rückbau",
-    "Ständerwände, Vorsatzschalen, abgehängte Decken, Dachschrägen, Spachtelung Q1 bis Q3 sowie nicht-tragender Rückbau als Vorleistung.",
-    "wall",
-  ],
-  [
-    "Abrechnung nach m² oder Tagessatz",
-    "Beides möglich, Material auf Wunsch bauseits. Der Aufmaßmodus wird vor Beginn festgelegt, nicht in der Schlussrechnung diskutiert.",
-    "euro",
-  ],
-  [
-    "Versicherung und Nachweise",
-    `Betriebshaftpflicht mit Subunternehmer-Klausel. Die Freistellungsbescheinigung nach § 48b EStG ist ${f48b ? "erteilt und wird auf Anfrage vorgelegt" : "beantragt - den Stand nennen wir Ihnen offen, sobald Sie fragen"}.`,
-    "shield",
-  ],
-  [
-    "Planbare Termine",
-    "Zugesagte Einsatztage werden gehalten. Kommt etwas dazwischen, bekommen Sie die Information rechtzeitig - nicht am Einsatztag.",
-    "clock",
-  ],
-];
+    [
+      "Trockenbau und Rückbau",
+      "Ständerwände, Vorsatzschalen, abgehängte Decken, Dachschrägen, Spachtelung Q1 bis Q3 sowie nicht-tragender Rückbau als Vorleistung.",
+      "platten",
+    ],
+    [
+      "Abrechnung nach m² oder Tagessatz",
+      "Beides möglich, Material auf Wunsch bauseits. Der Aufmaßmodus wird vor Beginn festgelegt, nicht in der Schlussrechnung diskutiert.",
+      "euro",
+    ],
+    [
+      "Versicherung und Nachweise",
+      `Betriebshaftpflicht mit Subunternehmer-Klausel. Die Freistellungsbescheinigung nach § 48b EStG ist ${f48b ? "erteilt und wird auf Anfrage vorgelegt" : "beantragt - den Stand nennen wir Ihnen offen, sobald Sie fragen"}.`,
+      "shield",
+    ],
+    [
+      "Planbare Termine",
+      "Zugesagte Einsatztage werden gehalten. Kommt etwas dazwischen, bekommen Sie die Information rechtzeitig - nicht am Einsatztag.",
+      "clock",
+    ],
+  ];
 
 const ablauf: Array<[string, string]> = [
   [

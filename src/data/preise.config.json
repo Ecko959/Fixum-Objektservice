@@ -3,14 +3,14 @@
     "Alle Preise der Website und des Preisrechners stehen nur in dieser Datei.",
     "Ändern: Zahl hinter \"von\" bzw. \"bis\" ersetzen. Ohne Anführungszeichen, Komma als Punkt schreiben (12.5 statt 12,5).",
     "Ein fester Wert: bei \"von\" und \"bis\" dieselbe Zahl eintragen.",
-    "Noch kein Wert: \"von\": null, \"bis\": null stehen lassen. Der Rechner zeigt dann \"Preis auf Anfrage\".",
-    "\"hinweis\" und \"platzhalter\" sind nur Erklärungen und werden nirgends angezeigt.",
-    "Alle Beträge in Euro ohne Umsatzsteuer (§ 19 UStG).",
-    "Nach dem Speichern baut Cloudflare die Seite neu, sobald die Änderung auf main ist."
+    "Noch kein Wert: \"von\": null, \"bis\": null. Der Rechner zeigt dann bei dieser Auswahl \"Preis auf Anfrage\".",
+    "\"hinweis\" ist nur eine Erklärung für dich und wird nirgends angezeigt.",
+    "Alle Beträge in Euro, netto, ohne Umsatzsteuer (§ 19 UStG). Nichts davon erscheint als Text auf der Website.",
+    "Nach dem Speichern baut Cloudflare die Seite neu, sobald die Änderung auf main ist. Die Tests (npm test) prüfen, ob die Werte zusammenpassen."
   ],
 
   "abPreise": {
-    "hinweis": "Die einzigen Preise, die als Text auf der Website stehen. Müssen zu den Rechnerwerten passen (die automatischen Tests prüfen das).",
+    "hinweis": "Die einzigen Preise, die als Text auf der Website stehen. Müssen den Untergrenzen im Rechner entsprechen (die Tests prüfen das).",
     "entruempelungNormal": 15,
     "entruempelungStark": 25,
     "entruempelungMessie": 36,
@@ -28,118 +28,129 @@
   "entruempelung": {
     "proQuadratmeterWohnflaeche": {
       "normal": { "von": 15, "bis": 25, "hinweis": "Normal möbliert" },
-      "stark": {
-        "von": 25,
-        "bis": 40,
-        "hinweis": "Stark möbliert, volle Keller oder Dachböden"
-      },
+      "stark": { "von": 25, "bis": 40, "hinweis": "Stark möbliert" },
       "messie": { "von": 36, "bis": 60, "hinweis": "Messie-Wohnung" }
     },
     "aufschlagJeEtageOhneAufzugProzent": {
-      "wert": 7,
-      "hinweis": "Prozent auf den Wohnflächen-Preis je Etage ohne Aufzug. Auswahl im Rechner: EG, 1., 2., 3. oder höher (zählt als 3)."
+      "wert": 10,
+      "hinweis": "Prozent je Etage ohne Aufzug, nur auf den Wohnflächen-Anteil. Auswahl: EG, 1., 2., 3. oder höher (zählt als 3)."
     },
-    "keller": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_KELLER]",
-      "hinweis": "Pauschal für einen Keller"
+    "kellerUndDachbodenProQuadratmeter": {
+      "wenig": { "von": 10, "bis": 18, "hinweis": "Wenig gefüllt" },
+      "voll": { "von": 18, "bis": 30, "hinweis": "Voll" },
+      "hinweis": "Ist die Wohnung als Messie-Wohnung gewählt, gilt für Keller und Dachboden der Messie-Satz der Wohnfläche."
     },
-    "dachboden": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_DACHBODEN]",
-      "hinweis": "Pauschal für einen Dachboden"
+    "standardKellerflaeche": {
+      "wert": 10,
+      "hinweis": "m², wenn der Kunde keine Kellerfläche angibt"
+    },
+    "standardDachbodenflaeche": {
+      "wert": 15,
+      "hinweis": "m², wenn der Kunde keine Dachbodenfläche angibt"
+    },
+    "dachbodenNurLeiterAufschlagProzent": {
+      "wert": 20,
+      "hinweis": "Prozent auf den Dachboden-Anteil, wenn nur Leiter oder Bodenluke"
     },
     "garageOderSchuppen": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_GARAGE]",
-      "hinweis": "Pauschal für Garage oder Schuppen"
+      "kleinWenig": {
+        "von": 150,
+        "bis": 250,
+        "hinweis": "Gartenhaus/Schuppen, wenig gefüllt"
+      },
+      "kleinVoll": {
+        "von": 250,
+        "bis": 450,
+        "hinweis": "Gartenhaus/Schuppen, voll"
+      },
+      "grossWenig": {
+        "von": 300,
+        "bis": 500,
+        "hinweis": "Garage/Doppelgarage, wenig gefüllt"
+      },
+      "grossVoll": {
+        "von": 500,
+        "bis": 900,
+        "hinweis": "Garage/Doppelgarage, voll"
+      }
     },
-    "kuecheOderEinbautenDemontieren": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_KUECHE_DEMONTAGE]",
-      "hinweis": "Pauschal"
+    "kuechenzeileAbbauen": { "von": 150, "bis": 350, "hinweis": "Pauschal" },
+    "einbauschrankAbbauenJeStueck": { "von": 60, "bis": 120 },
+    "reinigungProQuadratmeterWohnflaeche": {
+      "grund": {
+        "von": 15,
+        "bis": 25,
+        "hinweis": "Grundreinigung, bei Messie vorausgewählt"
+      },
+      "tief": { "von": 25, "bis": 40, "hinweis": "Tiefenreinigung" }
     },
-    "endreinigungProQuadratmeter": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_ENDREINIGUNG_PRO_M2]",
-      "hinweis": "Je m² Wohnfläche"
+    "eilauftragAufschlagProzent": {
+      "von": 15,
+      "bis": 25,
+      "hinweis": "Innerhalb von 48 Stunden. Auf alles außer der Halteverbotszone."
     },
+    "halteverbotszone": { "von": 80, "bis": 150 },
     "mindestpreis": {
-      "wert": null,
-      "platzhalter": "[MINDESTPREIS_ENTRUEMPELUNG]",
-      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+      "wert": 290,
+      "hinweis": "Darunter zeigt der Rechner \"ab 290 €\""
     },
     "maxWohnflaeche": {
       "wert": 1000,
       "hinweis": "Keine Preisangabe: Größere Flächen zeigen \"Preis auf Anfrage\"."
+    },
+    "maxZusatzflaeche": {
+      "wert": 300,
+      "hinweis": "Keine Preisangabe: Größere Keller/Dachböden zeigen \"Preis auf Anfrage\"."
     }
   },
 
   "umzug": {
-    "proZimmer": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_PRO_ZIMMER]",
-      "hinweis": "Je Zimmer im Nahbereich, Transporter bis 3,5 t, Tragen und Fahrt. 2 Zimmer dürfen nicht unter dem Ab-Preis von 600 € liegen."
+    "grundpreisNahbereich": {
+      "1": { "von": 450, "bis": 650 },
+      "2": { "von": 600, "bis": 850 },
+      "3": { "von": 800, "bis": 1150 },
+      "4": { "von": 1000, "bis": 1400 },
+      "5": { "von": 1400, "bis": 2000, "hinweis": "5 Zimmer oder Haus" },
+      "hinweis": "Nach Zimmerzahl, im Nahbereich, inkl. Transporter bis 3,5 t, Tragen und Fahrt. Größer als 5 Zimmer/Haus: Preis auf Anfrage."
     },
     "nahbereichKm": {
-      "wert": null,
-      "platzhalter": "[NAHBEREICH_KM]",
-      "hinweis": "Bis zu dieser Entfernung kostet kein Kilometer extra (Emden–Norden ca. 30 km)."
+      "wert": 15,
+      "hinweis": "Bis zu dieser Entfernung kostet kein Kilometer extra"
     },
     "proKmUeberNahbereich": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_PRO_KM]",
-      "hinweis": "Je Kilometer über dem Nahbereich"
+      "von": 2,
+      "bis": 3,
+      "hinweis": "Je weiterem Kilometer, einfache Strecke"
     },
-    "zuschlagJeEtageOhneAufzug": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[ZUSCHLAG_ETAGE]",
-      "hinweis": "Euro je Etage ohne Aufzug, für Auszug und Einzug getrennt gezählt"
+    "aufschlagJeEtageOhneAufzugProzent": {
+      "wert": 10,
+      "hinweis": "Prozent je Etage ohne Aufzug auf den Grundpreis, Auszug und Einzug getrennt gezählt"
     },
-    "moebelAbUndAufbauen": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_MOEBELMONTAGE]",
-      "hinweis": "Pauschal"
-    },
+    "moebelAbUndAufbauenJeZimmer": { "von": 50, "bis": 90 },
     "kuecheAbUndAufbauen": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_KUECHENMONTAGE]",
-      "hinweis": "Pauschal"
+      "von": 250,
+      "bis": 450,
+      "hinweis": "Ohne Anschlüsse"
     },
     "schweresEinzelstueck": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_SCHWERES_STUECK]",
-      "hinweis": "Je Stück (Klavier, Tresor, großer Kühlschrank)"
+      "von": 60,
+      "bis": 120,
+      "hinweis": "Je Stück (Klavier, Tresor, Side-by-Side-Kühlschrank, Massivholzmöbel)"
     },
-    "altmoebelEntsorgen": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_ENTSORGUNG_UMZUG]",
-      "hinweis": "Pauschal"
+    "altmoebelEntsorgen": { "von": 100, "bis": 250 },
+    "eilauftragAufschlagProzent": {
+      "von": 15,
+      "bis": 25,
+      "hinweis": "Innerhalb von 48 Stunden. Auf alles außer der Halteverbotszone."
     },
+    "halteverbotszoneJeAdresse": { "von": 80, "bis": 150 },
     "mindestpreis": {
-      "wert": null,
-      "platzhalter": "[MINDESTPREIS_UMZUG]",
-      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
-    },
-    "maxZimmer": {
-      "wert": 8,
-      "hinweis": "Keine Preisangabe: Mehr Zimmer zeigen \"Preis auf Anfrage\"."
+      "wert": 350,
+      "hinweis": "Darunter zeigt der Rechner \"ab 350 €\""
     },
     "maxKm": {
-      "wert": 150,
-      "hinweis": "Keine Preisangabe: Weitere Strecken zeigen \"Preis auf Anfrage\"."
+      "wert": 100,
+      "hinweis": "Darüber zeigt der Rechner \"Preis auf Anfrage\""
     }
   },
 
@@ -156,8 +167,7 @@
       "schallschutzwand": {
         "von": null,
         "bis": null,
-        "platzhalter": "[PREIS_SCHALLSCHUTZ_BAUSEITS]",
-        "hinweis": "Fehlt noch"
+        "hinweis": "Wird im Rechner nicht angeboten: Schallschutzwand nur mit Material über Fixum."
       },
       "deckeAbhaengen": { "von": 24, "bis": 26 },
       "dachschraege": { "von": 28, "bis": 45 },
@@ -167,7 +177,7 @@
       "ohne": {
         "von": 0,
         "bis": 0,
-        "hinweis": "Ohne Spachtelarbeiten, z. B. wenn gefliest oder verkleidet wird"
+        "hinweis": "Nicht spachteln, z. B. wenn gefliest oder verkleidet wird"
       },
       "normal": { "von": 9, "bis": 12, "hinweis": "Normal gespachtelt (Q2)" },
       "glatt": { "von": 14, "bis": 18, "hinweis": "Besonders glatt (Q3)" }
@@ -175,28 +185,27 @@
     "daemmungProQuadratmeter": {
       "von": 6,
       "bis": 6,
-      "hinweis": "Bei der Schallschutzwand ist Dämmung schon enthalten, die Frage entfällt dort."
+      "hinweis": "Bei der Schallschutzwand schon enthalten, die Frage entfällt dort."
     },
     "dampfbremseProQuadratmeter": {
       "von": 7,
       "bis": 8,
-      "hinweis": "Wird automatisch ergänzt: nur Dachschräge mit Dämmung"
+      "hinweis": "Automatisch: nur Dachschräge mit Dämmung"
     },
     "zweiteBeplankungProQuadratmeter": {
       "von": 9,
       "bis": 9,
-      "hinweis": "Derzeit im Rechner nicht abgefragt"
+      "hinweis": "Frage \"doppelt beplankt\" bei Zwischenwand und Vorsatzschale"
     },
     "tueroeffnungJeStueck": { "von": 100, "bis": 130 },
     "baustelleneinrichtung": {
       "von": 80,
-      "bis": 80,
+      "bis": 150,
       "hinweis": "Einmal je Auftrag"
     },
     "mindestpreis": {
-      "wert": null,
-      "platzhalter": "[MINDESTPREIS_TROCKENBAU]",
-      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+      "wert": 350,
+      "hinweis": "Darunter zeigt der Rechner \"ab 350 €\""
     },
     "maxFlaeche": {
       "wert": 500,
@@ -205,40 +214,31 @@
   },
 
   "montage": {
-    "innentuerMitZargeJeStueck": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_TUERMONTAGE_STUECK]"
-    },
+    "innentuerMitZargeJeStueck": { "von": 120, "bis": 180 },
     "alteTuerAusbauenJeStueck": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_TUER_AUSBAU]"
+      "von": 40,
+      "bis": 70,
+      "hinweis": "Inkl. Entsorgung"
     },
-    "moebelJeStueck": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_MOEBEL_STUECK]"
-    },
-    "altesMoebelAusbauenJeStueck": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_MOEBEL_AUSBAU_STUECK]"
+    "moebelJeStueck": { "von": 40, "bis": 90 },
+    "grossschrankJeStueck": {
+      "von": 90,
+      "bis": 180,
+      "hinweis": "Schrank ab 3 Türen"
     },
     "kuecheJeMeter": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_KUECHE_PRO_METER]"
+      "von": 80,
+      "bis": 130,
+      "hinweis": "Je laufendem Meter, ohne Anschlüsse"
     },
-    "alteKuecheAusbauenJeMeter": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_KUECHE_AUSBAU_PRO_METER]"
+    "alteKuecheAbbauen": {
+      "von": 150,
+      "bis": 350,
+      "hinweis": "Pauschal, inkl. Entsorgung"
     },
     "mindestpreis": {
-      "wert": null,
-      "platzhalter": "[MINDESTPREIS_MONTAGE]",
-      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+      "wert": 150,
+      "hinweis": "Darunter zeigt der Rechner \"ab 150 €\""
     },
     "maxAnzahl": {
       "wert": 30,
@@ -249,25 +249,19 @@
 
   "boden": {
     "verlegenProQuadratmeter": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_BODEN_VERLEGEN_M2]",
-      "hinweis": "Laminat, Vinyl und Teppich gleich"
+      "klick": {
+        "von": 14,
+        "bis": 20,
+        "hinweis": "Klick-Laminat oder Klick-Vinyl, Arbeitslohn"
+      },
+      "teppich": { "von": 10, "bis": 16, "hinweis": "Teppich, Arbeitslohn" }
     },
-    "altenBelagEntfernenProQuadratmeter": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_BODEN_ENTFERNEN_M2]"
-    },
-    "sockelleisteProMeter": {
-      "von": null,
-      "bis": null,
-      "platzhalter": "[PREIS_SOCKELLEISTE_M]"
-    },
+    "altenBelagEntfernenProQuadratmeter": { "von": 4, "bis": 8 },
+    "sockelleisteProMeter": { "von": 5, "bis": 8 },
+    "trittschalldaemmungProQuadratmeter": { "von": 2, "bis": 3 },
     "mindestpreis": {
-      "wert": null,
-      "platzhalter": "[MINDESTPREIS_BODEN]",
-      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+      "wert": 250,
+      "hinweis": "Darunter zeigt der Rechner \"ab 250 €\""
     },
     "maxFlaeche": { "wert": 500, "hinweis": "Keine Preisangabe." },
     "maxLeistenMeter": { "wert": 500, "hinweis": "Keine Preisangabe." }

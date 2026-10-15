@@ -258,7 +258,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
   "/umzug/": [
     {
       question: "Was kostet ein Umzug in Emden?",
-      answer: `Eine 2-Zimmer-Wohnung im Nahbereich, etwa von Emden nach Norden, ${preise.umzug.betrag}, mit Transporter bis ${site.maxTonnage}. ${preisHinweis} Sie bekommen einen Festpreis für Team, Fahrzeug und Fahrten, keinen Stundensatz mit offenem Ende.`,
+      answer: `Eine 2-Zimmer-Wohnung im Nahbereich bis 15 km ${preise.umzug.betrag}, mit Transporter bis ${site.maxTonnage}. ${preisHinweis} Sie bekommen einen Festpreis für Team, Fahrzeug und Fahrten, keinen Stundensatz mit offenem Ende.`,
     },
     {
       question: "Ziehen Sie auch von Emden aus über weitere Strecken um?",

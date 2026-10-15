@@ -3,7 +3,7 @@
  * Inline-SVG-Icons. Bewusst ohne Icon-Font oder externes Sprite:
  * kein zusätzlicher Request, volle Kontrolle über Strichstärke und Farbe.
  */
-import { iconPaths, type IconName } from "../data/icons";
+import { feineIcons, iconPaths, type IconName } from "../data/icons";
 
 interface Props {
   name: IconName;
@@ -15,6 +15,7 @@ interface Props {
 
 const { name, size = 22, class: className = "", label } = Astro.props;
 const d = iconPaths[name];
+const fein = feineIcons.has(name);
 ---
 
 <svg
@@ -24,9 +25,10 @@ const d = iconPaths[name];
   viewBox="0 0 24 24"
   fill="none"
   stroke="currentColor"
-  stroke-width="1.8"
-  stroke-linecap="round"
-  stroke-linejoin="round"
+  stroke-width={fein ? "1.5" : "1.8"}
+  stroke-linecap={fein ? "butt" : "round"}
+  stroke-linejoin={fein ? "miter" : "round"}
+  stroke-miterlimit="10"
   aria-hidden={label ? undefined : "true"}
   role={label ? "img" : undefined}
   focusable="false"
