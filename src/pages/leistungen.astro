@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import AreaServed from "../components/AreaServed.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Icon from "../components/Icon.astro";
+import KetteBand from "../components/KetteBand.astro";
 import PageHero from "../components/PageHero.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import { absolute, canonicalPath } from "../data/seo";
@@ -60,7 +61,7 @@ const bereiche: Array<[string, string, "crate" | "hammer" | "clipboard"]> = [
     title="Alles aus einer Hand"
     text="Fixum verbindet Entrümpelung, Rückbau, Trockenbau, Montage, Transporte und Objektbetreuung. Sie wählen den einzelnen Baustein oder den kompletten Ablauf."
     image={heroImage}
-    imageAlt="Renovierungsarbeiten in einem Objekt in Emden durch Fixum Objektservice"
+    imageAlt="Zwei Handwerker in einem leergeräumten Raum mit Material und Säcken (Symbolbild)"
     breadcrumbs={breadcrumbs}
     badges={["11 Leistungen", "Einzeln buchbar", "Ein Ansprechpartner"]}
   />
@@ -91,6 +92,8 @@ const bereiche: Array<[string, string, "crate" | "hammer" | "clipboard"]> = [
       }
     </div>
   </section>
+
+  <KetteBand />
 
   {/* Alle Leistungen */}
   <section class="section services-overview" aria-labelledby="uebersicht-title">

@@ -53,6 +53,15 @@ const waThema = whatsappThema(Astro.url.pathname);
   </section>
 </Base>
 
+{
+  /* Erfolgreich abgeschickte Anfrage: Das Formular leitet nach dem Versand
+     hierher weiter. Nur ein dataLayer-Ereignis, kein externer Dienst. */
+}
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: "form_submit_success", page_path: "/danke/" });
+</script>
+
 <style>
   .thanks {
     min-height: 68vh;

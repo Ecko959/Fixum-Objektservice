@@ -3,14 +3,56 @@
    Selbst gehostete Schriften, keine externen Requests zur Laufzeit.
    --------------------------------------------------------------------------- */
 
-@import "@fontsource/manrope/400.css";
-@import "@fontsource/manrope/500.css";
-@import "@fontsource/manrope/600.css";
-@import "@fontsource/manrope/700.css";
-@import "@fontsource/manrope/800.css";
-@import "@fontsource/barlow-condensed/600.css";
-@import "@fontsource/barlow-condensed/700.css";
-@import "@fontsource/kaushan-script/400.css";
+/* Nur das lateinische Subset: Umlaute, ß, €, Gedankenstrich und deutsche
+   Anführungszeichen liegen alle darin. Die übrigen Subsets (Kyrillisch,
+   Griechisch, Vietnamesisch) wurden nie geladen, standen aber als
+   @font-face-Regeln im render-blockierenden CSS. */
+@import "@fontsource/manrope/latin-400.css";
+@import "@fontsource/manrope/latin-500.css";
+@import "@fontsource/manrope/latin-600.css";
+@import "@fontsource/manrope/latin-700.css";
+@import "@fontsource/manrope/latin-800.css";
+@import "@fontsource/barlow-condensed/latin-600.css";
+@import "@fontsource/barlow-condensed/latin-700.css";
+@import "@fontsource/kaushan-script/latin-400.css";
+
+/* Metrisch angeglichene Ersatzschriften. Bis die Webfont geladen ist, steht
+   der Text in Arial bzw. Roboto - mit diesen Overrides nimmt er dabei schon
+   denselben Platz ein wie später in Manrope. Ohne sie springen Buttons und
+   Zeilenumbrüche beim Schriftwechsel (gemessen: CLS bis 0,22 auf Mobil).
+   Werte aus den Schriftmetriken (xWidthAvg, Ascent, Descent) berechnet. */
+@font-face {
+  font-family: "Manrope Fallback";
+  src:
+    local("Arial"), local("Helvetica"), local("Roboto"),
+    local("Liberation Sans");
+  size-adjust: 103.19%;
+  ascent-override: 103.31%;
+  descent-override: 29.07%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Barlow Condensed Fallback";
+  src:
+    local("Arial"), local("Helvetica"), local("Roboto"),
+    local("Liberation Sans");
+  size-adjust: 76.49%;
+  ascent-override: 130.73%;
+  descent-override: 26.15%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Kaushan Script Fallback";
+  src:
+    local("Arial"), local("Helvetica"), local("Roboto"),
+    local("Liberation Sans");
+  size-adjust: 89.95%;
+  ascent-override: 120.51%;
+  descent-override: 40.8%;
+  line-gap-override: 0%;
+}
 
 @tailwind base;
 @tailwind components;
@@ -46,10 +88,16 @@
   --on-dark-hairline: rgba(255, 255, 255, 0.1);
 
   /* Typografie */
-  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-utility: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --font-script: "Kaushan Script", "Segoe Script", cursive;
+  --font-body:
+    "Manrope", "Manrope Fallback", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-display:
+    "Manrope", "Manrope Fallback", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-utility:
+    "Barlow Condensed", "Barlow Condensed Fallback", "Arial Narrow", sans-serif;
+  --font-script:
+    "Kaushan Script", "Kaushan Script Fallback", "Segoe Script", cursive;
 
   --step--1: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
   --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);

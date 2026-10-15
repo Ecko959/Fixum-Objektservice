@@ -10,12 +10,12 @@ const current = "/umzug/";
   current={current}
   crumb="Umzüge & Transporte"
   metaTitle="Fixum Objektservice: Umzüge & Transporte Emden"
-  description={`Privat- und Firmenumzüge sowie Transporte bis ${site.maxTonnage} in Emden und Ostfriesland. Im Team, zum Festpreis, mit Demontage und auf Wunsch mit Entrümpelung.`}
+  description={`Umzug in Emden und Ostfriesland: Privat- und Büroumzüge, Transporte bis ${site.maxTonnage}. 2-Zimmer-Wohnung ab 600 €, Festpreis nach Besichtigung.`}
   eyebrow="Umzüge & Transporte"
   title="Umzüge und Transporte mit festem Termin"
-  heroText="Für private Umzüge, kleinere Firmenumzüge und Objekttransporte planen wir den Ablauf vorher durch - Etagen, Laufwege, Parken und Demontage inklusive."
+  heroText={`Fixum Objektservice übernimmt Umzüge und Transporte bis ${site.maxTonnage} in Emden und Ostfriesland - für Privathaushalte, kleinere Büros und Objektfahrten. Mit Möbeldemontage, Aufbau und auf Wunsch Entrümpelung im selben Termin.`}
   image="/images/categories/umzuege-transporte.png"
-  imageAlt="Transportfahrzeug von Fixum Objektservice bei einem Umzug in Emden"
+  imageAlt="Umzugshelfer laden ein in Decken gewickeltes Möbelstück in einen Transporter (Symbolbild)"
   serviceType="Umzüge und Transporte"
   areaTitle="Umzüge in Emden, Aurich, Leer und Umgebung"
   lead="Ein Umzug scheitert selten am Tragen, sondern an der Planung: Zu wenig Kartons, kein Parkplatz vor der Tür, ein Schrank, der nicht durchs Treppenhaus passt. Genau das klären wir vorher."
@@ -47,12 +47,58 @@ const current = "/umzug/";
     ],
   ]}
   facts={[
-    ["Größe", `Bis ${site.maxTonnage} Fahrzeuge - Wohnungen, Büros, Objektfahrten.`],
+    [
+      "Größe",
+      `Bis ${site.maxTonnage} Fahrzeuge - Wohnungen, Büros, Objektfahrten.`,
+    ],
     ["Preis", "Festpreis nach Planung, keine Stundenüberraschung."],
     ["Extras", "Demontage, Aufbau und Entsorgung kombinierbar."],
     ["Gebiet", "Emden und rund 50 km Umkreis."],
   ]}
   noteTitle="Umzug und Entrümpelung in einem Termin"
   noteText="Oft zieht ein Teil des Hausstands mit um, der Rest muss weg. Wenn beides derselbe Betrieb macht, fährt ein Fahrzeug einmal statt zwei Firmen zweimal. Das ist spürbar günstiger als zwei getrennte Aufträge und spart Ihnen einen kompletten Koordinationstermin."
+  beispiele={[
+    [
+      "Umzug innerhalb von Emden",
+      "Kurze Wege, schnell eingeschätzt: Oft reichen ein Telefonat oder ein paar Fotos für den Festpreis.",
+    ],
+    [
+      "Umzug nach Norden, Aurich oder Leer",
+      "Umzüge im Nahbereich mit Transporter, Tragen und Fahrt - die Anfahrt steht im Angebot als eigene Position.",
+    ],
+    [
+      "Umzug ins Heim mit Haushaltsauflösung",
+      "Was mitkommt, wird transportiert und aufgebaut, der Rest der Wohnung geräumt und besenrein übergeben.",
+    ],
+    [
+      "Kleinere Büroumzüge",
+      "Mit fester Terminabsprache, damit der Betrieb so kurz wie möglich ruht.",
+    ],
+    [
+      "Möbel- und Materialtransporte",
+      `Einzelne Möbelstücke, Material oder Objektfahrten bis ${site.maxTonnage} Fahrzeuggröße.`,
+    ],
+    [
+      "Umzug mit Küchenmontage",
+      "Küche abbauen, transportieren und wieder aufbauen - die Anschlüsse übernimmt ein Fachbetrieb.",
+    ],
+  ]}
+  vorteile={[
+    [
+      "Festpreis statt Stundensatz",
+      "Team, Fahrzeug und Fahrten stehen vorher fest.",
+    ],
+    [
+      "Umzug und Entrümpelung in einem Termin",
+      "Ein Fahrzeug, ein Team, eine Rechnung.",
+    ],
+    ["Demontage und Aufbau", "Möbel werden ab- und am Ziel wieder aufgebaut."],
+    [
+      "Treppenhaus geschützt",
+      "Treppenhaus, Türzargen und Böden werden vorher abgesichert.",
+    ],
+  ]}
+  preis={["umzug"]}
+  preisText="Der Preis hängt an Volumen, Etagen, Laufwegen, Parkmöglichkeit und Entfernung. Der Richtwert gilt für eine 2-Zimmer-Wohnung im Nahbereich - verbindlich ist der Festpreis nach Besichtigung oder Fotos."
   faq={serviceFaq[current]}
 />

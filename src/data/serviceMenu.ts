@@ -45,6 +45,13 @@ export const serviceMenuGroups: Array<{
     title: "Rückbau & Ausbau",
     items: [
       {
+        label: "Alles aus einer Hand",
+        href: "/entruempelung-entkernung-innenausbau/",
+        icon: "layers",
+        description:
+          "Entrümpelung, Entkernung und Innenausbau in einem Auftrag.",
+      },
+      {
         label: "Entkernung",
         href: "/entkernung/",
         icon: "hammer",

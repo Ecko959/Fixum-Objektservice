@@ -427,3 +427,30 @@ Vorgabe einen hellen Hintergrund verlangte, laeuft sie jetzt als
 `section--mist`. Die Regeln zu `.section--chain` in `src/styles/global.css`
 greifen damit nirgends mehr; sie wurden nicht entfernt, weil die Klasse als
 Bestandteil des Design-Systems wiederverwendbar bleibt.
+
+## SEO-Runde Oktober 2026
+
+- **Preise** stehen nur in `src/data/preise.ts` (vom Inhaber freigegebene
+  Richtwerte). Leistungsseiten ("Was kostet das?"), Startseiten-FAQ,
+  Zentralseite, schema.org-Offers und `/llms.txt` lesen von dort. Keine
+  weiteren Zahlen ohne Freigabe ergänzen.
+- **Zentralseite** `/entruempelung-entkernung-innenausbau/` erklärt die
+  Leistungskette. Verlinkt über `KetteBand` von Startseite, Leistungsübersicht,
+  Entrümpelung, Entkernung, Trockenbau, Kernsanierung und Rückbau + Trockenbau
+  sowie über das Leistungsmenü.
+- **Kundenstimmen**: `src/data/reviews.json` (leer = Sektion unsichtbar).
+  Nur echte Bewertungen wörtlich eintragen. Kein Review-Markup.
+  Button "Bewertung schreiben" erscheint, sobald `googleReviewUrl` in
+  `site.ts` gesetzt ist.
+- **Messpunkte**: Base.astro schreibt `phone_click`, `whatsapp_click`,
+  `email_click`, `offer_request_click` in `window.dataLayer`, `/danke/` schreibt
+  `form_submit_success`. Es ist **kein** Tracking-Dienst eingebunden – erst
+  nach Freigabe und mit Einwilligungsbanner.
+- **robots.txt** erlaubt Such- und KI-Crawler ausdrücklich; `/llms.txt` wird
+  beim Bauen aus `site.ts`, `preise.ts` und den Ortsseiten erzeugt.
+- **Alt-Texte** der generierten Bilder beschreiben nur das Motiv und tragen
+  "(Symbolbild)". Ort- oder Firmenbezug ("in Emden durch Fixum") erst, wenn
+  dort echte Fotos liegen.
+- **Schriften**: nur Latin-Subset, metrisch angeglichene Ersatzschriften
+  ("Manrope Fallback" usw.) gegen Layout-Sprünge, Preload für Manrope 400/800.
+- **Branchenportale**: siehe `EINTRAEGE.md`.

@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import ContactForm from "../components/ContactForm.astro";
 import Icon from "../components/Icon.astro";
+import Kundenstimmen from "../components/Kundenstimmen.astro";
 import WhatsAppMark from "../components/WhatsAppMark.astro";
 import { mailUrl, site, telUrl, whatsappUrl } from "../data/site";
 import { whatsappThema } from "../data/whatsapp";
@@ -15,12 +16,7 @@ const breadcrumbs: Array<[string, string]> = [["Kontakt", path]];
 const channels: Array<[string, string, string, "phone" | "whatsapp" | "mail"]> =
   [
     ["Telefon", site.phoneDisplay, telUrl, "phone"],
-    [
-      "WhatsApp",
-      "Fotos direkt schicken",
-      whatsappUrl(waThema),
-      "whatsapp",
-    ],
+    ["WhatsApp", "Fotos direkt schicken", whatsappUrl(waThema), "whatsapp"],
     ["E-Mail", site.email, mailUrl, "mail"],
   ];
 ---
@@ -109,6 +105,11 @@ const channels: Array<[string, string, string, "phone" | "whatsapp" | "mail"]> =
       </div>
     </div>
   </section>
+
+  {
+    /* Erscheint erst, wenn in src/data/reviews.json echte Bewertungen stehen. */
+  }
+  <Kundenstimmen />
 </Base>
 
 <style>

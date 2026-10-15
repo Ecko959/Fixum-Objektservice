@@ -20,10 +20,14 @@ export default {
         amber: "#FFB020",
       },
       fontFamily: {
-        display: ["Manrope", "sans-serif"],
-        body: ["Manrope", "sans-serif"],
-        utility: ["Barlow Condensed", "sans-serif"],
-        script: ["Kaushan Script", "cursive"],
+        display: ["Manrope", "Manrope Fallback", "sans-serif"],
+        body: ["Manrope", "Manrope Fallback", "sans-serif"],
+        utility: [
+          "Barlow Condensed",
+          "Barlow Condensed Fallback",
+          "sans-serif",
+        ],
+        script: ["Kaushan Script", "Kaushan Script Fallback", "cursive"],
       },
     },
   },

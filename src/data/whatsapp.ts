@@ -20,6 +20,8 @@ const imSatz: Record<string, string> = {
   "/umzug/": "einem Umzug",
   "/bodenverlegung/": "Bodenverlegung und Türmontage",
   "/rueckbau-trockenbau/": "Rückbau und Trockenbau",
+  "/entruempelung-entkernung-innenausbau/":
+    "Entrümpelung, Entkernung und Innenausbau",
   "/kuechenmontage/": "Möbel- und Küchenmontage",
   "/winterdienst/": "Winterdienst und Außenanlagen",
 };

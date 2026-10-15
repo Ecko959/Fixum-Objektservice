@@ -1,3 +1,4 @@
+import { preise, steuerHinweis } from "./preise";
 import { site } from "./site";
 
 export interface FaqItem {
@@ -9,8 +10,7 @@ export interface FaqItem {
 export const faq: FaqItem[] = [
   {
     question: "Was kostet eine Entrümpelung in Emden?",
-    answer:
-      "Das hängt vom Volumen ab, nicht allein von der Quadratmeterzahl - eine vollgestellte Zweizimmerwohnung kann mehr Aufwand sein als ein leergeräumtes Haus. Deshalb schauen wir uns das Objekt an und nennen danach einen Festpreis, der schriftlich gilt. Besichtigung und Angebot sind kostenlos.",
+    answer: `Als Richtwert ${preise.entruempelung.betrag} bei leicht möblierten Räumen im Erdgeschoss, üblich sind 20–40 €/m² - je nach Füllgrad, Etage und Entsorgung. Verbindlich ist der Festpreis nach der kostenlosen Besichtigung, und der gilt schriftlich. ${steuerHinweis}`,
   },
   {
     question: "Wie schnell bekomme ich einen Termin?",
@@ -56,6 +56,10 @@ export const faq: FaqItem[] = [
 export const serviceFaq: Record<string, FaqItem[]> = {
   "/entruempelung/": [
     {
+      question: "Was kostet eine Entrümpelung in Emden?",
+      answer: `Als Richtwert ${preise.entruempelung.betrag} bei leicht möblierten Räumen im Erdgeschoss. Üblich sind 20–40 €/m², je nach Füllgrad, Etage und Entsorgung. Verbindlich ist der Festpreis nach der kostenlosen Besichtigung. ${steuerHinweis}`,
+    },
+    {
       question: "Wie läuft eine Entrümpelung konkret ab?",
       answer:
         "Sie rufen an oder schicken Fotos per WhatsApp. Wir kommen zur kostenlosen Besichtigung, meist innerhalb von zwei Werktagen, und nennen danach einen schriftlichen Festpreis. Am Ausführungstag räumen wir das Objekt, trennen die Abfälle sortenrein und übergeben besenrein.",
@@ -75,6 +79,16 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       answer:
         "Auf Wunsch ja. Für Hausverwaltungen und Nachlassabwicklungen ist das oft nötig. Wir dokumentieren die Fraktionen und legen die Belege der Entsorgungsstellen bei.",
     },
+    {
+      question: "Muss ich bei der Entrümpelung dabei sein?",
+      answer:
+        "Nein. Wir arbeiten nach Schlüsselübergabe und dokumentieren das Ergebnis auf Wunsch mit Fotos. Was Sie behalten möchten, legen wir vorher gemeinsam fest - am Telefon, per Fotos oder bei der Besichtigung.",
+    },
+    {
+      question: "Entrümpeln Sie ein ganzes Haus oder auch nur einzelne Räume?",
+      answer:
+        "Beides. Wir räumen komplette Häuser und Wohnungen genauso wie einzelne Keller, Dachböden oder Garagen - in Emden und im Umkreis von rund 50 km, also auch in Aurich, Leer und Norden.",
+    },
   ],
   "/entkernung/": [
     {
@@ -92,8 +106,27 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       answer:
         "Wir stoppen den betroffenen Bereich sofort. Bei Gebäuden vor 1993 sind Asbest, KMF oder PAK-Kleber möglich. Die Beprobung und Sanierung übernimmt ein zertifizierter Fachbetrieb - das ist gesetzlich vorgeschrieben und steht so in jedem unserer Angebote.",
     },
+    {
+      question: "Was kostet eine Entkernung?",
+      answer:
+        "Dafür gibt es bei uns einen Festpreis nach Besichtigung. Fläche, Bauteile, Bodenaufbau und Entsorgungsmengen unterscheiden sich von Objekt zu Objekt zu stark für einen pauschalen Richtwert. Die Besichtigung ist kostenlos, Rückbau und Entsorgung stehen im Angebot als eigene Positionen.",
+    },
+    {
+      question: "Übernehmen Sie nach der Entkernung auch den Innenausbau?",
+      answer:
+        "Ja. Trockenbau, Boden, Türen und Montage machen wir selbst - direkt im Anschluss und ohne Übergabe an eine zweite Firma. Wenn Sie nur den Rückbau brauchen, ist das genauso in Ordnung.",
+    },
+    {
+      question: "Trennen Sie auch Strom- und Wasserleitungen?",
+      answer:
+        "Nein. Anschlüsse an Strom, Wasser und Heizung trennt ein zugelassener Fachbetrieb, bevor wir zurückbauen. Den Termin stimmen wir auf Wunsch für Sie ab, damit Sie niemanden selbst suchen müssen.",
+    },
   ],
   "/trockenbau/": [
+    {
+      question: "Was kostet eine Trockenbauwand?",
+      answer: `Als Richtwert ${preise.trockenbau.betrag}, ${preise.trockenbau.bedingung.replace(/\.$/, "")}. Verbindlich ist der Festpreis nach Besichtigung und Aufmaß. ${steuerHinweis}`,
+    },
     {
       question: "Welche Spachtelqualität brauche ich?",
       answer:
@@ -108,6 +141,21 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       question: "Machen Sie auch Schallschutz und Brandschutz?",
       answer:
         "Schallschutzlösungen mit entsprechendem Aufbau und Dämmung ja. Geprüfte Brandschutzkonstruktionen mit Verwendbarkeitsnachweis führen wir nicht als eigene Leistung aus - dafür ist ein Betrieb mit passendem Nachweis zuständig.",
+    },
+    {
+      question: "Bringen Sie das Material mit?",
+      answer:
+        "Auf Wunsch komplett: Profile, Platten, Dämmung und Spachtel. Bauseits gestelltes Material verarbeiten wir genauso - das steht dann so im Angebot.",
+    },
+    {
+      question: "Können die alten Wände vorher auch raus?",
+      answer:
+        "Ja. Nicht-tragende Wände, alte Verkleidungen und Böden bauen wir selbst zurück und trennen das Material sortenrein. Danach geht der Trockenbau ohne Wartetag weiter - dasselbe Team, ein Angebot.",
+    },
+    {
+      question: "Verlegen Sie auch die Leitungen in der neuen Wand?",
+      answer:
+        "Nein. Wir bauen die Wand so, dass Platz für Leitungen und Dosen bleibt. Elektro- und Sanitärleitungen legt ein zugelassener Fachbetrieb, dessen Termin wir auf Wunsch mit abstimmen.",
     },
   ],
   "/haushaltsaufloesung/": [
@@ -125,6 +173,15 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       question: "Was ist mit Unterlagen und Wertsachen?",
       answer:
         "Alles, was nach Dokument, Schmuck, Bargeld oder Erinnerungsstück aussieht, wird gesammelt und Ihnen übergeben. Das ist Teil des Auftrags und kostet nicht extra.",
+    },
+    {
+      question: "Was kostet eine Haushaltsauflösung in Emden?",
+      answer: `Sie wird wie eine Entrümpelung kalkuliert: als Richtwert ${preise.entruempelung.betrag} bei leicht möblierten Räumen im Erdgeschoss, üblich sind 20–40 €/m² je nach Füllgrad, Etage und Entsorgung. Verbindlich ist der Festpreis nach der kostenlosen Besichtigung. ${steuerHinweis}`,
+    },
+    {
+      question: "Bekommt die Erbengemeinschaft einen Nachweis?",
+      answer:
+        "Auf Wunsch ja: Festpreis in Textform, Fotodokumentation und Entsorgungsbelege über die Fraktionen. Damit ist für alle Beteiligten nachvollziehbar, was gemacht wurde.",
     },
   ],
   "/wohnungsraeumung/": [
@@ -160,6 +217,16 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       answer:
         "Das ist sogar der bessere Weg. Zargen und Türblätter werden auf die spätere Bodenhöhe abgestimmt, sonst schleift die Tür oder es bleibt eine Fuge. Wir planen beides in einem Aufmaß.",
     },
+    {
+      question: "Welche Bodenbeläge verlegen Sie?",
+      answer:
+        "Laminat, Vinyl, Klick-Systeme und Teppich. Parkett verkleben, schleifen oder versiegeln gehört nicht zu unseren Leistungen.",
+    },
+    {
+      question: "Was kostet die Bodenverlegung?",
+      answer:
+        "Festpreis nach Besichtigung. Fläche, Belag und Zustand des Untergrunds bestimmen den Aufwand, Vorarbeiten wie Ausgleichsmasse stehen als eigene Position im Angebot. Die Besichtigung ist kostenlos.",
+    },
   ],
   "/kuechenmontage/": [
     {
@@ -172,12 +239,26 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       answer:
         "Ja, Demontage und Entsorgung übernehmen wir gleich mit. In Kombination mit einer Entrümpelung oder einem Umzug ist das meist deutlich günstiger als zwei getrennte Aufträge.",
     },
+    {
+      question: "Bauen Sie auch Möbel aus dem Möbelhaus auf?",
+      answer:
+        "Ja, Möbel aller gängigen Hersteller nach Aufbauanleitung - inklusive sicherer Wandbefestigung mit passender Dübeltechnik.",
+    },
+    {
+      question: "Passen Sie die Arbeitsplatte an?",
+      answer:
+        "Ja. Arbeitsplatten werden zugeschnitten, eingepasst und abgedichtet, Fronten, Griffe und Auszüge eingestellt.",
+    },
+    {
+      question: "Was kostet eine Küchenmontage?",
+      answer:
+        "Festpreis nach Besichtigung. Oft lässt sich der Aufwand schon aus dem Planungsplan oder der Bestellliste einschätzen. Umfang, Wandbeschaffenheit und Anschlusssituation bestimmen den Preis.",
+    },
   ],
   "/umzug/": [
     {
       question: "Was kostet ein Umzug in Emden?",
-      answer:
-        "Der Preis hängt an Volumen, Etagen, Laufwegen, Parkmöglichkeit und Entfernung. Für einen Umzug innerhalb von Emden ist das schnell eingeschätzt - oft reicht ein Telefonat oder ein paar Fotos. Sie bekommen danach einen Festpreis für Team, Fahrzeug und Fahrten, keinen Stundensatz mit offenem Ende.",
+      answer: `Als Richtwert: Eine 2-Zimmer-Wohnung im Nahbereich, etwa von Emden nach Norden, ${preise.umzug.betrag} mit Transporter bis ${site.maxTonnage}, Tragen und Fahrt. Montage, Etagen ohne Aufzug und größere Haushalte kalkulieren wir nach Besichtigung oder Fotos. Sie bekommen einen Festpreis für Team, Fahrzeug und Fahrten, keinen Stundensatz mit offenem Ende. ${steuerHinweis}`,
     },
     {
       question: "Ziehen Sie auch von Emden aus über weitere Strecken um?",
@@ -187,13 +268,22 @@ export const serviceFaq: Record<string, FaqItem[]> = {
 
     {
       question: "Bis zu welcher Größe machen Sie Umzüge?",
-      answer:
-        `Bis ${site.maxTonnage} Fahrzeuggröße - also Wohnungen, kleinere Häuser, Büros und Objektfahrten. Für Fernumzüge mit großem LKW sind wir der falsche Ansprechpartner und sagen das auch gleich.`,
+      answer: `Bis ${site.maxTonnage} Fahrzeuggröße - also Wohnungen, kleinere Häuser, Büros und Objektfahrten. Für Fernumzüge mit großem LKW sind wir der falsche Ansprechpartner und sagen das auch gleich.`,
     },
     {
       question: "Kann ich Umzug und Entrümpelung kombinieren?",
       answer:
         "Genau dafür ist der Ablauf gedacht: Was mitkommt, wird transportiert, der Rest direkt entsorgt. Ein Team, ein Termin, eine Rechnung - das spart gegenüber zwei getrennten Aufträgen spürbar.",
+    },
+    {
+      question: "Bauen Sie Möbel ab und wieder auf?",
+      answer:
+        "Ja, nach Absprache. Schränke, Betten und Regale werden demontiert, transportiert und am Ziel wieder aufgebaut. Den Aufwand dafür nehmen wir in den Festpreis auf.",
+    },
+    {
+      question: "Wie schützen Sie Treppenhaus und Wohnung?",
+      answer:
+        "Treppenhaus, Türzargen und Böden werden vor dem Tragen abgesichert. Das gehört bei uns zum Umzug dazu und steht nicht als Extra im Angebot.",
     },
   ],
   "/hausmeisterservice/": [
@@ -207,6 +297,21 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       answer:
         "Alles im handwerklichen Kleinbereich: Türen, Schlösser, Beschläge, Silikonfugen, Befestigungen, kleine Trockenbauschäden. Nicht dabei sind Arbeiten an Strom, Gas, Wasser und Heizung - die übernehmen zugelassene Fachbetriebe.",
     },
+    {
+      question: "Geht das auch einmalig ohne Vertrag?",
+      answer:
+        "Ja. Einzelne Arbeiten erledigen wir auf Abruf. Der Rahmenvertrag lohnt sich, wenn regelmäßig etwas anfällt.",
+    },
+    {
+      question: "Übernehmen Sie auch den Winterdienst?",
+      answer:
+        "Ja, nach schriftlicher Vereinbarung mit festgelegten Flächen, Einsatzzeiten und Streumitteln - auf Wunsch zusammen mit der laufenden Betreuung.",
+    },
+    {
+      question: "Was kostet der Hausmeisterservice?",
+      answer:
+        "Festpreis nach Besichtigung: Wir gehen das Objekt einmal durch und halten Umfang, Turnus und Konditionen schriftlich fest. Für wiederkehrende Leistungen stehen die Konditionen im Rahmenvertrag.",
+    },
   ],
   "/winterdienst/": [
     {
@@ -218,6 +323,21 @@ export const serviceFaq: Record<string, FaqItem[]> = {
       question: "Ab wann wird geräumt?",
       answer:
         "Werktags in der Regel bis 7 Uhr, sonn- und feiertags bis 9 Uhr, danach nach Bedarf. Bei anhaltendem Schneefall wird nachgeräumt. Die konkreten Zeiten halten wir in der Vereinbarung fest.",
+    },
+    {
+      question: "Stellen Sie das Streumittel?",
+      answer:
+        "Ja, die vereinbarten Streumittel stellen und lagern wir. Welche das sind, steht in der Vereinbarung.",
+    },
+    {
+      question: "Bekomme ich einen Nachweis über die Einsätze?",
+      answer:
+        "Auf Wunsch dokumentieren wir die Einsätze. Das ist im Schadensfall die Grundlage, um zu zeigen, dass geräumt und gestreut wurde.",
+    },
+    {
+      question: "Was kostet der Winterdienst?",
+      answer:
+        "Festpreis nach Besichtigung: Flächen, Einsatzzeiten und Streumittel werden vor Ort aufgenommen und schriftlich vereinbart.",
     },
   ],
   "/kernsanierung/": [

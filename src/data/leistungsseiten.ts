@@ -15,10 +15,7 @@ import type { Faq } from "./staedte";
 import { findeStadt } from "./staedte";
 
 export type LeistungsSchluessel =
-  | "entruempelung"
-  | "entkernung"
-  | "trockenbau"
-  | "umzug";
+  "entruempelung" | "entkernung" | "trockenbau" | "umzug";
 
 export type Leistung = {
   label: string;
@@ -87,12 +84,10 @@ const inhalte: Record<string, Karte> = {
   /* ------------------------------------------------------------------ */
   aurich: {
     entruempelung: {
-      meta:
-        "Entrümpelung in Aurich und den Ortsteilen: Wohnung, Haus, Keller, Dachboden, Garage. Kostenlose Besichtigung, Festpreis in Textform, besenreine Übergabe.",
+      meta: "Entrümpelung in Aurich und den Ortsteilen: Wohnung, Haus, Keller, Dachboden, Garage. Kostenlose Besichtigung, Festpreis in Textform, besenreine Übergabe.",
       intro:
         "Eine Entrümpelung in Aurich beginnt mit einer kostenlosen Besichtigung, meist innerhalb von zwei Werktagen. Danach steht ein Festpreis in Textform - auch dann, wenn Keller und Dachboden voller sind als beim Telefonat gedacht.",
-      lage:
-        "Aurich zerfällt für uns in zwei Arten von Aufträgen. In der Kernstadt sind es überwiegend Wohnungen in Mehrfamilienhäusern: Treppenhaus schützen, Tragewege abdecken, Nachbarn vorher informieren. In Sandhorst, Walle, Wallinghausen oder Extum stehen dagegen Einfamilienhäuser aus den sechziger bis achtziger Jahren, und dort gehört fast immer mehr dazu als die Wohnfläche - Garage, Schuppen, Gartenhaus, oft ein Dachboden, der drei Jahrzehnte lang nie ausgeräumt wurde.",
+      lage: "Aurich zerfällt für uns in zwei Arten von Aufträgen. In der Kernstadt sind es überwiegend Wohnungen in Mehrfamilienhäusern: Treppenhaus schützen, Tragewege abdecken, Nachbarn vorher informieren. In Sandhorst, Walle, Wallinghausen oder Extum stehen dagegen Einfamilienhäuser aus den sechziger bis achtziger Jahren, und dort gehört fast immer mehr dazu als die Wohnfläche - Garage, Schuppen, Gartenhaus, oft ein Dachboden, der drei Jahrzehnte lang nie ausgeräumt wurde.",
       punkte: [
         "Komplette Haushaltsauflösung inklusive Nebengebäuden, Garage und Dachboden",
         "Einzelne Wohnungen im Mehrfamilienhaus mit Schutz von Treppenhaus und Aufzug",
@@ -121,12 +116,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     entkernung: {
-      meta:
-        "Entkernung und nicht-tragender Rückbau in Aurich: Böden, Einbauten, Trennwände raus, sortenrein getrennt. Klare Leistungsgrenze, Statik bleibt unangetastet.",
+      meta: "Entkernung und nicht-tragender Rückbau in Aurich: Böden, Einbauten, Trennwände raus, sortenrein getrennt. Statik bleibt unangetastet.",
       intro:
         "Entkernung in Aurich heißt bei uns: alles Nicht-Tragende raus, die Statik bleibt unangetastet. Wir entfernen Böden, Einbauten, Vorsatzschalen und nicht-tragende Wände und übergeben eine Fläche, auf der der Ausbau sofort weiterlaufen kann.",
-      lage:
-        "Der typische Auftrag in Aurich ist ein Haus aus den sechziger bis achtziger Jahren, das den Eigentümer wechselt. Darin steckt meist dieselbe Schichtung: Teppich auf Estrich, darunter eine Ausgleichsschicht, Holzpaneele an Decken und Wänden, Einbauschränke aus der Bauzeit, ein Bad mit Fliesen bis zur Decke. Bei Gebäuden aus dieser Zeit ist außerdem der Blick auf Schadstoffe Pflicht, nicht Kür.",
+      lage: "Der typische Auftrag in Aurich ist ein Haus aus den sechziger bis achtziger Jahren, das den Eigentümer wechselt. Darin steckt meist dieselbe Schichtung: Teppich auf Estrich, darunter eine Ausgleichsschicht, Holzpaneele an Decken und Wänden, Einbauschränke aus der Bauzeit, ein Bad mit Fliesen bis zur Decke. Bei Gebäuden aus dieser Zeit ist außerdem der Blick auf Schadstoffe Pflicht, nicht Kür.",
       punkte: [
         "Nicht-tragende Trennwände, Vorsatzschalen und Einbauten entfernen",
         "Bodenbeläge, Estrichaufbauten, Paneele und Deckenverkleidungen zurückbauen",
@@ -155,12 +148,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     trockenbau: {
-      meta:
-        "Trockenbau in Aurich: Ständerwände, Vorsatzschalen, abgehängte Decken, Dachausbau. Spachtelung Q1 bis Q3, privat zum Festpreis, gewerblich als Sub.",
+      meta: "Trockenbau in Aurich: Ständerwände, Vorsatzschalen, abgehängte Decken, Dachausbau. Spachtelung Q1 bis Q3, privat zum Festpreis, gewerblich als Sub.",
       intro:
         "Trockenbau in Aurich für private Modernisierer und als Nachunternehmer für Betriebe im Landkreis: Ständerwände, Vorsatzschalen, abgehängte Decken und Dachschrägen, gespachtelt bis Q3.",
-      lage:
-        "Die Siedlungshäuser in den Auricher Ortsteilen haben fast alle dasselbe ungenutzte Potenzial unter dem Dach: eine Kehlbalkenlage, in der bisher Kartons stehen. Daraus werden Kinder- oder Arbeitszimmer, und dafür braucht es Dachschrägen, Drempel und eine saubere Anschlussebene. In der Kernstadt geht es häufiger um Aufteilung - eine große Wohnung wird geteilt, ein Ladenlokal wird Büro, und dann zählt vor allem der Schallschutz zwischen den Einheiten.",
+      lage: "Die Siedlungshäuser in den Auricher Ortsteilen haben fast alle dasselbe ungenutzte Potenzial unter dem Dach: eine Kehlbalkenlage, in der bisher Kartons stehen. Daraus werden Kinder- oder Arbeitszimmer, und dafür braucht es Dachschrägen, Drempel und eine saubere Anschlussebene. In der Kernstadt geht es häufiger um Aufteilung - eine große Wohnung wird geteilt, ein Ladenlokal wird Büro, und dann zählt vor allem der Schallschutz zwischen den Einheiten.",
       punkte: [
         "Ständerwände in Einfach- und Doppelbeplankung, auf Wunsch mit Schallschutz",
         "Vorsatzschalen vor unebenen oder kalten Außenwänden",
@@ -182,19 +173,18 @@ const inhalte: Record<string, Karte> = {
             "Das hängt allein daran, was darauf kommt. Für Raufaser und strukturierte Tapete genügt Q2. Für glatte, matte Anstriche empfehlen wir Q3, weil Streiflicht sonst jede Unebenheit zeigt. Welche Stufe kalkuliert ist, steht im Angebot.",
         },
         {
-          frage: "Kann ich das Dachgeschoss ausbauen lassen, während ich im Haus wohne?",
+          frage:
+            "Kann ich das Dachgeschoss ausbauen lassen, während ich im Haus wohne?",
           antwort:
             "In der Regel ja, weil sich das Dachgeschoss gut abschotten lässt. Wir stellen Staubschutz, decken den Treppenaufgang ab und stimmen die lauten Arbeiten mit Ihnen ab. Eingriffe in tragende Teile der Dachkonstruktion nur mit Freigabe durch einen Statiker.",
         },
       ],
     },
     umzug: {
-      meta:
-        "Umzug in Aurich und zwischen Aurich und Emden: fester Termin, Möbelmontage auf Wunsch, Räumung der alten Adresse im selben Auftrag. Preis nach Besichtigung.",
+      meta: "Umzug in Aurich und zwischen Aurich und Emden: fester Termin, Möbelmontage auf Wunsch, Räumung der alten Adresse im selben Auftrag. Festpreis.",
       intro:
         "Umzug in Aurich oder zwischen Aurich und Emden: ein Team, ein Ansprechpartner, ein Termin, der schriftlich steht. Auf Wunsch mit Ab- und Aufbau der Möbel und mit der Räumung dessen, was nicht mitkommt.",
-      lage:
-        "Zwischen Emden und Aurich liegen rund 26 km. In der Kernstadt ist die Frage meist das Treppenhaus: Altbau ohne Aufzug, enge Wendelung, schmale Podeste. In den Ortsteilen ist es eher die Zufahrt - lange Einfahrten, weicher Untergrund im Winter, Carports, die einen großen Transporter nicht durchlassen. Beides klären wir bei der Besichtigung, nicht am Umzugstag.",
+      lage: "Zwischen Emden und Aurich liegen rund 26 km. In der Kernstadt ist die Frage meist das Treppenhaus: Altbau ohne Aufzug, enge Wendelung, schmale Podeste. In den Ortsteilen ist es eher die Zufahrt - lange Einfahrten, weicher Untergrund im Winter, Carports, die einen großen Transporter nicht durchlassen. Beides klären wir bei der Besichtigung, nicht am Umzugstag.",
       punkte: [
         "Verpacken auf Wunsch, oder nur Tragen und Fahren, wenn Sie selbst packen",
         "Möbel demontieren und am Zielort wieder aufbauen",
@@ -227,12 +217,10 @@ const inhalte: Record<string, Karte> = {
   /* ------------------------------------------------------------------ */
   leer: {
     entruempelung: {
-      meta:
-        "Entrümpelung in Leer, von der Altbauwohnung in der Altstadt bis zum Haus in Loga oder Heisfelde. Halteverbotszone inklusive, Festpreis, besenreine Übergabe.",
+      meta: "Entrümpelung in Leer, von der Altbauwohnung in der Altstadt bis zum Haus in Loga oder Heisfelde. Halteverbotszone inklusive, Festpreis, besenrein.",
       intro:
         "Entrümpelung in Leer, von der Altbauwohnung in der Altstadt bis zum Haus in Loga oder Heisfelde. Kostenlose Besichtigung, Festpreis in Textform, besenreine Übergabe zum vereinbarten Termin.",
-      lage:
-        "Leer ist der Ort, an dem der Weg nach draußen schwieriger ist als das Räumen selbst. Die Altstadt hat schmale Gassen, teilweise Fußgängerbereiche und Häuser, in denen die Treppe eng gewendelt ist und kein Aufzug existiert. Wer dort im dritten Obergeschoss räumt, trägt jeden Gegenstand über dieselbe Treppe. In Loga, Heisfelde, Bingum und Logabirum sind es dagegen klassische Einfamilienhäuser mit Keller, Garage und Dachboden - mehr Volumen, aber unkomplizierter Zugang.",
+      lage: "Leer ist der Ort, an dem der Weg nach draußen schwieriger ist als das Räumen selbst. Die Altstadt hat schmale Gassen, teilweise Fußgängerbereiche und Häuser, in denen die Treppe eng gewendelt ist und kein Aufzug existiert. Wer dort im dritten Obergeschoss räumt, trägt jeden Gegenstand über dieselbe Treppe. In Loga, Heisfelde, Bingum und Logabirum sind es dagegen klassische Einfamilienhäuser mit Keller, Garage und Dachboden - mehr Volumen, aber unkomplizierter Zugang.",
       punkte: [
         "Altbauwohnungen in der Altstadt, auch in oberen Etagen ohne Aufzug",
         "Komplette Haushaltsauflösungen im Einfamilienhaus samt Keller und Garage",
@@ -261,12 +249,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     entkernung: {
-      meta:
-        "Rückbau im Leeraner Altbau: behutsam freilegen statt abräumen, Dielen und Stuck auf Wunsch erhalten. Nicht-tragend, sortenrein getrennt, Festpreis in Textform.",
+      meta: "Rückbau im Leeraner Altbau: behutsam freilegen statt abräumen, Dielen und Stuck auf Wunsch erhalten. Nicht-tragend, sortenrein getrennt, Festpreis.",
       intro:
         "Rückbau im Leeraner Altbau heißt: behutsam trennen, was raus soll, und stehen lassen, was das Haus ausmacht. Wir entfernen Nicht-Tragendes, ohne die Substanz zu beschädigen, die später wieder sichtbar werden soll.",
-      lage:
-        "In Leer stehen viele Häuser aus der Gründerzeit und dem frühen zwanzigsten Jahrhundert, oft in geschlossener Bauweise. Darin liegt der Unterschied zum Nachkriegsbau: Unter Teppich und Spanplatte liegen häufig Dielenböden, hinter Rigips steckt Stuck, und die Wandaufbauten sind selten das, was der Grundriss vermuten lässt. Rückbau ist hier Freilegen, nicht Abräumen. Wo ein Gebäude unter Denkmalschutz steht, richtet sich der Umfang nach der Abstimmung mit der Behörde, die der Eigentümer führt.",
+      lage: "In Leer stehen viele Häuser aus der Gründerzeit und dem frühen zwanzigsten Jahrhundert, oft in geschlossener Bauweise. Darin liegt der Unterschied zum Nachkriegsbau: Unter Teppich und Spanplatte liegen häufig Dielenböden, hinter Rigips steckt Stuck, und die Wandaufbauten sind selten das, was der Grundriss vermuten lässt. Rückbau ist hier Freilegen, nicht Abräumen. Wo ein Gebäude unter Denkmalschutz steht, richtet sich der Umfang nach der Abstimmung mit der Behörde, die der Eigentümer führt.",
       punkte: [
         "Abgehängte Decken und Verkleidungen der siebziger Jahre entfernen",
         "Bodenaufbauten schichtweise zurückbauen, Dielung nach Absprache erhalten",
@@ -295,12 +281,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     trockenbau: {
-      meta:
-        "Trockenbau in Leer: Vorsatzschalen vor krummen Altbauwänden, Schallschutz zwischen Wohneinheiten, abgehängte Decken, Dachausbau. Spachtelung Q1 bis Q3.",
+      meta: "Trockenbau in Leer: Vorsatzschalen vor krummen Altbauwänden, Schallschutz zwischen Wohneinheiten, abgehängte Decken, Dachausbau. Spachtelung Q1 bis Q3.",
       intro:
         "Trockenbau in Leer, überwiegend im Bestand: Vorsatzschalen vor krummen Altbauwänden, Schallschutz zwischen aufgeteilten Wohnungen, abgehängte Decken und Dachschrägen. Gespachtelt bis Q3.",
-      lage:
-        "Im Leeraner Altbau ist keine Wand gerade und keine Decke waagerecht - das ist kein Mangel, sondern der Normalzustand eines Hauses, das über hundert Jahre gearbeitet hat. Trockenbau ist hier deshalb oft die einzige sinnvolle Antwort: Eine Vorsatzschale gleicht aus, was Putz nicht mehr rettet, und schafft nebenbei Platz für Leitungen und Dämmung. Dazu kommt das Thema Schallschutz, weil viele große Altbauwohnungen inzwischen geteilt sind und Trittschall in diesen Häusern erstaunlich weit trägt.",
+      lage: "Im Leeraner Altbau ist keine Wand gerade und keine Decke waagerecht - das ist kein Mangel, sondern der Normalzustand eines Hauses, das über hundert Jahre gearbeitet hat. Trockenbau ist hier deshalb oft die einzige sinnvolle Antwort: Eine Vorsatzschale gleicht aus, was Putz nicht mehr rettet, und schafft nebenbei Platz für Leitungen und Dämmung. Dazu kommt das Thema Schallschutz, weil viele große Altbauwohnungen inzwischen geteilt sind und Trittschall in diesen Häusern erstaunlich weit trägt.",
       punkte: [
         "Vorsatzschalen zum Ausgleich krummer Wände und für Leitungsführung",
         "Trennwände mit erhöhtem Schallschutz zwischen Wohneinheiten",
@@ -329,12 +313,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     umzug: {
-      meta:
-        "Umzug in Leer: enge Altstadtgassen, Treppenhäuser ohne Aufzug, Halteverbotszone rechtzeitig beantragt. Fester Termin, Möbelmontage, Preis nach Besichtigung.",
+      meta: "Umzug in Leer: enge Altstadtgassen, Treppenhäuser ohne Aufzug, Halteverbotszone rechtzeitig beantragt. Fester Termin, Möbelmontage, Festpreis.",
       intro:
         "Umzug in Leer oder von Leer nach Emden: fester Termin, klarer Preis, ein Ansprechpartner. Auf Wunsch mit Möbelmontage und mit der Räumung der alten Wohnung im selben Auftrag.",
-      lage:
-        "Umzüge in der Leeraner Altstadt sind Logistik, nicht Muskelkraft. Der Transporter muss nah genug stehen, sonst wird aus einem Tagesauftrag zwei, und in den engen Straßen geht das fast nie ohne Halteverbotszone. Dazu kommen Treppenhäuser, die für die Möbel von heute nie gebaut wurden - was nicht durchs Treppenhaus passt, geht durchs Fenster oder gar nicht. In Loga, Heisfelde und Bingum ist der Zugang unkomplizierter, dafür sind die Haushalte meist größer.",
+      lage: "Umzüge in der Leeraner Altstadt sind Logistik, nicht Muskelkraft. Der Transporter muss nah genug stehen, sonst wird aus einem Tagesauftrag zwei, und in den engen Straßen geht das fast nie ohne Halteverbotszone. Dazu kommen Treppenhäuser, die für die Möbel von heute nie gebaut wurden - was nicht durchs Treppenhaus passt, geht durchs Fenster oder gar nicht. In Loga, Heisfelde und Bingum ist der Zugang unkomplizierter, dafür sind die Haushalte meist größer.",
       punkte: [
         "Halteverbotszone rechtzeitig beantragen, damit der Tragweg kurz bleibt",
         "Möbel demontieren, transportieren und am Zielort wieder aufbauen",
@@ -351,7 +333,8 @@ const inhalte: Record<string, Karte> = {
             "Ja, das übernehmen wir auf Wunsch und rechnen die Gebühr transparent ab. Wichtig ist der Vorlauf: Kurzfristig ist eine Zone in der Altstadt oft nicht mehr zu bekommen, und dann wird der Tragweg lang und der Umzug teuer.",
         },
         {
-          frage: "Was passiert mit Möbeln, die nicht durchs Treppenhaus passen?",
+          frage:
+            "Was passiert mit Möbeln, die nicht durchs Treppenhaus passen?",
           antwort:
             "Das klären wir bei der Besichtigung, nicht am Umzugstag. Manches lässt sich weiter zerlegen als der Hersteller vorsieht, manches nicht. Wo es baulich möglich ist, arbeiten wir mit einem Möbellift - das planen und kalkulieren wir dann vorher ein.",
         },
@@ -367,12 +350,10 @@ const inhalte: Record<string, Karte> = {
   /* ------------------------------------------------------------------ */
   norden: {
     entruempelung: {
-      meta:
-        "Entrümpelung in Norden und Norddeich: Ferienwohnungen zwischen zwei Saisons, Haushaltsauflösungen, Nebengebäude. Festpreis, Fotodokumentation für Auswärtige.",
+      meta: "Entrümpelung in Norden und Norddeich: Ferienwohnungen zwischen zwei Saisons, Haushaltsauflösungen, Nebengebäude. Festpreis, Fotodoku für Auswärtige.",
       intro:
         "Entrümpelung in Norden und Norddeich, von der Ferienwohnung nach dem Eigentümerwechsel bis zur kompletten Haushaltsauflösung. Kostenlose Besichtigung, Festpreis in Textform, Termin, der hält.",
-      lage:
-        "Norden hat zwei Taktgeber, und beide sind saisonal. Ferienwohnungen und Ferienhäuser werden zwischen den Vermietungszeiträumen geräumt, und dieses Fenster ist kurz - im Herbst und Winter ist Platz dafür, in der Hauptsaison praktisch nicht. Dazu kommen die klassischen Haushaltsauflösungen in der Kernstadt und in den Ortsteilen, bei denen Angehörige oft weit entfernt wohnen und den Ablauf aus der Ferne steuern müssen.",
+      lage: "Norden hat zwei Taktgeber, und beide sind saisonal. Ferienwohnungen und Ferienhäuser werden zwischen den Vermietungszeiträumen geräumt, und dieses Fenster ist kurz - im Herbst und Winter ist Platz dafür, in der Hauptsaison praktisch nicht. Dazu kommen die klassischen Haushaltsauflösungen in der Kernstadt und in den Ortsteilen, bei denen Angehörige oft weit entfernt wohnen und den Ablauf aus der Ferne steuern müssen.",
       punkte: [
         "Ferienwohnungen und Ferienhäuser komplett räumen, inklusive Inventar",
         "Haushaltsauflösungen im Einfamilienhaus samt Keller, Garage und Schuppen",
@@ -384,7 +365,8 @@ const inhalte: Record<string, Karte> = {
         "Norden liegt rund 32 km entfernt, zuständig ist die Abfallwirtschaft des Landkreises Aurich. Wenn Sie eine Ferienimmobilie räumen lassen, sagen Sie uns bitte früh, bis wann der nächste Vermietungszeitraum beginnt - danach richten wir die Planung aus. Für Eigentümer, die nicht vor Ort sind, arbeiten wir mit Schlüsselübergabe und dokumentieren das Ergebnis mit Fotos.",
       faq: [
         {
-          frage: "Können Sie eine Ferienwohnung zwischen zwei Vermietungen räumen?",
+          frage:
+            "Können Sie eine Ferienwohnung zwischen zwei Vermietungen räumen?",
           antwort:
             "Ja, wenn der Vorlauf stimmt. Sagen Sie uns das Enddatum des laufenden und das Startdatum des nächsten Zeitraums, dann planen wir dazwischen. In der Hauptsaison sind die Fenster eng, außerhalb ist fast alles möglich.",
         },
@@ -401,12 +383,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     entkernung: {
-      meta:
-        "Rückbau in Norden und Norddeich: Ferienobjekte im Zeitfenster der Zwischensaison entkernen. Bäder, Böden, Trennwände raus - ohne Wartetage bis zum Ausbau.",
+      meta: "Rückbau in Norden und Norddeich: Ferienobjekte im Zeitfenster der Zwischensaison entkernen. Bäder, Böden, Trennwände raus - ohne Wartetage bis zum Ausbau.",
       intro:
         "Rückbau in Norden und Norddeich, meistens dann, wenn aus einem in die Jahre gekommenen Objekt wieder etwas Vermietbares werden soll. Wir nehmen alles Nicht-Tragende heraus und übergeben ausbaufertig.",
-      lage:
-        "Der typische Auftrag hier ist die Modernisierung einer Ferienwohnung, und der entscheidende Faktor ist Zeit. Zwischen Ende der einen und Beginn der nächsten Saison liegt ein festes Fenster, und wer darin Rückbau, Ausbau und Ausstattung unterbringen will, kann sich keine Wartetage zwischen den Gewerken leisten. Dazu kommt die Lage an der Küste: In Objekten nahe am Deich ist Feuchtigkeit ein Thema, das beim Öffnen von Bodenaufbauten sichtbar werden kann.",
+      lage: "Der typische Auftrag hier ist die Modernisierung einer Ferienwohnung, und der entscheidende Faktor ist Zeit. Zwischen Ende der einen und Beginn der nächsten Saison liegt ein festes Fenster, und wer darin Rückbau, Ausbau und Ausstattung unterbringen will, kann sich keine Wartetage zwischen den Gewerken leisten. Dazu kommt die Lage an der Küste: In Objekten nahe am Deich ist Feuchtigkeit ein Thema, das beim Öffnen von Bodenaufbauten sichtbar werden kann.",
       punkte: [
         "Bäder und Küchen vollständig zurückbauen, ohne Anschlüsse zu trennen",
         "Bodenbeläge und Estrichaufbauten entfernen, Untergrund beurteilen",
@@ -435,12 +415,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     trockenbau: {
-      meta:
-        "Trockenbau in Norden und Norddeich: Einheiten aufteilen, Schallschutz zwischen Ferienwohnungen, Dachgeschoss ausbauen, Decken abhängen. Spachtelung bis Q3.",
+      meta: "Trockenbau in Norden und Norddeich: Einheiten aufteilen, Schallschutz zwischen Ferienwohnungen, Dachgeschoss ausbauen, Decken abhängen. Spachtelung bis Q3.",
       intro:
         "Trockenbau in Norden und Norddeich: Einheiten aufteilen, Schallschutz zwischen Ferienwohnungen, Dachgeschosse ausbauen, Decken abhängen. Spachtelung bis Q3, Festpreis nach Aufmaß.",
-      lage:
-        "In Ferienobjekten hat Trockenbau eine Aufgabe, die er sonst selten hat: Er entscheidet mit über die Bewertung. Wer in einer Ferienwohnung nachts den Nachbarn hört, schreibt das in die Rezension, und das wirkt länger als jede Renovierung. Deshalb geht es hier selten nur um eine Wand, sondern um einen Aufbau, der Luft- und Trittschall im Blick hat. Der zweite große Posten ist das Dachgeschoss - aus ungenutztem Raum unter der Schräge wird eine zusätzliche vermietbare Einheit.",
+      lage: "In Ferienobjekten hat Trockenbau eine Aufgabe, die er sonst selten hat: Er entscheidet mit über die Bewertung. Wer in einer Ferienwohnung nachts den Nachbarn hört, schreibt das in die Rezension, und das wirkt länger als jede Renovierung. Deshalb geht es hier selten nur um eine Wand, sondern um einen Aufbau, der Luft- und Trittschall im Blick hat. Der zweite große Posten ist das Dachgeschoss - aus ungenutztem Raum unter der Schräge wird eine zusätzliche vermietbare Einheit.",
       punkte: [
         "Trennwände zwischen Wohneinheiten mit erhöhtem Schallschutz",
         "Aufteilung großer Grundrisse in mehrere vermietbare Einheiten",
@@ -469,12 +447,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     umzug: {
-      meta:
-        "Umzug in Norden und Norddeich, auch für Zweitwohnungen und Teilräumungen. Fester Termin, Möbelmontage auf Wunsch, klarer Preis nach kostenloser Besichtigung.",
+      meta: "Umzug in Norden und Norddeich, auch für Zweitwohnungen und Teilräumungen. Fester Termin, Möbelmontage auf Wunsch, Festpreis nach Besichtigung.",
       intro:
         "Umzug in Norden und Norddeich: fester Termin, klarer Preis, Möbelmontage auf Wunsch. Auch für Zweitwohnungen und für den Wechsel zwischen Küste und Festland.",
-      lage:
-        "Umzüge in Norden haben eine Besonderheit: Oft zieht nicht ein ganzer Haushalt um, sondern ein halber. Zweitwohnungen werden aufgelöst oder bezogen, Möbel gehen in die eine Richtung und Hausrat in die andere. Das lässt sich gut planen, wenn man vorher weiß, was wohin gehört - und schlecht, wenn es am Umzugstag entschieden wird. In Norddeich kommt die Nähe zum Fährhafen hinzu, und damit die Frage nach den Inseln.",
+      lage: "Umzüge in Norden haben eine Besonderheit: Oft zieht nicht ein ganzer Haushalt um, sondern ein halber. Zweitwohnungen werden aufgelöst oder bezogen, Möbel gehen in die eine Richtung und Hausrat in die andere. Das lässt sich gut planen, wenn man vorher weiß, was wohin gehört - und schlecht, wenn es am Umzugstag entschieden wird. In Norddeich kommt die Nähe zum Fährhafen hinzu, und damit die Frage nach den Inseln.",
       punkte: [
         "Umzüge innerhalb von Norden und zwischen Norden und Emden",
         "Auflösung oder Einrichtung von Zweitwohnungen, auch in Teilen",
@@ -507,12 +483,10 @@ const inhalte: Record<string, Karte> = {
   /* ------------------------------------------------------------------ */
   moormerland: {
     entruempelung: {
-      meta:
-        "Entrümpelung in Moormerland: Warsingsfehn, Veenhusen, Neermoor, Oldersum. Haus, Keller, Garage und Werkstatt, sortenrein getrennt. Nur 20 km ab Emden.",
+      meta: "Entrümpelung in Moormerland: Warsingsfehn, Veenhusen, Neermoor, Oldersum. Haus, Keller, Garage und Werkstatt, sortenrein getrennt. Nur 20 km ab Emden.",
       intro:
         "Entrümpelung in Moormerland, von Warsingsfehn über Veenhusen und Neermoor bis Oldersum. Kostenlose Besichtigung, Festpreis in Textform, besenreine Übergabe.",
-      lage:
-        "Moormerland ist eine Flächengemeinde aus vielen Ortsteilen, und die Grundstücke tragen ihre Geschichte: Die Fehnsiedlungen haben lange, schmale Parzellen, auf denen über Jahrzehnte angebaut wurde - Garage, Werkstatt, Gartenhaus, oft noch ein alter Stall. Bei einer Haushaltsauflösung ist deshalb selten die Wohnfläche der große Posten, sondern das, was drumherum steht. Der Vorteil für Sie: Mit rund 20 km ist Moormerland eines unserer nächstgelegenen Ziele, was die Anfahrtsposition im Angebot spürbar klein hält.",
+      lage: "Moormerland ist eine Flächengemeinde aus vielen Ortsteilen, und die Grundstücke tragen ihre Geschichte: Die Fehnsiedlungen haben lange, schmale Parzellen, auf denen über Jahrzehnte angebaut wurde - Garage, Werkstatt, Gartenhaus, oft noch ein alter Stall. Bei einer Haushaltsauflösung ist deshalb selten die Wohnfläche der große Posten, sondern das, was drumherum steht. Der Vorteil für Sie: Mit rund 20 km ist Moormerland eines unserer nächstgelegenen Ziele, was die Anfahrtsposition im Angebot spürbar klein hält.",
       punkte: [
         "Haushaltsauflösungen im Einfamilienhaus samt Keller und Dachboden",
         "Nebengebäude: Garage, Werkstatt, Gartenhaus, Schuppen und alte Ställe",
@@ -541,12 +515,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     entkernung: {
-      meta:
-        "Rückbau in Moormerland: Paneele, Teppich, Estrich, Einbauschränke und alte Bäder raus. Nicht-tragend, sortenrein getrennt, Fläche ausbaufertig übergeben.",
+      meta: "Rückbau in Moormerland: Paneele, Teppich, Estrich, Einbauschränke und alte Bäder raus. Nicht-tragend, sortenrein getrennt, Fläche ausbaufertig übergeben.",
       intro:
         "Rückbau in Moormerland, meist im Generationswechsel: Ein Haus aus den siebziger oder achtziger Jahren wechselt den Besitzer, und vor dem Einzug soll alles Alte raus. Genau dafür sind wir da.",
-      lage:
-        "Die Eigenheime in Warsingsfehn, Veenhusen und Neermoor stammen überwiegend aus einer Bauphase, deren Innenausbau man wiedererkennt: Holzpaneele an Decken und Wänden, Teppich auf Estrich, geflieste Bäder bis unter die Decke, Einbauschränke aus der Bauzeit und häufig ein ausgebauter Dachboden mit Spanplatten und Mineralwolle dahinter. Das alles lässt sich schnell und sauber zurückbauen, wenn man weiß, in welcher Reihenfolge - und wo man vorher genauer hinsieht.",
+      lage: "Die Eigenheime in Warsingsfehn, Veenhusen und Neermoor stammen überwiegend aus einer Bauphase, deren Innenausbau man wiedererkennt: Holzpaneele an Decken und Wänden, Teppich auf Estrich, geflieste Bäder bis unter die Decke, Einbauschränke aus der Bauzeit und häufig ein ausgebauter Dachboden mit Spanplatten und Mineralwolle dahinter. Das alles lässt sich schnell und sauber zurückbauen, wenn man weiß, in welcher Reihenfolge - und wo man vorher genauer hinsieht.",
       punkte: [
         "Deckenpaneele, Wandverkleidungen und Einbauschränke entfernen",
         "Teppich, Estrichaufbauten und Ausgleichsschichten zurückbauen",
@@ -575,12 +547,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     trockenbau: {
-      meta:
-        "Trockenbau in Moormerland: Dachgeschossausbau, neue Raumaufteilung, Vorsatzschalen, abgehängte Decken. Spachtelung Q1 bis Q3, auch kleinere Aufträge.",
+      meta: "Trockenbau in Moormerland: Dachgeschossausbau, neue Raumaufteilung, Vorsatzschalen, abgehängte Decken. Spachtelung Q1 bis Q3, auch kleinere Aufträge.",
       intro:
         "Trockenbau in Moormerland für private Modernisierer und als Nachunternehmer: Ständerwände, Vorsatzschalen, abgehängte Decken, Dachschrägen. Spachtelung bis Q3, Festpreis nach Aufmaß.",
-      lage:
-        "In den Eigenheimen der siebziger und achtziger Jahre geht es fast immer um dieselben zwei Dinge. Erstens der Dachboden: Die Kehlbalkenlage ist da, die Höhe reicht meistens, und aus Abstellfläche wird ein Kinder- oder Arbeitszimmer. Zweitens der Grundriss im Erdgeschoss, der für eine Wohnweise gebaut wurde, die es so nicht mehr gibt - kleine getrennte Räume, wo heute Küche und Wohnbereich zusammengehören. Beides ist Trockenbau, und beides lässt sich im bewohnten Haus machen.",
+      lage: "In den Eigenheimen der siebziger und achtziger Jahre geht es fast immer um dieselben zwei Dinge. Erstens der Dachboden: Die Kehlbalkenlage ist da, die Höhe reicht meistens, und aus Abstellfläche wird ein Kinder- oder Arbeitszimmer. Zweitens der Grundriss im Erdgeschoss, der für eine Wohnweise gebaut wurde, die es so nicht mehr gibt - kleine getrennte Räume, wo heute Küche und Wohnbereich zusammengehören. Beides ist Trockenbau, und beides lässt sich im bewohnten Haus machen.",
       punkte: [
         "Dachgeschossausbau mit Schrägen, Drempel und Kehlbalkenlage",
         "Ständerwände für neue Raumaufteilung, auf Wunsch mit Schallschutz",
@@ -597,7 +567,8 @@ const inhalte: Record<string, Karte> = {
             "Das messen wir bei der Besichtigung. Entscheidend ist nicht nur die Höhe im First, sondern wie viel Fläche eine ausreichende Stehhöhe hat - und was die Landesbauordnung für Aufenthaltsräume verlangt. Wenn es knapp wird, sagen wir das, bevor Sie planen.",
         },
         {
-          frage: "Kann eine Wand raus, damit Küche und Wohnzimmer zusammenkommen?",
+          frage:
+            "Kann eine Wand raus, damit Küche und Wohnzimmer zusammenkommen?",
           antwort:
             "Wenn sie nicht tragend ist, ja. Ob sie tragend ist, klären wir vorher anhand von Grundriss und Deckenauflager, im Zweifel mit einem Statiker. Ohne Freigabe fassen wir tragende Bauteile nicht an - da gibt es bei uns keinen Ermessensspielraum.",
         },
@@ -609,12 +580,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     umzug: {
-      meta:
-        "Umzug in Moormerland und Richtung Emden oder Leer: kurze Wege, fester Termin, Möbelmontage. Keller, Dachboden und Garage werden vorher mit eingeplant.",
+      meta: "Umzug in Moormerland und Richtung Emden oder Leer: kurze Wege, fester Termin, Möbelmontage. Keller, Dachboden und Garage werden vorher mit eingeplant.",
       intro:
         "Umzug in Moormerland oder zwischen Moormerland und Emden: kurze Wege, fester Termin, Möbelmontage auf Wunsch. Auf Wunsch räumen wir die alte Adresse im selben Auftrag.",
-      lage:
-        "Moormerland liegt für einen Umzug fast ideal: 20 km nach Emden, kurze Wege nach Leer, und die meisten Objekte sind Einfamilienhäuser mit ebenerdigem Zugang. Das macht Umzüge hier planbar. Leicht unterschätzt wird das Volumen - wer zwanzig Jahre in einem Haus mit Keller, Dachboden und Garage gewohnt hat, zieht mit deutlich mehr um als jemand aus einer Wohnung. Deshalb schauen wir uns vorher an, was tatsächlich mitkommt.",
+      lage: "Moormerland liegt für einen Umzug fast ideal: 20 km nach Emden, kurze Wege nach Leer, und die meisten Objekte sind Einfamilienhäuser mit ebenerdigem Zugang. Das macht Umzüge hier planbar. Leicht unterschätzt wird das Volumen - wer zwanzig Jahre in einem Haus mit Keller, Dachboden und Garage gewohnt hat, zieht mit deutlich mehr um als jemand aus einer Wohnung. Deshalb schauen wir uns vorher an, was tatsächlich mitkommt.",
       punkte: [
         "Umzüge innerhalb der Gemeinde und in Richtung Emden oder Leer",
         "Möbel demontieren, transportieren und am Zielort wieder aufbauen",
@@ -647,12 +616,10 @@ const inhalte: Record<string, Karte> = {
   /* ------------------------------------------------------------------ */
   krummhoern: {
     entruempelung: {
-      meta:
-        "Entrümpelung in der Krummhörn, von Pewsum bis Greetsiel: Wohnhaus, Ferienhaus, Scheune und Stall. Sortenrein getrennt, Festpreis, nur 14 km ab Emden.",
+      meta: "Entrümpelung in der Krummhörn, von Pewsum bis Greetsiel: Wohnhaus, Ferienhaus, Scheune und Stall. Sortenrein getrennt, Festpreis, nur 14 km ab Emden.",
       intro:
         "Entrümpelung in der Krummhörn, von Pewsum bis Greetsiel. Ob Wohnhaus, Ferienhaus oder ein alter Hof mit Scheune - kostenlose Besichtigung, Festpreis in Textform, besenreine Übergabe.",
-      lage:
-        "Die Krummhörn besteht aus vielen kleinen Dörfern, und die Objekte unterscheiden sich stärker voneinander als in einer Stadt. Ein Reihenhaus in Pewsum ist ein überschaubarer Auftrag. Ein Gulfhof mit Scheune und Stall ist etwas völlig anderes: große Volumina, teilweise alte Landtechnik, Reste von Futtermitteln, manchmal Bauschutt aus früheren Umbauten, und all das unter einem Dach, unter dem man nicht überall gefahrlos steht. In Greetsiel kommen Ferienhäuser hinzu, die beim Eigentümerwechsel komplett geräumt werden.",
+      lage: "Die Krummhörn besteht aus vielen kleinen Dörfern, und die Objekte unterscheiden sich stärker voneinander als in einer Stadt. Ein Reihenhaus in Pewsum ist ein überschaubarer Auftrag. Ein Gulfhof mit Scheune und Stall ist etwas völlig anderes: große Volumina, teilweise alte Landtechnik, Reste von Futtermitteln, manchmal Bauschutt aus früheren Umbauten, und all das unter einem Dach, unter dem man nicht überall gefahrlos steht. In Greetsiel kommen Ferienhäuser hinzu, die beim Eigentümerwechsel komplett geräumt werden.",
       punkte: [
         "Wohnhäuser und Ferienhäuser komplett räumen, inklusive Inventar",
         "Scheunen, Ställe und Nebengebäude mit großem Volumen",
@@ -681,12 +648,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     entkernung: {
-      meta:
-        "Rückbau in alter Bausubstanz der Krummhörn: Einbauten späterer Umbauten raus, Ständerwerk unangetastet. Feuchte wird gemeldet, nicht überbaut.",
+      meta: "Rückbau in alter Bausubstanz der Krummhörn: Einbauten späterer Umbauten raus, Ständerwerk unangetastet. Feuchte wird gemeldet, nicht überbaut.",
       intro:
         "Rückbau in der Krummhörn, häufig in alter Bausubstanz: Wir nehmen heraus, was spätere Jahrzehnte hineingebaut haben, und lassen unangetastet, was das Gebäude trägt.",
-      lage:
-        "Die alten Häuser und Höfe der Krummhörn sind baulich etwas anderes als ein Nachkriegsbau, und das hat Folgen für den Rückbau. Bei einem Gulfhof übernimmt ein hölzernes Ständergerüst im Inneren die Last des Daches - was dort aussieht wie eine gewöhnliche Wand, kann Teil der Konstruktion sein. Dazu kommen Einbauten aus mehreren Umbauphasen, hinter denen der ursprüngliche Aufbau steckt. Und die Außenwände haben oft keine Sperrschicht, weshalb beim Öffnen des Bodens Feuchtigkeit sichtbar werden kann.",
+      lage: "Die alten Häuser und Höfe der Krummhörn sind baulich etwas anderes als ein Nachkriegsbau, und das hat Folgen für den Rückbau. Bei einem Gulfhof übernimmt ein hölzernes Ständergerüst im Inneren die Last des Daches - was dort aussieht wie eine gewöhnliche Wand, kann Teil der Konstruktion sein. Dazu kommen Einbauten aus mehreren Umbauphasen, hinter denen der ursprüngliche Aufbau steckt. Und die Außenwände haben oft keine Sperrschicht, weshalb beim Öffnen des Bodens Feuchtigkeit sichtbar werden kann.",
       punkte: [
         "Einbauten und Verkleidungen späterer Umbauphasen entfernen",
         "Bodenaufbauten schichtweise öffnen und den Untergrund beurteilen",
@@ -715,12 +680,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     trockenbau: {
-      meta:
-        "Trockenbau in der Krummhörn: Innenausbau in Höfen und Ferienwohnungen, Vorsatzschalen, Trennwände, Dachschrägen. Spachtelung Q1 bis Q3, 14 km ab Emden.",
+      meta: "Trockenbau in der Krummhörn: Innenausbau in Höfen und Ferienwohnungen, Vorsatzschalen, Trennwände, Dachschrägen. Spachtelung Q1 bis Q3, 14 km ab Emden.",
       intro:
         "Trockenbau in der Krummhörn: Innenausbau in alten Häusern und Höfen, Ferienwohnungen, Dachgeschosse. Vorsatzschalen, Trennwände, Decken und Schrägen, gespachtelt bis Q3.",
-      lage:
-        "Im Bestand der Krummhörn ist Trockenbau die Technik, mit der ein altes Gebäude bewohnbar wird, ohne dass man seine Substanz opfert. Eine Vorsatzschale schafft die Ebene für Dämmung und Leitungen, ohne die Außenwand anzutasten. Trennwände teilen einen großen, ungegliederten Raum, wie ihn ein umgenutztes Wirtschaftsteil hat. Und weil viele dieser Objekte als Ferienwohnung genutzt werden, spielt Schallschutz zwischen den Einheiten eine größere Rolle als in einem Einfamilienhaus.",
+      lage: "Im Bestand der Krummhörn ist Trockenbau die Technik, mit der ein altes Gebäude bewohnbar wird, ohne dass man seine Substanz opfert. Eine Vorsatzschale schafft die Ebene für Dämmung und Leitungen, ohne die Außenwand anzutasten. Trennwände teilen einen großen, ungegliederten Raum, wie ihn ein umgenutztes Wirtschaftsteil hat. Und weil viele dieser Objekte als Ferienwohnung genutzt werden, spielt Schallschutz zwischen den Einheiten eine größere Rolle als in einem Einfamilienhaus.",
       punkte: [
         "Vorsatzschalen mit Raum für Dämmung und Leitungsführung",
         "Trennwände zur Gliederung großer Räume, auf Wunsch mit Schallschutz",
@@ -749,12 +712,10 @@ const inhalte: Record<string, Karte> = {
       ],
     },
     umzug: {
-      meta:
-        "Umzug in der Krummhörn: enge Dorfstraßen und Warften vorher eingeplant, Stellplatz und Tragweg festgelegt. Fester Termin, Möbelmontage, kurze Anfahrt.",
+      meta: "Umzug in der Krummhörn: enge Dorfstraßen und Warften vorher eingeplant, Stellplatz und Tragweg festgelegt. Fester Termin, Möbelmontage, kurze Anfahrt.",
       intro:
         "Umzug in der Krummhörn oder zwischen Krummhörn und Emden: kurze Anfahrt, fester Termin, Möbelmontage auf Wunsch. Auch für Ferienhäuser und Zweitwohnsitze.",
-      lage:
-        "Die Krummhörn ist nah, aber nicht überall leicht anzufahren. Viele Dörfer liegen auf Warften, die Straßen sind eng, und vor manchen Häusern ist schlicht kein Platz für einen großen Transporter samt Rampe. In Greetsiel kommt in der Saison der Besucherverkehr dazu, der die Frage nach dem Stellplatz verschärft. Das alles ist lösbar, wenn man es vorher weiß - und ärgerlich, wenn es am Umzugstag auffällt.",
+      lage: "Die Krummhörn ist nah, aber nicht überall leicht anzufahren. Viele Dörfer liegen auf Warften, die Straßen sind eng, und vor manchen Häusern ist schlicht kein Platz für einen großen Transporter samt Rampe. In Greetsiel kommt in der Saison der Besucherverkehr dazu, der die Frage nach dem Stellplatz verschärft. Das alles ist lösbar, wenn man es vorher weiß - und ärgerlich, wenn es am Umzugstag auffällt.",
       punkte: [
         "Umzüge innerhalb der Krummhörn und in Richtung Emden",
         "Möbel demontieren, transportieren und am Zielort wieder aufbauen",

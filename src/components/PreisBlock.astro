@@ -1,0 +1,155 @@
+---
+/* "Was kostet das?" - freigegebene Richtwerte aus src/data/preise.ts.
+   Neben jedem Betrag steht der Hinweis auf den Festpreis, darunter der
+   Steuerhinweis. Leistungen ohne Richtwert zeigen nur den Festpreis-Hinweis. */
+import Button from "./Button.astro";
+import { preise, steuerHinweis, type PreisSchluessel } from "../data/preise";
+
+interface Props {
+  positionen: PreisSchluessel[];
+  /** Einleitung über den Positionen - sachlich, ohne weitere Zahlen. */
+  text?: string;
+  titel?: string;
+}
+
+const {
+  positionen,
+  text = "Jedes Objekt ist anders. Deshalb gilt am Ende der Festpreis aus dem Angebot - schriftlich und vor Beginn der Arbeiten.",
+  titel = "Was kostet das?",
+} = Astro.props;
+
+const zeilen = positionen.map((k) => preise[k]);
+const mitBetrag = zeilen.some((z) => "betrag" in z && z.betrag);
+---
+
+<section class="section section--tight preis" aria-labelledby="preis-title">
+  <div class="container preis-grid" data-reveal>
+    <div class="preis-kopf">
+      <p class="eyebrow">Preise</p>
+      <h2 id="preis-title">{titel}</h2>
+      <p class="muted">{text}</p>
+      <Button
+        href="/kontakt/"
+        icon="arrow"
+        class="preis-btn"
+        data-track="angebot"
+      >
+        Festpreis anfragen
+      </Button>
+    </div>
+
+    <div class="preis-karte card">
+      <dl class="preis-liste">
+        {
+          zeilen.map((z) => (
+            <div class="preis-zeile">
+              <dt>{z.leistung}</dt>
+              <dd>
+                <span class="preis-werte">
+                  {"betrag" in z && z.betrag && (
+                    <strong class="preis-betrag">{z.betrag}</strong>
+                  )}
+                  <span class="preis-fest">{z.festpreis}</span>
+                </span>
+                <span class="preis-bedingung">{z.bedingung}</span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      {mitBetrag && <p class="preis-steuer">{steuerHinweis}</p>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .preis-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .preis-kopf h2 {
+    margin: 0.35rem 0 0.75rem;
+  }
+
+  .preis-kopf :global(.preis-btn) {
+    margin-top: 1.25rem;
+  }
+
+  .preis-karte {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-top: 4px solid var(--navy);
+  }
+
+  .preis-liste {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+  }
+
+  .preis-zeile + .preis-zeile {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .preis-zeile dt {
+    margin-bottom: 0.5rem;
+    font-weight: 800;
+    color: var(--navy);
+  }
+
+  .preis-zeile dd {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+  }
+
+  .preis-werte {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .preis-betrag {
+    font-size: var(--step-3);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--blue);
+  }
+
+  .preis-fest {
+    display: inline-flex;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--navy);
+  }
+
+  .preis-bedingung {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .preis-steuer {
+    margin: 1.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--line-strong);
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 860px) {
+    .preis-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
