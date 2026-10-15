@@ -10,6 +10,8 @@ interface Props {
   /** Für externe Ziele (WhatsApp) - setzt rel und target. */
   external?: boolean;
   "aria-label"?: string;
+  /** Messpunkt für die Klickmessung, siehe Base.astro (z. B. "angebot"). */
+  "data-track"?: string;
 }
 
 const {
@@ -19,6 +21,7 @@ const {
   class: className = "",
   external,
   "aria-label": ariaLabel,
+  "data-track": track,
 } = Astro.props;
 
 const variantClass =
@@ -41,6 +44,7 @@ const isExternal = external ?? /^https?:/.test(href);
     .trim()}
   href={href}
   aria-label={ariaLabel}
+  data-track={track}
   {...isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {}}
 >
   {isWhatsApp && <WhatsAppMark size={24} />}

@@ -1,0 +1,148 @@
+---
+/* Verweis auf die Zentralseite der Leistungskette. Steht auf der Startseite
+   und auf den Seiten Entrümpelung, Entkernung und Trockenbau - genau dort,
+   wo jemand eine Leistung sucht und die nächste vielleicht auch braucht. */
+import Icon from "./Icon.astro";
+import { kettePfad } from "../data/site";
+
+interface Props {
+  /** Hervorgehobener Schritt der aktuellen Seite. */
+  aktiv?: "raeumen" | "rueckbauen" | "ausbauen";
+}
+
+const { aktiv } = Astro.props;
+
+const schritte: Array<{ id: Props["aktiv"]; titel: string; href: string }> = [
+  { id: "raeumen", titel: "Entrümpelung", href: "/entruempelung/" },
+  { id: "rueckbauen", titel: "Entkernung", href: "/entkernung/" },
+  { id: "ausbauen", titel: "Innenausbau", href: "/trockenbau/" },
+];
+---
+
+<section class="section section--tight" aria-labelledby="kette-band-title">
+  <div class="container kette-band" data-reveal>
+    <div class="kette-text">
+      <p class="eyebrow">Alles aus einer Hand</p>
+      <h2 id="kette-band-title">
+        Entrümpelung, Entkernung und Innenausbau in einem Auftrag
+      </h2>
+      <p>
+        Fixum räumt das Objekt, baut nicht tragende Bauteile zurück und
+        übernimmt danach Trockenbau, Boden und Montage. Ein Ansprechpartner, ein
+        Angebot mit getrennten Positionen, keine Übergabe zwischen Firmen.
+      </p>
+      <a class="kette-link" href={kettePfad}>
+        So läuft die komplette Leistungskette
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
+
+    <ol class="kette-schritte" aria-label="Die drei Schritte">
+      {
+        schritte.map((s, i) => (
+          <li class={s.id === aktiv ? "is-aktiv" : ""}>
+            <span class="kette-no">{i + 1}</span>
+            <a href={s.href}>{s.titel}</a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .kette-band {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    border-radius: var(--radius-lg);
+    color: var(--on-dark-soft);
+    background:
+      radial-gradient(
+        120% 140% at 100% 0%,
+        rgba(31, 122, 224, 0.28),
+        transparent 55%
+      ),
+      linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+    box-shadow: var(--shadow-md);
+  }
+
+  .kette-band .eyebrow {
+    color: var(--amber);
+  }
+
+  .kette-band h2 {
+    margin: 0.35rem 0 0.75rem;
+    font-size: var(--step-3);
+    color: #fff;
+  }
+
+  .kette-band p {
+    max-width: var(--measure);
+  }
+
+  .kette-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-weight: 800;
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-underline-offset: 0.3em;
+  }
+
+  .kette-link:hover {
+    color: var(--amber);
+  }
+
+  .kette-schritte {
+    display: grid;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kette-schritte li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--on-dark-faint);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .kette-schritte li.is-aktiv {
+    border-color: var(--amber);
+    background: rgba(255, 176, 32, 0.1);
+  }
+
+  .kette-schritte a {
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .kette-no {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: var(--radius-pill);
+    font-weight: 800;
+    font-size: 0.875rem;
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  @media (max-width: 860px) {
+    .kette-band {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

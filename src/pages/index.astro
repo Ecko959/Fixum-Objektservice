@@ -8,6 +8,8 @@ import ContactForm from "../components/ContactForm.astro";
 import CtaBand from "../components/CtaBand.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
+import KetteBand from "../components/KetteBand.astro";
+import Kundenstimmen from "../components/Kundenstimmen.astro";
 import Photo from "../components/Photo.astro";
 import ReferenceGallery from "../components/ReferenceGallery.astro";
 import ServiceCard from "../components/ServiceCard.astro";
@@ -72,7 +74,8 @@ const ablaufRoh: Array<{
     bild: "/generated/ablauf-raeumen.png",
     ersatz: "/images/categories/haushaltsaufloesung.png",
     alt: "Halb geräumtes Wohnzimmer: Umzugskartons an der Wand, daneben getrennte Stapel aus Holz, Metall und Elektrogeräten.",
-    altErsatz: "Wohnraum während einer Haushaltsauflösung, Hausrat zum Abtransport vorbereitet.",
+    altErsatz:
+      "Wohnraum während einer Haushaltsauflösung, Hausrat zum Abtransport vorbereitet.",
   },
   {
     titel: "Rückbauen",
@@ -80,7 +83,8 @@ const ablaufRoh: Array<{
     bild: "/generated/ablauf-rueckbauen.png",
     ersatz: "/images/categories/entkernung-rueckbau.png",
     alt: "Leerer Altbauraum nach dem Rückbau: Bodenbelag entfernt, Estrich sichtbar, Bauschutt in Säcken, Staubschutzfolie vor der Tür.",
-    altErsatz: "Raum während des nicht-tragenden Rückbaus, Bodenbelag und Einbauten entfernt.",
+    altErsatz:
+      "Raum während des nicht-tragenden Rückbaus, Bodenbelag und Einbauten entfernt.",
   },
   {
     titel: "Ausbauen",
@@ -99,7 +103,8 @@ const ablaufRoh: Array<{
        besenreine Raum. */
     ersatz: "/images/categories/wohnungsraeumung.png",
     alt: "Fertig renovierter, leerer Raum mit hellem Vinylboden, glatten weißen Wänden und neuer Tür bei Tageslicht.",
-    altErsatz: "Leergeräumter heller Wohnraum, der für die Übergabe besenrein gefegt wird.",
+    altErsatz:
+      "Leergeräumter heller Wohnraum, der für die Übergabe besenrein gefegt wird.",
   },
 ];
 
@@ -160,6 +165,7 @@ const reasons: Array<[string, string]> = [
 
 const serviceChips: Array<[string, string]> = [
   ["Alle Leistungen", "/leistungen/"],
+  ["Preis berechnen", "/preisrechner/"],
   ["Entrümpelung", "/entruempelung/"],
   ["Entkernung", "/entkernung/"],
   ["Trockenbau", "/trockenbau/"],
@@ -254,7 +260,13 @@ const serviceChips: Array<[string, string]> = [
     <nav class="container hero-chips" aria-label="Leistungen im Überblick">
       {
         serviceChips.map(([label, href], index) => (
-          <a href={href} class={index === 0 ? "is-primary" : ""}>
+          <a
+            href={href}
+            class:list={[
+              index === 0 && "is-primary",
+              href === "/preisrechner/" && "is-rechner",
+            ]}
+          >
             {label}
           </a>
         ))
@@ -301,9 +313,9 @@ const serviceChips: Array<[string, string]> = [
             href="/entkernung/">Entkernung</a
           >,
           <a href="/trockenbau/">Trockenbau</a> und
-          <a href="/bodenverlegung/">Montage</a>. Unser Ziel ist nicht
-          nur, Arbeit abzunehmen, sondern ein Ergebnis zu liefern, auf das Sie
-          sich verlassen können.
+          <a href="/bodenverlegung/">Montage</a>. Unser Ziel ist nicht nur,
+          Arbeit abzunehmen, sondern ein Ergebnis zu liefern, auf das Sie sich
+          verlassen können.
         </p>
         <p class="muted">
           Wir arbeiten mit klarer Absprache, einem Blick für Details und
@@ -331,7 +343,7 @@ const serviceChips: Array<[string, string]> = [
       >
         <Photo
           src="/images/service-clearance.png"
-          alt="Sortierte Räumung einer Wohnung durch Fixum Objektservice in Emden"
+          alt="Räumung einer Wohnung: Kartons und Säcke zum Abtransport bereit (Symbolbild)"
           width={900}
           height={650}
           sizes="(max-width: 980px) 100vw, 44vw"
@@ -339,7 +351,7 @@ const serviceChips: Array<[string, string]> = [
         />
         <Photo
           src="/images/service-drywall.png"
-          alt="Trockenbauarbeiten an einer Ständerwand in Ostfriesland"
+          alt="Handwerker richtet eine Trockenbauwand mit der Wasserwaage aus (Symbolbild)"
           width={620}
           height={460}
           sizes="(max-width: 980px) 100vw, 20vw"
@@ -347,7 +359,7 @@ const serviceChips: Array<[string, string]> = [
         />
         <Photo
           src="/images/team-van.png"
-          alt="Fahrzeug und Team von Fixum Objektservice bei der Objektvorbereitung"
+          alt="Transporter mit Werkzeugkisten vor einem Wohnhaus (Symbolbild)"
           width={620}
           height={460}
           sizes="(max-width: 980px) 100vw, 22vw"
@@ -443,6 +455,8 @@ const serviceChips: Array<[string, string]> = [
       buchbar.
     </p>
   </section>
+
+  <KetteBand />
 
   {/* ---------------------------------------------------- Gründe */}
   <section class="section section--mist" aria-labelledby="reasons-title">
@@ -564,6 +578,12 @@ const serviceChips: Array<[string, string]> = [
       </section>
     )
   }
+
+  {/* ---------------------------------------------------- Kundenstimmen */}
+  {
+    /* Erscheint erst, wenn in src/data/reviews.json echte Bewertungen stehen. */
+  }
+  <Kundenstimmen />
 
   {/* ---------------------------------------------------- FAQ */}
   <section class="section section--mist" aria-labelledby="faq-title">
@@ -732,6 +752,13 @@ const serviceChips: Array<[string, string]> = [
     color: var(--navy-deep);
     background: #fff;
     border-color: #fff;
+  }
+
+  /* Einstieg in den Preisrechner - Amber wie die übrigen Akzente. */
+  .hero-chips a.is-rechner {
+    color: var(--navy-deep);
+    background: var(--amber);
+    border-color: var(--amber);
   }
 
   /* ---------------------------------------------------- Vertrauensleiste */

@@ -427,3 +427,60 @@ Vorgabe einen hellen Hintergrund verlangte, laeuft sie jetzt als
 `section--mist`. Die Regeln zu `.section--chain` in `src/styles/global.css`
 greifen damit nirgends mehr; sie wurden nicht entfernt, weil die Klasse als
 Bestandteil des Design-Systems wiederverwendbar bleibt.
+
+## SEO-Runde Oktober 2026
+
+- **Preise**: alle Zahlen stehen nur in `src/data/preise.config.json`.
+  Sichtbar auf der Website sind ausschließlich die fünf Ab-Preise
+  (Abschnitt `abPreise`), aufbereitet in `src/data/preise.ts`. Alle übrigen
+  Werte nutzt nur der Preisrechner.
+- **Zentralseite** `/entruempelung-entkernung-innenausbau/` erklärt die
+  Leistungskette. Verlinkt über `KetteBand` von Startseite, Leistungsübersicht,
+  Entrümpelung, Entkernung, Trockenbau, Kernsanierung und Rückbau + Trockenbau
+  sowie über das Leistungsmenü.
+- **Kundenstimmen**: `src/data/reviews.json` (leer = Sektion unsichtbar).
+  Nur echte Bewertungen wörtlich eintragen. Kein Review-Markup.
+  Button "Bewertung schreiben" erscheint, sobald `googleReviewUrl` in
+  `site.ts` gesetzt ist.
+- **Messpunkte**: Base.astro schreibt `phone_click`, `whatsapp_click`,
+  `email_click`, `offer_request_click` in `window.dataLayer`, `/danke/` schreibt
+  `form_submit_success`. Es ist **kein** Tracking-Dienst eingebunden – erst
+  nach Freigabe und mit Einwilligungsbanner.
+- **robots.txt** erlaubt Such- und KI-Crawler ausdrücklich; `/llms.txt` wird
+  beim Bauen aus `site.ts`, `preise.ts` und den Ortsseiten erzeugt.
+- **Alt-Texte** der generierten Bilder beschreiben nur das Motiv und tragen
+  "(Symbolbild)". Ort- oder Firmenbezug ("in Emden durch Fixum") erst, wenn
+  dort echte Fotos liegen.
+- **Schriften**: nur Latin-Subset, metrisch angeglichene Ersatzschriften
+  ("Manrope Fallback" usw.) gegen Layout-Sprünge, Preload für Manrope 400/800.
+- **Branchenportale**: siehe `EINTRAEGE.md`.
+
+## Preisrechner
+
+- Werte: `src/data/preise.config.json` (Anleitung steht oben in der Datei).
+  `null` = noch kein Wert, der Rechner zeigt dann "Preis auf Anfrage".
+- Fragen und Auswahlmöglichkeiten: `src/components/Preisrechner.astro`.
+- Rechenregeln: `src/lib/preisrechner.ts`, Tests: `tests/preisrechner.test.ts`
+  (`npm test`). Die Tests prüfen auch, dass die Ab-Preise zu den
+  Rechnerwerten passen.
+- Auf den Leistungsseiten unter `#kalkulator`, Sammelseite `/preisrechner/`
+  (Direktaufruf z. B. `/preisrechner/#umzug`). Entkernung: kein Rechner.
+- Diskretion: Im HTML stehen keine Detailwerte, das Rechenmodell wird
+  umcodiert mitgegeben. Gegen gezieltes Auslesen schützt das nicht.
+- "Festpreis anfragen" füllt das Kontaktformular vor (`/kontakt/#rechner=`);
+  ohne aktives Formular landen die Angaben im WhatsApp- und E-Mail-Link.
+- Messpunkte (nur `dataLayer`): `rechner_gestartet`, `rechner_ergebnis`,
+  `rechner_anfrage` - ohne Preise.
+- **Rechner ohne Grundwerte** werden automatisch ausgeblendet (inklusive
+  aller Links darauf, Sammelseite, Ortsseiten und `llms.txt`). Sobald die
+  Grundwerte in der Config stehen, erscheinen sie beim nächsten Build von
+  selbst. Grundwerte: Entrümpelung = drei m²-Stufen + Etagenaufschlag;
+  Umzug = Preis pro Zimmer + Nahbereich-km; Trockenbau = Zwischenwand,
+  normales Spachteln, Baustelleneinrichtung; Montage = Tür, Möbel oder
+  Küche; Boden = Verlegepreis.
+- **Mitlaufender Richtwert** auf Handy/Tablet (bis 900 px), über der
+  Kontaktleiste; verschwindet, sobald die Ergebniskarte zu sehen ist.
+- **Eingaben werden gemerkt** (sessionStorage, nur im Browser des Kunden,
+  gelöscht beim Schließen des Tabs).
+- **Faustregel zur Wohnfläche**: `allgemein.flaechenFaustregel` in der Config.
+- Einstieg: Menüpunkt "Preise" und Chip "Preis berechnen" im Startseiten-Hero.

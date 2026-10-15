@@ -10,7 +10,7 @@ export const site = {
   regionCode: "DE-NI",
   country: "DE",
   countryName: "Deutschland",
-  phoneDisplay: "+49 151 / 29628025",
+  phoneDisplay: "+49 151 29628025",
   phoneLink: "+4915129628025",
   whatsapp: "4915129628025",
   email: "info@fixum-objektservice.de",
@@ -30,8 +30,13 @@ export const site = {
      Kurzlink von Google funktioniert, die ausgeschriebene Profil-URL wäre
      als Signal aber etwas stärker - sie lässt sich hier jederzeit
      nachtragen. */
-  googleProfile: "https://share.google/hzDKeSFpvbowfRxhM",
-  hours: "Mo-Sa, 7:00-19:00 Uhr",
+  googleProfile: "https://share.google/cM6Kd9rGWegey8zPO",
+  /* Direktlink "Rezension schreiben" aus dem Google-Unternehmensprofil
+     (Profil > "Rezensionen erhalten" > Link kopieren). Platzhalter:
+     [GOOGLE_BEWERTUNGSLINK]. Solange der Wert leer ist, wird der Button
+     "Bewertung schreiben" nicht angezeigt. */
+  googleReviewUrl: "",
+  hours: "Mo–Sa 7:00–19:00 Uhr",
   radiusKm: 50,
   /* Zulässige Gesamtmasse der eingesetzten Fahrzeuge. Steht an sieben
      Stellen auf der Seite und wird überall aus diesem Wert gerendert -
@@ -125,12 +130,16 @@ export const navItems = [
       },
     ],
   },
+  { label: "Preise", href: "/preisrechner/" },
   { label: "Über uns", href: "/ueber-uns/" },
   { label: "Kontakt", href: "/kontakt/" },
 ];
 
 export const whatsappUrl = (topic = "Moin, ich habe eine Anfrage zu:") =>
   `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(topic)}`;
+
+/** Zentralseite der Leistungskette Entrümpelung, Entkernung, Innenausbau. */
+export const kettePfad = "/entruempelung-entkernung-innenausbau/";
 
 export const telUrl = `tel:${site.phoneLink}`;
 export const mailUrl = `mailto:${site.email}`;

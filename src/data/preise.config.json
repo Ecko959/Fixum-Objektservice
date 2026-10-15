@@ -1,0 +1,275 @@
+{
+  "_anleitung": [
+    "Alle Preise der Website und des Preisrechners stehen nur in dieser Datei.",
+    "Ändern: Zahl hinter \"von\" bzw. \"bis\" ersetzen. Ohne Anführungszeichen, Komma als Punkt schreiben (12.5 statt 12,5).",
+    "Ein fester Wert: bei \"von\" und \"bis\" dieselbe Zahl eintragen.",
+    "Noch kein Wert: \"von\": null, \"bis\": null stehen lassen. Der Rechner zeigt dann \"Preis auf Anfrage\".",
+    "\"hinweis\" und \"platzhalter\" sind nur Erklärungen und werden nirgends angezeigt.",
+    "Alle Beträge in Euro ohne Umsatzsteuer (§ 19 UStG).",
+    "Nach dem Speichern baut Cloudflare die Seite neu, sobald die Änderung auf main ist."
+  ],
+
+  "abPreise": {
+    "hinweis": "Die einzigen Preise, die als Text auf der Website stehen. Müssen zu den Rechnerwerten passen (die automatischen Tests prüfen das).",
+    "entruempelungNormal": 15,
+    "entruempelungStark": 25,
+    "entruempelungMessie": 36,
+    "umzugZweiZimmerNahbereich": 600,
+    "trockenbauwandInklMaterial": 45
+  },
+
+  "allgemein": {
+    "rundenAufEuro": 50,
+    "hinweis": "Ergebnisse werden auf diesen Betrag gerundet (immer aufgerundet, damit nie ein zu niedriger Preis erscheint).",
+    "flaechenFaustregel": "Als Faustregel: Eine 2-Zimmer-Wohnung hat etwa 50–60 m².",
+    "flaechenFaustregelHinweis": "Steht im Entrümpelungsrechner unter der Frage nach der Wohnfläche. Leer lassen (\"\"), um den Satz auszublenden. Kein Preis."
+  },
+
+  "entruempelung": {
+    "proQuadratmeterWohnflaeche": {
+      "normal": { "von": 15, "bis": 25, "hinweis": "Normal möbliert" },
+      "stark": {
+        "von": 25,
+        "bis": 40,
+        "hinweis": "Stark möbliert, volle Keller oder Dachböden"
+      },
+      "messie": { "von": 36, "bis": 60, "hinweis": "Messie-Wohnung" }
+    },
+    "aufschlagJeEtageOhneAufzugProzent": {
+      "wert": 7,
+      "hinweis": "Prozent auf den Wohnflächen-Preis je Etage ohne Aufzug. Auswahl im Rechner: EG, 1., 2., 3. oder höher (zählt als 3)."
+    },
+    "keller": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_KELLER]",
+      "hinweis": "Pauschal für einen Keller"
+    },
+    "dachboden": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_DACHBODEN]",
+      "hinweis": "Pauschal für einen Dachboden"
+    },
+    "garageOderSchuppen": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_GARAGE]",
+      "hinweis": "Pauschal für Garage oder Schuppen"
+    },
+    "kuecheOderEinbautenDemontieren": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_KUECHE_DEMONTAGE]",
+      "hinweis": "Pauschal"
+    },
+    "endreinigungProQuadratmeter": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_ENDREINIGUNG_PRO_M2]",
+      "hinweis": "Je m² Wohnfläche"
+    },
+    "mindestpreis": {
+      "wert": null,
+      "platzhalter": "[MINDESTPREIS_ENTRUEMPELUNG]",
+      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+    },
+    "maxWohnflaeche": {
+      "wert": 1000,
+      "hinweis": "Keine Preisangabe: Größere Flächen zeigen \"Preis auf Anfrage\"."
+    }
+  },
+
+  "umzug": {
+    "proZimmer": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_PRO_ZIMMER]",
+      "hinweis": "Je Zimmer im Nahbereich, Transporter bis 3,5 t, Tragen und Fahrt. 2 Zimmer dürfen nicht unter dem Ab-Preis von 600 € liegen."
+    },
+    "nahbereichKm": {
+      "wert": null,
+      "platzhalter": "[NAHBEREICH_KM]",
+      "hinweis": "Bis zu dieser Entfernung kostet kein Kilometer extra (Emden–Norden ca. 30 km)."
+    },
+    "proKmUeberNahbereich": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_PRO_KM]",
+      "hinweis": "Je Kilometer über dem Nahbereich"
+    },
+    "zuschlagJeEtageOhneAufzug": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[ZUSCHLAG_ETAGE]",
+      "hinweis": "Euro je Etage ohne Aufzug, für Auszug und Einzug getrennt gezählt"
+    },
+    "moebelAbUndAufbauen": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_MOEBELMONTAGE]",
+      "hinweis": "Pauschal"
+    },
+    "kuecheAbUndAufbauen": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_KUECHENMONTAGE]",
+      "hinweis": "Pauschal"
+    },
+    "schweresEinzelstueck": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_SCHWERES_STUECK]",
+      "hinweis": "Je Stück (Klavier, Tresor, großer Kühlschrank)"
+    },
+    "altmoebelEntsorgen": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_ENTSORGUNG_UMZUG]",
+      "hinweis": "Pauschal"
+    },
+    "mindestpreis": {
+      "wert": null,
+      "platzhalter": "[MINDESTPREIS_UMZUG]",
+      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+    },
+    "maxZimmer": {
+      "wert": 8,
+      "hinweis": "Keine Preisangabe: Mehr Zimmer zeigen \"Preis auf Anfrage\"."
+    },
+    "maxKm": {
+      "wert": 150,
+      "hinweis": "Keine Preisangabe: Weitere Strecken zeigen \"Preis auf Anfrage\"."
+    }
+  },
+
+  "trockenbau": {
+    "materialInklusiveProQuadratmeter": {
+      "zwischenwand": { "von": 45, "bis": 65 },
+      "schallschutzwand": { "von": 80, "bis": 95 },
+      "deckeAbhaengen": { "von": 55, "bis": 70 },
+      "dachschraege": { "von": 60, "bis": 75 },
+      "vorsatzschale": { "von": 45, "bis": 60 }
+    },
+    "materialVomKundenProQuadratmeter": {
+      "zwischenwand": { "von": 22, "bis": 30 },
+      "schallschutzwand": {
+        "von": null,
+        "bis": null,
+        "platzhalter": "[PREIS_SCHALLSCHUTZ_BAUSEITS]",
+        "hinweis": "Fehlt noch"
+      },
+      "deckeAbhaengen": { "von": 24, "bis": 26 },
+      "dachschraege": { "von": 28, "bis": 45 },
+      "vorsatzschale": { "von": 22, "bis": 30 }
+    },
+    "oberflaecheProQuadratmeter": {
+      "ohne": {
+        "von": 0,
+        "bis": 0,
+        "hinweis": "Ohne Spachtelarbeiten, z. B. wenn gefliest oder verkleidet wird"
+      },
+      "normal": { "von": 9, "bis": 12, "hinweis": "Normal gespachtelt (Q2)" },
+      "glatt": { "von": 14, "bis": 18, "hinweis": "Besonders glatt (Q3)" }
+    },
+    "daemmungProQuadratmeter": {
+      "von": 6,
+      "bis": 6,
+      "hinweis": "Bei der Schallschutzwand ist Dämmung schon enthalten, die Frage entfällt dort."
+    },
+    "dampfbremseProQuadratmeter": {
+      "von": 7,
+      "bis": 8,
+      "hinweis": "Wird automatisch ergänzt: nur Dachschräge mit Dämmung"
+    },
+    "zweiteBeplankungProQuadratmeter": {
+      "von": 9,
+      "bis": 9,
+      "hinweis": "Derzeit im Rechner nicht abgefragt"
+    },
+    "tueroeffnungJeStueck": { "von": 100, "bis": 130 },
+    "baustelleneinrichtung": {
+      "von": 80,
+      "bis": 80,
+      "hinweis": "Einmal je Auftrag"
+    },
+    "mindestpreis": {
+      "wert": null,
+      "platzhalter": "[MINDESTPREIS_TROCKENBAU]",
+      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+    },
+    "maxFlaeche": {
+      "wert": 500,
+      "hinweis": "Keine Preisangabe: Größere Flächen zeigen \"Preis auf Anfrage\"."
+    }
+  },
+
+  "montage": {
+    "innentuerMitZargeJeStueck": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_TUERMONTAGE_STUECK]"
+    },
+    "alteTuerAusbauenJeStueck": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_TUER_AUSBAU]"
+    },
+    "moebelJeStueck": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_MOEBEL_STUECK]"
+    },
+    "altesMoebelAusbauenJeStueck": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_MOEBEL_AUSBAU_STUECK]"
+    },
+    "kuecheJeMeter": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_KUECHE_PRO_METER]"
+    },
+    "alteKuecheAusbauenJeMeter": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_KUECHE_AUSBAU_PRO_METER]"
+    },
+    "mindestpreis": {
+      "wert": null,
+      "platzhalter": "[MINDESTPREIS_MONTAGE]",
+      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+    },
+    "maxAnzahl": {
+      "wert": 30,
+      "hinweis": "Keine Preisangabe: Mehr Türen/Möbel zeigen \"Preis auf Anfrage\"."
+    },
+    "maxKuechenmeter": { "wert": 15, "hinweis": "Keine Preisangabe." }
+  },
+
+  "boden": {
+    "verlegenProQuadratmeter": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_BODEN_VERLEGEN_M2]",
+      "hinweis": "Laminat, Vinyl und Teppich gleich"
+    },
+    "altenBelagEntfernenProQuadratmeter": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_BODEN_ENTFERNEN_M2]"
+    },
+    "sockelleisteProMeter": {
+      "von": null,
+      "bis": null,
+      "platzhalter": "[PREIS_SOCKELLEISTE_M]"
+    },
+    "mindestpreis": {
+      "wert": null,
+      "platzhalter": "[MINDESTPREIS_BODEN]",
+      "hinweis": "Darunter zeigt der Rechner \"ab ...\""
+    },
+    "maxFlaeche": { "wert": 500, "hinweis": "Keine Preisangabe." },
+    "maxLeistenMeter": { "wert": 500, "hinweis": "Keine Preisangabe." }
+  }
+}

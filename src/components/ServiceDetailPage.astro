@@ -4,11 +4,17 @@ import AreaServed from "./AreaServed.astro";
 import CtaBand from "./CtaBand.astro";
 import FaqAccordion from "./FaqAccordion.astro";
 import Icon from "./Icon.astro";
+import KetteBand from "./KetteBand.astro";
 import PageHero from "./PageHero.astro";
+import PreisBlock from "./PreisBlock.astro";
+import Preisrechner from "./Preisrechner.astro";
+import { rechnerBereit, type Leistung } from "../lib/preisrechner";
+import preisConfig from "../data/preise.config.json";
 import RelatedServices from "./RelatedServices.astro";
 import { leistungen, staedteFuerLeistung } from "../data/leistungsseiten";
 import { findeStadt } from "../data/staedte";
 import { canonicalPath, serviceSchema } from "../data/seo";
+import type { PreisSchluessel } from "../data/preise";
 
 interface Props {
   title: string;
@@ -36,6 +42,22 @@ interface Props {
   serviceType?: string;
   areaTitle?: string;
   current: string;
+  /** Typische Einsätze als [Titel, Text] - Ausgangslagen, keine Referenzen. */
+  beispiele?: Array<[string, string]>;
+  beispieleTitel?: string;
+  /** Vorteile mit Fixum als [Titel, Text]. Nur prüfbare Aussagen. */
+  vorteile?: Array<[string, string]>;
+  /** Positionen für "Was kostet das?" aus src/data/preise.ts. */
+  preis?: PreisSchluessel[];
+  preisText?: string;
+  /** Beschriftung des Anfrage-Buttons im Preisblock. */
+  preisAnfrage?: string;
+  /** Eigener Rechner auf der Seite (Anker #kalkulator). */
+  rechner?: Leistung;
+  /** Ohne eigenen Rechner: Link auf den passenden Rechner der Sammelseite. */
+  rechnerLink?: string;
+  /** Verweis auf die Zentralseite der Leistungskette, mit markiertem Schritt. */
+  kette?: "raeumen" | "rueckbauen" | "ausbauen";
 }
 
 const {
@@ -62,7 +84,20 @@ const {
   serviceType,
   areaTitle,
   current,
+  beispiele = [],
+  beispieleTitel = "Typische Einsätze in Emden und Ostfriesland",
+  vorteile = [],
+  preis = [],
+  preisText,
+  preisAnfrage,
+  rechner,
+  rechnerLink,
+  kette,
 } = Astro.props;
+
+/* Rechner nur, wenn seine Grundwerte in der Config stehen - sonst auch
+   kein Button "Preis grob berechnen". */
+const rechnerAktiv = Boolean(rechner && rechnerBereit(preisConfig, rechner));
 
 const path = canonicalPath(current);
 const breadcrumbs: Array<[string, string]> = [
@@ -79,6 +114,7 @@ const schema = [
     description,
     path,
     serviceType,
+    preis,
   }),
 ];
 
@@ -146,6 +182,25 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
   </section>
 
   {
+    beispiele.length > 0 && (
+      <section class="section section--soft" aria-labelledby="beispiele-title">
+        <div class="container section-head" data-reveal>
+          <p class="eyebrow">Einsatzbeispiele</p>
+          <h2 id="beispiele-title">{beispieleTitel}</h2>
+        </div>
+        <div class="container grid-3 beispiel-grid" data-reveal-group>
+          {beispiele.map(([headline, text]) => (
+            <article class="card beispiel-karte" data-reveal>
+              <h3>{headline}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
     /* Ablauf - auf jeder Leistungsseite derselbe Bogen von der Anfrage
       bis zur Übergabe, inhaltlich aber auf die Leistung gemünzt. */
   }
@@ -179,6 +234,44 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
     </p>
   </section>
 
+  {
+    preis.length > 0 && (
+      <PreisBlock
+        positionen={preis}
+        text={preisText}
+        rechner={rechnerAktiv ? "#kalkulator" : rechnerLink}
+        anfrageText={preisAnfrage}
+      />
+    )
+  }
+  {rechnerAktiv && rechner && <Preisrechner leistung={rechner} />}
+
+  {
+    vorteile.length > 0 && (
+      <section class="section section--tight" aria-labelledby="vorteile-title">
+        <div class="container section-head" data-reveal>
+          <p class="eyebrow">Warum Fixum</p>
+          <h2 id="vorteile-title">Ihre Vorteile mit Fixum</h2>
+        </div>
+        <ul class="container vorteil-grid" data-reveal-group>
+          {vorteile.map(([headline, text]) => (
+            <li class="vorteil" data-reveal>
+              <span class="vorteil-icon">
+                <Icon name="check" size={18} />
+              </span>
+              <div>
+                <h3>{headline}</h3>
+                <p>{text}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {kette && <KetteBand aktiv={kette} />}
+
   {/* Leistungsgrenzen */}
   <section class="section section--tight">
     <div class="container note-card card card--accent" data-reveal>
@@ -211,10 +304,8 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
         <div class="container orte-block" data-reveal>
           <div>
             <p class="eyebrow">Im Einsatzgebiet</p>
-            {
-              /* Die Ortsnamen gehören in die Liste, nicht in die Überschrift -
-                 bei fünf Orten wird daraus sonst eine Zeile, die niemand liest. */
-            }
+            {/* Die Ortsnamen gehören in die Liste, nicht in die Überschrift -
+                 bei fünf Orten wird daraus sonst eine Zeile, die niemand liest. */}
             <h2 id="orte-title">{crumb ?? eyebrow} außerhalb von Emden</h2>
             <p class="muted">
               Für diese Orte steht alles Örtliche - Bausubstanz, Zufahrt,
@@ -266,6 +357,65 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
 }
 
 <style>
+  /* ---- Einsatzbeispiele ---- */
+  .beispiel-karte {
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border-top: 3px solid var(--blue);
+  }
+
+  .beispiel-karte h3 {
+    margin-bottom: 0.5rem;
+    font-size: var(--step-1);
+  }
+
+  .beispiel-karte p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  /* ---- Vorteile ---- */
+  .vorteil-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 1.75rem) clamp(1.5rem, 4vw, 3rem);
+    margin-block: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vorteil {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.875rem;
+    align-items: start;
+  }
+
+  .vorteil-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  }
+
+  .vorteil h3 {
+    margin: 0 0 0.3rem;
+    font-size: var(--step-1);
+  }
+
+  .vorteil p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .vorteil-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
   .detail-check {
     padding-left: clamp(1.5rem, 3vw, 2rem);
     padding-right: clamp(1.5rem, 3vw, 2rem);

@@ -16,6 +16,11 @@ import {
 import { getImage } from "astro:assets";
 import { findeBild } from "../data/bilder";
 import { site } from "../data/site";
+/* Fließtext (400) und Überschriften (800) stehen auf jeder Seite über der
+   Falzlinie. Vite hängt denselben Hash an wie in der @font-face-Regel, der
+   Preload trifft also genau die Datei, die das CSS später anfordert. */
+import manrope400 from "@fontsource/manrope/files/manrope-latin-400-normal.woff2?url";
+import manrope800 from "@fontsource/manrope/files/manrope-latin-800-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -139,6 +144,21 @@ const jsonLd = JSON.stringify({
       document.documentElement.classList.add("js");
     </script>
 
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={manrope400}
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={manrope800}
+      crossorigin
+    />
+
     {
       preloadUrl && (
         <link
@@ -228,6 +248,45 @@ const jsonLd = JSON.stringify({
     </main>
     <Footer />
     <StickyCallBar />
+
+    {
+      /* Messpunkte für Conversions. Schreibt nur in window.dataLayer - es wird
+         KEIN Tracking-Dienst geladen und nichts übertragen. Erst wenn ein
+         Dienst (z. B. Google Tag Manager oder GA4) mit Einwilligungs-Banner
+         freigegeben und eingebunden ist, liest er diese Ereignisse aus.
+         Ereignisse: phone_click, whatsapp_click, email_click,
+         offer_request_click; form_submit_success kommt von /danke/. */
+    }
+    <script is:inline>
+      (() => {
+        window.dataLayer = window.dataLayer || [];
+        document.addEventListener(
+          "click",
+          (event) => {
+            const link = event.target.closest && event.target.closest("a");
+            if (!link) return;
+            const href = link.getAttribute("href") || "";
+            let name = "";
+            if (href.startsWith("tel:")) name = "phone_click";
+            else if (href.includes("wa.me/")) name = "whatsapp_click";
+            else if (href.startsWith("mailto:")) name = "email_click";
+            else if (
+              link.dataset.track === "angebot" ||
+              href === "/kontakt/" ||
+              href.startsWith("/kontakt/#")
+            )
+              name = "offer_request_click";
+            if (!name) return;
+            window.dataLayer.push({
+              event: name,
+              link_text: (link.textContent || "").trim().slice(0, 80),
+              page_path: location.pathname,
+            });
+          },
+          { capture: true },
+        );
+      })();
+    </script>
 
     {
       /* Scroll-Reveal: einmalig, entkoppelt vom Scroll-Event, respektiert Reduced Motion. */

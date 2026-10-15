@@ -1,0 +1,153 @@
+---
+/* Kundenstimmen aus src/data/reviews.json.
+
+   Nur echte Bewertungen eintragen - wörtlich übernommen, mit Einverständnis
+   bzw. aus dem öffentlichen Google-Profil. Solange die Datei leer ist
+   ([]), wird die Sektion gar nicht ausgegeben.
+
+   Bewusst ohne Review- oder AggregateRating-Markup: Google wertet
+   Bewertungen, die ein Unternehmen auf der eigenen Seite über sich selbst
+   zeigt, nicht als Rich Result und kann sie als Verstoß einstufen.
+
+   Format eines Eintrags:
+   { "name": "Vorname N.", "ort": "Emden", "text": "...",
+     "sterne": 5, "datum": "2026-09", "quelle": "Google" } */
+import Icon from "./Icon.astro";
+import reviews from "../data/reviews.json";
+import { site } from "../data/site";
+
+interface Bewertung {
+  name: string;
+  text: string;
+  ort?: string;
+  sterne?: number;
+  datum?: string;
+  quelle?: string;
+}
+
+const eintraege = (reviews as Bewertung[]).filter(
+  (r) => r && r.name?.trim() && r.text?.trim(),
+);
+
+const monat = (datum?: string) => {
+  if (!datum) return "";
+  const [jahr, mon] = datum.split("-");
+  if (!jahr || !mon) return datum;
+  return new Date(Number(jahr), Number(mon) - 1, 1).toLocaleDateString(
+    "de-DE",
+    { month: "long", year: "numeric" },
+  );
+};
+---
+
+{
+  eintraege.length > 0 && (
+    <section
+      class="section section--soft kundenstimmen"
+      aria-labelledby="stimmen-title"
+    >
+      <div class="container section-head" data-reveal>
+        <p class="eyebrow">Kundenstimmen</p>
+        <h2 id="stimmen-title">Was Auftraggeber über Fixum sagen</h2>
+      </div>
+
+      <ul class="container stimmen-grid" data-reveal-group>
+        {eintraege.map((r) => (
+          <li class="card stimme" data-reveal>
+            {r.sterne && (
+              <p class="stimme-sterne" aria-label={`${r.sterne} von 5 Sternen`}>
+                {Array.from({ length: Math.round(r.sterne) }).map(() => (
+                  <Icon name="star" size={16} />
+                ))}
+              </p>
+            )}
+            <blockquote>
+              <p>{r.text}</p>
+            </blockquote>
+            <p class="stimme-quelle">
+              <strong>{r.name}</strong>
+              {[r.ort, monat(r.datum), r.quelle && `via ${r.quelle}`]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          </li>
+        ))}
+      </ul>
+
+      <div class="container btn-row stimmen-aktionen" data-reveal>
+        {site.googleProfile && (
+          <a
+            class="btn btn--secondary"
+            href={site.googleProfile}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-track="bewertungen"
+          >
+            <span>Bewertungen bei Google ansehen</span>
+          </a>
+        )}
+        {site.googleReviewUrl && (
+          <a
+            class="btn"
+            href={site.googleReviewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-track="bewertung-schreiben"
+          >
+            <span>Bewertung schreiben</span>
+          </a>
+        )}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .stimmen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin-block: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stimme {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .stimme-sterne {
+    display: flex;
+    gap: 0.15rem;
+    margin: 0;
+    color: var(--amber-deep);
+  }
+
+  .stimme blockquote {
+    margin: 0;
+  }
+
+  .stimme blockquote p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .stimme-quelle {
+    display: grid;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .stimme-quelle strong {
+    color: var(--navy);
+  }
+
+  .stimmen-aktionen {
+    justify-content: center;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+</style>

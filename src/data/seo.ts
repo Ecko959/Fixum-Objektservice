@@ -1,5 +1,11 @@
 import { faq } from "./faq";
-import { offerCatalog } from "./services";
+import {
+  preise,
+  preisHinweis,
+  type PreisSchluessel,
+  type Preisposition,
+} from "./preise";
+import { services } from "./services";
 import { sameAs, site } from "./site";
 
 /**
@@ -65,11 +71,10 @@ export const businessSchema = {
   logo: { "@id": ids.logo },
   image: absolute(site.ogImage),
   description:
-    "Fixum Objektservice übernimmt Entrümpelung, Haushaltsauflösung, Entkernung, nicht-tragenden Rückbau, Trockenbau, Montage und Hausmeisterservice in Emden und Ostfriesland - mit Festpreis nach Besichtigung.",
+    "Fixum Objektservice aus Emden übernimmt Entrümpelung und Haushaltsauflösung, Entkernung und nicht-tragenden Rückbau, Trockenbau und Innenausbau, Umzüge und Transporte bis 3,5 t, Möbel- und Küchenmontage, Bodenverlegung sowie Hausmeisterservice und Winterdienst in Emden, Aurich, Leer, Norden und Ostfriesland - mit Festpreis nach Besichtigung.",
   slogan: site.claim,
   telephone: site.phoneDisplay,
   email: site.email,
-  priceRange: "€€",
   currenciesAccepted: "EUR",
   paymentAccepted: "Überweisung",
   foundingDate: site.foundingYear,
@@ -118,13 +123,14 @@ export const businessSchema = {
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Leistungen von Fixum Objektservice",
-    itemListElement: offerCatalog.map((name) => ({
+    itemListElement: services.map((service) => ({
       "@type": "Offer",
       itemOffered: {
         "@type": "Service",
-        name,
+        name: service.title,
+        url: absolute(service.href),
         provider: { "@id": ids.business },
-        areaServed: site.areaServed.slice(0, 6).join(", "),
+        areaServed: "Emden, Aurich, Leer, Norden und Ostfriesland",
       },
     })),
   },
@@ -204,18 +210,44 @@ export const stadtServiceSchema = ({
   },
 });
 
+/* Richtwerte als Offer mit Mindestpreis. Ohne Betrag (Festpreis nach
+   Besichtigung) entsteht bewusst kein Offer - ein Preis, der nicht genannt
+   wird, gehört auch nicht ins Markup. */
+const preisAngebote = (schluessel: PreisSchluessel[]) => {
+  const offers = schluessel
+    .map((k) => preise[k] as Preisposition)
+    .filter((p) => typeof p.ab === "number")
+    .map((p) => ({
+      "@type": "Offer",
+      name: p.leistung,
+      description: `${p.leistung} ${p.betrag}. ${preisHinweis}`,
+      priceCurrency: "EUR",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        minPrice: p.ab,
+        priceCurrency: "EUR",
+        ...(p.einheit ? { unitText: p.einheit } : {}),
+      },
+    }));
+  return offers.length ? { offers } : {};
+};
+
 /** Service-Knoten für eine einzelne Leistungsseite. */
 export const serviceSchema = ({
   name,
   description,
   path,
   serviceType,
+  preis = [],
 }: {
   name: string;
   description: string;
   path: string;
   serviceType?: string;
+  /** Freigegebene Richtwerte aus preise.ts - nur Positionen mit Betrag. */
+  preis?: PreisSchluessel[];
 }) => ({
+  ...preisAngebote(preis),
   "@type": "Service",
   name,
   description,

@@ -1,0 +1,561 @@
+---
+/* Zentralseite der Leistungskette. Sie beantwortet die Frage, die keine der
+   drei Einzelseiten allein beantworten kann: Was habe ich davon, wenn
+   Räumen, Rückbauen und Ausbauen bei einem Betrieb liegen?
+
+   Die Einzelseiten bleiben die Ziele für die einzelnen Suchbegriffe
+   (Entrümpelung Emden, Entkernung Emden, Trockenbau Emden). Diese Seite
+   verlinkt auf sie und wird von ihnen über das KetteBand verlinkt. */
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import ContactForm from "../components/ContactForm.astro";
+import CtaBand from "../components/CtaBand.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import Icon from "../components/Icon.astro";
+import PageHero from "../components/PageHero.astro";
+import PreisBlock from "../components/PreisBlock.astro";
+import AreaServed from "../components/AreaServed.astro";
+import { absolute, canonicalPath, serviceSchema } from "../data/seo";
+import { kettePfad } from "../data/site";
+
+const path = canonicalPath(kettePfad);
+const breadcrumbs: Array<[string, string]> = [
+  ["Leistungen", "/leistungen/"],
+  ["Alles aus einer Hand", path],
+];
+
+const title = "Fixum Objektservice: Entrümpelung, Entkernung & Ausbau";
+const description =
+  "Entrümpelung, Entkernung und Innenausbau in Emden und Ostfriesland aus einer Hand: ein Ansprechpartner, ein Angebot, kein Wartetag zwischen den Firmen.";
+const heroImage = "/images/categories/entkernung-rueckbau.png";
+
+const schritte: Array<{
+  no: string;
+  titel: string;
+  text: string;
+  punkte: string[];
+  href: string;
+  linkText: string;
+}> = [
+  {
+    no: "1",
+    titel: "Entrümpelung",
+    text: "Das Objekt wird vollständig geräumt: Wohnung, Haus, Keller, Dachboden, Garage. Was bleiben soll, legen wir vorher gemeinsam fest.",
+    punkte: [
+      "Sortenreine Trennung nach Holz, Metall, Elektro und Restmüll",
+      "Dokumente und Erinnerungsstücke werden aussortiert",
+      "Entsorgungsnachweis auf Wunsch",
+    ],
+    href: "/entruempelung/",
+    linkText: "Mehr zur Entrümpelung",
+  },
+  {
+    no: "2",
+    titel: "Entkernung",
+    text: "Alte Böden, nicht-tragende Wände, Deckenverkleidungen und Einbauten kommen raus. Die Statik bleibt unangetastet.",
+    punkte: [
+      "Nicht-tragender Rückbau mit Staubschutz",
+      "Bauschutt, Holz und Metall direkt vor Ort getrennt",
+      "Stopp und Fachbetrieb bei Schadstoffverdacht",
+    ],
+    href: "/entkernung/",
+    linkText: "Mehr zur Entkernung",
+  },
+  {
+    no: "3",
+    titel: "Innenausbau",
+    text: "Auf der ausbaufertigen Fläche entstehen neue Wände, Decken und Böden - ohne Wartetag nach dem Rückbau.",
+    punkte: [
+      "Trockenbau: Wände, Decken, Dachschrägen, Spachtelung Q1 bis Q3",
+      "Laminat, Vinyl und Teppich, Türen und Zargen",
+      "Möbel- und Küchenmontage zum Abschluss",
+    ],
+    href: "/trockenbau/",
+    linkText: "Mehr zum Trockenbau",
+  },
+];
+
+const ablauf: Array<[string, string]> = [
+  [
+    "Anfrage",
+    "Sie schildern Objekt und Ziel - am Telefon, per WhatsApp mit Fotos oder über das Formular.",
+  ],
+  [
+    "Eine Besichtigung, ein Angebot",
+    "Räumung, Rückbau und Ausbau werden in einem Termin aufgenommen. Im Angebot steht jeder Schritt als eigene Position - Sie sehen, was er kostet, und können Positionen streichen.",
+  ],
+  [
+    "Ausführung ohne Pause",
+    "Räumen, Rückbauen, Ausbauen hintereinander durch dasselbe Team. Fachbetriebe für Strom, Wasser und Heizung koordinieren wir.",
+  ],
+  [
+    "Übergabe",
+    "Sie bekommen ein nutzbares oder vermietbares Objekt zurück, auf Wunsch mit Fotodokumentation.",
+  ],
+];
+
+const vergleich: Array<[string, string, string]> = [
+  [
+    "Ansprechpartner",
+    "Drei Firmen, drei Telefonnummern, drei Terminkalender",
+    "Ein Ansprechpartner vom ersten Anruf bis zur Übergabe",
+  ],
+  [
+    "Angebot",
+    "Drei Angebote, die Sie selbst vergleichen und abgrenzen müssen",
+    "Ein Angebot mit getrennt ausgewiesenen Positionen",
+  ],
+  [
+    "Übergänge",
+    "Wartetage zwischen Räumung, Rückbau und Ausbau",
+    "Der nächste Schritt beginnt, wenn der vorige fertig ist",
+  ],
+  [
+    "Zuständigkeit",
+    "Bei Schäden die Frage, welche Firma verantwortlich ist",
+    "Ein Betrieb - keine Zuständigkeitsfragen zwischen Firmen",
+  ],
+  [
+    "Baustelle",
+    "Mehrfache Anfahrt und Baustelleneinrichtung",
+    "Eine Baustelleneinrichtung, ein Staubschutzkonzept",
+  ],
+];
+
+const zielgruppen: Array<{
+  titel: string;
+  text: string;
+  href: string;
+  linkText: string;
+  icon: "clipboard" | "home" | "wall";
+}> = [
+  {
+    titel: "Hausverwaltungen",
+    text: "Mieterwechsel in einem Durchgang: zurückgelassenen Hausrat räumen, alte Beläge zurückbauen, Wände und Böden erneuern, besenrein übergeben. Auf Wunsch mit Fotodokumentation zur Abnahme.",
+    href: "/fuer-hausverwaltungen/",
+    linkText: "Für Hausverwaltungen",
+    icon: "clipboard",
+  },
+  {
+    titel: "Eigentümer und Erben",
+    text: "Ein geerbtes oder gekauftes Haus soll wieder bewohnbar werden: erst räumen, dann alte Einbauten raus, danach Trockenbau und Boden. Ein Angebot statt drei.",
+    href: "/haushaltsaufloesung/",
+    linkText: "Zur Haushaltsauflösung",
+    icon: "home",
+  },
+  {
+    titel: "Renovierungs- und Sanierungsprojekte",
+    text: "Vor einer Kernsanierung übernehmen wir Räumung, nicht-tragenden Rückbau und Ausbau und takten die Fachbetriebe so, dass niemand wartet.",
+    href: "/kernsanierung/",
+    linkText: "Kernsanierung vorbereiten",
+    icon: "wall",
+  },
+];
+
+const fragen = [
+  {
+    question: "Muss ich alle drei Schritte bei Ihnen buchen?",
+    answer:
+      "Nein. Entrümpelung, Entkernung und Innenausbau sind auch einzeln buchbar. Der Vorteil der Kombination liegt in den Übergängen: keine Wartetage, ein Ansprechpartner, ein Angebot.",
+  },
+  {
+    question: "Bekomme ich ein Angebot oder drei?",
+    answer:
+      "Ein Angebot mit getrennt ausgewiesenen Positionen für Räumung, Rückbau und Ausbau. So sehen Sie, was welcher Schritt kostet, und können einzelne Positionen streichen.",
+  },
+  {
+    question: "Was machen Sie nicht selbst?",
+    answer:
+      "Arbeiten an Strom, Wasser, Gas und Heizung, Eingriffe in die Statik und Schadstoffsanierung, zum Beispiel bei Asbest oder alter Mineralwolle. Dafür koordinieren wir zugelassene Fachbetriebe.",
+  },
+  {
+    question: "In welchem Gebiet arbeiten Sie?",
+    answer:
+      "Von Emden aus in einem Umkreis von rund 50 km - Aurich, Leer, Norden und ganz Ostfriesland.",
+  },
+  {
+    question: "Wie komme ich zu einem Festpreis?",
+    answer:
+      "Sie rufen an, schreiben per WhatsApp oder nutzen das Formular. Wir kommen zur kostenlosen Besichtigung und schicken danach ein Angebot mit Festpreis.",
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: "Entrümpelung, Entkernung und Innenausbau aus einer Hand",
+    description,
+    path,
+    serviceType: "Entrümpelung, Entkernung und Innenausbau",
+    preis: ["entruempelungNormal", "trockenbau"],
+  }),
+  {
+    "@type": "FAQPage",
+    "@id": `${absolute(path)}#faq`,
+    mainEntity: fragen.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage={heroImage}
+>
+  <PageHero
+    eyebrow="Alles aus einer Hand"
+    title="Entrümpelung, Entkernung & Innenausbau in Ostfriesland - alles aus einer Hand"
+    text="Fixum Objektservice aus Emden räumt Objekte, baut nicht-tragende Bauteile zurück und übernimmt danach Trockenbau, Boden und Montage. Für Hausverwaltungen, Eigentümer und Sanierungsprojekte in Emden, Aurich, Leer, Norden und ganz Ostfriesland - mit einem Ansprechpartner und einem Angebot."
+    image={heroImage}
+    imageAlt="Rückbau in einem Altbau: alte Dielen und Bodenbelag gestapelt, Staubschutz vor der Tür (Symbolbild)"
+    breadcrumbs={breadcrumbs}
+  />
+
+  {/* Die drei Leistungen im Zusammenhang */}
+  <section class="section" aria-labelledby="kette-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Die Leistungskette</p>
+      <h2 id="kette-title">Drei Schritte, ein Betrieb</h2>
+      <p class="muted">
+        Die meisten Betriebe räumen oder bauen aus. Fixum macht beides - und
+        dazwischen den Rückbau.
+      </p>
+    </div>
+
+    <ol class="container kette-grid" data-reveal-group>
+      {
+        schritte.map((s) => (
+          <li class="card kette-karte" data-reveal>
+            <span class="kette-nr" aria-hidden="true">
+              {s.no}
+            </span>
+            <h3>{s.titel}</h3>
+            <p>{s.text}</p>
+            <ul class="check-list kette-liste">
+              {s.punkte.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+            <a class="arrow-link" href={s.href}>
+              {s.linkText}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  {/* Ablauf */}
+  <section class="section section--mist" aria-labelledby="ablauf-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Ablauf</p>
+      <h2 id="ablauf-title">So läuft ein Auftrag mit allen drei Schritten</h2>
+    </div>
+
+    <ol class="container process-flow" data-reveal-group>
+      {
+        ablauf.map(([headline, text]) => (
+          <li class="flow-step" data-reveal>
+            <span class="flow-no" aria-hidden="true" />
+            <h3>{headline}</h3>
+            <p>{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  {/* Vorteil gegenüber mehreren Firmen */}
+  <section class="section" aria-labelledby="vergleich-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Der Unterschied</p>
+      <h2 id="vergleich-title">Ein Betrieb statt drei Firmen</h2>
+    </div>
+
+    <div class="container vergleich" data-reveal>
+      <div class="vergleich-kopf" aria-hidden="true">
+        <span></span>
+        <span>Mit mehreren Firmen</span>
+        <span>Mit Fixum</span>
+      </div>
+      <dl class="vergleich-liste">
+        {
+          vergleich.map(([thema, mehrere, fixum]) => (
+            <div class="vergleich-zeile">
+              <dt>{thema}</dt>
+              <dd class="vergleich-alt">
+                <span class="vergleich-label">Mit mehreren Firmen: </span>
+                {mehrere}
+              </dd>
+              <dd class="vergleich-neu">
+                <span class="vergleich-label">Mit Fixum: </span>
+                <Icon name="check" size={16} />
+                {fixum}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  {/* Beispiele nach Auftraggeber */}
+  <section class="section section--soft" aria-labelledby="ziel-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Einsatzbeispiele</p>
+      <h2 id="ziel-title">Für wen sich die Leistungskette lohnt</h2>
+    </div>
+
+    <div class="container grid-3" data-reveal-group>
+      {
+        zielgruppen.map((z) => (
+          <article class="card ziel-karte" data-reveal>
+            <span class="ziel-icon">
+              <Icon name={z.icon} size={22} />
+            </span>
+            <h3>{z.titel}</h3>
+            <p>{z.text}</p>
+            <a class="arrow-link" href={z.href}>
+              {z.linkText}
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <PreisBlock
+    positionen={["entruempelungNormal", "entkernung", "trockenbau"]}
+    text="Räumung, Rückbau und Ausbau stehen als getrennte Positionen in einem Angebot. Verbindlich ist der Festpreis nach Besichtigung."
+    rechner="/preisrechner/"
+  />
+
+  {/* FAQ */}
+  <section class="section section--mist" aria-labelledby="faq-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="faq-title">Fragen zur Leistungskette</h2>
+    </div>
+    <div class="container container--narrow" data-reveal>
+      <FaqAccordion items={fragen} />
+    </div>
+  </section>
+
+  {/* Anfrage */}
+  <section class="section" aria-labelledby="anfrage-title">
+    <div class="container split split--top">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Anfrage</p>
+        <h2 id="anfrage-title">Ihr Objekt in einem Auftrag</h2>
+        <p class="muted">
+          Beschreiben Sie kurz, was ansteht - räumen, zurückbauen, ausbauen oder
+          alles davon. Fotos per WhatsApp helfen bei der ersten Einschätzung.
+        </p>
+        <div class="btn-row">
+          <Button href="/kontakt/" icon="arrow" data-track="angebot">
+            Kostenlose Besichtigung anfragen
+          </Button>
+        </div>
+      </div>
+      <div data-reveal>
+        <ContactForm title="Besichtigung für die Leistungskette anfragen" />
+      </div>
+    </div>
+  </section>
+
+  <AreaServed
+    service="Entrümpelung, Entkernung und Innenausbau"
+    title="Alles aus einer Hand in Emden und Ostfriesland"
+  />
+  <CtaBand />
+</Base>
+
+<style>
+  .kette-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin-block: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+
+  .kette-karte {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr auto;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border-top: 4px solid var(--blue);
+  }
+
+  .kette-nr {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-pill);
+    font-weight: 800;
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .kette-karte h3 {
+    margin: 0;
+    font-size: var(--step-2);
+  }
+
+  .kette-karte > p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .kette-liste {
+    padding: 0.5rem 0 0;
+    gap: 0.6rem;
+    font-size: 0.9375rem;
+  }
+
+  /* ---- Vergleich ---- */
+  .vergleich {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .vergleich-kopf,
+  .vergleich-zeile {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .vergleich-kopf span {
+    padding: 0.9rem 1.25rem;
+    font-family: var(--font-utility);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--mist-soft);
+  }
+
+  .vergleich-kopf span:last-child {
+    color: #fff;
+    background: var(--navy);
+  }
+
+  .vergleich-liste {
+    margin: 0;
+  }
+
+  .vergleich-zeile {
+    border-top: 1px solid var(--line);
+  }
+
+  .vergleich-zeile dt,
+  .vergleich-zeile dd {
+    margin: 0;
+    padding: 1rem 1.25rem;
+  }
+
+  .vergleich-zeile dt {
+    font-weight: 800;
+    color: var(--navy);
+  }
+
+  .vergleich-alt {
+    color: var(--muted);
+  }
+
+  .vergleich-neu {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--mist-soft);
+  }
+
+  .vergleich-neu :global(.icon) {
+    flex: none;
+    color: var(--blue);
+    transform: translateY(2px);
+  }
+
+  .vergleich-label {
+    display: none;
+  }
+
+  /* ---- Zielgruppen ---- */
+  .ziel-karte {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .ziel-karte h3,
+  .ziel-karte p {
+    margin: 0;
+  }
+
+  .ziel-karte p {
+    color: var(--muted);
+  }
+
+  .ziel-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  }
+
+  @media (max-width: 900px) {
+    .kette-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 760px) {
+    .vergleich-kopf {
+      display: none;
+    }
+
+    .vergleich-zeile {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .vergleich-zeile dt {
+      padding-bottom: 0.25rem;
+    }
+
+    .vergleich-zeile dd {
+      padding-top: 0.5rem;
+    }
+
+    .vergleich-label {
+      display: inline;
+      font-weight: 700;
+    }
+
+    .vergleich-neu {
+      display: block;
+    }
+
+    .vergleich-neu :global(.icon) {
+      display: none;
+    }
+  }
+</style>

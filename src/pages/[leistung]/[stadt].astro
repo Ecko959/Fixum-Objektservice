@@ -11,6 +11,8 @@
  * nichts, was nicht in leistungsseiten.ts steht.
  */
 import Base from "../../layouts/Base.astro";
+import preisConfig from "../../data/preise.config.json";
+import { rechnerBereit, type Leistung } from "../../lib/preisrechner";
 import CtaBand from "../../components/CtaBand.astro";
 import FaqAccordion from "../../components/FaqAccordion.astro";
 import Icon from "../../components/Icon.astro";
@@ -96,7 +98,7 @@ const schema = [
     title={`${ist.label} in ${stadt.name}`}
     text={inhalt.intro}
     image={ist.bild}
-    imageAlt={`${ist.label} durch Fixum Objektservice in ${stadt.name}`}
+    imageAlt={`${ist.label} (Symbolbild)`}
     breadcrumbs={breadcrumbs}
     badges={ist.badges}
   />
@@ -107,9 +109,8 @@ const schema = [
       <div class="stack" data-reveal>
         <p class="eyebrow">Vor Ort</p>
         <h2 id="lage-title">
-          Was {ist.label.toLowerCase() === "umzug" ? "einen Umzug" : ist.label} in {
-            stadt.name
-          } ausmacht
+          Was {ist.label.toLowerCase() === "umzug" ? "einen Umzug" : ist.label} in
+          {stadt.name} ausmacht
         </h2>
         <p class="lead">{inhalt.lage}</p>
         {
@@ -155,7 +156,9 @@ const schema = [
   <section class="section section--soft" aria-labelledby="faq-title">
     <div class="container section-head" data-reveal>
       <p class="eyebrow">Häufige Fragen</p>
-      <h2 id="faq-title">{ist.label} in {stadt.name} - was Auftraggeber fragen</h2>
+      <h2 id="faq-title">
+        {ist.label} in {stadt.name} - was Auftraggeber fragen
+      </h2>
     </div>
     <div class="container container--narrow" data-reveal>
       <FaqAccordion items={faq} />
@@ -188,6 +191,17 @@ const schema = [
             {ist.label}: der vollständige Leistungsumfang
           </a>
         </li>
+        {
+          /* Entkernung hat bewusst keinen Rechner (Festpreis nach Besichtigung). */
+          leistung !== "entkernung" &&
+            rechnerBereit(preisConfig, leistung as Leistung) && (
+              <li>
+                <a class="arrow-link" href={`${ist.hauptseite}#kalkulator`}>
+                  {ist.label}: Preis grob berechnen
+                </a>
+              </li>
+            )
+        }
         <li>
           <a class="arrow-link" href={`/einsatzgebiet/${stadt.slug}/`}>
             Einsatzgebiet {stadt.name}

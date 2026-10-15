@@ -1,3 +1,35 @@
+# robots.txt - Fixum Objektservice
+
+# Suchmaschinen
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# KI-Suche und KI-Assistenten (OpenAI, Anthropic, Perplexity)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Alle uebrigen Crawler
 User-agent: *
 Allow: /
 
@@ -14,3 +46,7 @@ Sitemap: https://www.fixum-objektservice.de/sitemap-index.xml
 # Impressum, Datenschutz, AGB und Widerruf stehen nicht in der Sitemap,
 # sind aber ausdruecklich erlaubt und verlinkt - ein Ausschluss aus der
 # Sitemap ist keine Sperre.
+#
+# Ein Crawler mit eigener Gruppe liest nur diese Gruppe und ignoriert "*".
+# Deshalb steht in jeder Gruppe dasselbe "Allow: /" - wer hier spaeter
+# etwas sperrt, muss es in jeder Gruppe eintragen.

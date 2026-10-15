@@ -1,0 +1,1162 @@
+---
+/* Preisrechner - eine Komponente für alle Leistungen.
+
+   Die Fragen stehen hier, die Werte in src/data/preise.config.json, die
+   Rechenregeln in src/lib/preisrechner.ts.
+
+   Diskret: Im HTML stehen keine Preise. Das Rechenmodell kommt umcodiert
+   als data-Attribut mit, das Ergebnis erscheint nur als gerundete Spanne,
+   ohne Einzelpositionen. */
+import config from "../data/preise.config.json";
+import {
+  baueModell,
+  rechnerBereit,
+  verpacke,
+  type Leistung,
+} from "../lib/preisrechner";
+import { site } from "../data/site";
+
+interface Props {
+  leistung: Leistung;
+  /** Anker der Sektion - auf Leistungsseiten "kalkulator". */
+  id?: string;
+  titel?: string;
+  /** Auf der Sammelseite ohne eigene Sektion und Überschrift-Ebene. */
+  eingebettet?: boolean;
+}
+
+const {
+  leistung,
+  id = "kalkulator",
+  titel = "Preis grob berechnen",
+  eingebettet = false,
+} = Astro.props;
+
+type Option = { wert: string; label: string; hilfe?: string };
+type Feld =
+  | {
+      typ: "zahl";
+      name: string;
+      label: string;
+      einheit?: string;
+      hilfe?: string;
+      beispiel?: string;
+      optional?: boolean;
+      zeigeWenn?: string;
+    }
+  | {
+      typ: "auswahl";
+      name: string;
+      label: string;
+      optionen: Option[];
+      standard: string;
+      hilfe?: string;
+      kompakt?: boolean;
+      zeigeWenn?: string;
+    }
+  | {
+      typ: "janein";
+      name: string;
+      label: string;
+      hilfe?: string;
+      zeigeWenn?: string;
+    };
+
+const etagen: Option[] = [
+  { wert: "0", label: "EG" },
+  { wert: "1", label: "1." },
+  { wert: "2", label: "2." },
+  { wert: "3", label: "3." },
+  { wert: "4", label: "4." },
+  { wert: "5", label: "5. +" },
+];
+
+const anzahl = (bis: number): Option[] =>
+  Array.from({ length: bis + 1 }, (_, i) => ({
+    wert: String(i),
+    label: String(i),
+  }));
+
+const felder: Record<Leistung, Feld[]> = {
+  entruempelung: [
+    {
+      typ: "zahl",
+      name: "flaeche",
+      label: "Wie groß ist die Wohnfläche?",
+      einheit: "m²",
+      beispiel: "z. B. 65",
+      hilfe: [
+        "Ungefähr reicht.",
+        config.allgemein.flaechenFaustregel,
+        "Keller, Dachboden und Garage kommen gleich extra.",
+      ]
+        .filter(Boolean)
+        .join(" "),
+    },
+    {
+      typ: "auswahl",
+      name: "zustand",
+      label: "Wie voll ist es?",
+      standard: "normal",
+      optionen: [
+        {
+          wert: "normal",
+          label: "Normal möbliert",
+          hilfe: "Übliche Einrichtung mit Möbeln und Hausrat",
+        },
+        {
+          wert: "stark",
+          label: "Stark möbliert",
+          hilfe:
+            "Sehr viel Hausrat, volle Schränke, volle Keller oder Dachböden",
+        },
+        {
+          wert: "messie",
+          label: "Messie-Wohnung",
+          hilfe: "Stark vermüllt oder kaum begehbar - wir arbeiten diskret",
+        },
+      ],
+    },
+    {
+      typ: "auswahl",
+      name: "etage",
+      label: "In welcher Etage, ohne Aufzug?",
+      hilfe: "Mit Aufzug bitte EG wählen. 3. + gilt auch für höhere Etagen.",
+      standard: "0",
+      kompakt: true,
+      optionen: [
+        { wert: "0", label: "EG" },
+        { wert: "1", label: "1." },
+        { wert: "2", label: "2." },
+        { wert: "3", label: "3. +" },
+      ],
+    },
+    { typ: "janein", name: "keller", label: "Keller mit räumen" },
+    { typ: "janein", name: "dachboden", label: "Dachboden mit räumen" },
+    { typ: "janein", name: "garage", label: "Garage oder Schuppen mit räumen" },
+    { typ: "janein", name: "kueche", label: "Küche oder Einbauten abbauen" },
+    {
+      typ: "janein",
+      name: "reinigung",
+      label: "Endreinigung",
+      hilfe: "Sonst übergeben wir besenrein.",
+    },
+  ],
+  umzug: [
+    {
+      typ: "auswahl",
+      name: "zimmer",
+      label: "Wie viele Zimmer hat die Wohnung?",
+      hilfe: "Küche und Bad zählen nicht mit.",
+      standard: "2",
+      kompakt: true,
+      optionen: [
+        ...["1", "2", "3", "4", "5", "6"].map((z) => ({ wert: z, label: z })),
+        { wert: "99", label: "mehr" },
+      ],
+    },
+    {
+      typ: "auswahl",
+      name: "etageAus",
+      label: "Auszug: in welcher Etage?",
+      standard: "0",
+      kompakt: true,
+      optionen: etagen,
+    },
+    {
+      typ: "janein",
+      name: "aufzugAus",
+      label: "Am Auszug gibt es einen Aufzug",
+    },
+    {
+      typ: "auswahl",
+      name: "etageEin",
+      label: "Einzug: in welcher Etage?",
+      standard: "0",
+      kompakt: true,
+      optionen: etagen,
+    },
+    {
+      typ: "janein",
+      name: "aufzugEin",
+      label: "Am Einzug gibt es einen Aufzug",
+    },
+    {
+      typ: "zahl",
+      name: "km",
+      label: "Wie weit ist es ungefähr?",
+      einheit: "km",
+      beispiel: "z. B. 30",
+      hilfe: "Von der alten zur neuen Wohnung. Emden–Norden sind etwa 30 km.",
+    },
+    { typ: "janein", name: "moebel", label: "Möbel ab- und wieder aufbauen" },
+    { typ: "janein", name: "kueche", label: "Küche ab- und wieder aufbauen" },
+    {
+      typ: "auswahl",
+      name: "schwer",
+      label: "Besonders schwere Stücke?",
+      hilfe: "Zum Beispiel Klavier, Tresor oder großer Kühlschrank.",
+      standard: "0",
+      kompakt: true,
+      optionen: anzahl(5),
+    },
+    { typ: "janein", name: "entsorgung", label: "Alte Möbel entsorgen" },
+  ],
+  trockenbau: [
+    {
+      typ: "auswahl",
+      name: "art",
+      label: "Was soll entstehen?",
+      standard: "zwischenwand",
+      optionen: [
+        {
+          wert: "zwischenwand",
+          label: "Normale Zwischenwand",
+          hilfe: "Teilt einen Raum, z. B. für ein zusätzliches Zimmer",
+        },
+        {
+          wert: "schallschutzwand",
+          label: "Zwischenwand mit Schallschutz",
+          hilfe: "Gedämmt, damit zwischen den Räumen Ruhe ist",
+        },
+        {
+          wert: "deckeAbhaengen",
+          label: "Decke abhängen",
+          hilfe: "Neue Decke unter der alten, z. B. für Leitungen oder Licht",
+        },
+        {
+          wert: "dachschraege",
+          label: "Dachschräge verkleiden",
+          hilfe: "Ausbau unter dem Dach",
+        },
+        {
+          wert: "vorsatzschale",
+          label: "Alte Wand begradigen",
+          hilfe: "Neue, gerade Fläche vor einer unebenen Wand",
+        },
+      ],
+    },
+    {
+      typ: "zahl",
+      name: "flaeche",
+      label: "Wie groß ist die Fläche?",
+      einheit: "m²",
+      beispiel: "z. B. 12",
+      hilfe: "Wand: Länge mal Höhe. Decke: Länge mal Breite. Ungefähr reicht.",
+    },
+    {
+      typ: "auswahl",
+      name: "material",
+      label: "Wer besorgt das Material?",
+      standard: "fixum",
+      optionen: [
+        { wert: "fixum", label: "Fixum besorgt alles" },
+        { wert: "kunde", label: "Ich stelle das Material" },
+      ],
+    },
+    {
+      typ: "auswahl",
+      name: "oberflaeche",
+      label: "Wie glatt soll die Oberfläche werden?",
+      standard: "normal",
+      optionen: [
+        {
+          wert: "ohne",
+          label: "Nicht spachteln",
+          hilfe: "Wenn gefliest oder verkleidet wird",
+        },
+        {
+          wert: "normal",
+          label: "Normal gespachtelt",
+          hilfe: "Für Tapete oder Raufaser",
+        },
+        {
+          wert: "glatt",
+          label: "Besonders glatt",
+          hilfe: "Für glatte Anstriche ohne Tapete",
+        },
+      ],
+    },
+    {
+      typ: "janein",
+      name: "daemmung",
+      label: "Mit Dämmung",
+      hilfe: "Für Wärme oder mehr Ruhe.",
+      zeigeWenn: "art=zwischenwand,deckeAbhaengen,dachschraege,vorsatzschale",
+    },
+    {
+      typ: "auswahl",
+      name: "tueren",
+      label: "Wie viele Türöffnungen?",
+      standard: "0",
+      kompakt: true,
+      optionen: anzahl(5),
+      zeigeWenn: "art=zwischenwand,schallschutzwand",
+    },
+  ],
+  montage: [
+    {
+      typ: "auswahl",
+      name: "art",
+      label: "Was soll montiert werden?",
+      standard: "tuer",
+      optionen: [
+        { wert: "tuer", label: "Innentür mit Zarge" },
+        { wert: "moebel", label: "Möbel aufbauen" },
+        { wert: "kueche", label: "Küche aufbauen" },
+      ],
+    },
+    {
+      typ: "zahl",
+      name: "anzahl",
+      label: "Wie viele Stück?",
+      beispiel: "z. B. 3",
+      hilfe: "Jede Tür, jeder Schrank, jedes Bett zählt einzeln.",
+      zeigeWenn: "art=tuer,moebel",
+    },
+    {
+      typ: "zahl",
+      name: "meter",
+      label: "Wie lang ist die Küche?",
+      einheit: "m",
+      beispiel: "z. B. 3,6",
+      hilfe: "Gesamtlänge aller Küchenzeilen.",
+      zeigeWenn: "art=kueche",
+    },
+    {
+      typ: "janein",
+      name: "ausbau",
+      label: "Altes vorher ausbauen und entsorgen",
+    },
+  ],
+  boden: [
+    {
+      typ: "zahl",
+      name: "flaeche",
+      label: "Wie groß ist die Fläche?",
+      einheit: "m²",
+      beispiel: "z. B. 40",
+    },
+    {
+      typ: "auswahl",
+      name: "belag",
+      label: "Welcher Belag?",
+      standard: "laminat",
+      optionen: [
+        { wert: "laminat", label: "Laminat" },
+        { wert: "vinyl", label: "Vinyl" },
+        { wert: "teppich", label: "Teppich" },
+      ],
+    },
+    { typ: "janein", name: "entfernen", label: "Alten Belag entfernen" },
+    {
+      typ: "zahl",
+      name: "leisten",
+      label: "Neue Sockelleisten",
+      einheit: "m",
+      beispiel: "z. B. 35",
+      hilfe:
+        "Ungefähr der Umfang der Räume. Leer lassen, wenn keine neuen Leisten.",
+      optional: true,
+    },
+  ],
+};
+
+const thema: Record<Leistung, string> = {
+  entruempelung: "Entrümpelung / Haushaltsauflösung",
+  umzug: "Umzug / Transport",
+  trockenbau: "Trockenbau & Innenausbau",
+  montage: "Montage & Bodenverlegung",
+  boden: "Montage & Bodenverlegung",
+};
+
+const hinweis: Partial<Record<Leistung, string>> = {
+  montage:
+    "Ohne Elektro-, Gas- und Wasseranschlüsse. Diese koordinieren wir mit einem Fachbetrieb.",
+  boden: "Parkett verlegen, schleifen oder versiegeln bieten wir nicht an.",
+};
+
+/* Ohne Grundwerte in der Config wird der Rechner gar nicht ausgegeben. */
+const bereit = rechnerBereit(config, leistung);
+const paket = bereit ? verpacke(baueModell(config, leistung)) : "";
+const p = (name: string) => `${id}-${name}`;
+const Tag = eingebettet ? "div" : "section";
+---
+
+{
+  bereit && (
+    <Tag
+      id={id}
+      class:list={["rechner", !eingebettet && "section section--mist"]}
+      aria-labelledby={`${id}-titel`}
+      data-preisrechner={leistung}
+      data-m={paket}
+      data-thema={thema[leistung]}
+      data-wa={site.whatsapp}
+    >
+      <div class:list={[!eingebettet && "container"]}>
+        {!eingebettet && (
+          <div class="section-head" data-reveal>
+            <p class="eyebrow">Preisrechner</p>
+            <h2 id={`${id}-titel`}>{titel}</h2>
+            <p class="muted">
+              Ein paar Angaben genügen. Sie sehen sofort einen ungefähren Rahmen
+              - und können direkt einen Festpreis anfragen.
+            </p>
+          </div>
+        )}
+        {eingebettet && (
+          <h2 id={`${id}-titel`} class="sr-only">
+            {titel}
+          </h2>
+        )}
+
+        <div class="rechner-grid">
+          <form class="rechner-form card" novalidate onsubmit="return false">
+            {felder[leistung].map((f) => (
+              <div
+                class:list={["rf", `rf--${f.typ}`]}
+                data-zeige-wenn={f.zeigeWenn}
+                data-feld={f.name}
+              >
+                {f.typ === "zahl" && (
+                  <>
+                    <label class="rf-frage" for={p(f.name)}>
+                      {f.label}
+                      {f.optional && (
+                        <span class="rf-optional"> (optional)</span>
+                      )}
+                    </label>
+                    <div class="rf-zahl">
+                      <input
+                        id={p(f.name)}
+                        name={f.name}
+                        type="text"
+                        inputmode="decimal"
+                        autocomplete="off"
+                        placeholder={f.beispiel}
+                        aria-describedby={
+                          f.hilfe ? p(`${f.name}-hilfe`) : undefined
+                        }
+                        data-einheit={f.einheit}
+                      />
+                      {f.einheit && (
+                        <span class="rf-einheit" aria-hidden="true">
+                          {f.einheit}
+                        </span>
+                      )}
+                    </div>
+                    {f.hilfe && (
+                      <p class="rf-hilfe" id={p(`${f.name}-hilfe`)}>
+                        {f.hilfe}
+                      </p>
+                    )}
+                  </>
+                )}
+                {f.typ === "auswahl" && (
+                  <fieldset>
+                    <legend class="rf-frage">{f.label}</legend>
+                    {f.hilfe && <p class="rf-hilfe">{f.hilfe}</p>}
+                    <div
+                      class:list={[
+                        "rf-wahlen",
+                        f.kompakt && "rf-wahlen--kompakt",
+                      ]}
+                    >
+                      {f.optionen.map((o) => (
+                        <label class="wahl">
+                          <input
+                            class="wahl-input"
+                            type="radio"
+                            name={f.name}
+                            value={o.wert}
+                            checked={o.wert === f.standard}
+                          />
+                          <span class="wahl-box">
+                            <span class="wahl-label">{o.label}</span>
+                            {o.hilfe && (
+                              <span class="wahl-hilfe">{o.hilfe}</span>
+                            )}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                )}
+                {f.typ === "janein" && (
+                  <label class="wahl wahl--check">
+                    <input
+                      class="wahl-input"
+                      type="checkbox"
+                      name={f.name}
+                      value="ja"
+                    />
+                    <span class="wahl-box">
+                      <span class="wahl-haken" aria-hidden="true" />
+                      <span>
+                        <span class="wahl-label">{f.label}</span>
+                        {f.hilfe && <span class="wahl-hilfe">{f.hilfe}</span>}
+                      </span>
+                    </span>
+                  </label>
+                )}
+              </div>
+            ))}
+            {hinweis[leistung] && (
+              <p class="rechner-hinweis">{hinweis[leistung]}</p>
+            )}
+          </form>
+
+          <aside class="rechner-ergebnis" aria-label="Ergebnis">
+            <p class="re-titel">Ihr Richtwert</p>
+            <p class="re-wert" data-ergebnis aria-live="polite">
+              Bitte die Angaben links ausfüllen.
+            </p>
+            <p class="re-hinweis">
+              <strong>
+                Unverbindlicher Richtwert. Verbindlicher Festpreis nach
+                kostenloser Besichtigung.
+              </strong>
+            </p>
+            <p class="re-steuer">Ohne Umsatzsteuer (§ 19 UStG).</p>
+            <div class="re-aktionen">
+              <a class="btn btn--wide" href="/kontakt/" data-anfrage="formular">
+                <span>Festpreis anfragen</span>
+              </a>
+              <a
+                class="btn btn--secondary btn--wa btn--wide"
+                href={`https://wa.me/${site.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-anfrage="whatsapp"
+              >
+                <span>Per WhatsApp anfragen</span>
+              </a>
+            </div>
+            <p class="re-foto">
+              Fotos helfen uns bei der Einschätzung - gern per WhatsApp.
+            </p>
+            <noscript>
+              <p class="re-noscript">
+                Der Rechner braucht JavaScript. Rufen Sie uns gern an:
+                {site.phoneDisplay}
+              </p>
+            </noscript>
+          </aside>
+        </div>
+      </div>
+
+      {/* Handy: Richtwert läuft beim Ausfüllen unten mit, solange die
+       Ergebniskarte nicht zu sehen ist. */}
+      <div class="rechner-mini" data-mini hidden>
+        <span class="rm-text">
+          <span class="rm-label">Ihr Richtwert</span>
+          <span class="rm-wert" data-mini-wert />
+        </span>
+        <button type="button" class="rm-btn" data-mini-zum>
+          Ansehen
+        </button>
+      </div>
+    </Tag>
+  )
+}
+
+<script>
+  import {
+    entpacke,
+    ergebnisText,
+    rechner,
+    type Ergebnis,
+    type Leistung,
+  } from "../lib/preisrechner";
+
+  type Eingaben = Record<string, string | boolean>;
+
+  const melde = (event: string, daten: Record<string, string>) => {
+    const w = window as unknown as { dataLayer?: unknown[] };
+    w.dataLayer = w.dataLayer || [];
+    w.dataLayer.push({ event, ...daten, page_path: location.pathname });
+  };
+
+  document
+    .querySelectorAll<HTMLElement>("[data-preisrechner]")
+    .forEach((wurzel) => {
+      const leistung = wurzel.dataset.preisrechner as Leistung;
+      let modell: unknown;
+      try {
+        modell = entpacke(wurzel.dataset.m || "");
+      } catch {
+        return;
+      }
+      const form = wurzel.querySelector<HTMLFormElement>("form")!;
+      const ausgabe = wurzel.querySelector<HTMLElement>("[data-ergebnis]")!;
+      const formularLink = wurzel.querySelector<HTMLAnchorElement>(
+        '[data-anfrage="formular"]',
+      )!;
+      const waLink = wurzel.querySelector<HTMLAnchorElement>(
+        '[data-anfrage="whatsapp"]',
+      )!;
+      const ergebnisKarte =
+        wurzel.querySelector<HTMLElement>(".rechner-ergebnis")!;
+      const mini = wurzel.querySelector<HTMLElement>("[data-mini]")!;
+      const miniWert = wurzel.querySelector<HTMLElement>("[data-mini-wert]")!;
+      const speicherKey = `fixum-rechner-${leistung}`;
+      let gestartet = false;
+      let letztesErgebnis = "";
+      let timer: number | undefined;
+
+      const eingaben = (): Eingaben => {
+        const e: Eingaben = {};
+        form.querySelectorAll<HTMLInputElement>("input").forEach((i) => {
+          if (i.closest<HTMLElement>("[data-feld]")?.hidden) return;
+          if (i.type === "radio") {
+            if (i.checked) e[i.name] = i.value;
+          } else if (i.type === "checkbox") {
+            e[i.name] = i.checked;
+          } else {
+            e[i.name] = i.value;
+          }
+        });
+        return e;
+      };
+
+      /* Bedingte Fragen: data-zeige-wenn="art=zwischenwand,dachschraege" */
+      const sichtbarkeit = () => {
+        const e = eingaben();
+        form
+          .querySelectorAll<HTMLElement>("[data-zeige-wenn]")
+          .forEach((feld) => {
+            const [name, werte] = (feld.dataset.zeigeWenn || "").split("=");
+            const aktuell =
+              form.querySelector<HTMLInputElement>(
+                `input[name="${name}"]:checked`,
+              )?.value ?? String(e[name] ?? "");
+            feld.hidden = !werte.split(",").includes(aktuell);
+          });
+      };
+
+      /* Lesbare Zusammenfassung für Formular und WhatsApp - nur die Angaben
+         des Kunden und der Richtwert, keine Einzelpreise. */
+      const zusammenfassung = (ergebnis: string) => {
+        const zeilen: string[] = [];
+        const extras: string[] = [];
+        form.querySelectorAll<HTMLElement>("[data-feld]").forEach((feld) => {
+          if (feld.hidden) return;
+          const frage = feld
+            .querySelector(".rf-frage")
+            ?.textContent?.replace(/\(optional\)/, "")
+            .trim();
+          const zahl =
+            feld.querySelector<HTMLInputElement>('input[type="text"]');
+          const radio = feld.querySelector<HTMLInputElement>(
+            'input[type="radio"]:checked',
+          );
+          const check = feld.querySelector<HTMLInputElement>(
+            'input[type="checkbox"]',
+          );
+          if (zahl && zahl.value.trim())
+            zeilen.push(
+              `${frage} ${zahl.value.trim()} ${zahl.dataset.einheit ?? ""}`.trim(),
+            );
+          if (radio)
+            zeilen.push(
+              `${frage} ${radio.closest("label")?.querySelector(".wahl-label")?.textContent?.trim()}`,
+            );
+          if (check?.checked)
+            extras.push(
+              feld.querySelector(".wahl-label")?.textContent?.trim() ?? "",
+            );
+        });
+        if (extras.length) zeilen.push(`Dazu: ${extras.join(", ")}`);
+        zeilen.push(`Richtwert laut Preisrechner: ${ergebnis}`);
+        return zeilen.join("\n");
+      };
+
+      /* Eingaben für die Sitzung merken (z. B. beim Wechsel zur
+         Kontaktseite und zurück). Nur im Browser des Kunden, sessionStorage
+         wird beim Schließen des Tabs gelöscht. */
+      const speichere = () => {
+        const daten: Record<string, string | boolean> = {};
+        form.querySelectorAll<HTMLInputElement>("input").forEach((i) => {
+          if (i.type === "radio") {
+            if (i.checked) daten[i.name] = i.value;
+          } else if (i.type === "checkbox") {
+            daten[i.name] = i.checked;
+          } else {
+            daten[i.name] = i.value;
+          }
+        });
+        try {
+          sessionStorage.setItem(speicherKey, JSON.stringify(daten));
+        } catch {
+          /* Speicher gesperrt (privater Modus) - dann eben ohne. */
+        }
+      };
+
+      const stelleWiederHer = () => {
+        let daten: Record<string, string | boolean> | null = null;
+        try {
+          daten = JSON.parse(sessionStorage.getItem(speicherKey) || "null");
+        } catch {
+          return;
+        }
+        if (!daten || typeof daten !== "object") return;
+        form.querySelectorAll<HTMLInputElement>("input").forEach((i) => {
+          if (!(i.name in daten!)) return;
+          const wert = daten![i.name];
+          if (i.type === "radio") i.checked = i.value === wert;
+          else if (i.type === "checkbox") i.checked = wert === true;
+          else if (typeof wert === "string") i.value = wert.slice(0, 20);
+        });
+      };
+
+      /* Mitlaufender Richtwert auf dem Handy */
+      const schmal = window.matchMedia("(max-width: 900px)");
+      let formSichtbar = false;
+      let karteSichtbar = false;
+      let hatErgebnis = false;
+      const miniAnzeigen = () => {
+        mini.hidden = !(
+          schmal.matches &&
+          formSichtbar &&
+          !karteSichtbar &&
+          hatErgebnis &&
+          !wurzel.closest<HTMLElement>("[hidden]")
+        );
+      };
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver((eintraege) => {
+          eintraege.forEach((e) => {
+            if (e.target === form) formSichtbar = e.isIntersecting;
+            else karteSichtbar = e.isIntersecting;
+          });
+          miniAnzeigen();
+        }).observe(form);
+        new IntersectionObserver(
+          (eintraege) => {
+            karteSichtbar = eintraege[0].isIntersecting;
+            miniAnzeigen();
+          },
+          { threshold: 0.35 },
+        ).observe(ergebnisKarte);
+      }
+      schmal.addEventListener?.("change", miniAnzeigen);
+      wurzel
+        .querySelector<HTMLButtonElement>("[data-mini-zum]")!
+        .addEventListener("click", () => {
+          ergebnisKarte.scrollIntoView({ behavior: "smooth", block: "center" });
+          ergebnisKarte
+            .querySelector<HTMLElement>("a")
+            ?.focus({ preventScroll: true });
+        });
+
+      const aktualisiere = () => {
+        sichtbarkeit();
+        const fn = rechner[leistung];
+        const ergebnis: Ergebnis = fn(modell as never, eingaben());
+        const text = ergebnisText(ergebnis);
+        ausgabe.textContent = text;
+        ausgabe.dataset.art = ergebnis.art;
+        hatErgebnis = ergebnis.art !== "unvollstaendig";
+        miniWert.textContent = text;
+        miniAnzeigen();
+
+        const nachricht = zusammenfassung(
+          ergebnis.art === "unvollstaendig" ? "noch offen" : text,
+        );
+        formularLink.href =
+          "/kontakt/#rechner=" +
+          encodeURIComponent(
+            JSON.stringify({ t: wurzel.dataset.thema, n: nachricht }),
+          );
+        waLink.href =
+          `https://wa.me/${wurzel.dataset.wa}?text=` +
+          encodeURIComponent(
+            `Moin, ich habe den Preisrechner auf fixum-objektservice.de genutzt:\n${nachricht}\n\nBitte um einen Festpreis.`,
+          );
+
+        if (ergebnis.art !== "unvollstaendig" && text !== letztesErgebnis) {
+          letztesErgebnis = text;
+          window.clearTimeout(timer);
+          timer = window.setTimeout(
+            () =>
+              melde("rechner_ergebnis", {
+                rechner: leistung,
+                ergebnis_art: ergebnis.art,
+              }),
+            1500,
+          );
+        }
+      };
+
+      const beiEingabe = () => {
+        if (!gestartet) {
+          gestartet = true;
+          melde("rechner_gestartet", { rechner: leistung });
+        }
+        aktualisiere();
+        speichere();
+      };
+
+      form.addEventListener("input", beiEingabe);
+      form.addEventListener("change", beiEingabe);
+      [formularLink, waLink].forEach((a) =>
+        a.addEventListener("click", () =>
+          melde("rechner_anfrage", {
+            rechner: leistung,
+            kanal: a.dataset.anfrage || "",
+          }),
+        ),
+      );
+      stelleWiederHer();
+      aktualisiere();
+    });
+</script>
+
+<style>
+  .rechner-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: start;
+  }
+
+  .rechner-form {
+    display: grid;
+    gap: 1.5rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .rf[hidden] {
+    display: none;
+  }
+
+  .rf fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .rf-frage {
+    display: block;
+    margin-bottom: 0.6rem;
+    padding: 0;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    color: var(--navy);
+  }
+
+  .rf-optional {
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .rf-hilfe {
+    margin: -0.25rem 0 0.6rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .rf--zahl .rf-hilfe {
+    margin: 0.5rem 0 0;
+  }
+
+  .rf-zahl {
+    position: relative;
+    max-width: 16rem;
+  }
+
+  .rf-zahl input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.75rem 3.25rem 0.75rem 1rem;
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: #fff;
+  }
+
+  .rf-zahl input:focus-visible {
+    outline: 3px solid var(--blue-light);
+    outline-offset: 2px;
+    border-color: var(--blue);
+  }
+
+  .rf-einheit {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  /* ---- Auswahlkarten ---- */
+  .rf-wahlen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 0.6rem;
+  }
+
+  .rf-wahlen--kompakt {
+    grid-template-columns: repeat(auto-fit, minmax(4.25rem, 1fr));
+  }
+
+  .wahl {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+
+  .wahl-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .wahl-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+    height: 100%;
+    min-height: 52px;
+    padding: 0.7rem 0.9rem;
+    border: 2px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      background var(--dur) var(--ease-out);
+  }
+
+  .rf-wahlen--kompakt .wahl-box {
+    align-items: center;
+    text-align: center;
+    padding: 0.6rem 0.4rem;
+  }
+
+  .wahl-label {
+    display: block;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .wahl-hilfe {
+    display: block;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+
+  .wahl:hover .wahl-box {
+    border-color: var(--blue-light);
+  }
+
+  .wahl-input:checked + .wahl-box {
+    border-color: var(--navy);
+    background: var(--mist);
+    box-shadow: inset 0 0 0 1px var(--navy);
+  }
+
+  .wahl-input:focus-visible + .wahl-box {
+    outline: 3px solid var(--blue-light);
+    outline-offset: 2px;
+  }
+
+  /* Ja/Nein als Haken-Karte */
+  .wahl--check .wahl-box {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+
+  .wahl-haken {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--line-strong);
+    border-radius: 6px;
+    background: #fff;
+  }
+
+  .wahl-input:checked + .wahl-box .wahl-haken {
+    border-color: var(--navy);
+    background: var(--navy);
+  }
+
+  .wahl-input:checked + .wahl-box .wahl-haken::after {
+    content: "";
+    width: 0.45rem;
+    height: 0.8rem;
+    margin-top: -0.15rem;
+    border: solid #fff;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+
+  .rechner-hinweis {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border-left: 4px solid var(--amber);
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    color: var(--ink);
+    background: var(--mist-soft);
+  }
+
+  /* ---- Ergebnis ---- */
+  .rechner-ergebnis {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: var(--radius-md);
+    color: var(--on-dark-soft);
+    background:
+      radial-gradient(
+        120% 120% at 100% 0%,
+        rgba(31, 122, 224, 0.3),
+        transparent 55%
+      ),
+      linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+    box-shadow: var(--shadow-md);
+  }
+
+  .rechner-ergebnis p {
+    margin: 0;
+  }
+
+  .re-titel {
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  .re-wert {
+    font-size: clamp(1.625rem, 1.2rem + 1.6vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: #fff;
+  }
+
+  .re-wert[data-art="unvollstaendig"] {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--on-dark-soft);
+  }
+
+  .re-hinweis strong {
+    color: #fff;
+  }
+
+  .re-steuer,
+  .re-foto,
+  .re-noscript {
+    font-size: 0.875rem;
+  }
+
+  .re-aktionen {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+
+  /* ---- Mitlaufender Richtwert (nur Handy/Tablet) ---- */
+  .rechner-mini {
+    position: fixed;
+    z-index: 40;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.6rem 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    color: #fff;
+    background: var(--navy-deep);
+    box-shadow: var(--shadow-md);
+  }
+
+  .rechner-mini[hidden] {
+    display: none;
+  }
+
+  .rm-text {
+    display: grid;
+    min-width: 0;
+  }
+
+  .rm-label {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  .rm-wert {
+    font-size: 1.0625rem;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rm-btn {
+    flex: none;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    font: inherit;
+    font-weight: 700;
+    color: var(--navy-deep);
+    background: var(--amber);
+    cursor: pointer;
+  }
+
+  .rm-btn:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 767px) {
+    /* Über der festen Kontaktleiste */
+    .rechner-mini {
+      bottom: calc(var(--sticky-call-h) + env(safe-area-inset-bottom) + 0.5rem);
+    }
+  }
+
+  @media (min-width: 901px) {
+    .rechner-mini {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .rechner-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rechner-ergebnis {
+      position: static;
+    }
+  }
+</style>

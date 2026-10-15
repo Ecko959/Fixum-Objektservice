@@ -129,7 +129,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Leer",
     metaDescription:
-      "Entrümpelung, Wohnungsräumung, Entkernung und Trockenbau in Leer, Loga, Heisfelde und Bingum. Festpreis nach Besichtigung – auch für Vermieter und Verwaltungen.",
+      "Entrümpelung, Wohnungsräumung, Entkernung und Trockenbau in Leer, Loga, Heisfelde und Bingum. Festpreis nach Besichtigung, auch für Verwaltungen.",
     h1: "Entrümpelung, Entkernung und Trockenbau in Leer",
     intro:
       "Leer ist die größte Stadt im Umkreis nach Emden – mit Altstadt, vielen Mietwohnungen und einem hohen Anteil an Vermietern und Verwaltungen. Wir arbeiten hier von Emden aus, rund 30 km entfernt, in Leer selbst sowie in Loga, Heisfelde, Bingum und den übrigen Ortsteilen.",
@@ -305,7 +305,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Hinte",
     metaDescription:
-      "Entrümpelung, Haushaltsauflösung und Trockenbau in Hinte und allen Ortsteilen – direkt an der Stadtgrenze Emden. Kurze Anfahrt, Festpreis nach Besichtigung.",
+      "Entrümpelung, Haushaltsauflösung und Trockenbau in Hinte und allen Ortsteilen – direkt an der Stadtgrenze Emden. Festpreis nach Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Hinte",
     intro:
       "Hinte grenzt direkt an Emden – rund 8 km bis zu uns. Das heißt für Sie: kurze Anfahrt, schnelle Besichtigung und oft auch kurzfristige Termine in Loppersum, Suurhusen, Osterhusen und den übrigen Ortsteilen.",
@@ -365,7 +365,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Moormerland",
     metaDescription:
-      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Moormerland – Warsingsfehn, Neermoor, Veenhusen, Oldersum. Festpreis nach kostenloser Besichtigung.",
+      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Moormerland – Warsingsfehn, Neermoor, Veenhusen, Oldersum. Festpreis nach Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Moormerland",
     intro:
       "Moormerland liegt zwischen Emden und Leer, rund 20 km von unserem Standort. Wir arbeiten in Warsingsfehn, Neermoor, Veenhusen, Oldersum und allen weiteren Ortsteilen.",
@@ -484,7 +484,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Ausbau Südbrookmerland",
     metaDescription:
-      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Südbrookmerland – Moordorf, Victorbur, Münkeboe, Theene. Festpreis nach kostenloser Besichtigung.",
+      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Südbrookmerland – Moordorf, Victorbur, Münkeboe, Theene. Festpreis nach Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Südbrookmerland",
     intro:
       "Südbrookmerland liegt rund 24 km von Emden, am Großen Meer. Wir sind in Moordorf, Victorbur, Münkeboe, Theene und allen anderen Ortsteilen im Einsatz.",
@@ -545,7 +545,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Ausbau Großefehn",
     metaDescription:
-      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Großefehn – Ostgroßefehn, Timmel, Holtrop, Spetzerfehn. Festpreis nach kostenloser Besichtigung.",
+      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Großefehn – Ostgroßefehn, Timmel, Holtrop, Spetzerfehn. Festpreis nach Besichtigung.",
     h1: "Entrümpelung und Ausbau in Großefehn",
     intro:
       "Großefehn gilt als älteste Fehnsiedlung Ostfrieslands. Rund 36 km von Emden arbeiten wir in Ost-, Mitte- und Westgroßefehn, Timmel, Holtrop, Spetzerfehn und den übrigen Ortsteilen.",
@@ -662,7 +662,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Rückbau Weener",
     metaDescription:
-      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Weener und im Rheiderland. Festpreis nach kostenloser Besichtigung, Anfahrt transparent ausgewiesen.",
+      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Weener und im Rheiderland. Festpreis nach Besichtigung, Anfahrt transparent ausgewiesen.",
     h1: "Entrümpelung und Haushaltsauflösung in Weener",
     intro:
       "Weener ist die Stadt im Rheiderland, nah an der niederländischen Grenze und rund 45 km von Emden. Wir arbeiten in Weener, Stapelmoor, Möhlenwarf, Holthusen und den umliegenden Orten.",
@@ -777,7 +777,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Trockenbau Wiesmoor",
     metaDescription:
-      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Wiesmoor und Ortsteilen wie Hinrichsfehn und Marcardsmoor. Festpreis nach kostenloser Besichtigung.",
+      "Entrümpelung, Haushaltsauflösung, Rückbau und Trockenbau in Wiesmoor und Ortsteilen wie Hinrichsfehn und Marcardsmoor. Festpreis nach Besichtigung.",
     h1: "Entrümpelung und Trockenbau in Wiesmoor",
     intro:
       "Die Blumenstadt Wiesmoor liegt rund 48 km von Emden. Wir arbeiten in Wiesmoor und den Ortsteilen Hinrichsfehn, Marcardsmoor, Voßbarg und Zwischenbergen.",
@@ -835,7 +835,7 @@ export const staedte: Stadt[] = [
     ],
     metaTitle: "Fixum Objektservice: Entrümpelung & Renovierung Wittmund",
     metaDescription:
-      "Entrümpelung, Haushaltsauflösung und Renovierung in Wittmund, Carolinensiel und Harlesiel – auch für Ferienwohnungen. Festpreis nach kostenloser Besichtigung.",
+      "Entrümpelung, Haushaltsauflösung und Renovierung in Wittmund, Carolinensiel und Harlesiel – auch für Ferienwohnungen. Festpreis nach Besichtigung.",
     h1: "Entrümpelung und Renovierung in Wittmund",
     intro:
       "Wittmund ist Kreisstadt am Rand unseres Einsatzgebiets, rund 52 km von Emden. Wir übernehmen hier vor allem größere Räumungen und Renovierungen – in Wittmund selbst sowie in Carolinensiel und Harlesiel.",
