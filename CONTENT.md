@@ -430,10 +430,10 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
 
 ## SEO-Runde Oktober 2026
 
-- **Preise** stehen nur in `src/data/preise.ts` (vom Inhaber freigegebene
-  Richtwerte). Leistungsseiten ("Was kostet das?"), Startseiten-FAQ,
-  Zentralseite, schema.org-Offers und `/llms.txt` lesen von dort. Keine
-  weiteren Zahlen ohne Freigabe ergänzen.
+- **Preise**: alle Zahlen stehen nur in `src/data/preise.config.json`.
+  Sichtbar auf der Website sind ausschließlich die fünf Ab-Preise
+  (Abschnitt `abPreise`), aufbereitet in `src/data/preise.ts`. Alle übrigen
+  Werte nutzt nur der Preisrechner.
 - **Zentralseite** `/entruempelung-entkernung-innenausbau/` erklärt die
   Leistungskette. Verlinkt über `KetteBand` von Startseite, Leistungsübersicht,
   Entrümpelung, Entkernung, Trockenbau, Kernsanierung und Rückbau + Trockenbau
@@ -454,3 +454,20 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
 - **Schriften**: nur Latin-Subset, metrisch angeglichene Ersatzschriften
   ("Manrope Fallback" usw.) gegen Layout-Sprünge, Preload für Manrope 400/800.
 - **Branchenportale**: siehe `EINTRAEGE.md`.
+
+## Preisrechner
+
+- Werte: `src/data/preise.config.json` (Anleitung steht oben in der Datei).
+  `null` = noch kein Wert, der Rechner zeigt dann "Preis auf Anfrage".
+- Fragen und Auswahlmöglichkeiten: `src/components/Preisrechner.astro`.
+- Rechenregeln: `src/lib/preisrechner.ts`, Tests: `tests/preisrechner.test.ts`
+  (`npm test`). Die Tests prüfen auch, dass die Ab-Preise zu den
+  Rechnerwerten passen.
+- Auf den Leistungsseiten unter `#kalkulator`, Sammelseite `/preisrechner/`
+  (Direktaufruf z. B. `/preisrechner/#umzug`). Entkernung: kein Rechner.
+- Diskretion: Im HTML stehen keine Detailwerte, das Rechenmodell wird
+  umcodiert mitgegeben. Gegen gezieltes Auslesen schützt das nicht.
+- "Festpreis anfragen" füllt das Kontaktformular vor (`/kontakt/#rechner=`);
+  ohne aktives Formular landen die Angaben im WhatsApp- und E-Mail-Link.
+- Messpunkte (nur `dataLayer`): `rechner_gestartet`, `rechner_ergebnis`,
+  `rechner_anfrage` - ohne Preise.

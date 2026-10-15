@@ -1,0 +1,296 @@
+---
+/* Sammelseite des Preisrechners. Oben wählt der Kunde die Leistung, darunter
+   erscheint der passende Rechner. Entkernung hat bewusst keinen Rechner.
+   Direktaufruf einer Leistung: /preisrechner/#umzug */
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Button from "../components/Button.astro";
+import CtaBand from "../components/CtaBand.astro";
+import Icon from "../components/Icon.astro";
+import Preisrechner from "../components/Preisrechner.astro";
+import type { Leistung } from "../lib/preisrechner";
+import { preisHinweis } from "../data/preise";
+import type { IconName } from "../data/icons";
+
+const path = "/preisrechner/";
+const breadcrumbs: Array<[string, string]> = [["Preisrechner", path]];
+
+const auswahl: Array<{
+  id: Leistung | "entkernung";
+  label: string;
+  text: string;
+  icon: IconName;
+  seite: string;
+}> = [
+  {
+    id: "entruempelung",
+    label: "Entrümpelung",
+    text: "Wohnung, Haus, Keller, Nachlass",
+    icon: "crate",
+    seite: "/entruempelung/",
+  },
+  {
+    id: "umzug",
+    label: "Umzug",
+    text: "Wohnung im Nahbereich",
+    icon: "truck",
+    seite: "/umzug/",
+  },
+  {
+    id: "trockenbau",
+    label: "Trockenbau",
+    text: "Wände, Decken, Dachschrägen",
+    icon: "wall",
+    seite: "/trockenbau/",
+  },
+  {
+    id: "montage",
+    label: "Montage",
+    text: "Türen, Möbel, Küchen",
+    icon: "wrench",
+    seite: "/kuechenmontage/",
+  },
+  {
+    id: "boden",
+    label: "Boden",
+    text: "Laminat, Vinyl, Teppich",
+    icon: "door",
+    seite: "/bodenverlegung/",
+  },
+  {
+    id: "entkernung",
+    label: "Entkernung",
+    text: "Festpreis nach Besichtigung",
+    icon: "hammer",
+    seite: "/entkernung/",
+  },
+];
+---
+
+<Base
+  title="Fixum Objektservice: Preisrechner"
+  description="Preisrechner für Entrümpelung, Umzug, Trockenbau, Montage und Boden in Emden und Ostfriesland. Unverbindlicher Richtwert, Festpreis nach Besichtigung."
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section page-top section--mist rechner-seite">
+    <div class="container">
+      <Breadcrumbs trail={breadcrumbs} />
+      <div class="section-head kopf">
+        <p class="eyebrow">Preisrechner</p>
+        <h1>Was kostet mein Auftrag ungefähr?</h1>
+        <p class="lead">
+          Wählen Sie die Leistung und beantworten Sie ein paar einfache Fragen.
+          Sie sehen sofort einen ungefähren Rahmen und können direkt einen
+          Festpreis anfragen.
+        </p>
+        <p class="hinweis"><strong>{preisHinweis}</strong></p>
+      </div>
+
+      <fieldset class="leistungswahl" data-leistungswahl>
+        <legend class="sr-only">Welche Leistung möchten Sie berechnen?</legend>
+        {
+          auswahl.map((a, i) => (
+            <label class="lw">
+              <input
+                class="lw-input"
+                type="radio"
+                name="leistung"
+                value={a.id}
+                checked={i === 0}
+              />
+              <span class="lw-box">
+                <span class="lw-icon">
+                  <Icon name={a.icon} size={22} />
+                </span>
+                <span class="lw-label">{a.label}</span>
+                <span class="lw-text">{a.text}</span>
+              </span>
+            </label>
+          ))
+        }
+      </fieldset>
+
+      {
+        auswahl.map((a) =>
+          a.id === "entkernung" ? (
+            <div class="lw-panel" data-panel={a.id} id={a.id}>
+              <div class="card entkernung">
+                <h2>Entkernung: Festpreis nach Besichtigung</h2>
+                <p class="muted">
+                  Fläche, Bauteile und Entsorgungsmengen unterscheiden sich von
+                  Objekt zu Objekt zu stark für einen Rechner. Wir sehen uns das
+                  Objekt kostenlos an und nennen danach einen Festpreis.
+                </p>
+                <div class="btn-row">
+                  <Button href="/kontakt/" icon="arrow" data-track="angebot">
+                    Besichtigung anfragen
+                  </Button>
+                  <a class="arrow-link" href={a.seite}>
+                    Mehr zur Entkernung
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div class="lw-panel" data-panel={a.id} id={a.id}>
+              <Preisrechner
+                leistung={a.id}
+                id={`rechner-${a.id}`}
+                titel={`Preisrechner ${a.label}`}
+                eingebettet
+              />
+              <p class="lw-mehr">
+                <a class="arrow-link" href={a.seite}>
+                  Mehr zu {a.label}
+                </a>
+              </p>
+            </div>
+          ),
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Lieber persönlich?"
+    title="Festpreis nach kostenloser Besichtigung"
+    text="Der Rechner zeigt einen Rahmen. Den verbindlichen Preis nennen wir, nachdem wir das Objekt gesehen haben - oder nach ein paar Fotos per WhatsApp."
+  />
+</Base>
+
+<script>
+  const wahl = document.querySelector<HTMLFieldSetElement>(
+    "[data-leistungswahl]",
+  );
+  const panels = document.querySelectorAll<HTMLElement>("[data-panel]");
+  if (wahl && panels.length) {
+    const zeige = (id: string) => {
+      panels.forEach((p) => (p.hidden = p.dataset.panel !== id));
+    };
+    const ausHash = location.hash.slice(1);
+    const start = wahl.querySelector<HTMLInputElement>(
+      `input[value="${ausHash}"]`,
+    );
+    if (start) start.checked = true;
+    zeige(
+      wahl.querySelector<HTMLInputElement>("input:checked")?.value ||
+        "entruempelung",
+    );
+    wahl.addEventListener("change", (e) => {
+      const id = (e.target as HTMLInputElement).value;
+      zeige(id);
+      history.replaceState(null, "", `#${id}`);
+    });
+  }
+</script>
+
+<style>
+  .kopf {
+    margin-top: 1.25rem;
+  }
+
+  .hinweis {
+    font-size: 0.9375rem;
+    color: var(--navy);
+  }
+
+  .leistungswahl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    gap: 0.75rem;
+    margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .lw {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .lw-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .lw-box {
+    display: grid;
+    gap: 0.25rem;
+    height: 100%;
+    padding: 1rem;
+    border: 2px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .lw-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.35rem;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  }
+
+  .lw-label {
+    font-weight: 800;
+    color: var(--navy);
+  }
+
+  .lw-text {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+
+  .lw:hover .lw-box {
+    border-color: var(--blue-light);
+  }
+
+  .lw-input:checked + .lw-box {
+    border-color: var(--navy);
+    background: var(--mist);
+    box-shadow: inset 0 0 0 1px var(--navy);
+  }
+
+  .lw-input:checked + .lw-box .lw-icon {
+    color: var(--navy-deep);
+    background: var(--amber);
+  }
+
+  .lw-input:focus-visible + .lw-box {
+    outline: 3px solid var(--blue-light);
+    outline-offset: 2px;
+  }
+
+  .lw-panel[hidden] {
+    display: none;
+  }
+
+  .lw-panel + .lw-panel {
+    margin-top: 2rem;
+  }
+
+  .lw-mehr {
+    margin-top: 1rem;
+  }
+
+  .entkernung {
+    display: grid;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-top: 4px solid var(--navy);
+  }
+
+  .entkernung h2 {
+    margin: 0;
+    font-size: var(--step-3);
+  }
+</style>

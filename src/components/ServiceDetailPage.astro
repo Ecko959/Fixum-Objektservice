@@ -7,6 +7,8 @@ import Icon from "./Icon.astro";
 import KetteBand from "./KetteBand.astro";
 import PageHero from "./PageHero.astro";
 import PreisBlock from "./PreisBlock.astro";
+import Preisrechner from "./Preisrechner.astro";
+import type { Leistung } from "../lib/preisrechner";
 import RelatedServices from "./RelatedServices.astro";
 import { leistungen, staedteFuerLeistung } from "../data/leistungsseiten";
 import { findeStadt } from "../data/staedte";
@@ -47,6 +49,12 @@ interface Props {
   /** Positionen für "Was kostet das?" aus src/data/preise.ts. */
   preis?: PreisSchluessel[];
   preisText?: string;
+  /** Beschriftung des Anfrage-Buttons im Preisblock. */
+  preisAnfrage?: string;
+  /** Eigener Rechner auf der Seite (Anker #kalkulator). */
+  rechner?: Leistung;
+  /** Ohne eigenen Rechner: Link auf den passenden Rechner der Sammelseite. */
+  rechnerLink?: string;
   /** Verweis auf die Zentralseite der Leistungskette, mit markiertem Schritt. */
   kette?: "raeumen" | "rueckbauen" | "ausbauen";
 }
@@ -80,6 +88,9 @@ const {
   vorteile = [],
   preis = [],
   preisText,
+  preisAnfrage,
+  rechner,
+  rechnerLink,
   kette,
 } = Astro.props;
 
@@ -218,7 +229,17 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
     </p>
   </section>
 
-  {preis.length > 0 && <PreisBlock positionen={preis} text={preisText} />}
+  {
+    preis.length > 0 && (
+      <PreisBlock
+        positionen={preis}
+        text={preisText}
+        rechner={rechner ? "#kalkulator" : rechnerLink}
+        anfrageText={preisAnfrage}
+      />
+    )
+  }
+  {rechner && <Preisrechner leistung={rechner} />}
 
   {
     vorteile.length > 0 && (

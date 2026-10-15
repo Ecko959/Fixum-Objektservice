@@ -581,7 +581,8 @@ h4 {
 .section--dark .btn--secondary,
 .section--chain .btn--secondary,
 .hero .btn--secondary,
-.footer .btn--secondary {
+.footer .btn--secondary,
+.rechner-ergebnis .btn--secondary {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.45);
   background: rgba(255, 255, 255, 0.06);
@@ -591,7 +592,8 @@ h4 {
 .section--dark .btn--secondary:hover,
 .section--chain .btn--secondary:hover,
 .hero .btn--secondary:hover,
-.footer .btn--secondary:hover {
+.footer .btn--secondary:hover,
+.rechner-ergebnis .btn--secondary:hover {
   border-color: #fff;
   background: rgba(255, 255, 255, 0.14);
 }

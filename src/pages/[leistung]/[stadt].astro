@@ -189,6 +189,16 @@ const schema = [
             {ist.label}: der vollständige Leistungsumfang
           </a>
         </li>
+        {
+          /* Entkernung hat bewusst keinen Rechner (Festpreis nach Besichtigung). */
+          leistung !== "entkernung" && (
+            <li>
+              <a class="arrow-link" href={`${ist.hauptseite}#kalkulator`}>
+                {ist.label}: Preis grob berechnen
+              </a>
+            </li>
+          )
+        }
         <li>
           <a class="arrow-link" href={`/einsatzgebiet/${stadt.slug}/`}>
             Einsatzgebiet {stadt.name}

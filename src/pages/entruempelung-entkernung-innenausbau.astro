@@ -186,7 +186,7 @@ const schema = [
     description,
     path,
     serviceType: "Entrümpelung, Entkernung und Innenausbau",
-    preis: ["entruempelung", "trockenbau"],
+    preis: ["entruempelungNormal", "trockenbau"],
   }),
   {
     "@type": "FAQPage",
@@ -331,8 +331,9 @@ const schema = [
   </section>
 
   <PreisBlock
-    positionen={["entruempelung", "entkernung", "trockenbau"]}
-    text="Räumung, Rückbau und Ausbau stehen als getrennte Positionen in einem Angebot. Für die einzelnen Schritte gelten diese Richtwerte - verbindlich ist der Festpreis nach Besichtigung."
+    positionen={["entruempelungNormal", "entkernung", "trockenbau"]}
+    text="Räumung, Rückbau und Ausbau stehen als getrennte Positionen in einem Angebot. Verbindlich ist der Festpreis nach Besichtigung."
+    rechner="/preisrechner/"
   />
 
   {/* FAQ */}

@@ -53,7 +53,8 @@ const current = "/wohnungsraeumung/";
   ]}
   noteTitle="Besenrein ist nicht gleich renoviert"
   noteText="Besenrein heißt: vollständig leer, grob gefegt und übergabefähig. Feuchtreinigung, Fensterputz, Malerarbeiten oder Bodenerneuerung sind nicht automatisch enthalten - lassen sich aber dazubuchen. Was genau vereinbart ist, steht im Angebot, damit es bei der Abnahme keine Diskussion mit dem Vermieter gibt."
-  preis={["entruempelung"]}
-  preisText="Eine Wohnungsräumung wird wie eine Entrümpelung kalkuliert: nach Wohnfläche, Füllgrad, Etage und Entsorgung. Verbindlich ist der Festpreis nach der kostenlosen Besichtigung."
+  preis={["entruempelungNormal", "entruempelungStark", "entruempelungMessie"]}
+  preisText="Eine Wohnungsräumung wird wie eine Entrümpelung kalkuliert - nach Wohnfläche und danach, wie voll es ist."
+  rechner="entruempelung"
   faq={serviceFaq[current]}
 />

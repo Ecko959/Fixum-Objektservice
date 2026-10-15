@@ -112,6 +112,66 @@ const channels: Array<[string, string, string, "phone" | "whatsapp" | "mail"]> =
   <Kundenstimmen />
 </Base>
 
+{
+  /* Übernahme aus dem Preisrechner: /kontakt/#rechner={t: Thema, n: Text}.
+     Ist das Formular aktiv, werden Thema und Nachricht vorausgefüllt.
+     Ohne Formular wandern die Angaben in den WhatsApp- und E-Mail-Link. */
+}
+<script>
+  (() => {
+    const hash = location.hash;
+    if (!hash.startsWith("#rechner=")) return;
+    let daten: { t?: string; n?: string } = {};
+    try {
+      daten = JSON.parse(decodeURIComponent(hash.slice(9)));
+    } catch {
+      return;
+    }
+    const text = (daten.n || "").slice(0, 2000);
+    if (!text) return;
+    history.replaceState(null, "", location.pathname);
+
+    const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+    if (form) {
+      const thema = form.querySelector<HTMLSelectElement>(
+        'select[name="thema"]',
+      );
+      if (
+        thema &&
+        daten.t &&
+        [...thema.options].some((o) => o.value === daten.t)
+      )
+        thema.value = daten.t;
+      const nachricht = form.querySelector<HTMLTextAreaElement>(
+        'textarea[name="nachricht"]',
+      );
+      if (nachricht) nachricht.value = text;
+      form.scrollIntoView({ block: "start" });
+      form
+        .querySelector<HTMLInputElement>('input[name="name"]')
+        ?.focus({ preventScroll: true });
+      return;
+    }
+
+    const kopf =
+      "Moin, ich habe den Preisrechner auf fixum-objektservice.de genutzt:\n";
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[href*="wa.me/"]')
+      .forEach((a) => {
+        /* encodeURIComponent statt searchParams: searchParams kodiert
+           Leerzeichen als "+", das WhatsApp nicht überall zurückwandelt. */
+        const basis = a.href.split("?")[0];
+        a.href = `${basis}?text=${encodeURIComponent(`${kopf}${text}\n\nBitte um einen Festpreis.`)}`;
+      });
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]')
+      .forEach((a) => {
+        const adresse = a.href.split("?")[0];
+        a.href = `${adresse}?subject=${encodeURIComponent("Festpreis-Anfrage")}&body=${encodeURIComponent(kopf + text)}`;
+      });
+  })();
+</script>
+
 <style>
   .contact-crumbs {
     margin-bottom: 1.5rem;

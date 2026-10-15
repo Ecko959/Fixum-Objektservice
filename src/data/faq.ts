@@ -1,4 +1,4 @@
-import { preise, steuerHinweis } from "./preise";
+import { entruempelungPreissatz, preise, preisHinweis } from "./preise";
 import { site } from "./site";
 
 export interface FaqItem {
@@ -10,7 +10,7 @@ export interface FaqItem {
 export const faq: FaqItem[] = [
   {
     question: "Was kostet eine Entrümpelung in Emden?",
-    answer: `Als Richtwert ${preise.entruempelung.betrag} bei leicht möblierten Räumen im Erdgeschoss, üblich sind 20–40 €/m² - je nach Füllgrad, Etage und Entsorgung. Verbindlich ist der Festpreis nach der kostenlosen Besichtigung, und der gilt schriftlich. ${steuerHinweis}`,
+    answer: `${entruempelungPreissatz} ${preisHinweis} Einen ersten Rahmen für Ihr Objekt zeigt der Preisrechner.`,
   },
   {
     question: "Wie schnell bekomme ich einen Termin?",
@@ -57,7 +57,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
   "/entruempelung/": [
     {
       question: "Was kostet eine Entrümpelung in Emden?",
-      answer: `Als Richtwert ${preise.entruempelung.betrag} bei leicht möblierten Räumen im Erdgeschoss. Üblich sind 20–40 €/m², je nach Füllgrad, Etage und Entsorgung. Verbindlich ist der Festpreis nach der kostenlosen Besichtigung. ${steuerHinweis}`,
+      answer: `${entruempelungPreissatz} ${preisHinweis} Einen ersten Rahmen für Ihr Objekt zeigt der Preisrechner auf dieser Seite.`,
     },
     {
       question: "Wie läuft eine Entrümpelung konkret ab?",
@@ -125,7 +125,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
   "/trockenbau/": [
     {
       question: "Was kostet eine Trockenbauwand?",
-      answer: `Als Richtwert ${preise.trockenbau.betrag}, ${preise.trockenbau.bedingung.replace(/\.$/, "")}. Verbindlich ist der Festpreis nach Besichtigung und Aufmaß. ${steuerHinweis}`,
+      answer: `Eine Trockenbauwand ${preise.trockenbau.betrag}. ${preisHinweis} Wie viel es bei Ihnen ungefähr wird, zeigt der Preisrechner auf dieser Seite.`,
     },
     {
       question: "Welche Spachtelqualität brauche ich?",
@@ -176,7 +176,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
     },
     {
       question: "Was kostet eine Haushaltsauflösung in Emden?",
-      answer: `Sie wird wie eine Entrümpelung kalkuliert: als Richtwert ${preise.entruempelung.betrag} bei leicht möblierten Räumen im Erdgeschoss, üblich sind 20–40 €/m² je nach Füllgrad, Etage und Entsorgung. Verbindlich ist der Festpreis nach der kostenlosen Besichtigung. ${steuerHinweis}`,
+      answer: `Sie wird wie eine Entrümpelung kalkuliert. ${entruempelungPreissatz} ${preisHinweis}`,
     },
     {
       question: "Bekommt die Erbengemeinschaft einen Nachweis?",
@@ -258,7 +258,7 @@ export const serviceFaq: Record<string, FaqItem[]> = {
   "/umzug/": [
     {
       question: "Was kostet ein Umzug in Emden?",
-      answer: `Als Richtwert: Eine 2-Zimmer-Wohnung im Nahbereich, etwa von Emden nach Norden, ${preise.umzug.betrag} mit Transporter bis ${site.maxTonnage}, Tragen und Fahrt. Montage, Etagen ohne Aufzug und größere Haushalte kalkulieren wir nach Besichtigung oder Fotos. Sie bekommen einen Festpreis für Team, Fahrzeug und Fahrten, keinen Stundensatz mit offenem Ende. ${steuerHinweis}`,
+      answer: `Eine 2-Zimmer-Wohnung im Nahbereich, etwa von Emden nach Norden, ${preise.umzug.betrag}, mit Transporter bis ${site.maxTonnage}. ${preisHinweis} Sie bekommen einen Festpreis für Team, Fahrzeug und Fahrten, keinen Stundensatz mit offenem Ende.`,
     },
     {
       question: "Ziehen Sie auch von Emden aus über weitere Strecken um?",

@@ -1,84 +1,99 @@
-/* Preisangaben - die einzige Stelle, an der Zahlen stehen.
+/* Sichtbare Preise der Website.
 
-   Alles hier ist vom Inhaber freigegeben. Leistungsseiten, Startseiten-FAQ,
-   Zentralseite und llms.txt lesen von hier; wer einen Preis ändert, ändert
-   ihn damit überall zugleich. Keine weiteren Zahlen ergänzen, ohne dass sie
-   freigegeben sind - auch keine Spannen "zur Orientierung".
+   Auf der Website stehen nur die fünf Ab-Preise. Ihre Zahlen kommen aus
+   src/data/preise.config.json (Abschnitt "abPreise") - dort und nur dort
+   werden sie geändert. Alle übrigen Werte stecken ausschließlich im
+   Preisrechner und erscheinen nie als Text auf einer Seite.
 
-   Leistungen ohne Richtwert (Entkernung, Boden, Montage, Hausmeisterservice,
-   Winterdienst) bekommen bewusst keinen Betrag, sondern nur den Hinweis auf
-   den Festpreis nach Besichtigung. */
+   Leistungen ohne Ab-Preis (Entkernung, Boden, Montage, Hausmeisterservice,
+   Winterdienst) zeigen nur "Festpreis nach Besichtigung". */
+import config from "./preise.config.json";
 
-/** Steht direkt neben jedem Betrag. */
+const ab = config.abPreise;
+
+/** Steht direkt neben jedem Ab-Preis. Wortlaut vom Inhaber vorgegeben. */
+export const preisHinweis =
+  "Richtwert ohne Umsatzsteuer (§ 19 UStG). Verbindlicher Festpreis nach kostenloser Besichtigung.";
+
 export const festpreisHinweis = "Festpreis nach Besichtigung";
 
-/** Steuerhinweis unter jeder Preisangabe, Wortlaut vom Inhaber vorgegeben. */
-export const steuerHinweis =
-  "Alle Preise sind Nettopreise, es wird keine Umsatzsteuer ausgewiesen (§ 19 UStG).";
-
 export interface Preisposition {
-  /** Was bepreist wird, z. B. "Entrümpelung". */
+  /** Was bepreist wird. */
   leistung: string;
-  /** Betrag mit Einheit, z. B. "ab 15 €/m² Wohnfläche". Fehlt bei Leistungen ohne Richtwert. */
+  /** Kurze Erläuterung, ohne weitere Zahlen. */
+  zusatz?: string;
+  /** Sichtbarer Ab-Preis, z. B. "ab 15 €/m²". Fehlt bei Leistungen ohne Ab-Preis. */
   betrag?: string;
-  /** Wofür der Betrag gilt bzw. wovon er abhängt. */
-  bedingung: string;
-  /** Hinweis direkt neben dem Betrag. */
-  festpreis: string;
-  /** Maschinenlesbar für schema.org: Mindestbetrag in Euro und Einheit. */
+  /** Maschinenlesbar für schema.org. */
   ab?: number;
   einheit?: string;
 }
 
+const zahl = (n: number) => n.toLocaleString("de-DE");
+
 export const preise = {
-  entruempelung: {
-    leistung: "Entrümpelung",
-    betrag: "ab 15 €/m² Wohnfläche",
-    bedingung:
-      "bei leicht möblierten Räumen im Erdgeschoss. Üblich sind 20–40 €/m², je nach Füllgrad, Etage und Entsorgung.",
-    festpreis: "Festpreis nach kostenloser Besichtigung",
-    ab: 15,
+  entruempelungNormal: {
+    leistung: "Entrümpelung, normal möbliert",
+    zusatz: "Übliche Einrichtung mit Möbeln und Hausrat.",
+    betrag: `ab ${zahl(ab.entruempelungNormal)} €/m²`,
+    ab: ab.entruempelungNormal,
     einheit: "m² Wohnfläche",
+  },
+  entruempelungStark: {
+    leistung: "Entrümpelung, stark möbliert",
+    zusatz: "Viel Hausrat, volle Keller oder Dachböden.",
+    betrag: `ab ${zahl(ab.entruempelungStark)} €/m²`,
+    ab: ab.entruempelungStark,
+    einheit: "m² Wohnfläche",
+  },
+  entruempelungMessie: {
+    leistung: "Messie-Wohnung",
+    zusatz: "Mit Ruhe, Schutzausrüstung und ohne Kommentar.",
+    betrag: `ab ${zahl(ab.entruempelungMessie)} €/m²`,
+    ab: ab.entruempelungMessie,
+    einheit: "m² Wohnfläche",
+  },
+  umzug: {
+    leistung: "Umzug einer 2-Zimmer-Wohnung im Nahbereich",
+    zusatz: "Zum Beispiel Emden–Norden, mit Transporter bis 3,5 t.",
+    betrag: `ab ${zahl(ab.umzugZweiZimmerNahbereich)} €`,
+    ab: ab.umzugZweiZimmerNahbereich,
   },
   trockenbau: {
     leistung: "Trockenbauwand",
-    betrag: "ab 45 €/m²",
-    bedingung: "je nach Wandaufbau, Dämmung und Oberflächenqualität.",
-    festpreis: "Festpreis nach Besichtigung und Aufmaß",
-    ab: 45,
+    zusatz: "Inklusive Material.",
+    betrag: `ab ${zahl(ab.trockenbauwandInklMaterial)} €/m² inkl. Material`,
+    ab: ab.trockenbauwandInklMaterial,
     einheit: "m² Wandfläche",
   },
-  umzug: {
-    leistung: "Umzug einer 2-Zimmer-Wohnung im Nahbereich (z. B. Emden–Norden)",
-    betrag: "ab 600 €",
-    bedingung:
-      "mit Transporter bis 3,5 t, Tragen und Fahrt. Montage, Etagen ohne Aufzug und größere Haushalte nach Besichtigung oder Fotos.",
-    festpreis: festpreisHinweis,
-    ab: 600,
-  },
   entkernung: {
-    leistung: "Entkernung und nicht tragender Rückbau",
-    bedingung:
-      "Der Aufwand hängt an Fläche, Bauteilen, Bodenaufbau und Entsorgungsmengen.",
-    festpreis: festpreisHinweis,
+    leistung: "Entkernung und nicht-tragender Rückbau",
+    zusatz:
+      "Fläche, Bauteile und Entsorgungsmengen unterscheiden sich von Objekt zu Objekt zu stark für einen Richtwert.",
   },
   boden: {
     leistung: "Bodenverlegung",
-    bedingung:
-      "Der Aufwand hängt an Fläche, Belag und Zustand des Untergrunds.",
-    festpreis: festpreisHinweis,
+    zusatz: "Laminat, Vinyl und Teppich.",
   },
   montage: {
-    leistung: "Demontage und Montage",
-    bedingung: "Der Aufwand hängt an Umfang, Zugänglichkeit und Material.",
-    festpreis: festpreisHinweis,
+    leistung: "Möbel-, Küchen- und Türmontage",
+    zusatz: "Ohne Elektro-, Gas- und Wasseranschlüsse.",
   },
   hausmeister: {
     leistung: "Hausmeisterservice und Winterdienst",
-    bedingung:
-      "Umfang, Flächen und Einsatzzeiten werden vor Ort aufgenommen und schriftlich vereinbart.",
-    festpreis: festpreisHinweis,
+    zusatz:
+      "Umfang und Einsatzzeiten werden vor Ort aufgenommen und schriftlich vereinbart.",
   },
 } satisfies Record<string, Preisposition>;
 
 export type PreisSchluessel = keyof typeof preise;
+
+/** Die drei Entrümpelungsstufen - als Karten auf den Räumungsseiten. */
+export const entruempelungsStufen: PreisSchluessel[] = [
+  "entruempelungNormal",
+  "entruempelungStark",
+  "entruempelungMessie",
+];
+
+/** Satz für FAQ-Antworten zur Entrümpelung, nur mit den Ab-Preisen. */
+export const entruempelungPreissatz = `Normal möblierte Wohnungen ab ${zahl(ab.entruempelungNormal)} €/m², stark möbliert oder mit vollen Kellern und Dachböden ab ${zahl(ab.entruempelungStark)} €/m², Messie-Wohnungen ab ${zahl(ab.entruempelungMessie)} €/m².`;

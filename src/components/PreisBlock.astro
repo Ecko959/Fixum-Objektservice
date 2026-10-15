@@ -1,116 +1,142 @@
 ---
-/* "Was kostet das?" - freigegebene Richtwerte aus src/data/preise.ts.
-   Neben jedem Betrag steht der Hinweis auf den Festpreis, darunter der
-   Steuerhinweis. Leistungen ohne Richtwert zeigen nur den Festpreis-Hinweis. */
+/* "Was kostet das?" - nur die freigegebenen Ab-Preise aus preise.ts.
+   Neben jedem Ab-Preis steht der Hinweis "Richtwert ohne Umsatzsteuer ...".
+   Leistungen ohne Ab-Preis zeigen nur "Festpreis nach Besichtigung".
+
+   Eine Position: Text links, Karte rechts. Mehrere Positionen: Karten
+   nebeneinander, auf dem Handy untereinander. */
 import Button from "./Button.astro";
-import { preise, steuerHinweis, type PreisSchluessel } from "../data/preise";
+import {
+  festpreisHinweis,
+  preise,
+  preisHinweis,
+  type PreisSchluessel,
+  type Preisposition,
+} from "../data/preise";
 
 interface Props {
   positionen: PreisSchluessel[];
-  /** Einleitung über den Positionen - sachlich, ohne weitere Zahlen. */
+  /** Einleitung - sachlich, ohne weitere Zahlen. */
   text?: string;
   titel?: string;
+  /** Ziel des Rechner-Buttons: "#kalkulator" auf der Seite oder "/preisrechner/". */
+  rechner?: string;
+  /** Beschriftung des Anfrage-Buttons. */
+  anfrageText?: string;
 }
 
 const {
   positionen,
   text = "Jedes Objekt ist anders. Deshalb gilt am Ende der Festpreis aus dem Angebot - schriftlich und vor Beginn der Arbeiten.",
   titel = "Was kostet das?",
+  rechner,
+  anfrageText = "Festpreis anfragen",
 } = Astro.props;
 
-const zeilen = positionen.map((k) => preise[k]);
-const mitBetrag = zeilen.some((z) => "betrag" in z && z.betrag);
+const karten = positionen.map((k) => preise[k] as Preisposition);
+const mehrere = karten.length > 1;
 ---
 
-<section class="section section--tight preis" aria-labelledby="preis-title">
+<section
+  class:list={["section section--tight preis", mehrere && "preis--karten"]}
+  aria-labelledby="preis-title"
+>
   <div class="container preis-grid" data-reveal>
     <div class="preis-kopf">
       <p class="eyebrow">Preise</p>
       <h2 id="preis-title">{titel}</h2>
       <p class="muted">{text}</p>
-      <Button
-        href="/kontakt/"
-        icon="arrow"
-        class="preis-btn"
-        data-track="angebot"
-      >
-        Festpreis anfragen
-      </Button>
+      <div class="btn-row preis-aktionen">
+        {
+          rechner && (
+            <Button href={rechner} icon="arrow" data-track="rechner-link">
+              Preis grob berechnen
+            </Button>
+          )
+        }
+        <Button
+          href="/kontakt/"
+          icon="arrow"
+          variant={rechner ? "secondary" : "primary"}
+          data-track="angebot"
+        >
+          {anfrageText}
+        </Button>
+      </div>
     </div>
 
-    <div class="preis-karte card">
-      <dl class="preis-liste">
-        {
-          zeilen.map((z) => (
-            <div class="preis-zeile">
-              <dt>{z.leistung}</dt>
-              <dd>
-                <span class="preis-werte">
-                  {"betrag" in z && z.betrag && (
-                    <strong class="preis-betrag">{z.betrag}</strong>
-                  )}
-                  <span class="preis-fest">{z.festpreis}</span>
-                </span>
-                <span class="preis-bedingung">{z.bedingung}</span>
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
-      {mitBetrag && <p class="preis-steuer">{steuerHinweis}</p>}
-    </div>
+    <ul class="preis-liste" role="list">
+      {
+        karten.map((z) => (
+          <li class="preis-karte card">
+            <p class="preis-leistung">{z.leistung}</p>
+            {z.betrag ? (
+              <>
+                <p class="preis-betrag">{z.betrag}</p>
+                <p class="preis-hinweis">{preisHinweis}</p>
+              </>
+            ) : (
+              <p class="preis-fest">{festpreisHinweis}</p>
+            )}
+            {z.zusatz && <p class="preis-zusatz">{z.zusatz}</p>}
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
 
 <style>
   .preis-grid {
     display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
     gap: clamp(1.5rem, 4vw, 3rem);
     align-items: start;
+  }
+
+  .preis--karten .preis-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .preis-kopf h2 {
     margin: 0.35rem 0 0.75rem;
   }
 
-  .preis-kopf :global(.preis-btn) {
-    margin-top: 1.25rem;
+  .preis--karten .preis-kopf {
+    max-width: var(--measure);
   }
 
-  .preis-karte {
-    padding: clamp(1.25rem, 3vw, 2rem);
-    border-top: 4px solid var(--navy);
+  .preis-aktionen {
+    margin-top: 1.25rem;
   }
 
   .preis-liste {
     display: grid;
-    gap: 1.25rem;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .preis--karten .preis-liste {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+
+  .preis-karte {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border-top: 4px solid var(--navy);
+  }
+
+  .preis-karte p {
     margin: 0;
   }
 
-  .preis-zeile + .preis-zeile {
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--line);
-  }
-
-  .preis-zeile dt {
-    margin-bottom: 0.5rem;
+  .preis-leistung {
     font-weight: 800;
     color: var(--navy);
-  }
-
-  .preis-zeile dd {
-    display: grid;
-    gap: 0.4rem;
-    margin: 0;
-  }
-
-  .preis-werte {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 0.75rem;
   }
 
   .preis-betrag {
@@ -120,8 +146,15 @@ const mitBetrag = zeilen.some((z) => "betrag" in z && z.betrag);
     color: var(--blue);
   }
 
+  .preis-hinweis {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--navy);
+  }
+
   .preis-fest {
-    display: inline-flex;
+    justify-self: start;
     padding: 0.3rem 0.75rem;
     border-radius: var(--radius-pill);
     font-family: var(--font-utility);
@@ -133,17 +166,9 @@ const mitBetrag = zeilen.some((z) => "betrag" in z && z.betrag);
     background: var(--navy);
   }
 
-  .preis-bedingung {
+  .preis-zusatz {
     font-size: 0.9375rem;
     line-height: 1.55;
-    color: var(--muted);
-  }
-
-  .preis-steuer {
-    margin: 1.25rem 0 0;
-    padding-top: 1rem;
-    border-top: 1px dashed var(--line-strong);
-    font-size: 0.875rem;
     color: var(--muted);
   }
 

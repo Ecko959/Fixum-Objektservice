@@ -5,7 +5,7 @@
    etwas, zieht diese Datei automatisch nach. */
 import type { APIRoute } from "astro";
 import { leistungsStadtSeiten, leistungen } from "../data/leistungsseiten";
-import { festpreisHinweis, preise, steuerHinweis } from "../data/preise";
+import { festpreisHinweis, preise, preisHinweis } from "../data/preise";
 import { absolute } from "../data/seo";
 import { kettePfad, site } from "../data/site";
 import { findeStadt } from "../data/staedte";
@@ -13,15 +13,8 @@ import { findeStadt } from "../data/staedte";
 const link = (titel: string, pfad: string, text: string) =>
   `- [${titel}](${absolute(pfad)}): ${text}`;
 
-const preiszeile = (p: {
-  leistung: string;
-  betrag?: string;
-  bedingung: string;
-  festpreis: string;
-}) =>
-  p.betrag
-    ? `- ${p.leistung}: ${p.betrag} (${p.festpreis}), ${p.bedingung}`
-    : `- ${p.leistung}: ${p.festpreis}. ${p.bedingung}`;
+const preiszeile = (p: { leistung: string; betrag?: string }) =>
+  `- ${p.leistung}: ${p.betrag}`;
 
 export const GET: APIRoute = () => {
   const ortsseiten = leistungsStadtSeiten.map((s) => {
@@ -66,9 +59,20 @@ ${link("Kernsanierung vorbereiten", "/kernsanierung/", "Räumen, Rückbau, Ausba
 
 ## Preise (Richtwerte)
 
-${[preise.entruempelung, preise.trockenbau, preise.umzug].map(preiszeile).join("\n")}
+${[
+  preise.entruempelungNormal,
+  preise.entruempelungStark,
+  preise.entruempelungMessie,
+  preise.umzug,
+  preise.trockenbau,
+]
+  .map(preiszeile)
+  .join("\n")}
 - Entkernung, Boden, Montage, Hausmeisterservice und Winterdienst: ${festpreisHinweis}.
-- ${steuerHinweis}
+
+${preisHinweis}
+
+${link("Preisrechner", "/preisrechner/", "Unverbindlicher Richtwert als Spanne für Entrümpelung, Umzug, Trockenbau, Montage und Boden.")}
 
 ## Nicht im Leistungsumfang
 

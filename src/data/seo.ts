@@ -1,7 +1,7 @@
 import { faq } from "./faq";
 import {
   preise,
-  steuerHinweis,
+  preisHinweis,
   type PreisSchluessel,
   type Preisposition,
 } from "./preise";
@@ -75,7 +75,6 @@ export const businessSchema = {
   slogan: site.claim,
   telephone: site.phoneDisplay,
   email: site.email,
-  priceRange: "€€",
   currenciesAccepted: "EUR",
   paymentAccepted: "Überweisung",
   foundingDate: site.foundingYear,
@@ -221,7 +220,7 @@ const preisAngebote = (schluessel: PreisSchluessel[]) => {
     .map((p) => ({
       "@type": "Offer",
       name: p.leistung,
-      description: `${p.betrag}, ${p.bedingung} ${p.festpreis}. ${steuerHinweis}`,
+      description: `${p.leistung} ${p.betrag}. ${preisHinweis}`,
       priceCurrency: "EUR",
       priceSpecification: {
         "@type": "UnitPriceSpecification",
