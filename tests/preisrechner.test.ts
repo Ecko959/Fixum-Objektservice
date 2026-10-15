@@ -9,6 +9,7 @@ import {
   ergebnisText,
   leseZahl,
   rechner,
+  rechnerBereit,
   verpacke,
   type Ergebnis,
   type Leistung,
@@ -435,5 +436,31 @@ describe("Weitergabe an den Browser", () => {
   test("Modell enthält keine Hinweise oder Platzhalter", () => {
     const text = JSON.stringify(baueModell(config, "umzug"));
     assert.ok(!/hinweis|platzhalter|\[/.test(text));
+  });
+});
+
+describe("Rechner nur mit Grundwerten anzeigen", () => {
+  test("Aktuelle Config: Entrümpelung und Trockenbau an, Rest aus", () => {
+    assert.equal(rechnerBereit(config, "entruempelung"), true);
+    assert.equal(rechnerBereit(config, "trockenbau"), true);
+    assert.equal(rechnerBereit(config, "umzug"), false);
+    assert.equal(rechnerBereit(config, "montage"), false);
+    assert.equal(rechnerBereit(config, "boden"), false);
+  });
+  test("Mit ausgefüllten Werten sind alle Rechner an", () => {
+    const c = testConfig();
+    for (const l of [
+      "entruempelung",
+      "umzug",
+      "trockenbau",
+      "montage",
+      "boden",
+    ] as const)
+      assert.equal(rechnerBereit(c, l), true, l);
+  });
+  test("Montage: eine Art mit Wert genügt", () => {
+    const c = structuredClone(config);
+    c.montage.innentuerMitZargeJeStueck = { von: 100, bis: 150 };
+    assert.equal(rechnerBereit(c, "montage"), true);
   });
 });

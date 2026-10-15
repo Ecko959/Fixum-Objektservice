@@ -4,6 +4,12 @@
    aus site.ts, Preise aus preise.ts, Orte aus staedte.ts. Ändert sich dort
    etwas, zieht diese Datei automatisch nach. */
 import type { APIRoute } from "astro";
+import preisConfig from "../data/preise.config.json";
+import {
+  alleLeistungen,
+  rechnerBereit,
+  type Leistung,
+} from "../lib/preisrechner";
 import { leistungsStadtSeiten, leistungen } from "../data/leistungsseiten";
 import { festpreisHinweis, preise, preisHinweis } from "../data/preise";
 import { absolute } from "../data/seo";
@@ -15,6 +21,22 @@ const link = (titel: string, pfad: string, text: string) =>
 
 const preiszeile = (p: { leistung: string; betrag?: string }) =>
   `- ${p.leistung}: ${p.betrag}`;
+
+/* Nur Rechner nennen, die auf der Website auch erscheinen. */
+const rechnerLabel: Record<Leistung, string> = {
+  entruempelung: "Entrümpelung",
+  umzug: "Umzug",
+  trockenbau: "Trockenbau",
+  montage: "Montage",
+  boden: "Boden",
+};
+const rechnerAktiv = alleLeistungen
+  .filter((l) => rechnerBereit(preisConfig, l))
+  .map((l) => rechnerLabel[l]);
+const rechnerNamen =
+  rechnerAktiv.length > 1
+    ? `${rechnerAktiv.slice(0, -1).join(", ")} und ${rechnerAktiv[rechnerAktiv.length - 1]}`
+    : rechnerAktiv.join("");
 
 export const GET: APIRoute = () => {
   const ortsseiten = leistungsStadtSeiten.map((s) => {
@@ -72,7 +94,7 @@ ${[
 
 ${preisHinweis}
 
-${link("Preisrechner", "/preisrechner/", "Unverbindlicher Richtwert als Spanne für Entrümpelung, Umzug, Trockenbau, Montage und Boden.")}
+${link("Preisrechner", "/preisrechner/", `Unverbindlicher Richtwert als Spanne für ${rechnerNamen}.`)}
 
 ## Nicht im Leistungsumfang
 

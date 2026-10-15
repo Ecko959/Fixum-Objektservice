@@ -147,6 +147,44 @@ export const baueModell = (c: Config, leistung: Leistung) => {
   }
 };
 
+/** Ein Rechner wird nur angezeigt, wenn seine Grundwerte in der Config
+    stehen. Sonst würde er bei jeder Eingabe nur "Preis auf Anfrage" zeigen.
+    Optionale Zusätze (Keller, Mindestpreis ...) dürfen fehlen - dafür
+    erscheint bei genau dieser Auswahl "Preis auf Anfrage". */
+export const rechnerBereit = (c: Config, leistung: Leistung): boolean => {
+  const m = baueModell(c, leistung) as Record<string, unknown> & {
+    qm?: Record<string, Wert>;
+    inkl?: Record<string, Wert>;
+    oberflaeche?: Record<string, Wert>;
+  };
+  switch (leistung) {
+    case "entruempelung":
+      return (
+        Object.values(m.qm ?? {}).every(Boolean) && m.etageProzent !== null
+      );
+    case "umzug":
+      return Boolean(m.zimmer) && m.nahKm !== null;
+    case "trockenbau":
+      return (
+        Boolean(m.inkl?.zwischenwand) &&
+        Boolean(m.oberflaeche?.normal) &&
+        Boolean(m.baustelle)
+      );
+    case "montage":
+      return Boolean(m.tuer || m.moebel || m.kueche);
+    case "boden":
+      return Boolean(m.verlegen);
+  }
+};
+
+export const alleLeistungen: Leistung[] = [
+  "entruempelung",
+  "umzug",
+  "trockenbau",
+  "montage",
+  "boden",
+];
+
 /* ---------------------------------------------------------------- Eingaben */
 
 /** Liest Zahlen so, wie Menschen sie tippen: "12,5", "12.5", "1.200", "60 m²". */

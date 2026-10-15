@@ -130,6 +130,7 @@ export const navItems = [
       },
     ],
   },
+  { label: "Preise", href: "/preisrechner/" },
   { label: "Über uns", href: "/ueber-uns/" },
   { label: "Kontakt", href: "/kontakt/" },
 ];

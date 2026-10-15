@@ -471,3 +471,16 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
   ohne aktives Formular landen die Angaben im WhatsApp- und E-Mail-Link.
 - Messpunkte (nur `dataLayer`): `rechner_gestartet`, `rechner_ergebnis`,
   `rechner_anfrage` - ohne Preise.
+- **Rechner ohne Grundwerte** werden automatisch ausgeblendet (inklusive
+  aller Links darauf, Sammelseite, Ortsseiten und `llms.txt`). Sobald die
+  Grundwerte in der Config stehen, erscheinen sie beim nächsten Build von
+  selbst. Grundwerte: Entrümpelung = drei m²-Stufen + Etagenaufschlag;
+  Umzug = Preis pro Zimmer + Nahbereich-km; Trockenbau = Zwischenwand,
+  normales Spachteln, Baustelleneinrichtung; Montage = Tür, Möbel oder
+  Küche; Boden = Verlegepreis.
+- **Mitlaufender Richtwert** auf Handy/Tablet (bis 900 px), über der
+  Kontaktleiste; verschwindet, sobald die Ergebniskarte zu sehen ist.
+- **Eingaben werden gemerkt** (sessionStorage, nur im Browser des Kunden,
+  gelöscht beim Schließen des Tabs).
+- **Faustregel zur Wohnfläche**: `allgemein.flaechenFaustregel` in der Config.
+- Einstieg: Menüpunkt "Preise" und Chip "Preis berechnen" im Startseiten-Hero.

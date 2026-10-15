@@ -8,7 +8,8 @@ import Button from "../components/Button.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Icon from "../components/Icon.astro";
 import Preisrechner from "../components/Preisrechner.astro";
-import type { Leistung } from "../lib/preisrechner";
+import { rechnerBereit, type Leistung } from "../lib/preisrechner";
+import preisConfig from "../data/preise.config.json";
 import { preisHinweis } from "../data/preise";
 import type { IconName } from "../data/icons";
 
@@ -65,11 +66,21 @@ const auswahl: Array<{
     seite: "/entkernung/",
   },
 ];
+/* Nur Rechner mit Grundwerten in der Config erscheinen in der Auswahl.
+   Entkernung steht immer da (Festpreis nach Besichtigung). */
+const aktiv = auswahl.filter(
+  (a) => a.id === "entkernung" || rechnerBereit(preisConfig, a.id),
+);
+const namen = aktiv.filter((a) => a.id !== "entkernung").map((a) => a.label);
+const namensliste =
+  namen.length > 1
+    ? `${namen.slice(0, -1).join(", ")} und ${namen[namen.length - 1]}`
+    : namen.join("");
 ---
 
 <Base
   title="Fixum Objektservice: Preisrechner"
-  description="Preisrechner für Entrümpelung, Umzug, Trockenbau, Montage und Boden in Emden und Ostfriesland. Unverbindlicher Richtwert, Festpreis nach Besichtigung."
+  description={`Preisrechner für ${namensliste} in Emden und Ostfriesland. Unverbindlicher Richtwert als Spanne, verbindlicher Festpreis nach Besichtigung.`}
   canonical={path}
   breadcrumbs={breadcrumbs}
 >
@@ -90,7 +101,7 @@ const auswahl: Array<{
       <fieldset class="leistungswahl" data-leistungswahl>
         <legend class="sr-only">Welche Leistung möchten Sie berechnen?</legend>
         {
-          auswahl.map((a, i) => (
+          aktiv.map((a, i) => (
             <label class="lw">
               <input
                 class="lw-input"
@@ -112,7 +123,7 @@ const auswahl: Array<{
       </fieldset>
 
       {
-        auswahl.map((a) =>
+        aktiv.map((a) =>
           a.id === "entkernung" ? (
             <div class="lw-panel" data-panel={a.id} id={a.id}>
               <div class="card entkernung">

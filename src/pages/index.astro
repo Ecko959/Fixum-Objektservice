@@ -165,6 +165,7 @@ const reasons: Array<[string, string]> = [
 
 const serviceChips: Array<[string, string]> = [
   ["Alle Leistungen", "/leistungen/"],
+  ["Preis berechnen", "/preisrechner/"],
   ["Entrümpelung", "/entruempelung/"],
   ["Entkernung", "/entkernung/"],
   ["Trockenbau", "/trockenbau/"],
@@ -259,7 +260,13 @@ const serviceChips: Array<[string, string]> = [
     <nav class="container hero-chips" aria-label="Leistungen im Überblick">
       {
         serviceChips.map(([label, href], index) => (
-          <a href={href} class={index === 0 ? "is-primary" : ""}>
+          <a
+            href={href}
+            class:list={[
+              index === 0 && "is-primary",
+              href === "/preisrechner/" && "is-rechner",
+            ]}
+          >
             {label}
           </a>
         ))
@@ -745,6 +752,13 @@ const serviceChips: Array<[string, string]> = [
     color: var(--navy-deep);
     background: #fff;
     border-color: #fff;
+  }
+
+  /* Einstieg in den Preisrechner - Amber wie die übrigen Akzente. */
+  .hero-chips a.is-rechner {
+    color: var(--navy-deep);
+    background: var(--amber);
+    border-color: var(--amber);
   }
 
   /* ---------------------------------------------------- Vertrauensleiste */

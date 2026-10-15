@@ -8,7 +8,12 @@
    als data-Attribut mit, das Ergebnis erscheint nur als gerundete Spanne,
    ohne Einzelpositionen. */
 import config from "../data/preise.config.json";
-import { baueModell, verpacke, type Leistung } from "../lib/preisrechner";
+import {
+  baueModell,
+  rechnerBereit,
+  verpacke,
+  type Leistung,
+} from "../lib/preisrechner";
 import { site } from "../data/site";
 
 interface Props {
@@ -80,8 +85,13 @@ const felder: Record<Leistung, Feld[]> = {
       label: "Wie groß ist die Wohnfläche?",
       einheit: "m²",
       beispiel: "z. B. 65",
-      hilfe:
-        "Ungefähr reicht. Keller, Dachboden und Garage kommen gleich extra.",
+      hilfe: [
+        "Ungefähr reicht.",
+        config.allgemein.flaechenFaustregel,
+        "Keller, Dachboden und Garage kommen gleich extra.",
+      ]
+        .filter(Boolean)
+        .join(" "),
     },
     {
       typ: "auswahl",
@@ -366,176 +376,190 @@ const hinweis: Partial<Record<Leistung, string>> = {
   boden: "Parkett verlegen, schleifen oder versiegeln bieten wir nicht an.",
 };
 
-const paket = verpacke(baueModell(config, leistung));
+/* Ohne Grundwerte in der Config wird der Rechner gar nicht ausgegeben. */
+const bereit = rechnerBereit(config, leistung);
+const paket = bereit ? verpacke(baueModell(config, leistung)) : "";
 const p = (name: string) => `${id}-${name}`;
 const Tag = eingebettet ? "div" : "section";
 ---
 
-<Tag
-  id={id}
-  class:list={["rechner", !eingebettet && "section section--mist"]}
-  aria-labelledby={`${id}-titel`}
-  data-preisrechner={leistung}
-  data-m={paket}
-  data-thema={thema[leistung]}
-  data-wa={site.whatsapp}
->
-  <div class:list={[!eingebettet && "container"]}>
-    {
-      !eingebettet && (
-        <div class="section-head" data-reveal>
-          <p class="eyebrow">Preisrechner</p>
-          <h2 id={`${id}-titel`}>{titel}</h2>
-          <p class="muted">
-            Ein paar Angaben genügen. Sie sehen sofort einen ungefähren Rahmen -
-            und können direkt einen Festpreis anfragen.
-          </p>
-        </div>
-      )
-    }
-    {
-      eingebettet && (
-        <h2 id={`${id}-titel`} class="sr-only">
-          {titel}
-        </h2>
-      )
-    }
+{
+  bereit && (
+    <Tag
+      id={id}
+      class:list={["rechner", !eingebettet && "section section--mist"]}
+      aria-labelledby={`${id}-titel`}
+      data-preisrechner={leistung}
+      data-m={paket}
+      data-thema={thema[leistung]}
+      data-wa={site.whatsapp}
+    >
+      <div class:list={[!eingebettet && "container"]}>
+        {!eingebettet && (
+          <div class="section-head" data-reveal>
+            <p class="eyebrow">Preisrechner</p>
+            <h2 id={`${id}-titel`}>{titel}</h2>
+            <p class="muted">
+              Ein paar Angaben genügen. Sie sehen sofort einen ungefähren Rahmen
+              - und können direkt einen Festpreis anfragen.
+            </p>
+          </div>
+        )}
+        {eingebettet && (
+          <h2 id={`${id}-titel`} class="sr-only">
+            {titel}
+          </h2>
+        )}
 
-    <div class="rechner-grid">
-      <form class="rechner-form card" novalidate onsubmit="return false">
-        {
-          felder[leistung].map((f) => (
-            <div
-              class:list={["rf", `rf--${f.typ}`]}
-              data-zeige-wenn={f.zeigeWenn}
-              data-feld={f.name}
-            >
-              {f.typ === "zahl" && (
-                <>
-                  <label class="rf-frage" for={p(f.name)}>
-                    {f.label}
-                    {f.optional && <span class="rf-optional"> (optional)</span>}
-                  </label>
-                  <div class="rf-zahl">
-                    <input
-                      id={p(f.name)}
-                      name={f.name}
-                      type="text"
-                      inputmode="decimal"
-                      autocomplete="off"
-                      placeholder={f.beispiel}
-                      aria-describedby={
-                        f.hilfe ? p(`${f.name}-hilfe`) : undefined
-                      }
-                      data-einheit={f.einheit}
-                    />
-                    {f.einheit && (
-                      <span class="rf-einheit" aria-hidden="true">
-                        {f.einheit}
-                      </span>
-                    )}
-                  </div>
-                  {f.hilfe && (
-                    <p class="rf-hilfe" id={p(`${f.name}-hilfe`)}>
-                      {f.hilfe}
-                    </p>
-                  )}
-                </>
-              )}
-              {f.typ === "auswahl" && (
-                <fieldset>
-                  <legend class="rf-frage">{f.label}</legend>
-                  {f.hilfe && <p class="rf-hilfe">{f.hilfe}</p>}
-                  <div
-                    class:list={[
-                      "rf-wahlen",
-                      f.kompakt && "rf-wahlen--kompakt",
-                    ]}
-                  >
-                    {f.optionen.map((o) => (
-                      <label class="wahl">
-                        <input
-                          class="wahl-input"
-                          type="radio"
-                          name={f.name}
-                          value={o.wert}
-                          checked={o.wert === f.standard}
-                        />
-                        <span class="wahl-box">
-                          <span class="wahl-label">{o.label}</span>
-                          {o.hilfe && <span class="wahl-hilfe">{o.hilfe}</span>}
+        <div class="rechner-grid">
+          <form class="rechner-form card" novalidate onsubmit="return false">
+            {felder[leistung].map((f) => (
+              <div
+                class:list={["rf", `rf--${f.typ}`]}
+                data-zeige-wenn={f.zeigeWenn}
+                data-feld={f.name}
+              >
+                {f.typ === "zahl" && (
+                  <>
+                    <label class="rf-frage" for={p(f.name)}>
+                      {f.label}
+                      {f.optional && (
+                        <span class="rf-optional"> (optional)</span>
+                      )}
+                    </label>
+                    <div class="rf-zahl">
+                      <input
+                        id={p(f.name)}
+                        name={f.name}
+                        type="text"
+                        inputmode="decimal"
+                        autocomplete="off"
+                        placeholder={f.beispiel}
+                        aria-describedby={
+                          f.hilfe ? p(`${f.name}-hilfe`) : undefined
+                        }
+                        data-einheit={f.einheit}
+                      />
+                      {f.einheit && (
+                        <span class="rf-einheit" aria-hidden="true">
+                          {f.einheit}
                         </span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-              )}
-              {f.typ === "janein" && (
-                <label class="wahl wahl--check">
-                  <input
-                    class="wahl-input"
-                    type="checkbox"
-                    name={f.name}
-                    value="ja"
-                  />
-                  <span class="wahl-box">
-                    <span class="wahl-haken" aria-hidden="true" />
-                    <span>
-                      <span class="wahl-label">{f.label}</span>
-                      {f.hilfe && <span class="wahl-hilfe">{f.hilfe}</span>}
+                      )}
+                    </div>
+                    {f.hilfe && (
+                      <p class="rf-hilfe" id={p(`${f.name}-hilfe`)}>
+                        {f.hilfe}
+                      </p>
+                    )}
+                  </>
+                )}
+                {f.typ === "auswahl" && (
+                  <fieldset>
+                    <legend class="rf-frage">{f.label}</legend>
+                    {f.hilfe && <p class="rf-hilfe">{f.hilfe}</p>}
+                    <div
+                      class:list={[
+                        "rf-wahlen",
+                        f.kompakt && "rf-wahlen--kompakt",
+                      ]}
+                    >
+                      {f.optionen.map((o) => (
+                        <label class="wahl">
+                          <input
+                            class="wahl-input"
+                            type="radio"
+                            name={f.name}
+                            value={o.wert}
+                            checked={o.wert === f.standard}
+                          />
+                          <span class="wahl-box">
+                            <span class="wahl-label">{o.label}</span>
+                            {o.hilfe && (
+                              <span class="wahl-hilfe">{o.hilfe}</span>
+                            )}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                )}
+                {f.typ === "janein" && (
+                  <label class="wahl wahl--check">
+                    <input
+                      class="wahl-input"
+                      type="checkbox"
+                      name={f.name}
+                      value="ja"
+                    />
+                    <span class="wahl-box">
+                      <span class="wahl-haken" aria-hidden="true" />
+                      <span>
+                        <span class="wahl-label">{f.label}</span>
+                        {f.hilfe && <span class="wahl-hilfe">{f.hilfe}</span>}
+                      </span>
                     </span>
-                  </span>
-                </label>
-              )}
-            </div>
-          ))
-        }
-        {
-          hinweis[leistung] && (
-            <p class="rechner-hinweis">{hinweis[leistung]}</p>
-          )
-        }
-      </form>
+                  </label>
+                )}
+              </div>
+            ))}
+            {hinweis[leistung] && (
+              <p class="rechner-hinweis">{hinweis[leistung]}</p>
+            )}
+          </form>
 
-      <aside class="rechner-ergebnis" aria-label="Ergebnis">
-        <p class="re-titel">Ihr Richtwert</p>
-        <p class="re-wert" data-ergebnis aria-live="polite">
-          Bitte die Angaben links ausfüllen.
-        </p>
-        <p class="re-hinweis">
-          <strong
-            >Unverbindlicher Richtwert. Verbindlicher Festpreis nach kostenloser
-            Besichtigung.</strong
-          >
-        </p>
-        <p class="re-steuer">Ohne Umsatzsteuer (§ 19 UStG).</p>
-        <div class="re-aktionen">
-          <a class="btn btn--wide" href="/kontakt/" data-anfrage="formular">
-            <span>Festpreis anfragen</span>
-          </a>
-          <a
-            class="btn btn--secondary btn--wa btn--wide"
-            href={`https://wa.me/${site.whatsapp}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-anfrage="whatsapp"
-          >
-            <span>Per WhatsApp anfragen</span>
-          </a>
+          <aside class="rechner-ergebnis" aria-label="Ergebnis">
+            <p class="re-titel">Ihr Richtwert</p>
+            <p class="re-wert" data-ergebnis aria-live="polite">
+              Bitte die Angaben links ausfüllen.
+            </p>
+            <p class="re-hinweis">
+              <strong>
+                Unverbindlicher Richtwert. Verbindlicher Festpreis nach
+                kostenloser Besichtigung.
+              </strong>
+            </p>
+            <p class="re-steuer">Ohne Umsatzsteuer (§ 19 UStG).</p>
+            <div class="re-aktionen">
+              <a class="btn btn--wide" href="/kontakt/" data-anfrage="formular">
+                <span>Festpreis anfragen</span>
+              </a>
+              <a
+                class="btn btn--secondary btn--wa btn--wide"
+                href={`https://wa.me/${site.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-anfrage="whatsapp"
+              >
+                <span>Per WhatsApp anfragen</span>
+              </a>
+            </div>
+            <p class="re-foto">
+              Fotos helfen uns bei der Einschätzung - gern per WhatsApp.
+            </p>
+            <noscript>
+              <p class="re-noscript">
+                Der Rechner braucht JavaScript. Rufen Sie uns gern an:
+                {site.phoneDisplay}
+              </p>
+            </noscript>
+          </aside>
         </div>
-        <p class="re-foto">
-          Fotos helfen uns bei der Einschätzung - gern per WhatsApp.
-        </p>
-        <noscript>
-          <p class="re-noscript">
-            Der Rechner braucht JavaScript. Rufen Sie uns gern an:
-            {site.phoneDisplay}
-          </p>
-        </noscript>
-      </aside>
-    </div>
-  </div>
-</Tag>
+      </div>
+
+      {/* Handy: Richtwert läuft beim Ausfüllen unten mit, solange die
+       Ergebniskarte nicht zu sehen ist. */}
+      <div class="rechner-mini" data-mini hidden>
+        <span class="rm-text">
+          <span class="rm-label">Ihr Richtwert</span>
+          <span class="rm-wert" data-mini-wert />
+        </span>
+        <button type="button" class="rm-btn" data-mini-zum>
+          Ansehen
+        </button>
+      </div>
+    </Tag>
+  )
+}
 
 <script>
   import {
@@ -572,6 +596,11 @@ const Tag = eingebettet ? "div" : "section";
       const waLink = wurzel.querySelector<HTMLAnchorElement>(
         '[data-anfrage="whatsapp"]',
       )!;
+      const ergebnisKarte =
+        wurzel.querySelector<HTMLElement>(".rechner-ergebnis")!;
+      const mini = wurzel.querySelector<HTMLElement>("[data-mini]")!;
+      const miniWert = wurzel.querySelector<HTMLElement>("[data-mini-wert]")!;
+      const speicherKey = `fixum-rechner-${leistung}`;
       let gestartet = false;
       let letztesErgebnis = "";
       let timer: number | undefined;
@@ -643,6 +672,84 @@ const Tag = eingebettet ? "div" : "section";
         return zeilen.join("\n");
       };
 
+      /* Eingaben für die Sitzung merken (z. B. beim Wechsel zur
+         Kontaktseite und zurück). Nur im Browser des Kunden, sessionStorage
+         wird beim Schließen des Tabs gelöscht. */
+      const speichere = () => {
+        const daten: Record<string, string | boolean> = {};
+        form.querySelectorAll<HTMLInputElement>("input").forEach((i) => {
+          if (i.type === "radio") {
+            if (i.checked) daten[i.name] = i.value;
+          } else if (i.type === "checkbox") {
+            daten[i.name] = i.checked;
+          } else {
+            daten[i.name] = i.value;
+          }
+        });
+        try {
+          sessionStorage.setItem(speicherKey, JSON.stringify(daten));
+        } catch {
+          /* Speicher gesperrt (privater Modus) - dann eben ohne. */
+        }
+      };
+
+      const stelleWiederHer = () => {
+        let daten: Record<string, string | boolean> | null = null;
+        try {
+          daten = JSON.parse(sessionStorage.getItem(speicherKey) || "null");
+        } catch {
+          return;
+        }
+        if (!daten || typeof daten !== "object") return;
+        form.querySelectorAll<HTMLInputElement>("input").forEach((i) => {
+          if (!(i.name in daten!)) return;
+          const wert = daten![i.name];
+          if (i.type === "radio") i.checked = i.value === wert;
+          else if (i.type === "checkbox") i.checked = wert === true;
+          else if (typeof wert === "string") i.value = wert.slice(0, 20);
+        });
+      };
+
+      /* Mitlaufender Richtwert auf dem Handy */
+      const schmal = window.matchMedia("(max-width: 900px)");
+      let formSichtbar = false;
+      let karteSichtbar = false;
+      let hatErgebnis = false;
+      const miniAnzeigen = () => {
+        mini.hidden = !(
+          schmal.matches &&
+          formSichtbar &&
+          !karteSichtbar &&
+          hatErgebnis &&
+          !wurzel.closest<HTMLElement>("[hidden]")
+        );
+      };
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver((eintraege) => {
+          eintraege.forEach((e) => {
+            if (e.target === form) formSichtbar = e.isIntersecting;
+            else karteSichtbar = e.isIntersecting;
+          });
+          miniAnzeigen();
+        }).observe(form);
+        new IntersectionObserver(
+          (eintraege) => {
+            karteSichtbar = eintraege[0].isIntersecting;
+            miniAnzeigen();
+          },
+          { threshold: 0.35 },
+        ).observe(ergebnisKarte);
+      }
+      schmal.addEventListener?.("change", miniAnzeigen);
+      wurzel
+        .querySelector<HTMLButtonElement>("[data-mini-zum]")!
+        .addEventListener("click", () => {
+          ergebnisKarte.scrollIntoView({ behavior: "smooth", block: "center" });
+          ergebnisKarte
+            .querySelector<HTMLElement>("a")
+            ?.focus({ preventScroll: true });
+        });
+
       const aktualisiere = () => {
         sichtbarkeit();
         const fn = rechner[leistung];
@@ -650,6 +757,9 @@ const Tag = eingebettet ? "div" : "section";
         const text = ergebnisText(ergebnis);
         ausgabe.textContent = text;
         ausgabe.dataset.art = ergebnis.art;
+        hatErgebnis = ergebnis.art !== "unvollstaendig";
+        miniWert.textContent = text;
+        miniAnzeigen();
 
         const nachricht = zusammenfassung(
           ergebnis.art === "unvollstaendig" ? "noch offen" : text,
@@ -685,6 +795,7 @@ const Tag = eingebettet ? "div" : "section";
           melde("rechner_gestartet", { rechner: leistung });
         }
         aktualisiere();
+        speichere();
       };
 
       form.addEventListener("input", beiEingabe);
@@ -697,6 +808,7 @@ const Tag = eingebettet ? "div" : "section";
           }),
         ),
       );
+      stelleWiederHer();
       aktualisiere();
     });
 </script>
@@ -961,6 +1073,81 @@ const Tag = eingebettet ? "div" : "section";
     display: grid;
     gap: 0.6rem;
     margin-top: 0.5rem;
+  }
+
+  /* ---- Mitlaufender Richtwert (nur Handy/Tablet) ---- */
+  .rechner-mini {
+    position: fixed;
+    z-index: 40;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.6rem 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    color: #fff;
+    background: var(--navy-deep);
+    box-shadow: var(--shadow-md);
+  }
+
+  .rechner-mini[hidden] {
+    display: none;
+  }
+
+  .rm-text {
+    display: grid;
+    min-width: 0;
+  }
+
+  .rm-label {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  .rm-wert {
+    font-size: 1.0625rem;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rm-btn {
+    flex: none;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    font: inherit;
+    font-weight: 700;
+    color: var(--navy-deep);
+    background: var(--amber);
+    cursor: pointer;
+  }
+
+  .rm-btn:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 767px) {
+    /* Über der festen Kontaktleiste */
+    .rechner-mini {
+      bottom: calc(var(--sticky-call-h) + env(safe-area-inset-bottom) + 0.5rem);
+    }
+  }
+
+  @media (min-width: 901px) {
+    .rechner-mini {
+      display: none !important;
+    }
   }
 
   @media (max-width: 900px) {

@@ -702,6 +702,20 @@ const servicesActive = serviceMenuGroups.some((group) =>
     min-height: 46px;
     padding: 0.75rem 1.35rem;
     font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  /* Zwischen Tablet und breitem Desktop wird es mit sechs Menüpunkten eng:
+     Abstände etwas kleiner, damit der Anfrage-Button einzeilig bleibt. */
+  @media (min-width: 1025px) and (max-width: 1179px) {
+    .nav-link {
+      padding: 0 0.45rem;
+      font-size: 0.875rem;
+    }
+
+    .header-actions :global(.header-cta) {
+      padding: 0.75rem 1rem;
+    }
   }
 
   /* ---- Burger ---- */

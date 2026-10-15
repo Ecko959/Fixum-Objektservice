@@ -20,7 +20,9 @@
 
   "allgemein": {
     "rundenAufEuro": 50,
-    "hinweis": "Ergebnisse werden auf diesen Betrag gerundet (immer aufgerundet, damit nie ein zu niedriger Preis erscheint)."
+    "hinweis": "Ergebnisse werden auf diesen Betrag gerundet (immer aufgerundet, damit nie ein zu niedriger Preis erscheint).",
+    "flaechenFaustregel": "Als Faustregel: Eine 2-Zimmer-Wohnung hat etwa 50–60 m².",
+    "flaechenFaustregelHinweis": "Steht im Entrümpelungsrechner unter der Frage nach der Wohnfläche. Leer lassen (\"\"), um den Satz auszublenden. Kein Preis."
   },
 
   "entruempelung": {

@@ -8,7 +8,8 @@ import KetteBand from "./KetteBand.astro";
 import PageHero from "./PageHero.astro";
 import PreisBlock from "./PreisBlock.astro";
 import Preisrechner from "./Preisrechner.astro";
-import type { Leistung } from "../lib/preisrechner";
+import { rechnerBereit, type Leistung } from "../lib/preisrechner";
+import preisConfig from "../data/preise.config.json";
 import RelatedServices from "./RelatedServices.astro";
 import { leistungen, staedteFuerLeistung } from "../data/leistungsseiten";
 import { findeStadt } from "../data/staedte";
@@ -93,6 +94,10 @@ const {
   rechnerLink,
   kette,
 } = Astro.props;
+
+/* Rechner nur, wenn seine Grundwerte in der Config stehen - sonst auch
+   kein Button "Preis grob berechnen". */
+const rechnerAktiv = Boolean(rechner && rechnerBereit(preisConfig, rechner));
 
 const path = canonicalPath(current);
 const breadcrumbs: Array<[string, string]> = [
@@ -234,12 +239,12 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
       <PreisBlock
         positionen={preis}
         text={preisText}
-        rechner={rechner ? "#kalkulator" : rechnerLink}
+        rechner={rechnerAktiv ? "#kalkulator" : rechnerLink}
         anfrageText={preisAnfrage}
       />
     )
   }
-  {rechner && <Preisrechner leistung={rechner} />}
+  {rechnerAktiv && rechner && <Preisrechner leistung={rechner} />}
 
   {
     vorteile.length > 0 && (
