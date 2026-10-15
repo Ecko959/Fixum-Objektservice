@@ -30,7 +30,7 @@ export const site = {
      Kurzlink von Google funktioniert, die ausgeschriebene Profil-URL wäre
      als Signal aber etwas stärker - sie lässt sich hier jederzeit
      nachtragen. */
-  googleProfile: "https://share.google/hzDKeSFpvbowfRxhM",
+  googleProfile: "https://share.google/cM6Kd9rGWegey8zPO",
   /* Direktlink "Rezension schreiben" aus dem Google-Unternehmensprofil
      (Profil > "Rezensionen erhalten" > Link kopieren). Platzhalter:
      [GOOGLE_BEWERTUNGSLINK]. Solange der Wert leer ist, wird der Button
