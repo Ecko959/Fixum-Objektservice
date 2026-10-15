@@ -28,16 +28,18 @@ const itemListSchema = {
   })),
 };
 
-const bereiche: Array<[string, string, "crate" | "hammer" | "clipboard"]> = [
+const bereiche: Array<
+  [string, string, "karton" | "vorschlaghammer" | "clipboard"]
+> = [
   [
     "Räumen",
     "Entrümpelung, Haushaltsauflösung, Wohnungsräumung und Transporte - alles, was raus muss.",
-    "crate",
+    "karton",
   ],
   [
     "Rückbau & Ausbau",
     "Entkernung, Trockenbau, Boden, Türen und Montage - alles, was wieder rein muss.",
-    "hammer",
+    "vorschlaghammer",
   ],
   [
     "Objektservice",
@@ -158,9 +160,9 @@ const bereiche: Array<[string, string, "crate" | "hammer" | "clipboard"]> = [
     width: 50px;
     height: 50px;
     margin-bottom: 0.25rem;
-    border-radius: var(--radius-sm);
-    color: var(--blue-light);
-    background: linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
+    border-radius: 10px;
+    color: var(--navy);
+    background: var(--mist);
   }
 
   .bereich-card p {

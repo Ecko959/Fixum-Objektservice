@@ -22,49 +22,30 @@ const config = JSON.parse(
   ),
 );
 
-const rechne = (l: Leistung, e: Record<string, unknown>, c = config) =>
-  rechner[l](baueModell(c, l), e);
+const rechne = (
+  l: Leistung,
+  e: Record<string, unknown>,
+  c = config,
+): Ergebnis =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (rechner[l] as any)(baueModell(c, l), e);
 
 const spanne = (r: Ergebnis) => {
   assert.equal(r.art, "spanne", `erwartet Spanne, bekam ${JSON.stringify(r)}`);
-  return r as { art: "spanne"; von: number; bis: number };
+  return r as { art: "spanne"; von: number; bis: number; zusatz?: string[] };
+};
+const werte = (r: Ergebnis) => {
+  const s = spanne(r);
+  return [s.von, s.bis];
 };
 
-/** Config mit ausgefüllten Testwerten für alle Platzhalter (nur für Tests). */
-const testConfig = () => {
-  const c = structuredClone(config);
-  const f = (o: Record<string, unknown>, k: string, von: number, bis = von) =>
-    (o[k] = { von, bis });
-  f(c.entruempelung, "keller", 150, 300);
-  f(c.entruempelung, "dachboden", 200, 400);
-  f(c.entruempelung, "garageOderSchuppen", 100, 250);
-  f(c.entruempelung, "kuecheOderEinbautenDemontieren", 150, 250);
-  f(c.entruempelung, "endreinigungProQuadratmeter", 3, 5);
-  c.entruempelung.mindestpreis = { wert: 300 };
-  f(c.umzug, "proZimmer", 300, 400);
-  c.umzug.nahbereichKm = { wert: 30 };
-  f(c.umzug, "proKmUeberNahbereich", 2, 3);
-  f(c.umzug, "zuschlagJeEtageOhneAufzug", 40, 60);
-  f(c.umzug, "moebelAbUndAufbauen", 100, 200);
-  f(c.umzug, "kuecheAbUndAufbauen", 300, 500);
-  f(c.umzug, "schweresEinzelstueck", 150, 250);
-  f(c.umzug, "altmoebelEntsorgen", 100, 200);
-  c.umzug.mindestpreis = { wert: 400 };
-  f(c.trockenbau.materialVomKundenProQuadratmeter, "schallschutzwand", 40, 50);
-  c.trockenbau.mindestpreis = { wert: 400 };
-  f(c.montage, "innentuerMitZargeJeStueck", 120, 160);
-  f(c.montage, "alteTuerAusbauenJeStueck", 30, 50);
-  f(c.montage, "moebelJeStueck", 40, 80);
-  f(c.montage, "altesMoebelAusbauenJeStueck", 20, 40);
-  f(c.montage, "kuecheJeMeter", 150, 200);
-  f(c.montage, "alteKuecheAusbauenJeMeter", 40, 60);
-  c.montage.mindestpreis = { wert: 150 };
-  f(c.boden, "verlegenProQuadratmeter", 18, 25);
-  f(c.boden, "altenBelagEntfernenProQuadratmeter", 5, 8);
-  f(c.boden, "sockelleisteProMeter", 6, 9);
-  c.boden.mindestpreis = { wert: 300 };
-  return c;
-};
+/* Alle Kombinationen einer Liste von Optionen (kartesisches Produkt). */
+const kombinationen = (optionen: Record<string, unknown[]>) =>
+  Object.entries(optionen).reduce<Record<string, unknown>[]>(
+    (alle, [k, liste]) =>
+      alle.flatMap((a) => liste.map((v) => ({ ...a, [k]: v }))),
+    [{}],
+  );
 
 /* ------------------------------------------------------------------ */
 
@@ -97,7 +78,7 @@ describe("Ausgabe", () => {
       "ca. 1.200–1.700 €",
     ));
   test("ab", () =>
-    assert.equal(ergebnisText({ art: "ab", ab: 300 }), "ab 300 €"));
+    assert.equal(ergebnisText({ art: "ab", ab: 290 }), "ab 290 €"));
   test("Anfrage", () =>
     assert.equal(ergebnisText({ art: "anfrage" }), "Preis auf Anfrage"));
 });
@@ -113,16 +94,14 @@ describe("Config ist in sich stimmig", () => {
   test("Trockenbau: Ab-Preis = günstigste Wand inkl. Material", () => {
     const inkl = config.trockenbau.materialInklusiveProQuadratmeter;
     assert.equal(inkl.zwischenwand.von, ab.trockenbauwandInklMaterial);
-    const minimum = Math.min(
-      ...Object.values(inkl).map((w) => (w as { von: number }).von),
-    );
-    assert.ok(minimum >= ab.trockenbauwandInklMaterial);
+    for (const w of Object.values(inkl))
+      assert.ok((w as { von: number }).von >= ab.trockenbauwandInklMaterial);
   });
-  test("Umzug: 2 Zimmer nicht unter dem Ab-Preis (sobald Wert gesetzt)", () => {
-    const z = config.umzug.proZimmer;
-    if (typeof z.von === "number")
-      assert.ok(2 * z.von >= ab.umzugZweiZimmerNahbereich);
-  });
+  test("Umzug: 2 Zimmer im Nahbereich = Ab-Preis", () =>
+    assert.equal(
+      config.umzug.grundpreisNahbereich["2"].von,
+      ab.umzugZweiZimmerNahbereich,
+    ));
   test("Jede Spanne: von <= bis", () => {
     const pruefe = (o: unknown, pfad: string) => {
       if (!o || typeof o !== "object") return;
@@ -133,201 +112,406 @@ describe("Config ist in sich stimmig", () => {
     };
     pruefe(config, "config");
   });
+  test("Alle Rechner haben ihre Grundwerte", () => {
+    for (const l of [
+      "entruempelung",
+      "umzug",
+      "trockenbau",
+      "montage",
+      "boden",
+    ] as const)
+      assert.equal(rechnerBereit(config, l), true, l);
+  });
 });
 
+/* ------------------------------------------------------------------ Fälle aus dem Auftrag */
+
+describe("Testfälle aus dem Auftrag", () => {
+  test("Entrümpelung 70 m² Messie, EG, Keller voll 10 m², Grundreinigung", () =>
+    // 70*36 + 10*36 + 70*15 = 3930 -> 3950 | 70*60 + 10*60 + 70*25 = 6550
+    assert.deepEqual(
+      werte(
+        rechne("entruempelung", {
+          flaeche: "70",
+          zustand: "messie",
+          etage: "0",
+          keller: true,
+          kellerFlaeche: "10",
+          kellerFuell: "voll",
+          reinigung: "grund",
+        }),
+      ),
+      [3950, 6550],
+    ));
+  test("Entrümpelung 45 m² normal, 2. OG, ohne Zusatzflächen", () =>
+    // 45*15*1.2 = 810 -> 850 | 45*25*1.2 = 1350
+    assert.deepEqual(
+      werte(
+        rechne("entruempelung", {
+          flaeche: "45",
+          zustand: "normal",
+          etage: "2",
+        }),
+      ),
+      [850, 1350],
+    ));
+  test("Umzug 2 Zimmer, 10 km, EG nach EG, ohne Montage", () =>
+    assert.deepEqual(
+      werte(
+        rechne("umzug", {
+          zimmer: "2",
+          km: "10",
+          etageAus: "0",
+          etageEin: "0",
+        }),
+      ),
+      [600, 850],
+    ));
+  test("Umzug 4 Zimmer, 5 km, 1. OG nach 2. OG, Montage, 2 schwere Stücke", () =>
+    // (1000..1400)*1.3 + 4*(50..90) + 2*(60..120) = 1620..2420 -> 1650..2450
+    assert.deepEqual(
+      werte(
+        rechne("umzug", {
+          zimmer: "4",
+          km: "5",
+          etageAus: "1",
+          etageEin: "2",
+          moebel: true,
+          schwer: "2",
+        }),
+      ),
+      [1650, 2450],
+    ));
+  test("Trockenbau 20 m² Zwischenwand inkl. Material, Q2, 1 Türöffnung", () =>
+    // 20*(45+9)+100+80 = 1260 -> 1300 | 20*(65+12)+130+150 = 1820 -> 1850
+    assert.deepEqual(
+      werte(
+        rechne("trockenbau", {
+          art: "zwischenwand",
+          flaeche: "20",
+          material: "fixum",
+          oberflaeche: "normal",
+          tueren: "1",
+        }),
+      ),
+      [1300, 1850],
+    ));
+  test("Montage 3 Innentüren mit Ausbau der alten", () =>
+    // 3*(120+40) = 480 -> 500 | 3*(180+70) = 750
+    assert.deepEqual(
+      werte(
+        rechne("montage", { tueren: true, tuerAnzahl: "3", tuerAusbau: true }),
+      ),
+      [500, 750],
+    ));
+  test("Boden 40 m² Klick-Vinyl, alten Belag entfernen, 30 m Sockelleiste", () =>
+    // 40*(14+4)+30*5 = 870 -> 900 | 40*(20+8)+30*8 = 1360 -> 1400
+    assert.deepEqual(
+      werte(
+        rechne("boden", {
+          flaeche: "40",
+          belag: "vinyl",
+          entfernen: true,
+          leisten: "30",
+          material: "kunde",
+        }),
+      ),
+      [900, 1400],
+    ));
+});
+
+/* ------------------------------------------------------------------ Entrümpelung */
+
 describe("Entrümpelung", () => {
-  test("60 m² normal, EG", () => {
-    const r = spanne(
-      rechne("entruempelung", { flaeche: "60", zustand: "normal", etage: 0 }),
+  test("Messie + Keller ergibt eine Spanne (früher: Preis auf Anfrage)", () => {
+    spanne(
+      rechne("entruempelung", { flaeche: 60, zustand: "messie", keller: true }),
     );
-    assert.deepEqual([r.von, r.bis], [900, 1500]);
   });
-  test("60,5 m² mit Komma", () => {
+  test("Jede Kombination ergibt Spanne oder ab-Preis, nie 'auf Anfrage'", () => {
+    const alle = kombinationen({
+      flaeche: ["5", "45", "70", "400"],
+      zustand: ["normal", "stark", "messie"],
+      etage: ["0", "3"],
+      keller: [false, true],
+      kellerFuell: ["wenig", "voll"],
+      kellerFlaeche: ["", "25"],
+      dachboden: [false, true],
+      dachbodenZugang: ["treppe", "leiter"],
+      garage: [false, true],
+      garageGroesse: ["klein", "gross"],
+      garageFuell: ["wenig", "voll"],
+      kueche: [false, true],
+      kuechenzeile: [false, true],
+      einbauschraenke: ["0", "3"],
+      reinigung: ["keine", "grund", "tief"],
+      eilig: [false, true],
+      halteverbot: [false, true],
+    });
+    for (const e of alle) {
+      const r = rechne("entruempelung", e);
+      assert.ok(r.art === "spanne" || r.art === "ab", JSON.stringify({ e, r }));
+    }
+  });
+  test("Standardflächen: Keller 10 m², Dachboden 15 m², Füllgrad voll", () => {
+    const ohne = rechne("entruempelung", {
+      flaeche: 50,
+      keller: true,
+      dachboden: true,
+    });
+    const mit = rechne("entruempelung", {
+      flaeche: 50,
+      keller: true,
+      kellerFlaeche: "10",
+      kellerFuell: "voll",
+      dachboden: true,
+      dachbodenFlaeche: "15",
+      dachbodenFuell: "voll",
+    });
+    assert.deepEqual(ohne, mit);
+  });
+  test("Messie: Keller/Dachboden mit Messie-Satz, Füllgrad egal", () => {
+    const a = rechne("entruempelung", {
+      flaeche: 50,
+      zustand: "messie",
+      keller: true,
+      kellerFuell: "wenig",
+    });
+    const b = rechne("entruempelung", {
+      flaeche: 50,
+      zustand: "messie",
+      keller: true,
+      kellerFuell: "voll",
+    });
+    assert.deepEqual(a, b);
+    // 50*36 + 10*36 = 2160 -> 2200 | 50*60 + 10*60 = 3600
+    assert.deepEqual(werte(a), [2200, 3600]);
+  });
+  test("Dachboden nur über Leiter: +20 % auf den Dachboden-Anteil", () =>
+    // 40*15 + 15*18*1.2 = 924 -> 950 | 40*25 + 15*30*1.2 = 1540 -> 1550
+    assert.deepEqual(
+      werte(
+        rechne("entruempelung", {
+          flaeche: 40,
+          dachboden: true,
+          dachbodenZugang: "leiter",
+        }),
+      ),
+      [950, 1550],
+    ));
+  test("Etagenaufschlag nur auf die Wohnfläche", () =>
+    // 40*15*1.1 + 10*18 = 840 -> 850 | 40*25*1.1 + 10*30 = 1400
+    assert.deepEqual(
+      werte(rechne("entruempelung", { flaeche: 40, etage: 1, keller: true })),
+      [850, 1400],
+    ));
+  test("Garage groß, voll + Küchenzeile + 2 Einbauschränke", () =>
+    // 50*15 + 500 + 150 + 120 = 1520 -> 1550 | 50*25 + 900 + 350 + 240 = 2740 -> 2750
+    assert.deepEqual(
+      werte(
+        rechne("entruempelung", {
+          flaeche: 50,
+          garage: true,
+          garageGroesse: "gross",
+          garageFuell: "voll",
+          kueche: true,
+          kuechenzeile: true,
+          einbauschraenke: "2",
+        }),
+      ),
+      [1550, 2750],
+    ));
+  test("Eilauftrag +15–25 %, Halteverbotszone obendrauf", () =>
+    // 60*15*1.15 + 80 = 1115 -> 1150 | 60*25*1.25 + 150 = 2025 -> 2050
+    assert.deepEqual(
+      werte(
+        rechne("entruempelung", {
+          flaeche: 60,
+          eilig: true,
+          halteverbot: true,
+        }),
+      ),
+      [1150, 2050],
+    ));
+  test("Besondere Verschmutzung: Spanne bleibt, Hinweis kommt dazu", () => {
     const r = spanne(
-      rechne("entruempelung", { flaeche: "60,5", zustand: "normal", etage: 0 }),
+      rechne("entruempelung", {
+        flaeche: 60,
+        zustand: "messie",
+        verschmutzung: true,
+      }),
     );
-    assert.deepEqual([r.von, r.bis], [950, 1550]);
+    assert.deepEqual(r.zusatz, ["sonderreinigung"]);
   });
-  test("5 m²: aufgerundet, nie unter dem Ab-Preis", () => {
-    const r = spanne(
-      rechne("entruempelung", { flaeche: "5", zustand: "normal" }),
-    );
-    assert.deepEqual([r.von, r.bis], [100, 150]);
-    assert.ok(r.von >= 5 * 15);
-  });
-  test("Stark möbliert, 2. Etage: +14 %", () => {
-    const r = spanne(
-      rechne("entruempelung", { flaeche: "80", zustand: "stark", etage: 2 }),
-    );
-    // 80*25*1.14 = 2280 -> 2300; 80*40*1.14 = 3648 -> 3650
-    assert.deepEqual([r.von, r.bis], [2300, 3650]);
-  });
-  test("400 m² Messie, 3. Etage oder höher", () => {
-    const r = spanne(
-      rechne("entruempelung", { flaeche: "400", zustand: "messie", etage: 5 }),
-    );
-    // Etage wird bei 3 gedeckelt: 400*36*1.21 = 17424; 400*60*1.21 = 29040
-    assert.deepEqual([r.von, r.bis], [17450, 29050]);
-  });
-  test("Je Stufe nie unter dem Ab-Preis pro m²", () => {
+  test("Unter Mindestauftrag: ab 290 €", () =>
+    assert.deepEqual(rechne("entruempelung", { flaeche: 5 }), {
+      art: "ab",
+      ab: 290,
+    }));
+  test("Nie unter dem Ab-Preis pro m²", () => {
     for (const [zustand, ab] of [
       ["normal", 15],
       ["stark", 25],
       ["messie", 36],
     ] as const)
-      for (const flaeche of [5, 17, 60, 133, 400]) {
+      for (const flaeche of [20, 60, 133, 400]) {
         const r = spanne(rechne("entruempelung", { flaeche, zustand }));
         assert.ok(r.von >= flaeche * ab, `${zustand} ${flaeche}`);
-        assert.ok(r.bis > r.von);
       }
   });
-  test("Keller ohne Wert in der Config: Preis auf Anfrage", () =>
-    assert.equal(
-      rechne("entruempelung", { flaeche: 60, zustand: "normal", keller: true })
-        .art,
-      "anfrage",
-    ));
-  test("Leere Fläche: unvollständig", () =>
+  test("Leere Fläche: unvollständig; riesige Fläche: auf Anfrage", () => {
     assert.equal(
       rechne("entruempelung", { flaeche: "" }).art,
       "unvollstaendig",
-    ));
-  test("Über der Höchstfläche: Preis auf Anfrage", () =>
-    assert.equal(rechne("entruempelung", { flaeche: 5000 }).art, "anfrage"));
-  test("Mit allen Zusatzwerten (Testwerte) und Mindestpreis", () => {
-    const c = testConfig();
-    const r = spanne(
-      rechne(
-        "entruempelung",
-        {
-          flaeche: 50,
-          zustand: "normal",
-          etage: 1,
-          keller: true,
-          reinigung: true,
-        },
-        c,
-      ),
     );
-    // 50*15*1.07 + 150 + 50*3 = 1102.5 -> 1150; 50*25*1.07 + 300 + 50*5 = 1887.5 -> 1900
-    assert.deepEqual([r.von, r.bis], [1150, 1900]);
-    const klein = rechne("entruempelung", { flaeche: 5, zustand: "normal" }, c);
-    assert.deepEqual(klein, { art: "ab", ab: 300 });
+    assert.equal(rechne("entruempelung", { flaeche: "5000" }).art, "anfrage");
   });
 });
+
+/* ------------------------------------------------------------------ Umzug */
 
 describe("Umzug", () => {
-  test("Ohne gesetzte Werte: Preis auf Anfrage", () =>
-    assert.equal(rechne("umzug", { zimmer: 2, km: 20 }).art, "anfrage"));
-  test("Fehlende Entfernung: unvollständig", () =>
-    assert.equal(rechne("umzug", { zimmer: 2, km: "" }).art, "unvollstaendig"));
-  const c = testConfig();
-  test("2 Zimmer im Nahbereich: nie unter 600 €", () => {
-    const r = spanne(rechne("umzug", { zimmer: 2, km: 25 }, c));
-    assert.ok(r.von >= 600);
+  test("Grundpreise im Nahbereich", () => {
+    const erwartet: Record<string, number[]> = {
+      "1": [450, 650],
+      "2": [600, 850],
+      "3": [800, 1150],
+      "4": [1000, 1400],
+      "5": [1400, 2000],
+    };
+    for (const [z, w] of Object.entries(erwartet))
+      assert.deepEqual(werte(rechne("umzug", { zimmer: z, km: "15" })), w, z);
   });
-  test("3 Zimmer, 2. Etage ohne Aufzug, 50 km, Möbel, 1 Klavier", () => {
-    const r = spanne(
-      rechne(
-        "umzug",
-        {
-          zimmer: 3,
-          km: "50",
-          etageAus: 2,
-          aufzugAus: false,
-          etageEin: 3,
-          aufzugEin: true,
-          moebel: true,
-          schwer: 1,
-        },
-        c,
+  test("km über 15: 2–3 € je km", () =>
+    // 600 + 35*2 = 670 -> 700 | 850 + 35*3 = 955 -> 1000
+    assert.deepEqual(
+      werte(rechne("umzug", { zimmer: "2", km: "50" })),
+      [700, 1000],
+    ));
+  test("Aufzug hebt den Etagenaufschlag auf", () =>
+    assert.deepEqual(
+      rechne("umzug", { zimmer: "2", km: "5", etageAus: "3", aufzugAus: true }),
+      rechne("umzug", { zimmer: "2", km: "5" }),
+    ));
+  test("Küche, Entsorgung, Eilauftrag und Halteverbot an beiden Adressen", () =>
+    // (600+250+100)*1.15 + 160 = 1252.5 -> 1300 | (850+450+250)*1.25 + 300 = 2237.5 -> 2250
+    assert.deepEqual(
+      werte(
+        rechne("umzug", {
+          zimmer: "2",
+          km: "10",
+          kueche: true,
+          entsorgung: true,
+          eilig: true,
+          halteverbot: "2",
+        }),
       ),
-    );
-    // 900+80+40+100+150 = 1270 -> 1300; 1200+120+60+200+250 = 1830 -> 1850
-    assert.deepEqual([r.von, r.bis], [1300, 1850]);
+      [1300, 2250],
+    ));
+  test("Möbelmontage: Zimmerzahl änderbar", () =>
+    // 600 + 1*50 = 650 | 850 + 90 = 940 -> 950
+    assert.deepEqual(
+      werte(
+        rechne("umzug", {
+          zimmer: "2",
+          km: "5",
+          moebel: true,
+          moebelZimmer: "1",
+        }),
+      ),
+      [650, 950],
+    ));
+  test("Über 100 km und 'größer als 5 Zimmer': auf Anfrage", () => {
+    assert.equal(rechne("umzug", { zimmer: "2", km: "120" }).art, "anfrage");
+    assert.equal(rechne("umzug", { zimmer: "99", km: "10" }).art, "anfrage");
   });
-  test("Zu weit: Preis auf Anfrage", () =>
-    assert.equal(rechne("umzug", { zimmer: 2, km: 400 }, c).art, "anfrage"));
+  test("Jede Kombination bis 100 km ergibt eine Spanne", () => {
+    for (const e of kombinationen({
+      zimmer: ["1", "3", "5"],
+      km: ["0", "15", "60", "100"],
+      etageAus: ["0", "5"],
+      aufzugAus: [false, true],
+      etageEin: ["0", "2"],
+      moebel: [false, true],
+      kueche: [false, true],
+      schwer: ["0", "3"],
+      entsorgung: [false, true],
+      eilig: [false, true],
+      halteverbot: ["0", "1", "2"],
+    }))
+      spanne(rechne("umzug", e));
+  });
+  test("Entfernung fehlt: unvollständig", () =>
+    assert.equal(
+      rechne("umzug", { zimmer: "2", km: "" }).art,
+      "unvollstaendig",
+    ));
 });
 
+/* ------------------------------------------------------------------ Trockenbau */
+
 describe("Trockenbau", () => {
-  test("Zwischenwand 10 m² inkl. Material, ohne Spachteln", () => {
-    const r = spanne(
-      rechne("trockenbau", {
-        art: "zwischenwand",
-        flaeche: 10,
-        material: "fixum",
-        oberflaeche: "ohne",
-      }),
-    );
-    // 450+80 = 530 -> 550; 650+80 = 730 -> 750
-    assert.deepEqual([r.von, r.bis], [550, 750]);
-  });
-  test("Zwischenwand 20 m², Q2, Dämmung, 1 Tür", () => {
-    const r = spanne(
-      rechne("trockenbau", {
-        art: "zwischenwand",
-        flaeche: "20",
-        material: "fixum",
-        oberflaeche: "normal",
-        daemmung: true,
-        tueren: 1,
-      }),
-    );
-    // 20*(45+9+6)+100+80 = 1380 -> 1400; 20*(65+12+6)+130+80 = 1870 -> 1900
-    assert.deepEqual([r.von, r.bis], [1400, 1900]);
-  });
-  test("Dachschräge mit Dämmung bekommt Dampfbremse", () => {
-    const r = spanne(
-      rechne("trockenbau", {
-        art: "dachschraege",
-        flaeche: 30,
-        material: "fixum",
-        oberflaeche: "glatt",
-        daemmung: true,
-      }),
-    );
-    // 30*(60+14+6+7)+80 = 2690 -> 2700; 30*(75+18+6+8)+80 = 3290 -> 3300
-    assert.deepEqual([r.von, r.bis], [2700, 3300]);
-  });
-  test("Schallschutzwand: Dämmung nicht doppelt", () => {
-    const mit = rechne("trockenbau", {
+  test("Dachschräge, glatt, Dämmung: mit Dampfbremse", () =>
+    // 30*(60+14+6+7)+80 = 2690 -> 2700 | 30*(75+18+6+8)+150 = 3360 -> 3400
+    assert.deepEqual(
+      werte(
+        rechne("trockenbau", {
+          art: "dachschraege",
+          flaeche: 30,
+          oberflaeche: "glatt",
+          daemmung: true,
+        }),
+      ),
+      [2700, 3400],
+    ));
+  test("Doppelt beplankt: +9 €/m² bei Zwischenwand", () =>
+    // 10*(45+9+9)+80 = 710 -> 750 | 10*(65+12+9)+150 = 1010 -> 1050
+    assert.deepEqual(
+      werte(
+        rechne("trockenbau", {
+          art: "zwischenwand",
+          flaeche: 10,
+          oberflaeche: "normal",
+          doppelt: true,
+        }),
+      ),
+      [750, 1050],
+    ));
+  test("Schallschutzwand: immer mit Material, Dämmung nicht doppelt", () => {
+    const a = rechne("trockenbau", {
       art: "schallschutzwand",
       flaeche: 10,
-      oberflaeche: "ohne",
+      material: "kunde",
       daemmung: true,
     });
-    const ohne = rechne("trockenbau", {
+    const b = rechne("trockenbau", {
       art: "schallschutzwand",
       flaeche: 10,
-      oberflaeche: "ohne",
-    });
-    assert.deepEqual(mit, ohne);
-  });
-  test("Türöffnungen nur bei Wänden", () => {
-    const a = rechne("trockenbau", {
-      art: "deckeAbhaengen",
-      flaeche: 15,
-      oberflaeche: "normal",
-      tueren: 3,
-    });
-    const b = rechne("trockenbau", {
-      art: "deckeAbhaengen",
-      flaeche: 15,
-      oberflaeche: "normal",
+      material: "fixum",
     });
     assert.deepEqual(a, b);
   });
-  test("Schallschutz mit Kundenmaterial ohne Wert: Preis auf Anfrage", () =>
-    assert.equal(
-      rechne("trockenbau", {
-        art: "schallschutzwand",
-        flaeche: 10,
-        material: "kunde",
-      }).art,
-      "anfrage",
-    ));
-  test("Inkl. Material nie unter 45 €/m²", () => {
+  test("Jede Kombination ergibt Spanne oder ab-Preis", () => {
+    for (const e of kombinationen({
+      art: [
+        "zwischenwand",
+        "schallschutzwand",
+        "deckeAbhaengen",
+        "dachschraege",
+        "vorsatzschale",
+      ],
+      flaeche: ["1", "20", "500"],
+      material: ["fixum", "kunde"],
+      oberflaeche: ["ohne", "normal", "glatt"],
+      daemmung: [false, true],
+      doppelt: [false, true],
+      tueren: ["0", "2"],
+    })) {
+      const r = rechne("trockenbau", e);
+      assert.ok(r.art === "spanne" || r.art === "ab", JSON.stringify({ e, r }));
+    }
+  });
+  test("Inkl. Material nie unter 45 €/m² (Fläche groß genug für den Mindestauftrag)", () => {
     for (const art of [
       "zwischenwand",
       "schallschutzwand",
@@ -335,7 +519,7 @@ describe("Trockenbau", () => {
       "dachschraege",
       "vorsatzschale",
     ])
-      for (const flaeche of [1, 5, 60, 400]) {
+      for (const flaeche of [10, 60, 400]) {
         const r = spanne(
           rechne("trockenbau", {
             art,
@@ -347,108 +531,141 @@ describe("Trockenbau", () => {
         assert.ok(r.von >= flaeche * 45, `${art} ${flaeche}`);
       }
   });
-  test("Fläche über Höchstwert: Preis auf Anfrage", () =>
-    assert.equal(
-      rechne("trockenbau", { art: "zwischenwand", flaeche: 900 }).art,
-      "anfrage",
-    ));
-  test("Mindestpreis greift", () =>
+  test("Kleine Fläche: ab 350 €", () =>
     assert.deepEqual(
-      rechne(
-        "trockenbau",
-        {
-          art: "zwischenwand",
-          flaeche: 2,
-          material: "kunde",
-          oberflaeche: "ohne",
-        },
-        testConfig(),
-      ),
-      { art: "ab", ab: 400 },
+      rechne("trockenbau", {
+        art: "zwischenwand",
+        flaeche: 2,
+        material: "kunde",
+        oberflaeche: "ohne",
+      }),
+      { art: "ab", ab: 350 },
     ));
 });
 
+/* ------------------------------------------------------------------ Montage */
+
 describe("Montage", () => {
-  test("Ohne Werte: Preis auf Anfrage", () =>
-    assert.equal(rechne("montage", { art: "tuer", anzahl: 3 }).art, "anfrage"));
-  const c = testConfig();
-  test("3 Türen mit Ausbau", () => {
-    const r = spanne(
-      rechne("montage", { art: "tuer", anzahl: "3", ausbau: true }, c),
+  test("Nichts gewählt: unvollständig", () =>
+    assert.equal(rechne("montage", {}).art, "unvollstaendig"));
+  test("Möbel: 2 Stück + 1 Großschrank", () =>
+    // 2*40 + 90 = 170 -> 200 | 2*90 + 180 = 360 -> 400
+    assert.deepEqual(
+      werte(
+        rechne("montage", {
+          moebel: true,
+          moebelAnzahl: "2",
+          grossschraenke: "1",
+        }),
+      ),
+      [200, 400],
+    ));
+  test("Küche 3,6 m mit Abbau der alten", () =>
+    // 3.6*80 + 150 = 438 -> 450 | 3.6*130 + 350 = 818 -> 850
+    assert.deepEqual(
+      werte(
+        rechne("montage", {
+          kueche: true,
+          kuecheMeter: "3,6",
+          kuecheAlt: true,
+        }),
+      ),
+      [450, 850],
+    ));
+  test("Alles kombiniert", () => {
+    spanne(
+      rechne("montage", {
+        tueren: true,
+        tuerAnzahl: "2",
+        moebel: true,
+        moebelAnzahl: "3",
+        kueche: true,
+        kuecheMeter: "4",
+      }),
     );
-    // 3*150 = 450; 3*210 = 630 -> 650
-    assert.deepEqual([r.von, r.bis], [450, 650]);
   });
-  test("Küche 3,6 m", () => {
-    const r = spanne(rechne("montage", { art: "kueche", meter: "3,6" }, c));
-    // 540 -> 550; 720 -> 750
-    assert.deepEqual([r.von, r.bis], [550, 750]);
-  });
-  test("Ein Möbelstück unter Mindestpreis", () =>
-    assert.deepEqual(rechne("montage", { art: "moebel", anzahl: 1 }, c), {
-      art: "ab",
-      ab: 150,
+  test("Eine Tür: Spanne beginnt beim Mindestauftrag 150 €", () =>
+    assert.deepEqual(rechne("montage", { tueren: true, tuerAnzahl: "1" }), {
+      art: "spanne",
+      von: 150,
+      bis: 200,
     }));
-  test("Anzahl fehlt", () =>
+  test("Küche ohne Länge: unvollständig", () =>
     assert.equal(
-      rechne("montage", { art: "moebel", anzahl: "" }, c).art,
+      rechne("montage", { kueche: true, kuecheMeter: "" }).art,
       "unvollstaendig",
     ));
 });
 
+/* ------------------------------------------------------------------ Boden */
+
 describe("Boden", () => {
-  test("Ohne Werte: Preis auf Anfrage", () =>
-    assert.equal(rechne("boden", { flaeche: 40 }).art, "anfrage"));
-  const c = testConfig();
-  test("40 m² mit Entfernen und 30 m Leisten", () => {
-    const r = spanne(
-      rechne("boden", { flaeche: 40, entfernen: true, leisten: "30" }, c),
-    );
-    // 40*23+30*6 = 1100; 40*33+30*9 = 1590 -> 1600
-    assert.deepEqual([r.von, r.bis], [1100, 1600]);
-  });
-  test("Leisten leer zählt als 0", () => {
-    const r = spanne(rechne("boden", { flaeche: 40, leisten: "" }, c));
-    assert.deepEqual([r.von, r.bis], [750, 1000]);
-  });
+  test("Teppich mit Trittschall", () =>
+    // 30*(10+2) = 360 -> 400 | 30*(16+3) = 570 -> 600
+    assert.deepEqual(
+      werte(
+        rechne("boden", { flaeche: 30, belag: "teppich", trittschall: true }),
+      ),
+      [400, 600],
+    ));
+  test("Material über Fixum: Hinweis 'zzgl. Material'", () =>
+    assert.deepEqual(
+      spanne(
+        rechne("boden", { flaeche: 40, belag: "laminat", material: "fixum" }),
+      ).zusatz,
+      ["material"],
+    ));
+  test("Kleine Fläche: ab 250 €", () =>
+    assert.deepEqual(rechne("boden", { flaeche: 5, belag: "laminat" }), {
+      art: "ab",
+      ab: 250,
+    }));
+  test("Leisten leer zählt als 0", () =>
+    assert.deepEqual(
+      rechne("boden", { flaeche: 40, leisten: "" }),
+      rechne("boden", { flaeche: 40 }),
+    ));
 });
+
+/* ------------------------------------------------------------------ Allgemein */
 
 describe("Nie ein einzelner Betrag", () => {
   test("Gleiche Unter- und Obergrenze wird zur Spanne", () => {
-    const c = testConfig();
-    c.boden.verlegenProQuadratmeter = { von: 20, bis: 20 };
+    const c = structuredClone(config);
+    c.boden.verlegenProQuadratmeter.klick = { von: 20, bis: 20 };
     c.boden.mindestpreis = { wert: null };
-    const r = spanne(rechne("boden", { flaeche: 10 }, c));
+    const r = spanne(rechne("boden", { flaeche: 50 }, c));
     assert.ok(r.bis > r.von);
+  });
+});
+
+describe("Fehlender Wert in der Config", () => {
+  test("ergibt bei genau dieser Auswahl 'Preis auf Anfrage'", () => {
+    const c = structuredClone(config);
+    c.entruempelung.halteverbotszone = { von: null, bis: null };
+    assert.equal(
+      rechne("entruempelung", { flaeche: 60, halteverbot: true }, c).art,
+      "anfrage",
+    );
+    spanne(rechne("entruempelung", { flaeche: 60 }, c));
+  });
+  test("Rechner ohne Grundwerte wird ausgeblendet", () => {
+    const c = structuredClone(config);
+    c.umzug.grundpreisNahbereich = {};
+    assert.equal(rechnerBereit(c, "umzug"), false);
   });
 });
 
 describe("Weitergabe an den Browser", () => {
   test("Verpacken und Entpacken ergibt dasselbe Modell", () => {
     const m = baueModell(config, "trockenbau");
-    const paket = verpacke(m);
-    assert.deepEqual(entpacke(paket), m);
+    assert.deepEqual(entpacke(verpacke(m)), m);
   });
   test("Im Paket stehen keine lesbaren Preise oder Begriffe", () => {
     const paket = verpacke(baueModell(config, "entruempelung"));
-    assert.ok(!/"von"|messie|normal|15,|"bis"/.test(paket));
+    assert.ok(!/"von"|messie|normal|"bis"/.test(paket));
   });
-  test("Modell enthält keine Hinweise oder Platzhalter", () => {
-    const text = JSON.stringify(baueModell(config, "umzug"));
-    assert.ok(!/hinweis|platzhalter|\[/.test(text));
-  });
-});
-
-describe("Rechner nur mit Grundwerten anzeigen", () => {
-  test("Aktuelle Config: Entrümpelung und Trockenbau an, Rest aus", () => {
-    assert.equal(rechnerBereit(config, "entruempelung"), true);
-    assert.equal(rechnerBereit(config, "trockenbau"), true);
-    assert.equal(rechnerBereit(config, "umzug"), false);
-    assert.equal(rechnerBereit(config, "montage"), false);
-    assert.equal(rechnerBereit(config, "boden"), false);
-  });
-  test("Mit ausgefüllten Werten sind alle Rechner an", () => {
-    const c = testConfig();
+  test("Modell enthält keine Hinweise", () => {
     for (const l of [
       "entruempelung",
       "umzug",
@@ -456,11 +673,6 @@ describe("Rechner nur mit Grundwerten anzeigen", () => {
       "montage",
       "boden",
     ] as const)
-      assert.equal(rechnerBereit(c, l), true, l);
-  });
-  test("Montage: eine Art mit Wert genügt", () => {
-    const c = structuredClone(config);
-    c.montage.innentuerMitZargeJeStueck = { von: 100, bis: 150 };
-    assert.equal(rechnerBereit(c, "montage"), true);
+      assert.ok(!/hinweis/.test(JSON.stringify(baueModell(config, l))), l);
   });
 });

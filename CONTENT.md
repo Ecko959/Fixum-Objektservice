@@ -484,3 +484,19 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
   gelöscht beim Schließen des Tabs).
 - **Faustregel zur Wohnfläche**: `allgemein.flaechenFaustregel` in der Config.
 - Einstieg: Menüpunkt "Preise" und Chip "Preis berechnen" im Startseiten-Hero.
+
+### Update Preisrechner (Preisliste vom Inhaber)
+
+- Alle Werte der neuen Preisliste stehen in `src/data/preise.config.json`.
+  "Preis auf Anfrage" nur noch bei: Umzug über 100 km, Umzug größer als
+  5 Zimmer/Haus, Flächen über den Höchstwerten. Besondere Verschmutzung
+  zeigt die Spanne für die Räumung plus Hinweis auf Sonderreinigung.
+- Detailfragen (Keller, Dachboden, Garage, Küche, Möbel, Türen) klappen
+  erst auf, wenn die Option angehakt ist; ohne Angabe gelten die
+  Standardwerte aus der Config.
+- Messie: Grundreinigung ist vorausgewählt, solange der Kunde die Reinigung
+  nicht selbst ändert.
+- Schallschutzwand gibt es nur mit Material über Fixum.
+- Leistungs-Icons: eigene, fein gezeichnete Motive (`karton`, `transporter`,
+  `platten`, `akkuschrauber`, `dielen`, `vorschlaghammer`) mit dünnerer
+  Linie, geraden Enden und spitzen Ecken (`feineIcons` in `src/data/icons.ts`).

@@ -33,34 +33,30 @@ const {
 } = Astro.props;
 
 type Option = { wert: string; label: string; hilfe?: string };
+type Gemeinsam = {
+  name: string;
+  label: string;
+  hilfe?: string;
+  /** Nur zeigen, wenn eine andere Angabe passt: "art=zwischenwand,dachschraege"
+      oder bei Ja/Nein-Fragen "keller=ja". */
+  zeigeWenn?: string;
+  /** Aufgeklappte Detailangabe unter einer Ja/Nein-Frage - eingerückt. */
+  detail?: boolean;
+};
 type Feld =
-  | {
+  | (Gemeinsam & {
       typ: "zahl";
-      name: string;
-      label: string;
       einheit?: string;
-      hilfe?: string;
       beispiel?: string;
       optional?: boolean;
-      zeigeWenn?: string;
-    }
-  | {
+    })
+  | (Gemeinsam & {
       typ: "auswahl";
-      name: string;
-      label: string;
       optionen: Option[];
       standard: string;
-      hilfe?: string;
       kompakt?: boolean;
-      zeigeWenn?: string;
-    }
-  | {
-      typ: "janein";
-      name: string;
-      label: string;
-      hilfe?: string;
-      zeigeWenn?: string;
-    };
+    })
+  | (Gemeinsam & { typ: "janein"; standard?: boolean });
 
 const etagen: Option[] = [
   { wert: "0", label: "EG" },
@@ -74,8 +70,28 @@ const etagen: Option[] = [
 const anzahl = (bis: number): Option[] =>
   Array.from({ length: bis + 1 }, (_, i) => ({
     wert: String(i),
-    label: String(i),
+    label: i === bis ? `${i} +` : String(i),
   }));
+
+const fuellgrad = (name: string, raum: string, zeigeWenn: string): Feld => ({
+  typ: "auswahl",
+  name,
+  label: `${raum}: wie voll?`,
+  standard: "voll",
+  kompakt: true,
+  detail: true,
+  zeigeWenn,
+  optionen: [
+    { wert: "wenig", label: "Wenig" },
+    { wert: "voll", label: "Voll" },
+  ],
+});
+
+const eilauftrag: Feld = {
+  typ: "janein",
+  name: "eilig",
+  label: "Eilauftrag: innerhalb von 48 Stunden",
+};
 
 const felder: Record<Leistung, Feld[]> = {
   entruempelung: [
@@ -107,8 +123,7 @@ const felder: Record<Leistung, Feld[]> = {
         {
           wert: "stark",
           label: "Stark möbliert",
-          hilfe:
-            "Sehr viel Hausrat, volle Schränke, volle Keller oder Dachböden",
+          hilfe: "Sehr viel Hausrat, volle Schränke und Räume",
         },
         {
           wert: "messie",
@@ -132,14 +147,105 @@ const felder: Record<Leistung, Feld[]> = {
       ],
     },
     { typ: "janein", name: "keller", label: "Keller mit räumen" },
+    {
+      typ: "zahl",
+      name: "kellerFlaeche",
+      label: "Kellerfläche",
+      einheit: "m²",
+      beispiel: "ca. 10",
+      optional: true,
+      detail: true,
+      zeigeWenn: "keller=ja",
+    },
+    fuellgrad("kellerFuell", "Keller", "keller=ja"),
     { typ: "janein", name: "dachboden", label: "Dachboden mit räumen" },
+    {
+      typ: "zahl",
+      name: "dachbodenFlaeche",
+      label: "Dachbodenfläche",
+      einheit: "m²",
+      beispiel: "ca. 15",
+      optional: true,
+      detail: true,
+      zeigeWenn: "dachboden=ja",
+    },
+    fuellgrad("dachbodenFuell", "Dachboden", "dachboden=ja"),
+    {
+      typ: "auswahl",
+      name: "dachbodenZugang",
+      label: "Dachboden: wie kommt man hoch?",
+      standard: "treppe",
+      detail: true,
+      zeigeWenn: "dachboden=ja",
+      optionen: [
+        { wert: "treppe", label: "Über eine Treppe" },
+        { wert: "leiter", label: "Nur Leiter oder Bodenluke" },
+      ],
+    },
     { typ: "janein", name: "garage", label: "Garage oder Schuppen mit räumen" },
+    {
+      typ: "auswahl",
+      name: "garageGroesse",
+      label: "Garage/Schuppen: wie groß?",
+      standard: "klein",
+      detail: true,
+      zeigeWenn: "garage=ja",
+      optionen: [
+        { wert: "klein", label: "Klein", hilfe: "Gartenhaus, Schuppen" },
+        { wert: "gross", label: "Groß", hilfe: "Garage, Doppelgarage" },
+      ],
+    },
+    fuellgrad("garageFuell", "Garage/Schuppen", "garage=ja"),
     { typ: "janein", name: "kueche", label: "Küche oder Einbauten abbauen" },
     {
       typ: "janein",
+      name: "kuechenzeile",
+      label: "Küchenzeile abbauen",
+      standard: true,
+      detail: true,
+      zeigeWenn: "kueche=ja",
+    },
+    {
+      typ: "auswahl",
+      name: "einbauschraenke",
+      label: "Wie viele Einbauschränke?",
+      standard: "0",
+      kompakt: true,
+      detail: true,
+      zeigeWenn: "kueche=ja",
+      optionen: anzahl(6),
+    },
+    {
+      typ: "auswahl",
       name: "reinigung",
-      label: "Endreinigung",
-      hilfe: "Sonst übergeben wir besenrein.",
+      label: "Reinigung danach?",
+      standard: "keine",
+      optionen: [
+        { wert: "keine", label: "Keine", hilfe: "Besenreine Übergabe" },
+        {
+          wert: "grund",
+          label: "Grundreinigung",
+          hilfe: "Böden, Fenster, Bad und Küche",
+        },
+        {
+          wert: "tief",
+          label: "Tiefenreinigung",
+          hilfe: "Gründlich, auch Fugen und Ecken",
+        },
+      ],
+    },
+    {
+      typ: "janein",
+      name: "verschmutzung",
+      label: "Besondere Verschmutzung",
+      hilfe: "Zum Beispiel Fäkalien, Ungeziefer, Schimmel oder starker Geruch.",
+    },
+    eilauftrag,
+    {
+      typ: "janein",
+      name: "halteverbot",
+      label: "Halteverbotszone einrichten",
+      hilfe: "Wenn vor dem Haus kein Platz für den Transporter ist.",
     },
   ],
   umzug: [
@@ -151,8 +257,12 @@ const felder: Record<Leistung, Feld[]> = {
       standard: "2",
       kompakt: true,
       optionen: [
-        ...["1", "2", "3", "4", "5", "6"].map((z) => ({ wert: z, label: z })),
-        { wert: "99", label: "mehr" },
+        { wert: "1", label: "1" },
+        { wert: "2", label: "2" },
+        { wert: "3", label: "3" },
+        { wert: "4", label: "4" },
+        { wert: "5", label: "5 / Haus" },
+        { wert: "99", label: "größer" },
       ],
     },
     {
@@ -186,21 +296,48 @@ const felder: Record<Leistung, Feld[]> = {
       name: "km",
       label: "Wie weit ist es ungefähr?",
       einheit: "km",
-      beispiel: "z. B. 30",
-      hilfe: "Von der alten zur neuen Wohnung. Emden–Norden sind etwa 30 km.",
+      beispiel: "z. B. 10",
+      hilfe: "Von der alten zur neuen Wohnung, einfache Strecke.",
     },
     { typ: "janein", name: "moebel", label: "Möbel ab- und wieder aufbauen" },
-    { typ: "janein", name: "kueche", label: "Küche ab- und wieder aufbauen" },
+    {
+      typ: "zahl",
+      name: "moebelZimmer",
+      label: "Möbel in wie vielen Zimmern?",
+      beispiel: "wie Zimmeranzahl",
+      optional: true,
+      detail: true,
+      zeigeWenn: "moebel=ja",
+    },
+    {
+      typ: "janein",
+      name: "kueche",
+      label: "Küche ab- und wieder aufbauen",
+      hilfe: "Ohne Anschlüsse - die übernimmt ein Fachbetrieb.",
+    },
     {
       typ: "auswahl",
       name: "schwer",
       label: "Besonders schwere Stücke?",
-      hilfe: "Zum Beispiel Klavier, Tresor oder großer Kühlschrank.",
+      hilfe: "Klavier, Tresor, Side-by-Side-Kühlschrank, Massivholzmöbel.",
       standard: "0",
       kompakt: true,
       optionen: anzahl(5),
     },
     { typ: "janein", name: "entsorgung", label: "Alte Möbel entsorgen" },
+    eilauftrag,
+    {
+      typ: "auswahl",
+      name: "halteverbot",
+      label: "Halteverbotszone einrichten?",
+      hilfe: "Wenn vor dem Haus kein Platz für den Transporter ist.",
+      standard: "0",
+      optionen: [
+        { wert: "0", label: "Nicht nötig" },
+        { wert: "1", label: "An einer Adresse" },
+        { wert: "2", label: "An beiden Adressen" },
+      ],
+    },
   ],
   trockenbau: [
     {
@@ -249,6 +386,7 @@ const felder: Record<Leistung, Feld[]> = {
       name: "material",
       label: "Wer besorgt das Material?",
       standard: "fixum",
+      zeigeWenn: "art=zwischenwand,deckeAbhaengen,dachschraege,vorsatzschale",
       optionen: [
         { wert: "fixum", label: "Fixum besorgt alles" },
         { wert: "kunde", label: "Ich stelle das Material" },
@@ -285,6 +423,13 @@ const felder: Record<Leistung, Feld[]> = {
       zeigeWenn: "art=zwischenwand,deckeAbhaengen,dachschraege,vorsatzschale",
     },
     {
+      typ: "janein",
+      name: "doppelt",
+      label: "Doppelt beplankt",
+      hilfe: "Stabiler, z. B. für Hängeschränke oder schwere Regale.",
+      zeigeWenn: "art=zwischenwand,vorsatzschale",
+    },
+    {
       typ: "auswahl",
       name: "tueren",
       label: "Wie viele Türöffnungen?",
@@ -295,38 +440,58 @@ const felder: Record<Leistung, Feld[]> = {
     },
   ],
   montage: [
+    { typ: "janein", name: "tueren", label: "Innentüren mit Zarge einbauen" },
     {
-      typ: "auswahl",
-      name: "art",
-      label: "Was soll montiert werden?",
-      standard: "tuer",
-      optionen: [
-        { wert: "tuer", label: "Innentür mit Zarge" },
-        { wert: "moebel", label: "Möbel aufbauen" },
-        { wert: "kueche", label: "Küche aufbauen" },
-      ],
+      typ: "zahl",
+      name: "tuerAnzahl",
+      label: "Wie viele Türen?",
+      beispiel: "1",
+      detail: true,
+      zeigeWenn: "tueren=ja",
+    },
+    {
+      typ: "janein",
+      name: "tuerAusbau",
+      label: "Alte Türen ausbauen und entsorgen",
+      detail: true,
+      zeigeWenn: "tueren=ja",
+    },
+    { typ: "janein", name: "moebel", label: "Möbel aufbauen" },
+    {
+      typ: "zahl",
+      name: "moebelAnzahl",
+      label: "Wie viele Möbelstücke?",
+      beispiel: "z. B. 4",
+      hilfe: "Bett, Kommode, Regal ... Große Schränke bitte darunter angeben.",
+      detail: true,
+      zeigeWenn: "moebel=ja",
     },
     {
       typ: "zahl",
-      name: "anzahl",
-      label: "Wie viele Stück?",
-      beispiel: "z. B. 3",
-      hilfe: "Jede Tür, jeder Schrank, jedes Bett zählt einzeln.",
-      zeigeWenn: "art=tuer,moebel",
+      name: "grossschraenke",
+      label: "Große Schränke ab 3 Türen",
+      beispiel: "z. B. 1",
+      optional: true,
+      detail: true,
+      zeigeWenn: "moebel=ja",
     },
+    { typ: "janein", name: "kueche", label: "Küche aufbauen" },
     {
       typ: "zahl",
-      name: "meter",
+      name: "kuecheMeter",
       label: "Wie lang ist die Küche?",
       einheit: "m",
       beispiel: "z. B. 3,6",
       hilfe: "Gesamtlänge aller Küchenzeilen.",
-      zeigeWenn: "art=kueche",
+      detail: true,
+      zeigeWenn: "kueche=ja",
     },
     {
       typ: "janein",
-      name: "ausbau",
-      label: "Altes vorher ausbauen und entsorgen",
+      name: "kuecheAlt",
+      label: "Alte Küche abbauen und entsorgen",
+      detail: true,
+      zeigeWenn: "kueche=ja",
     },
   ],
   boden: [
@@ -342,13 +507,20 @@ const felder: Record<Leistung, Feld[]> = {
       name: "belag",
       label: "Welcher Belag?",
       standard: "laminat",
+      kompakt: true,
       optionen: [
-        { wert: "laminat", label: "Laminat" },
-        { wert: "vinyl", label: "Vinyl" },
+        { wert: "laminat", label: "Klick-Laminat" },
+        { wert: "vinyl", label: "Klick-Vinyl" },
         { wert: "teppich", label: "Teppich" },
       ],
     },
     { typ: "janein", name: "entfernen", label: "Alten Belag entfernen" },
+    {
+      typ: "janein",
+      name: "trittschall",
+      label: "Trittschalldämmung verlegen",
+      hilfe: "Bei Klick-Vinyl ist sie oft schon integriert.",
+    },
     {
       typ: "zahl",
       name: "leisten",
@@ -358,6 +530,20 @@ const felder: Record<Leistung, Feld[]> = {
       hilfe:
         "Ungefähr der Umfang der Räume. Leer lassen, wenn keine neuen Leisten.",
       optional: true,
+    },
+    {
+      typ: "auswahl",
+      name: "material",
+      label: "Wer besorgt den Belag?",
+      standard: "kunde",
+      optionen: [
+        { wert: "kunde", label: "Ich stelle das Material" },
+        {
+          wert: "fixum",
+          label: "Material über Fixum",
+          hilfe: "Wird nach Ihrer Auswahl dazugerechnet",
+        },
+      ],
     },
   ],
 };
@@ -371,6 +557,8 @@ const thema: Record<Leistung, string> = {
 };
 
 const hinweis: Partial<Record<Leistung, string>> = {
+  umzug:
+    "Umzugskartons stellen wir auf Wunsch leihweise. Größere Umzüge und Strecken über 100 km kalkulieren wir nach Besichtigung oder Fotos.",
   montage:
     "Ohne Elektro-, Gas- und Wasseranschlüsse. Diese koordinieren wir mit einem Fachbetrieb.",
   boden: "Parkett verlegen, schleifen oder versiegeln bieten wir nicht an.",
@@ -415,7 +603,7 @@ const Tag = eingebettet ? "div" : "section";
           <form class="rechner-form card" novalidate onsubmit="return false">
             {felder[leistung].map((f) => (
               <div
-                class:list={["rf", `rf--${f.typ}`]}
+                class:list={["rf", `rf--${f.typ}`, f.detail && "rf--detail"]}
                 data-zeige-wenn={f.zeigeWenn}
                 data-feld={f.name}
               >
@@ -490,6 +678,7 @@ const Tag = eingebettet ? "div" : "section";
                       type="checkbox"
                       name={f.name}
                       value="ja"
+                      checked={f.standard}
                     />
                     <span class="wahl-box">
                       <span class="wahl-haken" aria-hidden="true" />
@@ -512,6 +701,7 @@ const Tag = eingebettet ? "div" : "section";
             <p class="re-wert" data-ergebnis aria-live="polite">
               Bitte die Angaben links ausfüllen.
             </p>
+            <p class="re-zusatz" data-zusatz hidden />
             <p class="re-hinweis">
               <strong>
                 Unverbindlicher Richtwert. Verbindlicher Festpreis nach
@@ -566,6 +756,7 @@ const Tag = eingebettet ? "div" : "section";
     entpacke,
     ergebnisText,
     rechner,
+    zusatzText,
     type Ergebnis,
     type Leistung,
   } from "../lib/preisrechner";
@@ -600,7 +791,9 @@ const Tag = eingebettet ? "div" : "section";
         wurzel.querySelector<HTMLElement>(".rechner-ergebnis")!;
       const mini = wurzel.querySelector<HTMLElement>("[data-mini]")!;
       const miniWert = wurzel.querySelector<HTMLElement>("[data-mini-wert]")!;
-      const speicherKey = `fixum-rechner-${leistung}`;
+      const speicherKey = `fixum-rechner-v2-${leistung}`;
+      const zusatzEl = wurzel.querySelector<HTMLElement>("[data-zusatz]")!;
+      let reinigungBeruehrt = false;
       let gestartet = false;
       let letztesErgebnis = "";
       let timer: number | undefined;
@@ -620,18 +813,24 @@ const Tag = eingebettet ? "div" : "section";
         return e;
       };
 
-      /* Bedingte Fragen: data-zeige-wenn="art=zwischenwand,dachschraege" */
+      /* Bedingte Fragen: data-zeige-wenn="art=zwischenwand,dachschraege"
+         oder bei Ja/Nein-Fragen "keller=ja". */
+      const wertVon = (name: string) => {
+        const box = form.querySelector<HTMLInputElement>(
+          `input[type="checkbox"][name="${name}"]`,
+        );
+        if (box) return box.checked ? "ja" : "nein";
+        return (
+          form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)
+            ?.value ?? ""
+        );
+      };
       const sichtbarkeit = () => {
-        const e = eingaben();
         form
           .querySelectorAll<HTMLElement>("[data-zeige-wenn]")
           .forEach((feld) => {
             const [name, werte] = (feld.dataset.zeigeWenn || "").split("=");
-            const aktuell =
-              form.querySelector<HTMLInputElement>(
-                `input[name="${name}"]:checked`,
-              )?.value ?? String(e[name] ?? "");
-            feld.hidden = !werte.split(",").includes(aktuell);
+            feld.hidden = !werte.split(",").includes(wertVon(name));
           });
       };
 
@@ -757,6 +956,10 @@ const Tag = eingebettet ? "div" : "section";
         const text = ergebnisText(ergebnis);
         ausgabe.textContent = text;
         ausgabe.dataset.art = ergebnis.art;
+        const zusaetze =
+          "zusatz" in ergebnis && ergebnis.zusatz ? ergebnis.zusatz : [];
+        zusatzEl.textContent = zusaetze.map((z) => zusatzText[z]).join(" ");
+        zusatzEl.hidden = zusaetze.length === 0;
         hatErgebnis = ergebnis.art !== "unvollstaendig";
         miniWert.textContent = text;
         miniAnzeigen();
@@ -789,7 +992,23 @@ const Tag = eingebettet ? "div" : "section";
         }
       };
 
-      const beiEingabe = () => {
+      /* Entrümpelung: Bei Messie ist die Grundreinigung vorausgewählt
+         (abwählbar). Hat der Kunde die Reinigung selbst gewählt, bleibt
+         seine Wahl stehen. */
+      const messieReinigung = (ziel: EventTarget | null) => {
+        const feld = ziel as HTMLInputElement | null;
+        if (!feld || leistung !== "entruempelung") return;
+        if (feld.name === "reinigung") reinigungBeruehrt = true;
+        if (feld.name !== "zustand" || reinigungBeruehrt) return;
+        const wert = feld.value === "messie" ? "grund" : "keine";
+        const radio = form.querySelector<HTMLInputElement>(
+          `input[name="reinigung"][value="${wert}"]`,
+        );
+        if (radio) radio.checked = true;
+      };
+
+      const beiEingabe = (event?: Event) => {
+        if (event?.type === "change") messieReinigung(event.target);
         if (!gestartet) {
           gestartet = true;
           melde("rechner_gestartet", { rechner: leistung });
@@ -829,6 +1048,18 @@ const Tag = eingebettet ? "div" : "section";
 
   .rf[hidden] {
     display: none;
+  }
+
+  /* Aufgeklappte Details unter einer Ja/Nein-Frage */
+  .rf--detail {
+    margin-top: -0.75rem;
+    margin-left: 0.75rem;
+    padding: 0.25rem 0 0.25rem 1rem;
+    border-left: 2px solid var(--line-strong);
+  }
+
+  .rf--detail .rf-frage {
+    font-size: 0.9375rem;
   }
 
   .rf fieldset {
@@ -1057,6 +1288,18 @@ const Tag = eingebettet ? "div" : "section";
     font-size: 1.0625rem;
     font-weight: 600;
     color: var(--on-dark-soft);
+  }
+
+  .re-zusatz {
+    padding: 0.6rem 0.8rem;
+    border-left: 3px solid var(--blue-light);
+    font-size: 0.9375rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .re-zusatz[hidden] {
+    display: none;
   }
 
   .re-hinweis strong {

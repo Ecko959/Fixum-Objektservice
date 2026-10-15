@@ -10,6 +10,7 @@
 import config from "./preise.config.json";
 
 const ab = config.abPreise;
+const nahbereichKm = config.umzug.nahbereichKm.wert;
 
 /** Steht direkt neben jedem Ab-Preis. Wortlaut vom Inhaber vorgegeben. */
 export const preisHinweis =
@@ -54,8 +55,8 @@ export const preise = {
     einheit: "m² Wohnfläche",
   },
   umzug: {
-    leistung: "Umzug einer 2-Zimmer-Wohnung im Nahbereich",
-    zusatz: "Zum Beispiel Emden–Norden, mit Transporter bis 3,5 t.",
+    leistung: `Umzug einer 2-Zimmer-Wohnung bis ${nahbereichKm} km`,
+    zusatz: "Im Nahbereich, mit Transporter bis 3,5 t, Tragen und Fahrt.",
     betrag: `ab ${zahl(ab.umzugZweiZimmerNahbereich)} €`,
     ab: ab.umzugZweiZimmerNahbereich,
   },

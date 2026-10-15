@@ -54,9 +54,50 @@ export const iconPaths = {
   snow: "M12 3.4v17.2M4.6 7.7l14.8 8.6M19.4 7.7 4.6 16.3M12 7.4 9.7 5.1M12 7.4l2.3-2.3M12 16.6l-2.3 2.3M12 16.6l2.3 2.3",
   home: "M3.8 10.6 12 3.9l8.2 6.7M6.3 9.6v10a.9.9 0 0 0 .9.9h9.6a.9.9 0 0 0 .9-.9v-10M10 20.5v-5.2h4v5.2",
 
+  /* --- Leistungsmotive, fein gezeichnet ---
+     Geometrisch auf dem 24er-Raster, gerade Linien statt weicher Bögen.
+     Werden mit dünnerer Linie, geraden Enden und spitzen Ecken gerendert
+     (siehe feineIcons unten). */
+  /* Offener Umzugskarton, Pfeil nach oben: es kommt raus */
+  karton:
+    "M5.5 11h13v9.5h-13ZM5.5 11 3 7.5h6.5L12 11M18.5 11 21 7.5h-6.5L12 11M12 8.5V2.5M9.75 4.75 12 2.5l2.25 2.25",
+  /* Transporter, Seitenansicht */
+  transporter:
+    "M2.5 16.5v-10h12.5v10M15 9.5h3.6l2.9 3.4v3.6h-1M2.5 16.5h2.75M9.25 16.5h7.5M7.25 18.75a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5ZM18.75 18.75a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Z",
+  /* Ständerwerk, zum Teil mit Gipskartonplatten beplankt */
+  platten:
+    "M2.5 3.5h19M2.5 20.5h19M4 3.5v17h7.5v-17M5.75 7.5l4-2M5.75 12l4-2M5.75 16.5l4-2M15.75 3.5v17M20 3.5v17M11.5 12h8.5",
+  /* Akkuschrauber */
+  akkuschrauber:
+    "M5 5.5h10v5H5ZM15 7h2.5v2H15M17.5 8h4M8 10.5l-1 7M11.5 10.5l-1 7M5 17.5h7.5v3H5Z",
+  /* Dielen bzw. Laminat in Perspektive */
+  dielen:
+    "M2.5 19.5 6.5 6.5h11l4 13ZM8.83 19.5l1.34-13M15.17 19.5l-1.34-13M5.12 11h4.59M9.29 15h5.42M14.14 9.5h4.28",
+  /* Vorschlaghammer */
+  vorschlaghammer:
+    "M13.23 3.69 20.31 10.77 16.77 14.31 9.69 7.23ZM13.23 10.77 3.5 20.5",
+
   /* --- Sonstiges --- */
   pen: "M4 20h4L19.6 8.4a2.7 2.7 0 0 0-3.8-3.8L4 16.2V20Zm10.7-12.7 3.8 3.8",
   arrow: "M4.5 12h15m-6.2-6.2L19.5 12l-6.2 6.2",
 } as const;
 
 export type IconName = keyof typeof iconPaths;
+
+/** Leistungsmotive: dünnere Linie, gerade Enden, spitze Ecken - wirkt
+    präziser und ruhiger als die weich gerundete Standarddarstellung. */
+export const feineIcons: ReadonlySet<IconName> = new Set<IconName>([
+  "karton",
+  "transporter",
+  "platten",
+  "akkuschrauber",
+  "dielen",
+  "vorschlaghammer",
+  "home",
+  "key",
+  "layers",
+  "pen",
+  "clipboard",
+  "snow",
+  "building",
+]);

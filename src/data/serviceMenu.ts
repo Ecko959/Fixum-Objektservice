@@ -18,7 +18,7 @@ export const serviceMenuGroups: Array<{
       {
         label: "Entrümpelung",
         href: "/entruempelung/",
-        icon: "crate",
+        icon: "karton",
         description: "Wohnung, Haus, Keller, Dachboden, Garage.",
       },
       {
@@ -36,7 +36,7 @@ export const serviceMenuGroups: Array<{
       {
         label: "Umzüge & Transporte",
         href: "/umzug/",
-        icon: "truck",
+        icon: "transporter",
         description: `Privat, Gewerbe und Objektfahrten bis ${site.maxTonnage}.`,
       },
     ],
@@ -54,13 +54,13 @@ export const serviceMenuGroups: Array<{
       {
         label: "Entkernung",
         href: "/entkernung/",
-        icon: "hammer",
+        icon: "vorschlaghammer",
         description: "Nicht-tragender Rückbau, sortenrein getrennt.",
       },
       {
         label: "Trockenbau",
         href: "/trockenbau/",
-        icon: "wall",
+        icon: "platten",
         description: "Wände, Decken, Dachschrägen, Q1 bis Q3.",
       },
       {
@@ -78,7 +78,7 @@ export const serviceMenuGroups: Array<{
       {
         label: "Boden & Türen",
         href: "/bodenverlegung/",
-        icon: "door",
+        icon: "dielen",
         description: "Laminat, Vinyl, Teppich, Türen und Zargen.",
       },
     ],
@@ -89,7 +89,7 @@ export const serviceMenuGroups: Array<{
       {
         label: "Möbel- & Küchenmontage",
         href: "/kuechenmontage/",
-        icon: "wrench",
+        icon: "akkuschrauber",
         description: "Ohne Elektro-, Gas- und Wasseranschlüsse.",
       },
       {
