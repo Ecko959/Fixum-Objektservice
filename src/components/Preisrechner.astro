@@ -915,12 +915,18 @@ const Tag = eingebettet ? "div" : "section";
       let karteSichtbar = false;
       let hatErgebnis = false;
       const miniAnzeigen = () => {
-        mini.hidden = !(
+        const zeigen =
           schmal.matches &&
           formSichtbar &&
           !karteSichtbar &&
           hatErgebnis &&
-          !wurzel.closest<HTMLElement>("[hidden]")
+          !wurzel.closest<HTMLElement>("[hidden]");
+        mini.hidden = !zeigen;
+        /* Nur eine Leiste am unteren Rand: Solange der Richtwert steht,
+           tritt die Anruf-/WhatsApp-Leiste zurück. */
+        document.documentElement.toggleAttribute(
+          "data-rechner-mini",
+          Boolean(document.querySelector(".rechner-mini:not([hidden])")),
         );
       };
       if ("IntersectionObserver" in window) {
@@ -1319,21 +1325,29 @@ const Tag = eingebettet ? "div" : "section";
   }
 
   /* ---- Mitlaufender Richtwert (nur Handy/Tablet) ---- */
+  /* Fest am unteren Rand angedockt, volle Breite - wie die
+     Kontaktleiste, die solange ausgeblendet wird (siehe StickyCallBar).
+     So schwebt nichts mitten im Bild, auch nicht in In-App-Browsern
+     (Instagram, Facebook), in denen die Kontaktleiste fehlen kann.
+     Kein transform/filter: iOS würde die Leiste sonst beim Ein- und
+     Ausfahren der Adressleiste nicht mitführen. */
   .rechner-mini {
     position: fixed;
     z-index: 40;
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    padding: 0.6rem 0.6rem 0.6rem 1rem;
-    border-radius: var(--radius-md);
+    padding: 0.65rem calc(var(--gutter) + env(safe-area-inset-right))
+      calc(0.65rem + env(safe-area-inset-bottom))
+      calc(var(--gutter) + env(safe-area-inset-left));
+    border-top: 1px solid var(--on-dark-hairline);
     color: #fff;
     background: var(--navy-deep);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 -6px 24px rgba(10, 23, 48, 0.18);
   }
 
   .rechner-mini[hidden] {
@@ -1378,13 +1392,6 @@ const Tag = eingebettet ? "div" : "section";
   .rm-btn:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 2px;
-  }
-
-  @media (max-width: 767px) {
-    /* Über der festen Kontaktleiste */
-    .rechner-mini {
-      bottom: calc(var(--sticky-call-h) + env(safe-area-inset-bottom) + 0.5rem);
-    }
   }
 
   @media (min-width: 901px) {
