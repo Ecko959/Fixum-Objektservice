@@ -95,10 +95,20 @@ if (breadcrumbs.length) {
   pageNode.breadcrumb = { "@id": `${canonicalUrl}#breadcrumb` };
 }
 
+/* Seitenname im Suchergebnis ("Fixum Objektservice" statt der Domain):
+   Google liest ihn aus dem WebSite-Knoten der Startseite. Dort steht er
+   deshalb als eigener, alleinstehender JSON-LD-Block - so, wie Googles
+   Dokumentation es zeigt -, statt im @graph zu stecken. Auf allen anderen
+   Seiten bleibt er Teil des Graphen. */
+const istStartseite = path === "/";
+const websiteJsonLd = istStartseite
+  ? JSON.stringify({ "@context": "https://schema.org", ...websiteSchema })
+  : undefined;
+
 const graph: Record<string, unknown>[] = [
   logoSchema,
   businessSchema,
-  websiteSchema,
+  ...(istStartseite ? [] : [websiteSchema]),
   pageNode,
   ...(breadcrumbs.length
     ? [
@@ -185,6 +195,8 @@ const jsonLd = JSON.stringify({
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:site_name" content={site.name} />
+    <meta name="application-name" content={site.name} />
+    <meta name="apple-mobile-web-app-title" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
@@ -238,6 +250,11 @@ const jsonLd = JSON.stringify({
     <meta name="theme-color" content="#0A1730" />
     <meta name="color-scheme" content="light" />
 
+    {
+      websiteJsonLd && (
+        <script is:inline type="application/ld+json" set:html={websiteJsonLd} />
+      )
+    }
     <script is:inline type="application/ld+json" set:html={jsonLd} />
   </head>
   <body>

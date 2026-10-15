@@ -147,7 +147,9 @@ export const websiteSchema = {
   "@id": ids.website,
   url: `${site.domain}/`,
   name: site.name,
-  alternateName: ["Fixum", "Fixum Objektservice Emden"],
+  /* Nur echte Kurzform. Varianten mit Ort ("... Emden") liest Google als
+     Keyword-Zusatz und nimmt dann eher die Domain als Seitennamen. */
+  alternateName: "Fixum",
   inLanguage: "de-DE",
   publisher: { "@id": ids.business },
 };

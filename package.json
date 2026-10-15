@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "build:referenzen": "node scripts/build-reference-placeholders.mjs",
     "build:logos": "node scripts/build-logo-variants.mjs",
-    "test": "node --test tests/*.test.ts"
+    "test": "node --test tests/*.test.ts",
+    "build:favicons": "node scripts/build-favicons.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
