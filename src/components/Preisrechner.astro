@@ -93,6 +93,194 @@ const eilauftrag: Feld = {
   label: "Eilauftrag: innerhalb von 48 Stunden",
 };
 
+/* Küchenmontage - dieselben Fragen in der Montage ("Küche aufbauen") und im
+   Umzug ("Küche ab- und aufbauen"). Lieferzustand, alte Küche und Etage
+   fragt nur die Montage; im Umzug gilt die Etage des Einzugs. */
+const kuechenFelder = (variante: "montage" | "umzug"): Feld[] => {
+  const k = "kueche=ja";
+  const platte = "arbeitsplatte=ja";
+  return [
+    {
+      typ: "auswahl",
+      name: "kuecheForm",
+      label: "Küchenform",
+      standard: "zeile",
+      detail: true,
+      zeigeWenn: k,
+      optionen: [
+        { wert: "zeile", label: "Gerade Zeile" },
+        { wert: "l", label: "L-Form" },
+        { wert: "u", label: "U-Form" },
+      ],
+    },
+    {
+      typ: "janein",
+      name: "kochinsel",
+      label: "Mit Kochinsel",
+      detail: true,
+      zeigeWenn: k,
+    },
+    {
+      typ: "zahl",
+      name: "kuecheMeter",
+      label: "Länge der Unterschränke",
+      einheit: "m",
+      beispiel: "z. B. 3,6",
+      hilfe: "Gesamtlänge aller Zeilen, ohne Kochinsel.",
+      detail: true,
+      zeigeWenn: k,
+    },
+    ...(variante === "montage"
+      ? ([
+          {
+            typ: "auswahl",
+            name: "lieferzustand",
+            label: "Wie kommen die Schränke?",
+            standard: "fertig",
+            detail: true,
+            zeigeWenn: k,
+            optionen: [
+              { wert: "fertig", label: "Fertig montiert" },
+              {
+                wert: "bausatz",
+                label: "Als Bausatz",
+                hilfe: "Zum Selbstaufbau, z. B. IKEA",
+              },
+            ],
+          },
+        ] as Feld[])
+      : []),
+    {
+      typ: "auswahl",
+      name: "haengeschraenke",
+      label: "Hängeschränke?",
+      standard: "keine",
+      detail: true,
+      zeigeWenn: k,
+      optionen: [
+        { wert: "keine", label: "Keine" },
+        { wert: "gleich", label: "Ja, auf ganzer Länge" },
+        {
+          wert: "halb",
+          label: "Ja, teilweise",
+          hilfe: "Etwa auf halber Länge",
+        },
+      ],
+    },
+    {
+      typ: "auswahl",
+      name: "hochschraenke",
+      label: "Hochschränke",
+      hilfe: "Zum Beispiel für Backofen oder Kühlschrank.",
+      standard: "0",
+      kompakt: true,
+      detail: true,
+      zeigeWenn: k,
+      optionen: anzahl(4),
+    },
+    {
+      typ: "janein",
+      name: "arbeitsplatte",
+      label: "Arbeitsplatte zuschneiden und montieren",
+      hilfe: "Nicht anhaken, wenn der Küchenhändler sie fertig liefert.",
+      detail: true,
+      zeigeWenn: k,
+    },
+    {
+      typ: "auswahl",
+      name: "plattenMaterial",
+      label: "Material der Arbeitsplatte",
+      standard: "holz",
+      detail: true,
+      zeigeWenn: platte,
+      optionen: [
+        { wert: "holz", label: "Holz oder Schichtstoff" },
+        {
+          wert: "stein",
+          label: "Stein",
+          hilfe: "Granit, Quarz, Keramik - nur montieren, nicht zuschneiden",
+        },
+      ],
+    },
+    {
+      typ: "auswahl",
+      name: "ausschnitte",
+      label: "Ausschnitte in der Arbeitsplatte",
+      hilfe: "Für Spüle und Kochfeld.",
+      standard: "0",
+      kompakt: true,
+      detail: true,
+      zeigeWenn: platte,
+      optionen: anzahl(4),
+    },
+    {
+      typ: "auswahl",
+      name: "ecken",
+      label: "Eckverbindungen der Arbeitsplatte",
+      hilfe: "Bei L-Form 1, bei U-Form 2 - schon vorausgewählt.",
+      standard: "0",
+      kompakt: true,
+      detail: true,
+      zeigeWenn: platte,
+      optionen: [
+        { wert: "0", label: "0" },
+        { wert: "1", label: "1" },
+        { wert: "2", label: "2" },
+        { wert: "3", label: "3" },
+      ],
+    },
+    {
+      typ: "auswahl",
+      name: "geraete",
+      label: "Einbaugeräte einsetzen",
+      hilfe:
+        "Backofen, Geschirrspüler, Kühlschrank, Dunstabzug - ohne Anschluss.",
+      standard: "0",
+      kompakt: true,
+      detail: true,
+      zeigeWenn: k,
+      optionen: anzahl(6),
+    },
+    {
+      typ: "zahl",
+      name: "nischeMeter",
+      label: "Nischenrückwand oder Wandabschlussleiste",
+      einheit: "m",
+      beispiel: "z. B. 3",
+      optional: true,
+      detail: true,
+      zeigeWenn: k,
+    },
+    ...(variante === "montage"
+      ? ([
+          {
+            typ: "janein",
+            name: "kuecheAlt",
+            label: "Alte Küche vorher abbauen und entsorgen",
+            detail: true,
+            zeigeWenn: k,
+          },
+          {
+            typ: "auswahl",
+            name: "kuecheEtage",
+            label: "Küche: in welcher Etage, ohne Aufzug?",
+            hilfe: "Mit Aufzug bitte EG wählen.",
+            standard: "0",
+            kompakt: true,
+            detail: true,
+            zeigeWenn: k,
+            optionen: [
+              { wert: "0", label: "EG" },
+              { wert: "1", label: "1." },
+              { wert: "2", label: "2." },
+              { wert: "3", label: "3. +" },
+            ],
+          },
+        ] as Feld[])
+      : []),
+  ];
+};
+
 const felder: Record<Leistung, Feld[]> = {
   entruempelung: [
     {
@@ -315,6 +503,7 @@ const felder: Record<Leistung, Feld[]> = {
       label: "Küche ab- und wieder aufbauen",
       hilfe: "Ohne Anschlüsse - die übernimmt ein Fachbetrieb.",
     },
+    ...kuechenFelder("umzug"),
     {
       typ: "auswahl",
       name: "schwer",
@@ -476,23 +665,7 @@ const felder: Record<Leistung, Feld[]> = {
       zeigeWenn: "moebel=ja",
     },
     { typ: "janein", name: "kueche", label: "Küche aufbauen" },
-    {
-      typ: "zahl",
-      name: "kuecheMeter",
-      label: "Wie lang ist die Küche?",
-      einheit: "m",
-      beispiel: "z. B. 3,6",
-      hilfe: "Gesamtlänge aller Küchenzeilen.",
-      detail: true,
-      zeigeWenn: "kueche=ja",
-    },
-    {
-      typ: "janein",
-      name: "kuecheAlt",
-      label: "Alte Küche abbauen und entsorgen",
-      detail: true,
-      zeigeWenn: "kueche=ja",
-    },
+    ...kuechenFelder("montage"),
   ],
   boden: [
     {
@@ -558,9 +731,9 @@ const thema: Record<Leistung, string> = {
 
 const hinweis: Partial<Record<Leistung, string>> = {
   umzug:
-    "Umzugskartons stellen wir auf Wunsch leihweise. Größere Umzüge und Strecken über 100 km kalkulieren wir nach Besichtigung oder Fotos.",
+    "Umzugskartons stellen wir auf Wunsch leihweise. Größere Umzüge und Strecken über 100 km kalkulieren wir nach Besichtigung oder Fotos. Küchen ohne Anschlüsse; Steinarbeitsplatten (Granit, Quarz, Keramik) nur montieren, nicht zuschneiden.",
   montage:
-    "Ohne Elektro-, Gas- und Wasseranschlüsse. Diese koordinieren wir mit einem Fachbetrieb.",
+    "Ohne Elektro-, Gas- und Wasseranschlüsse. Diese koordinieren wir mit einem Fachbetrieb. Steinarbeitsplatten (Granit, Quarz, Keramik) nur montieren, nicht zuschneiden.",
   boden: "Parkett verlegen, schleifen oder versiegeln bieten wir nicht an.",
 };
 
@@ -735,18 +908,6 @@ const Tag = eingebettet ? "div" : "section";
           </aside>
         </div>
       </div>
-
-      {/* Handy: Richtwert läuft beim Ausfüllen unten mit, solange die
-       Ergebniskarte nicht zu sehen ist. */}
-      <div class="rechner-mini" data-mini hidden>
-        <span class="rm-text">
-          <span class="rm-label">Ihr Richtwert</span>
-          <span class="rm-wert" data-mini-wert />
-        </span>
-        <button type="button" class="rm-btn" data-mini-zum>
-          Ansehen
-        </button>
-      </div>
     </Tag>
   )
 }
@@ -754,6 +915,7 @@ const Tag = eingebettet ? "div" : "section";
 <script>
   import {
     entpacke,
+    eckenJeForm,
     ergebnisText,
     rechner,
     zusatzText,
@@ -787,11 +949,7 @@ const Tag = eingebettet ? "div" : "section";
       const waLink = wurzel.querySelector<HTMLAnchorElement>(
         '[data-anfrage="whatsapp"]',
       )!;
-      const ergebnisKarte =
-        wurzel.querySelector<HTMLElement>(".rechner-ergebnis")!;
-      const mini = wurzel.querySelector<HTMLElement>("[data-mini]")!;
-      const miniWert = wurzel.querySelector<HTMLElement>("[data-mini-wert]")!;
-      const speicherKey = `fixum-rechner-v2-${leistung}`;
+      const speicherKey = `fixum-rechner-v3-${leistung}`;
       const zusatzEl = wurzel.querySelector<HTMLElement>("[data-zusatz]")!;
       let reinigungBeruehrt = false;
       let gestartet = false;
@@ -816,6 +974,12 @@ const Tag = eingebettet ? "div" : "section";
       /* Bedingte Fragen: data-zeige-wenn="art=zwischenwand,dachschraege"
          oder bei Ja/Nein-Fragen "keller=ja". */
       const wertVon = (name: string) => {
+        /* Ist die Frage selbst ausgeblendet, zählt ihre Antwort nicht -
+           so klappen verschachtelte Details mit ihrer Oberfrage zu. */
+        const quelle = form
+          .querySelector<HTMLInputElement>(`input[name="${name}"]`)
+          ?.closest<HTMLElement>("[data-feld]");
+        if (quelle?.hidden) return "";
         const box = form.querySelector<HTMLInputElement>(
           `input[type="checkbox"][name="${name}"]`,
         );
@@ -909,52 +1073,6 @@ const Tag = eingebettet ? "div" : "section";
         });
       };
 
-      /* Mitlaufender Richtwert auf dem Handy */
-      const schmal = window.matchMedia("(max-width: 900px)");
-      let formSichtbar = false;
-      let karteSichtbar = false;
-      let hatErgebnis = false;
-      const miniAnzeigen = () => {
-        const zeigen =
-          schmal.matches &&
-          formSichtbar &&
-          !karteSichtbar &&
-          hatErgebnis &&
-          !wurzel.closest<HTMLElement>("[hidden]");
-        mini.hidden = !zeigen;
-        /* Nur eine Leiste am unteren Rand: Solange der Richtwert steht,
-           tritt die Anruf-/WhatsApp-Leiste zurück. */
-        document.documentElement.toggleAttribute(
-          "data-rechner-mini",
-          Boolean(document.querySelector(".rechner-mini:not([hidden])")),
-        );
-      };
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver((eintraege) => {
-          eintraege.forEach((e) => {
-            if (e.target === form) formSichtbar = e.isIntersecting;
-            else karteSichtbar = e.isIntersecting;
-          });
-          miniAnzeigen();
-        }).observe(form);
-        new IntersectionObserver(
-          (eintraege) => {
-            karteSichtbar = eintraege[0].isIntersecting;
-            miniAnzeigen();
-          },
-          { threshold: 0.35 },
-        ).observe(ergebnisKarte);
-      }
-      schmal.addEventListener?.("change", miniAnzeigen);
-      wurzel
-        .querySelector<HTMLButtonElement>("[data-mini-zum]")!
-        .addEventListener("click", () => {
-          ergebnisKarte.scrollIntoView({ behavior: "smooth", block: "center" });
-          ergebnisKarte
-            .querySelector<HTMLElement>("a")
-            ?.focus({ preventScroll: true });
-        });
-
       const aktualisiere = () => {
         sichtbarkeit();
         const fn = rechner[leistung];
@@ -966,9 +1084,6 @@ const Tag = eingebettet ? "div" : "section";
           "zusatz" in ergebnis && ergebnis.zusatz ? ergebnis.zusatz : [];
         zusatzEl.textContent = zusaetze.map((z) => zusatzText[z]).join(" ");
         zusatzEl.hidden = zusaetze.length === 0;
-        hatErgebnis = ergebnis.art !== "unvollstaendig";
-        miniWert.textContent = text;
-        miniAnzeigen();
 
         const nachricht = zusammenfassung(
           ergebnis.art === "unvollstaendig" ? "noch offen" : text,
@@ -998,12 +1113,21 @@ const Tag = eingebettet ? "div" : "section";
         }
       };
 
-      /* Entrümpelung: Bei Messie ist die Grundreinigung vorausgewählt
-         (abwählbar). Hat der Kunde die Reinigung selbst gewählt, bleibt
+      /* Vorauswahlen: Küchenform -> Eckverbindungen der Arbeitsplatte.
+         Entrümpelung: Bei Messie ist die Grundreinigung vorausgewählt
+         (abwählbar); hat der Kunde die Reinigung selbst gewählt, bleibt
          seine Wahl stehen. */
-      const messieReinigung = (ziel: EventTarget | null) => {
+      const vorauswahl = (ziel: EventTarget | null) => {
         const feld = ziel as HTMLInputElement | null;
-        if (!feld || leistung !== "entruempelung") return;
+        if (!feld) return;
+        if (feld.name === "kuecheForm") {
+          /* Küchenform: Eckverbindungen der Arbeitsplatte vorauswählen */
+          const ecken = form.querySelector<HTMLInputElement>(
+            `input[name="ecken"][value="${eckenJeForm[feld.value] ?? 0}"]`,
+          );
+          if (ecken) ecken.checked = true;
+        }
+        if (leistung !== "entruempelung") return;
         if (feld.name === "reinigung") reinigungBeruehrt = true;
         if (feld.name !== "zustand" || reinigungBeruehrt) return;
         const wert = feld.value === "messie" ? "grund" : "keine";
@@ -1014,7 +1138,7 @@ const Tag = eingebettet ? "div" : "section";
       };
 
       const beiEingabe = (event?: Event) => {
-        if (event?.type === "change") messieReinigung(event.target);
+        if (event?.type === "change") vorauswahl(event.target);
         if (!gestartet) {
           gestartet = true;
           melde("rechner_gestartet", { rechner: leistung });
@@ -1322,82 +1446,6 @@ const Tag = eingebettet ? "div" : "section";
     display: grid;
     gap: 0.6rem;
     margin-top: 0.5rem;
-  }
-
-  /* ---- Mitlaufender Richtwert (nur Handy/Tablet) ---- */
-  /* Fest am unteren Rand angedockt, volle Breite - wie die
-     Kontaktleiste, die solange ausgeblendet wird (siehe StickyCallBar).
-     So schwebt nichts mitten im Bild, auch nicht in In-App-Browsern
-     (Instagram, Facebook), in denen die Kontaktleiste fehlen kann.
-     Kein transform/filter: iOS würde die Leiste sonst beim Ein- und
-     Ausfahren der Adressleiste nicht mitführen. */
-  .rechner-mini {
-    position: fixed;
-    z-index: 40;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.65rem calc(var(--gutter) + env(safe-area-inset-right))
-      calc(0.65rem + env(safe-area-inset-bottom))
-      calc(var(--gutter) + env(safe-area-inset-left));
-    border-top: 1px solid var(--on-dark-hairline);
-    color: #fff;
-    background: var(--navy-deep);
-    box-shadow: 0 -6px 24px rgba(10, 23, 48, 0.18);
-  }
-
-  .rechner-mini[hidden] {
-    display: none;
-  }
-
-  .rm-text {
-    display: grid;
-    min-width: 0;
-  }
-
-  .rm-label {
-    font-family: var(--font-utility);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--amber);
-  }
-
-  .rm-wert {
-    font-size: 1.0625rem;
-    font-weight: 800;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .rm-btn {
-    flex: none;
-    min-height: 44px;
-    padding: 0 1rem;
-    border: 0;
-    border-radius: var(--radius-pill);
-    font: inherit;
-    font-weight: 700;
-    color: var(--navy-deep);
-    background: var(--amber);
-    cursor: pointer;
-  }
-
-  .rm-btn:focus-visible {
-    outline: 3px solid #fff;
-    outline-offset: 2px;
-  }
-
-  @media (min-width: 901px) {
-    .rechner-mini {
-      display: none !important;
-    }
   }
 
   @media (max-width: 900px) {

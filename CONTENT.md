@@ -478,8 +478,8 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
   Umzug = Preis pro Zimmer + Nahbereich-km; Trockenbau = Zwischenwand,
   normales Spachteln, Baustelleneinrichtung; Montage = Tür, Möbel oder
   Küche; Boden = Verlegepreis.
-- **Mitlaufender Richtwert** auf Handy/Tablet (bis 900 px), über der
-  Kontaktleiste; verschwindet, sobald die Ergebniskarte zu sehen ist.
+- Einen mitlaufenden Richtwert-Balken auf dem Handy gibt es bewusst nicht
+  (auf Wunsch des Inhabers entfernt).
 - **Eingaben werden gemerkt** (sessionStorage, nur im Browser des Kunden,
   gelöscht beim Schließen des Tabs).
 - **Faustregel zur Wohnfläche**: `allgemein.flaechenFaustregel` in der Config.
@@ -500,3 +500,18 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
 - Leistungs-Icons: eigene, fein gezeichnete Motive (`karton`, `transporter`,
   `platten`, `akkuschrauber`, `dielen`, `vorschlaghammer`) mit dünnerer
   Linie, geraden Enden und spitzen Ecken (`feineIcons` in `src/data/icons.ts`).
+
+### Küchenmontage im Preisrechner
+
+- Eigener Abschnitt `kuechenmontage` in `src/data/preise.config.json`, gilt
+  für "Küche aufbauen" (Montage) und "Küche ab- und aufbauen" (Umzug).
+- Fragen: Küchenform (+ Kochinsel), Länge der Unterschränke, Lieferzustand
+  (nur Montage), Hängeschränke, Hochschränke, Arbeitsplatte (Material,
+  Ausschnitte, Eckverbindungen - bei L/U vorausgewählt), Einbaugeräte,
+  Nischenrückwand, alte Küche und Etage (nur Montage; im Umzug gilt die
+  Etage des Einzugs).
+- Steinarbeitsplatte + Zuschnitt: Dieser Teil fehlt in der Spanne, daneben
+  steht "auf Anfrage".
+- Umzug: Abbau an der alten Adresse = `umzug.kuecheAbbauenAmAuszug`
+  (Annahme 200-450 €, vom Wert "Alte Küche abbauen" übernommen - prüfen).
+- Mindestpreis 450 € gilt für die ganze Montage, sobald eine Küche dabei ist.

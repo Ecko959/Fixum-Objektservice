@@ -394,19 +394,44 @@ describe("Umzug", () => {
       rechne("umzug", { zimmer: "2", km: "5" }),
     ));
   test("Küche, Entsorgung, Eilauftrag und Halteverbot an beiden Adressen", () =>
-    // (600+250+100)*1.15 + 160 = 1252.5 -> 1300 | (850+450+250)*1.25 + 300 = 2237.5 -> 2250
+    // Küche 4 m: Abbau 200..450 + Aufbau 4*(100..160)
+    // (600+200+400+100)*1.15 + 160 = 1655 -> 1700 | (850+450+640+250)*1.25 + 300 = 3037.5 -> 3050
     assert.deepEqual(
       werte(
         rechne("umzug", {
           zimmer: "2",
           km: "10",
           kueche: true,
+          kuecheMeter: "4",
           entsorgung: true,
           eilig: true,
           halteverbot: "2",
         }),
       ),
-      [1300, 2250],
+      [1700, 3050],
+    ));
+  test("Küche im Umzug: Aufbau mit Etage des Einzugs, Stein-Hinweis", () => {
+    // 600*1.2 = 720 | 850*1.2 = 1020 (2. OG Einzug)
+    // Küche: Abbau 200..450 + 3*(100..160) = 300..480, +10 % (2 Etagen) = 330..528
+    const r = spanne(
+      rechne("umzug", {
+        zimmer: "2",
+        km: "5",
+        etageEin: "2",
+        kueche: true,
+        kuecheMeter: "3",
+        arbeitsplatte: true,
+        plattenMaterial: "stein",
+      }),
+    );
+    // 720 + 200 + 330 = 1250 | 1020 + 450 + 528 = 1998 -> 2000
+    assert.deepEqual([r.von, r.bis], [1250, 2000]);
+    assert.deepEqual(r.zusatz, ["stein"]);
+  });
+  test("Küche im Umzug ohne Länge: unvollständig", () =>
+    assert.equal(
+      rechne("umzug", { zimmer: "2", km: "5", kueche: true }).art,
+      "unvollstaendig",
     ));
   test("Möbelmontage: Zimmerzahl änderbar", () =>
     // 600 + 1*50 = 650 | 850 + 90 = 940 -> 950
@@ -434,6 +459,7 @@ describe("Umzug", () => {
       etageEin: ["0", "2"],
       moebel: [false, true],
       kueche: [false, true],
+      kuecheMeter: ["3"],
       schwer: ["0", "3"],
       entsorgung: [false, true],
       eilig: [false, true],
@@ -561,7 +587,7 @@ describe("Montage", () => {
       [200, 400],
     ));
   test("Küche 3,6 m mit Abbau der alten", () =>
-    // 3.6*80 + 150 = 438 -> 450 | 3.6*130 + 350 = 818 -> 850
+    // 3.6*100 + 200 = 560 -> 600 | 3.6*160 + 450 = 1026 -> 1050
     assert.deepEqual(
       werte(
         rechne("montage", {
@@ -570,7 +596,7 @@ describe("Montage", () => {
           kuecheAlt: true,
         }),
       ),
-      [450, 850],
+      [600, 1050],
     ));
   test("Alles kombiniert", () => {
     spanne(
@@ -595,6 +621,173 @@ describe("Montage", () => {
       rechne("montage", { kueche: true, kuecheMeter: "" }).art,
       "unvollstaendig",
     ));
+});
+
+/* ------------------------------------------------------------------ Küchenmontage */
+
+describe("Küchenmontage: Testfälle aus dem Auftrag", () => {
+  test("4 m Zeile, Bausatz, Hängeschränke gleiche Länge, Arbeitsplatte, 2 Ausschnitte, 3 Geräte, EG", () =>
+    // Schränke (400+200)*1.35 = 810 | (640+320)*1.35 = 1296
+    // + Platte 140..240 + Ausschnitte 120..200 + Geräte 120..240
+    // = 1190 -> 1200 | 1976 -> 2000
+    assert.deepEqual(
+      werte(
+        rechne("montage", {
+          kueche: true,
+          kuecheForm: "zeile",
+          kuecheMeter: "4",
+          lieferzustand: "bausatz",
+          haengeschraenke: "gleich",
+          arbeitsplatte: true,
+          plattenMaterial: "holz",
+          ausschnitte: "2",
+          geraete: "3",
+          kuecheEtage: "0",
+        }),
+      ),
+      [1200, 2000],
+    ));
+  test("6 m L-Form, fertig, Hängeschränke teilweise, 2 Hochschränke, Arbeitsplatte, 2 Ausschnitte, 4 Geräte, alte Küche, 2. OG", () =>
+    // 600+150+140+210+120+90+160+200 = 1670 | 960+240+260+360+200+160+320+450 = 2950
+    // +10 % (2 Etagen) = 1837 -> 1850 | 3245 -> 3250
+    assert.deepEqual(
+      werte(
+        rechne("montage", {
+          kueche: true,
+          kuecheForm: "l",
+          kuecheMeter: "6",
+          lieferzustand: "fertig",
+          haengeschraenke: "halb",
+          hochschraenke: "2",
+          arbeitsplatte: true,
+          plattenMaterial: "holz",
+          ausschnitte: "2",
+          geraete: "4",
+          kuecheAlt: true,
+          kuecheEtage: "2",
+        }),
+      ),
+      [1850, 3250],
+    ));
+  test("2,4 m Pantryküche, fertig, keine Hängeschränke, ohne Arbeitsplatte, 1 Gerät", () =>
+    // 240+40 = 280 | 384+80 = 464 -> Mindestpreis 450: 450 | 464 -> 500
+    assert.deepEqual(
+      werte(
+        rechne("montage", {
+          kueche: true,
+          kuecheForm: "zeile",
+          kuecheMeter: "2,4",
+          lieferzustand: "fertig",
+          haengeschraenke: "keine",
+          arbeitsplatte: false,
+          geraete: "1",
+        }),
+      ),
+      [450, 500],
+    ));
+  test("8 m U-Form mit Insel, Bausatz, alles ausgewählt, Steinarbeitsplatte", () => {
+    // Schränke (800+400+140)*1.35 = 1809 | (1280+640+260)*1.35 = 2943
+    // + Insel 150..300 + Geräte 160..320 + Nische 8 m 160..280 + alte Küche 200..450
+    // = 2479 -> 2500 | 4293 -> 4300; Arbeitsplatte (Stein): auf Anfrage
+    const r = spanne(
+      rechne("montage", {
+        kueche: true,
+        kuecheForm: "u",
+        kochinsel: true,
+        kuecheMeter: "8",
+        lieferzustand: "bausatz",
+        haengeschraenke: "gleich",
+        hochschraenke: "2",
+        arbeitsplatte: true,
+        plattenMaterial: "stein",
+        ausschnitte: "2",
+        ecken: "2",
+        geraete: "4",
+        nischeMeter: "8",
+        kuecheAlt: true,
+        kuecheEtage: "0",
+      }),
+    );
+    assert.deepEqual([r.von, r.bis], [2500, 4300]);
+    assert.deepEqual(r.zusatz, ["stein"]);
+  });
+});
+
+describe("Küchenmontage: Regeln", () => {
+  const basis = { kueche: true, kuecheMeter: "4", lieferzustand: "fertig" };
+  test("Eckverbindung: L-Form 1, U-Form 2 automatisch", () => {
+    const mit = (form: string, ecken?: string) =>
+      rechne("montage", {
+        ...basis,
+        arbeitsplatte: true,
+        kuecheForm: form,
+        ...(ecken ? { ecken } : {}),
+      });
+    assert.deepEqual(mit("l"), mit("zeile", "1"));
+    assert.deepEqual(mit("u"), mit("zeile", "2"));
+  });
+  test("Bausatz: +35 % nur auf die Schränke", () => {
+    // fertig: 400 + 3 Geräte 120 = 520 | 640 + 240 = 880
+    // Bausatz: 540 + 120 = 660 -> 700 | 864 + 240 = 1104 -> 1150
+    assert.deepEqual(
+      werte(rechne("montage", { ...basis, geraete: "3" })),
+      [550, 900],
+    );
+    assert.deepEqual(
+      werte(
+        rechne("montage", { ...basis, lieferzustand: "bausatz", geraete: "3" }),
+      ),
+      [700, 1150],
+    );
+  });
+  test("Stein ohne Zuschnitt (Arbeitsplatte nein): kein Hinweis", () =>
+    assert.equal(
+      spanne(
+        rechne("montage", {
+          ...basis,
+          arbeitsplatte: false,
+          plattenMaterial: "stein",
+        }),
+      ).zusatz,
+      undefined,
+    ));
+  test("Etage: +5 % je Etage, höchstens 3 Etagen", () =>
+    assert.deepEqual(
+      rechne("montage", { ...basis, kuecheEtage: "5" }),
+      rechne("montage", { ...basis, kuecheEtage: "3" }),
+    ));
+  test("Mit Küche gilt der Mindestpreis 450 €, auch zusammen mit Türen", () =>
+    assert.deepEqual(rechne("montage", { kueche: true, kuecheMeter: "1" }), {
+      art: "ab",
+      ab: 450,
+    }));
+  test("Längere Küche als erlaubt: auf Anfrage", () =>
+    assert.equal(
+      rechne("montage", { kueche: true, kuecheMeter: "40" }).art,
+      "anfrage",
+    ));
+  test("Jede Kombination ergibt Spanne oder ab-Preis", () => {
+    for (const e of kombinationen({
+      kueche: [true],
+      kuecheForm: ["zeile", "l", "u"],
+      kochinsel: [false, true],
+      kuecheMeter: ["1", "4", "12"],
+      lieferzustand: ["fertig", "bausatz"],
+      haengeschraenke: ["keine", "gleich", "halb"],
+      hochschraenke: ["0", "2"],
+      arbeitsplatte: [false, true],
+      plattenMaterial: ["holz", "stein"],
+      ausschnitte: ["0", "2"],
+      geraete: ["0", "4"],
+      nischeMeter: ["", "3"],
+      kuecheAlt: [false, true],
+      kuecheEtage: ["0", "3"],
+      tueren: [false, true],
+    })) {
+      const r = rechne("montage", e);
+      assert.ok(r.art === "spanne" || r.art === "ab", JSON.stringify({ e, r }));
+    }
+  });
 });
 
 /* ------------------------------------------------------------------ Boden */

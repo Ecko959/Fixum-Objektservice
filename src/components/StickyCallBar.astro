@@ -133,15 +133,6 @@ const waThema = whatsappThema(Astro.url.pathname);
         visibility 0s;
     }
   }
-
-  /* Der mitlaufende Richtwert des Preisrechners belegt dann den unteren
-     Rand - zwei Leisten übereinander wären zu viel. Nur über opacity und
-     visibility, siehe Hinweis oben. */
-  :global(html[data-rechner-mini]) .sticky-call {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
 </style>
 
 {

@@ -127,10 +127,10 @@
       "hinweis": "Prozent je Etage ohne Aufzug auf den Grundpreis, Auszug und Einzug getrennt gezählt"
     },
     "moebelAbUndAufbauenJeZimmer": { "von": 50, "bis": 90 },
-    "kuecheAbUndAufbauen": {
-      "von": 250,
+    "kuecheAbbauenAmAuszug": {
+      "von": 200,
       "bis": 450,
-      "hinweis": "Ohne Anschlüsse"
+      "hinweis": "Küche an der alten Adresse abbauen. Der Aufbau an der neuen Adresse wird mit den Werten aus \"kuechenmontage\" berechnet. ANNAHME: übernommen vom Wert \"Alte Küche abbauen\" - bitte prüfen."
     },
     "schweresEinzelstueck": {
       "von": 60,
@@ -226,16 +226,6 @@
       "bis": 180,
       "hinweis": "Schrank ab 3 Türen"
     },
-    "kuecheJeMeter": {
-      "von": 80,
-      "bis": 130,
-      "hinweis": "Je laufendem Meter, ohne Anschlüsse"
-    },
-    "alteKuecheAbbauen": {
-      "von": 150,
-      "bis": 350,
-      "hinweis": "Pauschal, inkl. Entsorgung"
-    },
     "mindestpreis": {
       "wert": 150,
       "hinweis": "Darunter zeigt der Rechner \"ab 150 €\""
@@ -244,7 +234,65 @@
       "wert": 30,
       "hinweis": "Keine Preisangabe: Mehr Türen/Möbel zeigen \"Preis auf Anfrage\"."
     },
-    "maxKuechenmeter": { "wert": 15, "hinweis": "Keine Preisangabe." }
+    "hinweis": "Die Küche hat einen eigenen Abschnitt \"kuechenmontage\" (gilt auch für den Umzug)."
+  },
+
+  "kuechenmontage": {
+    "hinweis": "Gilt für \"Küche aufbauen\" in der Montage und für \"Küche ab- und aufbauen\" im Umzug. Ohne Elektro-, Gas- und Wasseranschlüsse.",
+    "unterschraenkeJeMeter": {
+      "von": 100,
+      "bis": 160,
+      "hinweis": "Stellen, ausrichten, verbinden, Sockel und Fronten; je laufendem Meter"
+    },
+    "bausatzAufschlagProzent": {
+      "wert": 35,
+      "hinweis": "Bausatz zum Selbstaufbau (z. B. IKEA) statt fertig montiert: auf Unter-, Hänge- und Hochschränke"
+    },
+    "haengeschraenkeJeMeter": { "von": 50, "bis": 80 },
+    "hochschrankJeStueck": { "von": 70, "bis": 130 },
+    "arbeitsplatteJeMeter": {
+      "von": 35,
+      "bis": 60,
+      "hinweis": "Zuschneiden und montieren, Holz/Schichtstoff. Stein: Preis auf Anfrage."
+    },
+    "ausschnittJeStueck": {
+      "von": 60,
+      "bis": 100,
+      "hinweis": "Spüle oder Kochfeld"
+    },
+    "eckverbindungJeEcke": {
+      "von": 90,
+      "bis": 160,
+      "hinweis": "L-Form 1 Ecke, U-Form 2 Ecken"
+    },
+    "kochinsel": { "von": 150, "bis": 300, "hinweis": "Zuschlag" },
+    "einbaugeraetJeStueck": {
+      "von": 40,
+      "bis": 80,
+      "hinweis": "Einsetzen ohne Anschluss"
+    },
+    "nischenrueckwandJeMeter": {
+      "von": 20,
+      "bis": 35,
+      "hinweis": "Nischenrückwand oder Wandabschlussleiste"
+    },
+    "alteKuecheAbbauen": {
+      "von": 200,
+      "bis": 450,
+      "hinweis": "Abbauen und entsorgen, pauschal"
+    },
+    "aufschlagJeEtageOhneAufzugProzent": {
+      "wert": 5,
+      "hinweis": "Prozent je Etage ohne Aufzug auf den Küchen-Anteil"
+    },
+    "mindestpreis": {
+      "wert": 450,
+      "hinweis": "Ist eine Küche dabei, zeigt die Montage darunter \"ab 450 €\""
+    },
+    "maxMeter": {
+      "wert": 20,
+      "hinweis": "Keine Preisangabe: Längere Küchen zeigen \"Preis auf Anfrage\"."
+    }
   },
 
   "boden": {
