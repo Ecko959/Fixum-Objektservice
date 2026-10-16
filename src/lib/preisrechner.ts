@@ -19,7 +19,7 @@ export type Spanne = { von: number; bis: number };
 type Wert = Spanne | null;
 
 /** Hinweise, die neben dem Ergebnis stehen - nie mit Beträgen. */
-export type Zusatz = "sonderreinigung" | "material";
+export type Zusatz = "sonderreinigung" | "material" | "stein";
 
 export type Ergebnis =
   | { art: "spanne"; von: number; bis: number; zusatz?: Zusatz[] }
@@ -87,14 +87,34 @@ const modellEntruempelung = (e: Config, runden: number) => ({
   maxZusatz: zahl(e.maxZusatzflaeche),
 });
 
-const modellUmzug = (u: Config, runden: number) => ({
+/* Küchenmontage - gemeinsam für Montage ("Küche aufbauen") und Umzug
+   ("Küche ab- und aufbauen"). */
+const modellKueche = (k: Config) => ({
+  unter: spanne(k.unterschraenkeJeMeter),
+  bausatzProzent: zahl(k.bausatzAufschlagProzent),
+  haenge: spanne(k.haengeschraenkeJeMeter),
+  hoch: spanne(k.hochschrankJeStueck),
+  platte: spanne(k.arbeitsplatteJeMeter),
+  ausschnitt: spanne(k.ausschnittJeStueck),
+  ecke: spanne(k.eckverbindungJeEcke),
+  insel: spanne(k.kochinsel),
+  geraet: spanne(k.einbaugeraetJeStueck),
+  nische: spanne(k.nischenrueckwandJeMeter),
+  alt: spanne(k.alteKuecheAbbauen),
+  etageProzent: zahl(k.aufschlagJeEtageOhneAufzugProzent),
+  min: zahl(k.mindestpreis),
+  maxMeter: zahl(k.maxMeter),
+});
+
+const modellUmzug = (u: Config, runden: number, c: Config) => ({
   runden,
   grund: tabelle(u.grundpreisNahbereich, ["1", "2", "3", "4", "5"]),
   nahKm: zahl(u.nahbereichKm),
   km: spanne(u.proKmUeberNahbereich),
   etageProzent: zahl(u.aufschlagJeEtageOhneAufzugProzent),
   moebelJeZimmer: spanne(u.moebelAbUndAufbauenJeZimmer),
-  kueche: spanne(u.kuecheAbUndAufbauen),
+  kueche: modellKueche(c?.kuechenmontage ?? {}),
+  kuecheAbbau: spanne(u.kuecheAbbauenAmAuszug),
   schwer: spanne(u.schweresEinzelstueck),
   entsorgung: spanne(u.altmoebelEntsorgen),
   eilProzent: spanne(u.eilauftragAufschlagProzent),
@@ -129,17 +149,15 @@ const modellTrockenbau = (t: Config, runden: number) => ({
   max: zahl(t.maxFlaeche),
 });
 
-const modellMontage = (m: Config, runden: number) => ({
+const modellMontage = (m: Config, runden: number, c: Config) => ({
   runden,
   tuer: spanne(m.innentuerMitZargeJeStueck),
   tuerAusbau: spanne(m.alteTuerAusbauenJeStueck),
   moebel: spanne(m.moebelJeStueck),
   grossschrank: spanne(m.grossschrankJeStueck),
-  kueche: spanne(m.kuecheJeMeter),
-  kuecheAlt: spanne(m.alteKuecheAbbauen),
+  kueche: modellKueche(c?.kuechenmontage ?? {}),
   min: zahl(m.mindestpreis),
   maxAnzahl: zahl(m.maxAnzahl),
-  maxMeter: zahl(m.maxKuechenmeter),
 });
 
 const modellBoden = (b: Config, runden: number) => ({
@@ -174,7 +192,7 @@ export const baueModell = <L extends Leistung>(
     montage: modellMontage,
     boden: modellBoden,
   }[leistung];
-  return bauer(c?.[leistung] ?? {}, runden) as Modelle[L];
+  return bauer(c?.[leistung] ?? {}, runden, c) as Modelle[L];
 };
 
 /** Ein Rechner wird nur angezeigt, wenn seine Grundwerte in der Config
@@ -197,7 +215,7 @@ export const rechnerBereit = (c: Config, leistung: Leistung): boolean => {
     }
     case "montage": {
       const m = baueModell(c, "montage");
-      return Boolean(m.tuer || m.moebel || m.kueche);
+      return Boolean(m.tuer || m.moebel || m.kueche.unter);
     }
     case "boden": {
       const m = baueModell(c, "boden");
@@ -410,6 +428,63 @@ export const rechneEntruempelung = (
     };
   });
 
+/* ---------------------------------------------------------------- Küche */
+
+/** Vorauswahl der Eckverbindungen je Küchenform. */
+export const eckenJeForm: Record<string, number> = { zeile: 0, l: 1, u: 2 };
+
+/** Küchenanteil für Montage und Umzug. Steinarbeitsplatten werden nur
+    montiert, nicht zugeschnitten: Zuschnitt, Ausschnitte und Ecken entfallen
+    dann in der Summe und stehen als "Preis auf Anfrage" daneben. */
+const kuechenAnteil = (
+  k: ReturnType<typeof modellKueche>,
+  e: Eingaben,
+  optionen: { etagen: number; bausatz: boolean; alt: boolean },
+): { wert: Spanne; zusatz: Zusatz[] } => {
+  const meter = leseZahl(e.kuecheMeter);
+  if (meter === null || meter <= 0) throw new Unvollstaendig("Küchenlänge");
+  grenze(meter, k.maxMeter);
+
+  // Schränke: Unter-, Hänge- und Hochschränke (Bausatz-Aufschlag nur hierauf)
+  const schraenke = summe();
+  schraenke.plus(brauche(k.unter), meter);
+  const haenge = String(e.haengeschraenke ?? "keine");
+  if (haenge === "gleich") schraenke.plus(k.haenge, meter);
+  if (haenge === "halb") schraenke.plus(k.haenge, meter / 2);
+  schraenke.plus(k.hoch, ganz(e.hochschraenke));
+  let gesamt = schraenke.wert;
+  if (optionen.bausatz && e.lieferzustand === "bausatz") {
+    const p = brauche(k.bausatzProzent);
+    gesamt = aufschlag(gesamt, { von: p, bis: p });
+  }
+
+  const rest = summe();
+  const zusatz: Zusatz[] = [];
+  if (ja(e.kochinsel)) rest.plus(k.insel);
+  if (ja(e.arbeitsplatte)) {
+    if (e.plattenMaterial === "stein") {
+      zusatz.push("stein");
+    } else {
+      const form = String(e.kuecheForm ?? "zeile");
+      rest.plus(k.platte, meter);
+      rest.plus(k.ausschnitt, ganz(e.ausschnitte));
+      rest.plus(k.ecke, ganz(e.ecken, eckenJeForm[form] ?? 0));
+    }
+  }
+  rest.plus(k.geraet, ganz(e.geraete));
+  const nische = leseZahl(e.nischeMeter) ?? 0;
+  if (k.maxMeter !== null) grenze(nische, k.maxMeter * 2);
+  if (nische > 0) rest.plus(k.nische, nische);
+  if (optionen.alt && ja(e.kuecheAlt)) rest.plus(k.alt);
+  gesamt = plus(gesamt, rest.wert);
+
+  if (optionen.etagen > 0) {
+    const p = brauche(k.etageProzent) * Math.min(optionen.etagen, 3);
+    gesamt = aufschlag(gesamt, { von: p, bis: p });
+  }
+  return { wert: gesamt, zusatz };
+};
+
 /* ---------------------------------------------------------------- Umzug */
 
 export const rechneUmzug = (m: Modelle["umzug"], e: Eingaben): Ergebnis =>
@@ -438,7 +513,18 @@ export const rechneUmzug = (m: Modelle["umzug"], e: Eingaben): Ergebnis =>
       const standard = Math.min(Number(zimmer), 5);
       rest.plus(m.moebelJeZimmer, ganz(e.moebelZimmer, standard) || standard);
     }
-    if (ja(e.kueche)) rest.plus(m.kueche);
+    let zusatz: Zusatz[] = [];
+    if (ja(e.kueche)) {
+      // Abbau an der alten Adresse + Aufbau an der neuen (Etage des Einzugs)
+      rest.plus(m.kuecheAbbau);
+      const kueche = kuechenAnteil(m.kueche, e, {
+        etagen: ja(e.aufzugEin) ? 0 : ganz(e.etageEin),
+        bausatz: false,
+        alt: false,
+      });
+      rest.plus(kueche.wert);
+      zusatz = kueche.zusatz;
+    }
     rest.plus(m.schwer, ganz(e.schwer));
     if (ja(e.entsorgung)) rest.plus(m.entsorgung);
 
@@ -449,7 +535,7 @@ export const rechneUmzug = (m: Modelle["umzug"], e: Eingaben): Ergebnis =>
       const h = brauche(m.halteverbot);
       gesamt = plus(gesamt, { von: h.von * zonen, bis: h.bis * zonen });
     }
-    return { roh: gesamt };
+    return { roh: gesamt, zusatz };
   });
 
 /* ---------------------------------------------------------------- Trockenbau */
@@ -483,36 +569,45 @@ export const rechneTrockenbau = (
 /* ---------------------------------------------------------------- Montage */
 
 export const rechneMontage = (m: Modelle["montage"], e: Eingaben): Ergebnis =>
-  rechneMitGrenzen(m, () => {
-    const tueren = ja(e.tueren);
-    const moebel = ja(e.moebel);
-    const kueche = ja(e.kueche);
-    if (!tueren && !moebel && !kueche)
-      throw new Unvollstaendig("Türen, Möbel oder Küche");
-    const s = summe();
-    if (tueren) {
-      const n = ganz(e.tuerAnzahl, 1) || 1;
-      grenze(n, m.maxAnzahl);
-      s.plus(m.tuer, n);
-      if (ja(e.tuerAusbau)) s.plus(m.tuerAusbau, n);
-    }
-    if (moebel) {
-      const n = ganz(e.moebelAnzahl);
-      const gross = ganz(e.grossschraenke);
-      grenze(n + gross, m.maxAnzahl);
-      if (n + gross === 0) throw new Unvollstaendig("Anzahl der Möbelstücke");
-      s.plus(m.moebel, n);
-      s.plus(m.grossschrank, gross);
-    }
-    if (kueche) {
-      const meter = leseZahl(e.kuecheMeter);
-      if (meter === null || meter <= 0) throw new Unvollstaendig("Küchenlänge");
-      grenze(meter, m.maxMeter);
-      s.plus(m.kueche, meter);
-      if (ja(e.kuecheAlt)) s.plus(m.kuecheAlt);
-    }
-    return { roh: s.wert };
-  });
+  /* Ist eine Küche dabei, gilt der Mindestpreis der Küchenmontage. */
+  rechneMitGrenzen(
+    ja(e.kueche) && m.kueche.min !== null
+      ? { runden: m.runden, min: Math.max(m.min ?? 0, m.kueche.min) }
+      : m,
+    () => {
+      const tueren = ja(e.tueren);
+      const moebel = ja(e.moebel);
+      const kueche = ja(e.kueche);
+      if (!tueren && !moebel && !kueche)
+        throw new Unvollstaendig("Türen, Möbel oder Küche");
+      const s = summe();
+      if (tueren) {
+        const n = ganz(e.tuerAnzahl, 1) || 1;
+        grenze(n, m.maxAnzahl);
+        s.plus(m.tuer, n);
+        if (ja(e.tuerAusbau)) s.plus(m.tuerAusbau, n);
+      }
+      if (moebel) {
+        const n = ganz(e.moebelAnzahl);
+        const gross = ganz(e.grossschraenke);
+        grenze(n + gross, m.maxAnzahl);
+        if (n + gross === 0) throw new Unvollstaendig("Anzahl der Möbelstücke");
+        s.plus(m.moebel, n);
+        s.plus(m.grossschrank, gross);
+      }
+      let zusatz: Zusatz[] = [];
+      if (kueche) {
+        const anteil = kuechenAnteil(m.kueche, e, {
+          etagen: ganz(e.kuecheEtage),
+          bausatz: true,
+          alt: true,
+        });
+        s.plus(anteil.wert);
+        zusatz = anteil.zusatz;
+      }
+      return { roh: s.wert, zusatz };
+    },
+  );
 
 /* ---------------------------------------------------------------- Boden */
 
@@ -566,6 +661,8 @@ export const zusatzText: Record<Zusatz, string> = {
   sonderreinigung:
     "Bei besonderer Verschmutzung kommt eine Sonderreinigung hinzu - Preis auf Anfrage, ggf. durch einen Fachbetrieb.",
   material: "zzgl. Material nach Auswahl",
+  stein:
+    "Arbeitsplatte aus Stein: Zuschnitt und Ausschnitte auf Anfrage - Steinplatten montieren wir, schneiden sie aber nicht zu.",
 };
 
 /* ---------------------------------------------------------------- Weitergabe an den Browser */
