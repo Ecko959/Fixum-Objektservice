@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/hausmeisterservice/";
@@ -13,8 +14,8 @@ const current = "/hausmeisterservice/";
   eyebrow="Hausmeisterservice"
   title="Objektbetreuung mit festem Ansprechpartner"
   heroText="Fixum Objektservice betreut Wohn- und Gewerbeobjekte in Emden und Ostfriesland: Objektkontrolle, Kleinreparaturen, Außenanlagen und Winterdienst. Für Eigentümer, Hausverwaltungen und Gewerbe - einmalig oder als Rahmenvertrag."
-  image="/images/categories/hausmeister-winterdienst.png"
-  imageAlt="Hausmeister mit Besen und Streuwagen vor einem Klinkerhaus (Symbolbild)"
+  image={fotos.rasterdecke.pfad}
+  imageAlt={fotos.rasterdecke.alt}
   serviceType="Hausmeisterservice und Objektbetreuung"
   areaTitle="Hausmeisterservice in Emden und Ostfriesland"
   lead="Die meisten Objektprobleme sind klein, wenn man sie früh sieht - und teuer, wenn niemand hinschaut. Genau dafür ist eine laufende Betreuung da: regelmäßig vorbeischauen, kleine Sachen sofort erledigen, große rechtzeitig melden."

@@ -2,8 +2,9 @@
  * Erzeugt public/og.png (1200x630) für Social-Previews.
  *
  * Hintergrund: Facebook, LinkedIn, WhatsApp und X rendern kein SVG als
- * og:image. Die Karte muss deshalb als PNG vorliegen. Sie wird aus dem
- * vorhandenen Bildmaterial und dem Logo-Lockup zusammengesetzt, damit die
+ * og:image. Die Karte muss deshalb als PNG vorliegen. Sie wird aus einem
+ * echten Projektfoto (renoviertes Dachzimmer) und dem Logo-Lockup
+ * zusammengesetzt, damit die
  * Markentypografie stimmt, ohne dass eine Webfont-Datei gerendert werden muss.
  *
  * Aufruf: npm run build:og
@@ -35,12 +36,13 @@ const lines = {
   claim: ["Entrümpelt. Ausgebaut.", "Übergabefertig."],
   services: "Entrümpelung · Entkernung · Trockenbau · Montage",
   meta: "Emden · Ostfriesland · Festpreis nach Besichtigung",
-  phone: "+49 151 / 29628025",
+  phone: "+49 151 29628025",
 };
 
-/** Hintergrundfoto, auf Kartenformat beschnitten und abgedunkelt. */
+/** Hintergrundfoto, auf Kartenformat beschnitten. Das Original bleibt
+    unverändert; rechts bleibt es sichtbar, links trägt der Verlauf den Text. */
 const background = await sharp(
-  path.join(root, "public/images/hero-renovation.png"),
+  path.join(root, "src/assets/images/referenzen/dachzimmer.webp"),
 )
   .resize(WIDTH, HEIGHT, { fit: "cover", position: "centre" })
   .toBuffer();
@@ -50,9 +52,9 @@ const overlay = Buffer.from(`
 <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
   <defs>
     <linearGradient id="scrim" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%"   stop-color="#07131A" stop-opacity="0.97"/>
-      <stop offset="58%"  stop-color="#0A1730" stop-opacity="0.94"/>
-      <stop offset="100%" stop-color="#0A1730" stop-opacity="0.80"/>
+      <stop offset="0%"   stop-color="#07131A" stop-opacity="0.96"/>
+      <stop offset="52%"  stop-color="#0A1730" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#0A1730" stop-opacity="0.35"/>
     </linearGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%"   stop-color="#4FA0F5"/>

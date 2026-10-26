@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/entruempelung/";
@@ -13,8 +14,8 @@ const current = "/entruempelung/";
   eyebrow="Entrümpelung Emden"
   title="Entrümpelung und Haushaltsauflösung zum Festpreis"
   heroText="Als Entrümpelungsfirma aus Emden räumt Fixum Objektservice Wohnungen, Häuser, Keller, Dachböden und Garagen in Emden, Aurich, Leer, Norden und ganz Ostfriesland. Für Privatpersonen, Erben, Vermieter und Hausverwaltungen - sortenrein entsorgt und besenrein übergeben."
-  image="/images/categories/haushaltsaufloesung.png"
-  imageAlt="Entrümpelung einer Wohnung: Umzugskartons und Hausrat zum Abtransport (Symbolbild)"
+  image={fotos.wohnungsaufloesung.pfad}
+  imageAlt={fotos.wohnungsaufloesung.alt}
   serviceType="Entrümpelung und Haushaltsauflösung"
   areaTitle="Entrümpelung in Emden, Aurich, Leer und Umgebung"
   lead="Wohnungen, Häuser, Keller, Dachböden, Garagen, Nachlässe und Übergaben an Vermieter. Sie zeigen uns, was bleibt. Alles andere wird ordentlich sortiert, getragen und entsorgt - ohne dass Sie dabei sein müssen."

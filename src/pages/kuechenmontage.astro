@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/kuechenmontage/";
@@ -13,8 +14,8 @@ const current = "/kuechenmontage/";
   eyebrow="Möbel- & Küchenmontage"
   title="Möbel- und Küchenmontage nach Aufmaß"
   heroText="Fixum Objektservice baut Küchen und Möbel in Emden und Ostfriesland auf, richtet sie aus und befestigt sie sicher - und baut alte Möbel ab. Die Anschlüsse übernehmen zugelassene Fachbetriebe, deren Termin wir auf Wunsch mit abstimmen."
-  image="/images/categories/montage-boden.png"
-  imageAlt="Handwerker bei Montagearbeiten am Boden einer Wohnung (Symbolbild)"
+  image={fotos.kuecheLicht.pfad}
+  imageAlt={fotos.kuecheLicht.alt}
   serviceType="Möbelmontage und Küchenmontage"
   areaTitle="Möbel- und Küchenmontage in Emden und Ostfriesland"
   lead="Eine Küche steht selten von selbst gerade. Alte Wände, unebene Böden und Leitungen an unerwarteter Stelle machen aus zwei Stunden Aufbau schnell einen Tag - wenn man weiß, was man tut, aus einem Tag wieder zwei Stunden."

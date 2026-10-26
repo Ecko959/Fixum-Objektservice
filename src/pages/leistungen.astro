@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { fotos } from "../data/referenzen";
 import AreaServed from "../components/AreaServed.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Icon from "../components/Icon.astro";
@@ -11,7 +12,8 @@ import { services } from "../data/services";
 
 const path = "/leistungen/";
 const breadcrumbs: Array<[string, string]> = [["Leistungen", path]];
-const heroImage = "/images/hero-renovation.png";
+const heroBild = fotos.dachzimmer;
+const heroImage = heroBild.pfad;
 
 /* Leistungsübersicht als ItemList: Google kann die Seite dadurch als
    Sammelseite einordnen statt als weitere Leistungsseite. */
@@ -63,7 +65,7 @@ const bereiche: Array<
     title="Alles aus einer Hand"
     text="Fixum verbindet Entrümpelung, Rückbau, Trockenbau, Montage, Transporte und Objektbetreuung. Sie wählen den einzelnen Baustein oder den kompletten Ablauf."
     image={heroImage}
-    imageAlt="Zwei Handwerker in einem leergeräumten Raum mit Material und Säcken (Symbolbild)"
+    imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={["11 Leistungen", "Einzeln buchbar", "Ein Ansprechpartner"]}
   />

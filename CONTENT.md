@@ -14,39 +14,40 @@
 
 ## Fotos
 
-- Aktuell verwendet die Seite mit Imagegen erzeugte, realistische
-  Website-Bilder.
-- Echte Baustellenfotos sind der größte Qualitätssprung, der ohne
-  Code-Änderung möglich ist. Sie ersetzen die generierten Bilder unter
-  gleichem Dateinamen in `src/assets/images/`. WebP und AVIF müssen **nicht**
-  mehr von Hand erzeugt werden - das macht astro:assets beim Bauen. Danach
-  nur noch `npm run build:og` laufen lassen.
-- Mehrere Leistungen teilen sich derzeit ein Bild
-  (Entrümpelung/Haushaltsauflösung sowie Boden/Möbelmontage). Eigene Motive
-  wären besser, sind aber keine Voraussetzung.
-- Die alte Einzelabbildung `src/assets/images/reference-before-after.png`
-  wird seit der Umstellung auf die Referenz-Galerie nicht mehr eingebunden.
-  Sie kostet im Build nichts mehr, weil astro:assets nur verarbeitet, was
-  auch verwendet wird - sie kann trotzdem gelöscht werden.
+Alle Bilder der Website sind echte Projektfotos von Fixum. Der Katalog
+steht zentral in `src/data/referenzen.ts`: Pfad, Alt-Text und die
+Reihenfolge der Referenz-Sektion auf der Startseite. Seiten, Leistungskarten
+und Ortsseiten holen ihr Bild von dort.
 
-## Referenzfotos
+- **Originale** liegen unverändert in `src/assets/images/referenzen/`
+  (1400 × 1100 px, mit Logo-Wasserzeichen). Collagen zeigen vorher links,
+  nachher rechts.
+- **Zuschnitte** (nur die Vorher- oder Nachher-Hälfte einer Collage) liegen in
+  `src/assets/images/zuschnitte/`. Sie werden in der Ablauf-Sektion der
+  Startseite gebraucht, weil diese quadratische Bilder zeigt.
+- **Neues Foto:** Datei in `referenzen/` legen, in `referenzen.ts` bei
+  `fotos` mit Alt-Text eintragen, bei `referenzen` einsortieren (stärkste
+  zuerst). WebP und AVIF entstehen beim Bauen.
+- **Alt-Texte** beschreiben, was wirklich zu sehen ist, und nennen die
+  Leistung. Eine Region steht nur dort, wo es um den Auftrag als Ganzes geht -
+  keine Ortsangabe, die das Foto nicht belegt.
+- Bilder, die nur den Zustand vorher zeigen (Abstellraum, Bad-Rückbau),
+  stehen nur in der Referenz-Galerie, nicht im Hero und nicht auf Karten.
 
-In `src/assets/images/referenzen/` liegen die **echten Vorher/Nachher-Fotos**:
+**Noch offen:**
 
-| Datei                                     | Referenz                              |
-| ----------------------------------------- | ------------------------------------- |
-| `dachgeschoss-raeumung-rueckbau-foto.png` | Dachgeschoss geräumt und zurückgebaut |
-| `dachgeschoss-trockenbau-foto.png`        | Dachgeschoss ausgebaut                |
-| `haushaltsaufloesung-wohnzimmer-foto.png` | Haushalt vollständig aufgelöst        |
-| `wohnungsraeumung-neuvermietung-foto.png` | Wohnung für die Neuvermietung geräumt |
-| `altbau-entkernung-ausbau-foto.png`       | Altbau entkernt und neu ausgebaut     |
-
-Format: 4:3, vorher links, nachher rechts. Nach dem Einsetzen die Texte in
-`src/data/references.ts` gegenlesen - sie beschreiben, was auf den Fotos zu
-sehen sein soll. WebP und AVIF entstehen beim Bauen von selbst.
-
-Kommen weitere Referenzen dazu, gehören sie unter demselben Namensschema in
-den Ordner und als Eintrag in `src/data/references.ts`.
+- Die Fotos aus „Stapel 4“ (Container vorher/nachher und Dachgeschoss mit
+  Wandkassetten in vier Schritten) sind noch nicht als Datei angekommen. Sobald
+  sie da sind: Wandkassetten als Nummer 1 in `referenzen`, als Bild für
+  Renovierung und als Option für den Startseiten-Hero; Container in die
+  Galerie (Entrümpelung).
+- Die weiße Designküche (Kochinsel, grifflos) ist bewusst nicht eingebaut -
+  Rückfrage beim Inhaber steht aus.
+- Für Winterdienst und Hausmeisterservice gibt es kein passendes Foto. Beide
+  zeigen vorerst die Rasterdecke aus dem Gewerbeobjekt.
+- Die Fotos zeigen gestrichene Decken und Wände (Bad, Wandkassetten). Die
+  FAQ auf `/renovierung/` sagt dagegen „Den Anstrich selbst führen wir nicht
+  aus“. Bitte klären, was gilt.
 
 ## Kundenstimmen
 
@@ -272,9 +273,6 @@ Startseite und die Meta-Beschreibung ziehen automatisch nach.
   ein 7,5-Tonner eingesetzt wird, müssen die Angaben vereinheitlicht werden -
   und gewerbliche Transporte über 3,5 t zGG sind nach GüKG in der Regel
   erlaubnispflichtig. Vorher klären, dann anpassen.
-- **"Eigene Fotos, keine Katalogbilder"** auf der Startseite: Die Aussage ist
-  nur haltbar, wenn wirklich alle Referenzbilder von eigenen Baustellen
-  stammen. Falls nicht, muss der Satz weg.
 - **Leerstandsrechner, Kapazitätsanzeige, Ratgeberartikel**: sinnvoll, aber
   eigene Bausteine. Die Kapazitätsanzeige nur einbauen, wenn sie wöchentlich
   gepflegt wird - eine veraltete Angabe schadet mehr, als sie bringt.
@@ -339,27 +337,26 @@ Nach dem Einrichten prüfen: `curl -I https://fixum-objektservice.de/` muss
 
 ## Bilder laufen über astro:assets
 
-Die Quelldateien liegen als PNG in `src/assets/images/`, nicht mehr in
-`public/images/`. Beim Bauen erzeugt Astro daraus AVIF und WebP in drei
-Breiten (480/800/1200, Hero 640/1024/1600) und hängt einen Inhalts-Hash an
-den Dateinamen - damit ist eine dauerhafte Cache-Regel möglich.
+Die Quelldateien liegen in `src/assets/images/`, nicht in `public/images/`.
+Beim Bauen erzeugt Astro daraus AVIF und WebP in 480, 960 und 1400 px Breite
+(Werte in `src/data/bilder.ts`) und hängt einen Inhalts-Hash an den
+Dateinamen - damit ist eine dauerhafte Cache-Regel möglich. 1400 px ist die
+Breite der Originale; größer zu rechnen brächte nur Bytes.
 
-`src/data/bilder.ts` bildet die alten Pfade (`/images/categories/x.png`) auf
-die verarbeiteten Bilder ab. Deshalb konnten die Datendateien und die 16
-Seiten unverändert bleiben; nur `Photo.astro`, `PageHero.astro`, der Hero in
-`index.astro` und der Preload in `Base.astro` wurden angefasst.
+`src/data/bilder.ts` bildet die Pfade aus `referenzen.ts`
+(`/images/referenzen/x.webp`) auf die verarbeiteten Bilder ab.
+
+Qualität 82, Hero-Bilder 60: Sie liegen unter einem dunklen Verlauf, dort
+fällt der Unterschied nicht auf, das LCP-Bild wird aber nur halb so groß.
+`Base.astro` lädt das Hero-Bild mit denselben Breiten und derselben Qualität
+vor (`imagesrcset`) - weichen die Werte von `PageHero.astro` ab, lädt der
+Browser das Bild doppelt.
 
 Der Rückfall im `<img>` ist **JPEG, nicht PNG**. Er greift nur bei Browsern
-ohne AVIF und ohne WebP. Mit PNG als Rückfall wog der Build 154 MB, mit JPEG
-sind es 35 MB.
-
-Ein neues Motiv braucht nur als PNG in den Ordner gelegt zu werden - Formate,
-Größen und Hash entstehen beim nächsten Build.
+ohne AVIF und ohne WebP.
 
 **Noch offen:** Das Logo (`public/logo/fixum-lockup-blue-trim.png`, 72 KB) ist
-inzwischen das größte Bild auf der Startseite - größer als das Hero-Foto.
-Es liegt in `public/` und wird deshalb nicht verarbeitet. Eine WebP-Fassung
-mit Transparenz würde dort noch einmal spürbar sparen.
+eines der größten Bilder auf der Startseite.
 
 ## Ablauf-Sektion der Startseite (React + Framer Motion)
 
@@ -391,34 +388,12 @@ animiert wird. Wer das sparen will, ersetzt in `index.astro`
 Buendel auf Telefonen nie, dafuer auf dem Desktop schon beim Seitenaufbau
 statt erst beim Scrollen.
 
-### Die vier Bilder fehlen noch
+### Bilder
 
-Punkt 4 der Aufgabe verlangte die Bilder ueber den MCP-Server `codex` mit
-`$imagegen`. Der ist in der Arbeitsumgebung nicht installiert
-(`Executable not found in $PATH: codex`). Die Motive wurden stattdessen mit
-Knightvision erzeugt, konnten aus der Umgebung aber nicht heruntergeladen
-werden - der Egress-Proxy lehnt `knightvision.tech` mit 403 ab.
-
-Solange die Dateien fehlen, greift ein Rueckfall auf vorhandene
-Kategoriebilder, damit die Sektion steht. Der Alternativtext wechselt
-automatisch mit und beschreibt dann das Ersatzbild, nicht das geplante.
-
-Zum Nachruesten die vier Dateien nach `src/assets/generated/` legen:
-
-| Datei | Quelle |
-| --- | --- |
-| `ablauf-raeumen.png` | https://knightvision.tech/static/generated_images/kv-0c0f0e20.png |
-| `ablauf-rueckbauen.png` | https://knightvision.tech/static/generated_images/kv-1d8930ed.png |
-| `ablauf-ausbauen.png` | https://knightvision.tech/static/generated_images/kv-3f127b2d.png |
-| `ablauf-uebergeben.png` | https://knightvision.tech/static/generated_images/kv-0f1b7ed4.png |
-
-Vorher auf 1600x1000 beschneiden (die Quellen sind 3:2). Danach genuegt
-`npm run build` - `src/data/bilder.ts` findet sie von selbst, und die
-ausfuehrlichen Alternativtexte in `index.astro` werden automatisch aktiv.
-
-Die Bilder sind erzeugt, nicht fotografiert. Sie duerfen deshalb nicht als
-Referenz oder als Vorher/Nachher ausgewiesen werden - die Alternativtexte
-beschreiben nur, was zu sehen ist, ohne Behauptung ueber eigene Baustellen.
+Die vier Schritte zeigen echte Fotos aus `src/data/referenzen.ts`: Räumen
+(Esszimmer vorher), Rückbauen (Dachboden nachher), Ausbauen (Dachausbau im
+Trockenbau), Übergeben (renoviertes Dachzimmer). Die früher geplanten,
+generierten Motive werden nicht mehr gebraucht.
 
 ### Nebeneffekt: .section--chain wird nicht mehr benutzt
 
@@ -448,9 +423,8 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
   nach Freigabe und mit Einwilligungsbanner.
 - **robots.txt** erlaubt Such- und KI-Crawler ausdrücklich; `/llms.txt` wird
   beim Bauen aus `site.ts`, `preise.ts` und den Ortsseiten erzeugt.
-- **Alt-Texte** der generierten Bilder beschreiben nur das Motiv und tragen
-  "(Symbolbild)". Ort- oder Firmenbezug ("in Emden durch Fixum") erst, wenn
-  dort echte Fotos liegen.
+- **Alt-Texte** stehen zentral in `src/data/referenzen.ts` und beschreiben
+  die echten Fotos (siehe Abschnitt „Fotos“).
 - **Schriften**: nur Latin-Subset, metrisch angeglichene Ersatzschriften
   ("Manrope Fallback" usw.) gegen Layout-Sprünge, Preload für Manrope 400/800.
 - **Branchenportale**: siehe `EINTRAEGE.md`.

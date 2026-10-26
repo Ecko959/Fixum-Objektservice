@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { fotos } from "../data/referenzen";
 import AreaServed from "../components/AreaServed.astro";
 import Button from "../components/Button.astro";
 import CtaBand from "../components/CtaBand.astro";
@@ -10,7 +11,8 @@ import { canonicalPath, serviceSchema } from "../data/seo";
 
 const path = "/fuer-hausverwaltungen/";
 const breadcrumbs: Array<[string, string]> = [["Für Hausverwaltungen", path]];
-const heroImage = "/images/categories/wohnungsraeumung.png";
+const heroBild = fotos.wohnungsraeumung;
+const heroImage = heroBild.pfad;
 
 const description =
   "Mieterwechsel aus einer Hand für Hausverwaltungen in Emden und Ostfriesland: räumen, zurückbauen, ausbauen, dokumentiert übergeben. Rahmenvertrag möglich.";
@@ -118,7 +120,7 @@ const schema = [
     title="Mieterwechsel komplett - aus einer Hand"
     text="Weniger Leerstandstage pro Einheit: Fixum räumt, baut zurück, koordiniert Fachbetriebe und übergibt nachvollziehbar dokumentiert."
     image={heroImage}
-    imageAlt="Leergeräumte Wohnung wird besenrein gefegt (Symbolbild)"
+    imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={["Rahmenvertrag möglich", "Feste Reaktionszeit", "Mit Fotodoku"]}
   />

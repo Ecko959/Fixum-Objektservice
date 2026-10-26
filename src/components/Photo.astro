@@ -1,6 +1,6 @@
 ---
 import { Picture } from "astro:assets";
-import { findeBild } from "../data/bilder";
+import { bildBreiten, bildQualitaet, findeBild } from "../data/bilder";
 
 interface Props {
   src?: string;
@@ -49,7 +49,8 @@ const style = `--photo-ratio:${ratio ?? `${width} / ${height}`}`;
       pictureAttributes={{ class: `photo ${className}`.trim(), style }}
       src={bild}
       alt={alt}
-      widths={[480, 800, 1200]}
+      widths={bildBreiten}
+      quality={bildQualitaet}
       sizes={sizes ?? "(max-width: 900px) 100vw, 50vw"}
       formats={["avif", "webp"]}
       fallbackFormat="jpeg"

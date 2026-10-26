@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/haushaltsaufloesung/";
@@ -13,8 +14,8 @@ const current = "/haushaltsaufloesung/";
   eyebrow="Haushaltsauflösung & Nachlass"
   title="Haushaltsauflösung mit Rücksicht und festem Preis"
   heroText="Fixum Objektservice löst Haushalte und Nachlässe in Emden und ganz Ostfriesland auf - im Trauerfall, beim Umzug ins Heim oder vor dem Verkauf. Für Angehörige, Erbengemeinschaften und Betreuer, auf Wunsch ohne Ihre Anwesenheit."
-  image="/images/categories/haushaltsaufloesung.png"
-  imageAlt="Haushaltsauflösung: Wohnzimmer mit Umzugskartons und Hausrat (Symbolbild)"
+  image={fotos.wohnungsaufloesung.pfad}
+  imageAlt={fotos.wohnungsaufloesung.alt}
   serviceType="Haushaltsauflösung und Nachlassauflösung"
   areaTitle="Haushaltsauflösung in Emden und Ostfriesland"
   lead="Eine Haushaltsauflösung ist selten nur eine Räumung. Meistens hängt eine Frist daran, eine Erbengemeinschaft, ein Übergabetermin - und Angehörige, die weit weg wohnen. Genau darauf ist unser Ablauf ausgelegt."

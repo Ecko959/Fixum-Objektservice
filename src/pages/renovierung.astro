@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 /**
@@ -19,8 +20,8 @@ const current = "/renovierung/";
   eyebrow="Renovierung"
   title="Renovierung: Wände, Böden, Türen"
   heroText="Wenn ein Raum nicht entkernt werden muss, sondern nur wieder ordentlich aussehen soll: Wände herrichten, Boden erneuern, Türen tauschen - in einem Durchgang und zum Festpreis."
-  image="/images/categories/trockenbau-innenausbau.png"
-  imageAlt="Handwerker beim Beplanken einer Trockenbauwand aus Metallprofilen (Symbolbild)"
+  image={fotos.badDecke.pfad}
+  imageAlt={fotos.badDecke.alt}
   serviceType="Renovierung und Modernisierung von Innenräumen"
   areaTitle="Renovierung in Emden und Ostfriesland"
   lead="Renovieren heißt: Der Raum bleibt, wie er ist, wird aber wieder ansehnlich und nutzbar. Das ist der kleinere Bruder der Kernsanierung - ohne Rohbau, ohne Leitungen, ohne monatelange Baustelle. Für Eigentümer vor dem Einzug, für Vermieter zwischen zwei Mietern und für alle, die eine Wohnung übergeben müssen."

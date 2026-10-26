@@ -1,11 +1,12 @@
 ---
 import Photo from "./Photo.astro";
+import type { Foto } from "../data/referenzen";
 
 interface Props {
   title: string;
   text: string;
   href?: string;
-  image?: string;
+  foto?: Foto;
   bullets?: string[];
   large?: boolean;
   /** Erste Reihe eager laden, alles darunter lazy. */
@@ -16,7 +17,7 @@ const {
   title,
   text,
   href = "/kontakt/",
-  image,
+  foto,
   bullets = [],
   large = false,
   eager = false,
@@ -25,10 +26,10 @@ const {
 
 <article class={`service-card card card--hover ${large ? "is-large" : ""}`}>
   {
-    image && (
+    foto && (
       <Photo
-        src={image}
-        alt={`${title} (Symbolbild)`}
+        src={foto.pfad}
+        alt={foto.alt}
         width={960}
         height={600}
         eager={eager}

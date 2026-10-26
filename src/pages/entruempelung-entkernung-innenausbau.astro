@@ -7,6 +7,7 @@
    (Entrümpelung Emden, Entkernung Emden, Trockenbau Emden). Diese Seite
    verlinkt auf sie und wird von ihnen über das KetteBand verlinkt. */
 import Base from "../layouts/Base.astro";
+import { fotos } from "../data/referenzen";
 import Button from "../components/Button.astro";
 import ContactForm from "../components/ContactForm.astro";
 import CtaBand from "../components/CtaBand.astro";
@@ -27,7 +28,8 @@ const breadcrumbs: Array<[string, string]> = [
 const title = "Fixum Objektservice: Entrümpelung, Entkernung & Ausbau";
 const description =
   "Entrümpelung, Entkernung und Innenausbau in Emden und Ostfriesland aus einer Hand: ein Ansprechpartner, ein Angebot, kein Wartetag zwischen den Firmen.";
-const heroImage = "/images/categories/entkernung-rueckbau.png";
+const heroBild = fotos.dachbodenRueckbau;
+const heroImage = heroBild.pfad;
 
 const schritte: Array<{
   no: string;
@@ -213,7 +215,7 @@ const schema = [
     title="Entrümpelung, Entkernung & Innenausbau in Ostfriesland - alles aus einer Hand"
     text="Fixum Objektservice aus Emden räumt Objekte, baut nicht-tragende Bauteile zurück und übernimmt danach Trockenbau, Boden und Montage. Für Hausverwaltungen, Eigentümer und Sanierungsprojekte in Emden, Aurich, Leer, Norden und ganz Ostfriesland - mit einem Ansprechpartner und einem Angebot."
     image={heroImage}
-    imageAlt="Rückbau in einem Altbau: alte Dielen und Bodenbelag gestapelt, Staubschutz vor der Tür (Symbolbild)"
+    imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
   />
 

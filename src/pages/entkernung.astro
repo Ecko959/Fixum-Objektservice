@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/entkernung/";
@@ -13,8 +14,8 @@ const current = "/entkernung/";
   eyebrow="Entkernung & Rückbau"
   title="Entkernung und nicht-tragender Rückbau"
   heroText="Fixum Objektservice übernimmt Entkernungsarbeiten in Wohnungen und Häusern in Emden und Ostfriesland: alte Böden, nicht-tragende Wände, Deckenverkleidungen und Einbauten kommen raus, sortenrein getrennt. Für Eigentümer, Hausverwaltungen und Bauunternehmen vor Sanierung oder Neuausbau."
-  image="/images/categories/entkernung-rueckbau.png"
-  imageAlt="Rückbau in einem Altbau: alte Dielen und Bodenbelag gestapelt, Staubschutz vor der Tür (Symbolbild)"
+  image={fotos.dachbodenRueckbau.pfad}
+  imageAlt={fotos.dachbodenRueckbau.alt}
   serviceType="Entkernung und nicht-tragender Rückbau"
   areaTitle="Entkernung in Emden und Ostfriesland"
   lead="Entkernung heißt bei Fixum: klare Grenzen, keine Eingriffe in die Statik, keine Schadstoffsanierung und keine Anschlussarbeiten an Strom, Wasser oder Heizung. Alles andere räumen wir kontrolliert zurück."

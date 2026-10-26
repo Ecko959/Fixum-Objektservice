@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/wohnungsraeumung/";
@@ -13,8 +14,8 @@ const current = "/wohnungsraeumung/";
   eyebrow="Wohnungsräumung"
   title="Wohnungsräumung, besenrein zur Übergabe"
   heroText="Fixum Objektservice übernimmt Wohnungsräumung und Wohnungsauflösung in Emden und Ostfriesland - bei Auszug, Mieterwechsel oder vor der Neuvermietung. Für Vermieter, Hausverwaltungen, Eigentümer und Mieter, besenrein zum vereinbarten Übergabetermin."
-  image="/images/categories/wohnungsraeumung.png"
-  imageAlt="Leergeräumte Wohnung wird besenrein gefegt (Symbolbild)"
+  image={fotos.wohnungsraeumung.pfad}
+  imageAlt={fotos.wohnungsraeumung.alt}
   serviceType="Wohnungsräumung"
   areaTitle="Wohnungsräumung in Emden und Ostfriesland"
   lead="Für Vermieter, Hausverwaltungen, Eigentümer und Mieter, die aus einer Wohnung eine übergabefähige Einheit machen müssen - meist unter Zeitdruck und mit einem Abnahmetermin im Kalender."
