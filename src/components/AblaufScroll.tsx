@@ -118,7 +118,7 @@ function Schritt({
       >
         {/* Schrittmarke: Amber-Kreis plus Linie, wie im Ablauf der Ortsseiten */}
         <div className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-full bg-amber font-utility text-sm font-bold text-navy-deep">
+          <span className="grid size-9 place-items-center rounded-sm bg-amber font-utility text-sm font-bold text-navy-deep">
             {nummer}
           </span>
           <span
@@ -146,7 +146,7 @@ function Schritt({
       >
         <span
           aria-hidden="true"
-          className="absolute -bottom-3 -right-3 hidden rounded-2xl border border-blue/25 md:block md:size-[24rem] lg:size-[26rem]"
+          className="absolute -bottom-3 -right-3 hidden rounded-md border border-blue/25 md:block md:size-[24rem] lg:size-[26rem]"
         />
         <img
           src={schritt.bild}
@@ -155,7 +155,7 @@ function Schritt({
           height={832}
           loading="lazy"
           decoding="async"
-          className="relative aspect-square w-full rounded-2xl object-cover shadow-[0_18px_50px_-24px_rgba(19,42,92,0.45)] md:size-[24rem] lg:size-[26rem]"
+          className="relative aspect-square w-full rounded-md object-cover shadow-[0_18px_50px_-24px_rgba(19,42,92,0.45)] md:size-[24rem] lg:size-[26rem]"
         />
       </motion.div>
 
@@ -207,14 +207,14 @@ export default function AblaufScroll({ steps, telHref, whatsappHref }: Props) {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <a
               href={telHref}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-blue px-7 py-3.5 font-utility text-sm font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-blue-bright"
+              className="inline-flex items-center justify-center gap-2 rounded bg-blue px-7 py-3.5 font-utility text-sm font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-blue-bright"
             >
               <Phone size={17} aria-hidden="true" />
               Jetzt anrufen
             </a>
             <a
               href={whatsappHref}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3.5 font-utility text-sm font-bold uppercase tracking-[0.08em] text-white transition-colors hover:border-white/60 hover:bg-white/5"
+              className="inline-flex items-center justify-center gap-2 rounded border border-white/25 px-7 py-3.5 font-utility text-sm font-bold uppercase tracking-[0.08em] text-white transition-colors hover:border-white/60 hover:bg-white/5"
             >
               <MessageCircle size={17} aria-hidden="true" />
               WhatsApp schreiben

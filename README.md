@@ -101,15 +101,29 @@ Hintergrundbild das Skript erneut ausführen.
 
 ## Formular aktivieren
 
-Das Kontaktformular nutzt Formspree. Der Endpunkt wird nicht im Code
-gespeichert.
+Das Kontaktformular schickt Anfragen samt Fotos als E-Mail. Den Versand
+übernimmt die Pages Function `functions/api/anfrage.ts` über
+[Resend](https://resend.com) (kostenlos bis 3.000 Mails im Monat).
 
-1. `.env.example` als `.env` kopieren.
-2. `PUBLIC_FORM_ENDPOINT=` mit dem Formspree-Endpunkt füllen.
-3. `npm run build` ausführen.
+1. Bei Resend ein Konto anlegen und unter „API Keys“ einen Schlüssel
+   erzeugen.
+2. In Cloudflare Pages → Projekt → Settings → Variables and Secrets für
+   „Production“ anlegen:
+   - `RESEND_API_KEY` – der Schlüssel (als Secret)
+   - `ANFRAGE_AN` – Empfänger, Standard `info@fixum-objektservice.de`
+   - `ANFRAGE_VON` – optional, siehe unten
+3. Neu deployen (Deployments → Retry deployment). Erst dann erscheint das
+   Formular; vorher zeigt die Seite Telefon, WhatsApp und E-Mail.
 
-Ist der Wert leer, zeigt die Website automatisch Telefon, WhatsApp und E-Mail
-statt eines Formulars, das ins Leere läuft.
+Ohne bestätigte Domain darf Resend nur an die E-Mail-Adresse des eigenen
+Resend-Kontos senden (Absender `onboarding@resend.dev`). Für einen eigenen
+Absender wie `anfrage@fixum-objektservice.de` die Domain bei Resend unter
+„Domains“ hinzufügen, die angezeigten DNS-Einträge setzen und
+`ANFRAGE_VON` auf `Fixum Website <anfrage@fixum-objektservice.de>` stellen.
+
+Fotos: bis 6 Stück. Das Formular verkleinert sie im Browser auf 1920 px
+(meist unter 1 MB je Foto); Antworten auf die Mail gehen direkt an die
+E-Mail-Adresse des Kunden, falls er eine angegeben hat.
 
 ## Fotos und Referenzen
 
@@ -168,4 +182,4 @@ umgekehrt.
 
 - Build command: `npm run build`
 - Output directory: `dist`
-- Environment variable: `PUBLIC_FORM_ENDPOINT`
+- Variables: `RESEND_API_KEY`, `ANFRAGE_AN`, optional `ANFRAGE_VON` (siehe „Formular aktivieren“)
