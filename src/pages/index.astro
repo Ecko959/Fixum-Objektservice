@@ -1,10 +1,11 @@
 ---
-import { getImage, Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 import AblaufScroll from "../components/AblaufScroll.tsx";
 import Base from "../layouts/Base.astro";
 import AreaServed from "../components/AreaServed.astro";
 import Button from "../components/Button.astro";
 import ContactForm from "../components/ContactForm.astro";
+import HeroBild from "../components/HeroBild.astro";
 import CtaBand from "../components/CtaBand.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
@@ -13,12 +14,7 @@ import Kundenstimmen from "../components/Kundenstimmen.astro";
 import Photo from "../components/Photo.astro";
 import ReferenzMarquee from "../components/ReferenzMarquee.astro";
 import ServiceCard from "../components/ServiceCard.astro";
-import {
-  bildBreiten,
-  bildQualitaet,
-  findeBild,
-  heroQualitaet,
-} from "../data/bilder";
+import { bildQualitaet, findeBild } from "../data/bilder";
 import { fotos, type Foto } from "../data/referenzen";
 import { services } from "../data/services";
 import { site, telUrl, whatsappUrl } from "../data/site";
@@ -164,19 +160,7 @@ const serviceChips: Array<[string, string]> = [
   <section class="hero section--dark">
     {
       heroBild && (
-        <Picture
-          pictureAttributes={{ class: "hero-media" }}
-          src={heroBild}
-          alt={heroFoto.alt}
-          widths={bildBreiten}
-          quality={heroQualitaet}
-          sizes="100vw"
-          formats={["avif", "webp"]}
-          fallbackFormat="jpeg"
-          loading="eager"
-          fetchpriority="high"
-          decoding="sync"
-        />
+        <HeroBild bild={heroBild} alt={heroFoto.alt} class="hero-media" />
       )
     }
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -571,13 +555,13 @@ const serviceChips: Array<[string, string]> = [
       clamp(2.5rem, 5vw, 3.5rem);
   }
 
-  .hero-media {
+  .hero :global(.hero-media) {
     position: absolute;
     inset: 0;
     z-index: -2;
   }
 
-  .hero-media img {
+  .hero :global(.hero-media img) {
     width: 100%;
     height: 100%;
     object-fit: cover;

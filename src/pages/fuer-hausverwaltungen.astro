@@ -7,6 +7,7 @@ import CtaBand from "../components/CtaBand.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
+import ReferenzMarquee from "../components/ReferenzMarquee.astro";
 import { canonicalPath, serviceSchema } from "../data/seo";
 
 const path = "/fuer-hausverwaltungen/";
@@ -123,6 +124,29 @@ const schema = [
     imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={["Rahmenvertrag möglich", "Feste Reaktionszeit", "Mit Fotodoku"]}
+  />
+
+  {
+    /* Referenzen direkt unter dem Hero: Verwaltungen sehen zuerst Ergebnisse.
+      Räumungen und Renovierungen vorn - das ist ihr Mieterwechsel. */
+  }
+  <ReferenzMarquee
+    eyebrow="Referenzen"
+    titel="Vorher voll, nachher"
+    akzent="übergabefertig."
+    text="Echte Aufträge aus Emden und Ostfriesland – Räumung, Rückbau und Renovierung, fotografiert vor und nach unserer Arbeit."
+    zuerst={[
+      "wohnungsraeumung",
+      "wohnungsaufloesung",
+      "entruempelungMessie",
+      "badDecke",
+      "messieSchlafzimmer",
+      "dachzimmer",
+      "altbauTrockenbau",
+      "dachbodenRueckbau",
+    ]}
+    anfrageHref="/kontakt/"
+    anfrageText="Konditionen anfordern"
   />
 
   {/* Nutzen */}

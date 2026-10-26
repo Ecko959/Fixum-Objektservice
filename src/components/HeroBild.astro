@@ -1,0 +1,29 @@
+---
+/* Hero-Bild als <picture> mit breitenabhängiger Qualität - siehe
+   src/lib/heroBild.ts. Ein leeres alt blendet das Bild für Screenreader
+   aus (rein dekorativ). */
+import { heroQuellen } from "../lib/heroBild";
+
+interface Props {
+  bild: ImageMetadata;
+  alt?: string;
+  class?: string;
+}
+
+const { bild, alt = "", class: klasse } = Astro.props;
+const q = await heroQuellen(bild);
+---
+
+<picture class={klasse} aria-hidden={alt ? undefined : "true"}>
+  <source type="image/avif" srcset={q.avif} sizes="100vw" />
+  <source type="image/webp" srcset={q.webp} sizes="100vw" />
+  <img
+    src={q.jpeg}
+    alt={alt}
+    width={q.width}
+    height={q.height}
+    loading="eager"
+    fetchpriority="high"
+    decoding="sync"
+  />
+</picture>

@@ -13,8 +13,8 @@ import {
   logoSchema,
   websiteSchema,
 } from "../data/seo";
-import { getImage } from "astro:assets";
-import { bildBreiten, findeBild, heroQualitaet } from "../data/bilder";
+import { findeBild } from "../data/bilder";
+import { heroQuellen } from "../lib/heroBild";
 import { site } from "../data/site";
 /* Fließtext (400) und Überschriften (800) stehen auf jeder Seite über der
    Falzlinie. Vite hängt denselben Hash an wie in der @font-face-Regel, der
@@ -65,18 +65,10 @@ const robots = noindex
   ? "noindex, nofollow"
   : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
 /* Das Hero-Bild ist das LCP-Element. Der Preload nennt genau die Datei, die
-   PageHero als erste Wahl anbietet - dieselben Breiten, dasselbe Format -,
-   sonst lädt der Browser zwei Fassungen statt einer.
-   Die Adresse entsteht erst beim Bauen, deshalb getImage statt Pfadstring. */
+   PageHero als erste Wahl anbietet - beide kommen aus heroQuellen() -,
+   sonst lädt der Browser zwei Fassungen statt einer. */
 const heroQuelle = findeBild(preloadImage);
-const preload = heroQuelle
-  ? await getImage({
-      src: heroQuelle,
-      widths: bildBreiten,
-      format: "avif",
-      quality: heroQualitaet,
-    })
-  : undefined;
+const preload = heroQuelle ? await heroQuellen(heroQuelle) : undefined;
 
 const pageNode: Record<string, unknown> = {
   "@type": pageType,
@@ -173,8 +165,8 @@ const jsonLd = JSON.stringify({
         <link
           rel="preload"
           as="image"
-          href={preload.src}
-          imagesrcset={preload.srcSet.attribute}
+          href={preload.avifGross}
+          imagesrcset={preload.avif}
           imagesizes="100vw"
           type="image/avif"
           fetchpriority="high"

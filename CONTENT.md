@@ -346,11 +346,12 @@ Breite der Originale; größer zu rechnen brächte nur Bytes.
 `src/data/bilder.ts` bildet die Pfade aus `referenzen.ts`
 (`/images/referenzen/x.webp`) auf die verarbeiteten Bilder ab.
 
-Qualität 82, Hero-Bilder 60: Sie liegen unter einem dunklen Verlauf, dort
-fällt der Unterschied nicht auf, das LCP-Bild wird aber nur halb so groß.
-`Base.astro` lädt das Hero-Bild mit denselben Breiten und derselben Qualität
-vor (`imagesrcset`) - weichen die Werte von `PageHero.astro` ab, lädt der
-Browser das Bild doppelt.
+Qualität 82. Hero-Bilder laufen über `src/lib/heroBild.ts` mit
+breitenabhängiger Qualität: bis 960 px (Handy) 60, darüber (Desktop) 82 und
+bis 1920 px Breite, gekappt auf die Vorlage. Mit durchgehend 60 waren auf
+großen Bildschirmen Blockränder zu sehen, durchgehend 82 kostete auf dem Handy
+rund eine Sekunde LCP. `Base.astro` lädt das Hero-Bild aus derselben Funktion
+vor - so nennen Preload und `<picture>` dieselben Dateien.
 
 Der Rückfall im `<img>` ist **JPEG, nicht PNG**. Er greift nur bei Browsern
 ohne AVIF und ohne WebP.

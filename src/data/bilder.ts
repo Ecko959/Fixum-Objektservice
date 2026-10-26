@@ -30,14 +30,15 @@ export const bilder: Record<string, ImageMetadata> = Object.fromEntries(
 
 /* Breiten und Qualität aller ausgelieferten Fotos. Die Originale sind
    1400 px breit - größer zu rechnen brächte nur Bytes, keine Schärfe.
-   Base.astro lädt das Hero-Bild mit genau diesen Werten vor; weichen sie
-   von denen in PageHero ab, holt der Browser das Bild zweimal. */
+   Base.astro lädt das Hero-Bild mit heroBreiten und heroQualitaet vor;
+   weichen sie von denen in PageHero ab, holt der Browser das Bild zweimal. */
 export const bildBreiten = [480, 960, 1400];
 export const bildQualitaet = 82;
-/* Hero-Bilder liegen unter einem dunklen Verlauf (60 bis 95 % Deckkraft).
-   Dort fällt die niedrigere Qualität nicht auf, spart aber gut die Hälfte
-   der Bytes am LCP-Element. */
-export const heroQualitaet = 60;
+/* Hero-Bilder füllen auf großen Bildschirmen die ganze Breite. Deshalb
+   zusätzlich 1920 px - es wird auf die Breite der Vorlage (1400 bzw.
+   1600 px) gekappt, nichts hochgerechnet. Wie die Varianten entstehen,
+   steht in src/lib/heroBild.ts. */
+export const heroBreiten = [480, 960, 1400, 1920];
 
 /**
  * Bild zu einem Pfad. Gibt undefined zurück, wenn es das Bild nicht gibt -

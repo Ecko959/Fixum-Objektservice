@@ -1,9 +1,12 @@
 ---
-/* Referenz-Sektion der Startseite: zwei endlos laufende Fotoreihen und eine
-   Lightbox, die durch alle Projekte blättert.
+/* Referenz-Sektion: zwei endlos laufende Fotoreihen und eine Lightbox, die
+   durch alle Projekte blättert. Läuft auf der Startseite und auf
+   /fuer-hausverwaltungen/.
 
    Die Daten stehen zentral in src/data/referenzen.ts - Reihenfolge dort
-   ist die Reihenfolge hier und in der Lightbox.
+   ist die Reihenfolge hier und in der Lightbox. Eine Seite kann mit
+   `zuerst` einzelne Fotos nach vorn holen; alle übrigen folgen in der
+   gewohnten Reihenfolge.
 
    Grundzustand ohne JavaScript und bei "Bewegung reduzieren": jede Reihe
    ist eine normal scrollbare Leiste mit Einrasten. Erst das Skript schaltet
@@ -12,10 +15,39 @@
 import { getImage, Picture } from "astro:assets";
 import Icon from "./Icon.astro";
 import { bildQualitaet, findeBild } from "../data/bilder";
-import { fotos, referenzen } from "../data/referenzen";
+import { fotos, referenzen, type FotoName } from "../data/referenzen";
+
+interface Props {
+  eyebrow?: string;
+  /** Überschrift vor dem kursiven Akzentwort. */
+  titel?: string;
+  /** Kursives Wort am Ende der Überschrift, in Fraunces. */
+  akzent?: string;
+  text?: string;
+  /** Diese Fotos stehen vorn, in dieser Reihenfolge. */
+  zuerst?: FotoName[];
+  /** Ziel des Anfrage-Buttons. */
+  anfrageHref?: string;
+  anfrageText?: string;
+}
+
+const {
+  eyebrow = "Referenzen",
+  titel = "Unsere fertigen",
+  akzent = "Projekte.",
+  text = "Echte Aufträge aus Emden und Ostfriesland – von der Entrümpelung bis zum fertigen Raum.",
+  zuerst = [],
+  anfrageHref = "#anfrage",
+  anfrageText = "Ihr Projekt anfragen",
+} = Astro.props;
+
+const sortiert = [
+  ...zuerst.flatMap((name) => referenzen.filter((r) => r.foto === name)),
+  ...referenzen.filter((r) => !zuerst.includes(r.foto)),
+];
 
 const eintraege = await Promise.all(
-  referenzen.map(async (r, index) => {
+  sortiert.map(async (r, index) => {
     const foto = fotos[r.foto];
     const bild = findeBild(foto.pfad)!;
     /* Lightbox: WebP in zwei Breiten. Die Karten selbst nehmen <Picture>. */
@@ -59,12 +91,9 @@ const anzahl = eintraege.length;
   data-referenzen
 >
   <div class="container section-head" data-reveal>
-    <p class="eyebrow">Referenzen</p>
-    <h2 id="referenzen-title">Unsere fertigen <em>Projekte.</em></h2>
-    <p class="muted">
-      Echte Aufträge aus Emden und Ostfriesland – von der Entrümpelung bis zum
-      fertigen Raum.
-    </p>
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id="referenzen-title">{titel} <em>{akzent}</em></h2>
+    <p class="muted">{text}</p>
   </div>
 
   <div class="rm-reihen">
@@ -103,6 +132,7 @@ const anzahl = eintraege.length;
                         quality={bildQualitaet}
                         loading="lazy"
                         decoding="async"
+                        fetchpriority="low"
                         draggable="false"
                       />
                       <span class="rm-titel">{e.titel}</span>
@@ -121,8 +151,8 @@ const anzahl = eintraege.length;
     <button type="button" class="btn btn--secondary" data-alle>
       Alle Projekte ansehen
     </button>
-    <a class="btn" href="#anfrage" data-track="angebot">
-      Ihr Projekt anfragen
+    <a class="btn" href={anfrageHref} data-track="angebot">
+      {anfrageText}
       <Icon name="arrow" size={18} />
     </a>
   </div>
