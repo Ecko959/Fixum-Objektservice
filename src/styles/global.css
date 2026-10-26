@@ -434,16 +434,17 @@ h4 {
   color: var(--blue);
 }
 
-/* Kurzer Strich vor der Dachzeile - setzt einen klaren Anfang wie eine
-   Markierung auf dem Bauplan. */
+/* Feiner Strich vor der Dachzeile - eine leise Markierung wie auf dem
+   Bauplan, kein zweites Gestaltungselement. */
 .eyebrow::before {
   content: "";
   display: inline-block;
-  width: 1.75rem;
-  height: 2px;
-  margin-right: 0.625rem;
-  vertical-align: 0.3em;
+  width: 0.875rem;
+  height: 1px;
+  margin-right: 0.5rem;
+  vertical-align: 0.32em;
   background: currentColor;
+  opacity: 0.55;
 }
 
 .section--dark .eyebrow,
