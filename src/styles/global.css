@@ -640,6 +640,21 @@ h4 {
   background: rgba(22, 104, 196, 0.06);
 }
 
+/* Formularkarte in der dunklen Hero-Variante: wieder die Dunkel-Fassung. */
+.contact-form.is-dunkel .btn--secondary,
+.contact-fallback.is-dunkel .btn--secondary {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.contact-form.is-dunkel .btn--secondary:hover,
+.contact-fallback.is-dunkel .btn--secondary:hover {
+  color: #fff;
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 /* WhatsApp-Schaltflächen tragen die plastische Marke statt eines Strich-Icons.
    Eine runde Scheibe braucht optisch weniger Luft zum Rand als eine Textkante,
    sonst sitzt der Knopf schief. Das flachere Innenmaß hält die Schaltfläche

@@ -11,9 +11,15 @@ interface Props {
   /** Vorbelegtes Thema, z. B. von einer Leistungsseite aus. */
   topic?: string;
   title?: string;
+  /** Dunkle Glas-Variante für den Hero - statt weißer Karte. */
+  dunkel?: boolean;
 }
 
-const { topic = "", title = "Kostenlose Besichtigung anfragen" } = Astro.props;
+const {
+  topic = "",
+  title = "Kostenlose Besichtigung anfragen",
+  dunkel = false,
+} = Astro.props;
 
 /* Das Formular schickt an die Pages Function functions/api/anfrage.ts, die
    per Resend eine E-Mail mit den Fotos als Anhang verschickt. Solange in
@@ -38,7 +44,7 @@ const topics = [
 {
   aktiv ? (
     <form
-      class="contact-form"
+      class:list={["contact-form", { "is-dunkel": dunkel }]}
       method="post"
       action="/api/anfrage"
       enctype="multipart/form-data"
@@ -208,7 +214,7 @@ const topics = [
       </p>
     </form>
   ) : (
-    <div class="contact-fallback">
+    <div class:list={["contact-fallback", { "is-dunkel": dunkel }]}>
       <div class="form-head">
         <p class="form-title">{title}</p>
         <p class="form-sub">
@@ -720,6 +726,122 @@ const topics = [
   [data-senden]:disabled {
     opacity: 0.7;
     cursor: progress;
+  }
+
+  /* ---- Dunkle Variante (Hero) ----
+     Glasfläche auf dem Hero-Foto, oben eine blaue Akzentkante. Nur Navy,
+     Weiß und Blau - keine weiteren Farben. */
+  .is-dunkel {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background:
+      linear-gradient(
+        165deg,
+        rgba(31, 122, 224, 0.22),
+        rgba(10, 23, 48, 0) 45%
+      ),
+      rgba(7, 19, 38, 0.72);
+    box-shadow:
+      0 30px 70px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px) saturate(140%);
+  }
+
+  .is-dunkel::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-bright), var(--blue-light));
+  }
+
+  .is-dunkel .form-title {
+    color: #fff;
+  }
+
+  .is-dunkel .form-sub,
+  .is-dunkel .form-note,
+  .is-dunkel .checkbox,
+  .is-dunkel .optional,
+  .is-dunkel .foto-text small {
+    color: var(--on-dark-soft);
+  }
+
+  .is-dunkel .field-label,
+  .is-dunkel .foto-text strong {
+    color: #fff;
+  }
+
+  .is-dunkel .form-note :global(.icon),
+  .is-dunkel .fallback-mail,
+  .is-dunkel .checkbox a {
+    color: var(--blue-light);
+  }
+
+  .is-dunkel input,
+  .is-dunkel select,
+  .is-dunkel textarea {
+    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+
+  .is-dunkel select option {
+    color: var(--ink);
+  }
+
+  .is-dunkel input::placeholder,
+  .is-dunkel textarea::placeholder {
+    color: rgba(211, 227, 249, 0.55);
+  }
+
+  .is-dunkel input:focus,
+  .is-dunkel select:focus,
+  .is-dunkel textarea:focus {
+    border-color: var(--blue-light);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 4px rgba(79, 160, 245, 0.2);
+  }
+
+  .is-dunkel .select-wrap::after {
+    border-color: var(--blue-light);
+  }
+
+  .is-dunkel .foto-feld {
+    border-color: rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .is-dunkel .foto-feld:hover,
+  .is-dunkel .foto-feld:focus-within {
+    border-color: var(--blue-light);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .is-dunkel .foto-icon {
+    background: var(--blue);
+  }
+
+  .is-dunkel .error {
+    color: #ffb4ab;
+  }
+
+  .is-dunkel .has-error input,
+  .is-dunkel .has-error select,
+  .is-dunkel .has-error textarea {
+    border-color: #ffb4ab;
+    background: rgba(179, 38, 30, 0.14);
+  }
+
+  .is-dunkel .form-status {
+    border-left-color: #ffb4ab;
+    background: rgba(179, 38, 30, 0.18);
+    color: #fff;
+  }
+
+  .is-dunkel .form-status a {
+    color: var(--blue-light);
   }
 
   @media (max-width: 480px) {
