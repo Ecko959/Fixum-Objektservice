@@ -1,0 +1,983 @@
+---
+/* Referenz-Sektion der Startseite: zwei endlos laufende Fotoreihen und eine
+   Lightbox, die durch alle Projekte blättert.
+
+   Die Daten stehen zentral in src/data/referenzen.ts - Reihenfolge dort
+   ist die Reihenfolge hier und in der Lightbox.
+
+   Grundzustand ohne JavaScript und bei "Bewegung reduzieren": jede Reihe
+   ist eine normal scrollbare Leiste mit Einrasten. Erst das Skript schaltet
+   auf Laufband um (Klasse is-laeuft) und blendet dafür die Kopie jeder
+   Reihe ein, die den nahtlosen Übergang trägt. */
+import { getImage, Picture } from "astro:assets";
+import Icon from "./Icon.astro";
+import { bildQualitaet, findeBild } from "../data/bilder";
+import { fotos, referenzen } from "../data/referenzen";
+
+const eintraege = await Promise.all(
+  referenzen.map(async (r, index) => {
+    const foto = fotos[r.foto];
+    const bild = findeBild(foto.pfad)!;
+    /* Lightbox: WebP in zwei Breiten. Die Karten selbst nehmen <Picture>. */
+    const gross = await getImage({
+      src: bild,
+      widths: [960, 1400],
+      format: "webp",
+      quality: bildQualitaet,
+    });
+    return {
+      index,
+      bild,
+      alt: foto.alt,
+      titel: `${r.leistung} · ${r.typ}`,
+      kategorie: r.kategorie,
+      lightbox: {
+        src: gross.src,
+        srcset: gross.srcSet.attribute,
+        w: bild.width,
+        h: bild.height,
+        alt: foto.alt,
+        titel: `${r.leistung} · ${r.typ}`,
+        kategorie: r.kategorie,
+      },
+    };
+  }),
+);
+
+/* Obere Reihe die erste Hälfte (die stärksten Bilder), untere der Rest. */
+const mitte = Math.ceil(eintraege.length / 2);
+const reihen = [
+  { richtung: "links", tempo: 38, eintraege: eintraege.slice(0, mitte) },
+  { richtung: "rechts", tempo: 26, eintraege: eintraege.slice(mitte) },
+];
+const anzahl = eintraege.length;
+---
+
+<section
+  class="section referenzen"
+  aria-labelledby="referenzen-title"
+  data-referenzen
+>
+  <div class="container section-head" data-reveal>
+    <p class="eyebrow">Referenzen</p>
+    <h2 id="referenzen-title">Unsere fertigen <em>Projekte.</em></h2>
+    <p class="muted">
+      Echte Aufträge aus Emden und Ostfriesland – von der Entrümpelung bis zum
+      fertigen Raum.
+    </p>
+  </div>
+
+  <div class="rm-reihen">
+    {
+      reihen.map((reihe, r) => (
+        <div
+          class="rm-reihe"
+          data-reihe
+          data-richtung={reihe.richtung}
+          data-tempo={reihe.tempo}
+          role="region"
+          aria-label={`Projektfotos, Reihe ${r + 1}`}
+        >
+          <div class="rm-band" data-band>
+            {[false, true].map((kopie) => (
+              <ul
+                class:list={["rm-gruppe", { "rm-gruppe--kopie": kopie }]}
+                aria-hidden={kopie ? "true" : undefined}
+              >
+                {reihe.eintraege.map((e) => (
+                  <li class="rm-eintrag">
+                    <button
+                      type="button"
+                      class="rm-karte"
+                      data-index={e.index}
+                      aria-label={`${e.titel} – Foto vergrößern`}
+                      tabindex={kopie ? -1 : undefined}
+                    >
+                      <Picture
+                        src={e.bild}
+                        alt={kopie ? "" : e.alt}
+                        widths={[480, 960]}
+                        sizes="(max-width: 640px) 260px, 380px"
+                        formats={["avif", "webp"]}
+                        fallbackFormat="jpeg"
+                        quality={bildQualitaet}
+                        loading="lazy"
+                        decoding="async"
+                        draggable="false"
+                      />
+                      <span class="rm-titel">{e.titel}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="container rm-aktionen" data-reveal>
+    <button type="button" class="btn btn--secondary" data-alle>
+      Alle Projekte ansehen
+    </button>
+    <a class="btn" href="#anfrage" data-track="angebot">
+      Ihr Projekt anfragen
+      <Icon name="arrow" size={18} />
+    </a>
+  </div>
+
+  <dialog class="lb" aria-modal="true" aria-labelledby="lb-titel" data-lightbox>
+    <div class="lb-kopf">
+      <p class="lb-zaehler" aria-live="polite">
+        <span data-lb-nr>01</span> / {String(anzahl).padStart(2, "0")}
+      </p>
+      <button
+        type="button"
+        class="lb-knopf lb-zu"
+        aria-label="Schließen"
+        data-lb-zu
+        autofocus
+      >
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="lb-buehne" data-lb-buehne>
+      <button
+        type="button"
+        class="lb-knopf lb-pfeil lb-pfeil--zurueck"
+        aria-label="Vorheriges Foto"
+        data-lb-zurueck
+      >
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7"></path>
+        </svg>
+      </button>
+
+      <figure class="lb-figur">
+        <img class="lb-bild" data-lb-bild alt="" decoding="async" />
+        <figcaption class="lb-text">
+          <span class="lb-titel" id="lb-titel" data-lb-titel></span>
+          <span class="lb-kategorie" data-lb-kategorie></span>
+        </figcaption>
+      </figure>
+
+      <button
+        type="button"
+        class="lb-knopf lb-pfeil lb-pfeil--weiter"
+        aria-label="Nächstes Foto"
+        data-lb-weiter
+      >
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+  </dialog>
+
+  <script
+    is:inline
+    type="application/json"
+    data-lb-daten
+    set:html={JSON.stringify(eintraege.map((e) => e.lightbox))}
+  />
+</section>
+
+<script>
+  type Eintrag = {
+    src: string;
+    srcset: string;
+    w: number;
+    h: number;
+    alt: string;
+    titel: string;
+    kategorie: string;
+  };
+
+  const sektion = document.querySelector<HTMLElement>("[data-referenzen]");
+
+  if (sektion) {
+    const daten: Eintrag[] = JSON.parse(
+      sektion.querySelector("[data-lb-daten]")?.textContent || "[]",
+    );
+
+    /* ---------------------------------------------------------- Laufband */
+    const ruhig = matchMedia("(prefers-reduced-motion: reduce)");
+    const feinerZeiger = matchMedia("(hover: hover) and (pointer: fine)");
+
+    type Reihe = {
+      el: HTMLElement;
+      band: HTMLElement;
+      richtung: number;
+      tempo: number;
+      x: number;
+      breite: number;
+      faktor: number;
+      ziel: number;
+      hover: boolean;
+      fokus: boolean;
+      ziehen: null | { id: number; start: number; x0: number; aktiv: boolean };
+      gezogen: boolean;
+    };
+
+    const reihen: Reihe[] = [
+      ...sektion.querySelectorAll<HTMLElement>("[data-reihe]"),
+    ].map((el) => ({
+      el,
+      band: el.querySelector<HTMLElement>("[data-band]")!,
+      richtung: el.dataset.richtung === "rechts" ? 1 : -1,
+      tempo: Number(el.dataset.tempo) || 30,
+      x: 0,
+      breite: 0,
+      faktor: 1,
+      ziel: 1,
+      hover: false,
+      fokus: false,
+      ziehen: null,
+      gezogen: false,
+    }));
+
+    /* Eine Gruppe ist eine vollständige Runde. Ihre Breite plus ein Abstand
+       ist die Strecke, nach der das Band nahtlos von vorn beginnt. */
+    const messen = () => {
+      reihen.forEach((r) => {
+        const gruppe = r.band.firstElementChild as HTMLElement;
+        const abstand = parseFloat(getComputedStyle(r.band).columnGap) || 0;
+        r.breite = gruppe.getBoundingClientRect().width + abstand;
+        r.x = einpassen(r.x, r.breite);
+        setzen(r);
+      });
+    };
+
+    const einpassen = (x: number, breite: number) => {
+      if (!breite) return 0;
+      let v = x % breite;
+      if (v > 0) v -= breite;
+      return v;
+    };
+
+    const setzen = (r: Reihe) => {
+      r.band.style.transform = `translate3d(${r.x.toFixed(2)}px, 0, 0)`;
+    };
+
+    const zielSetzen = (r: Reihe) => {
+      r.ziel = r.hover || r.fokus || r.ziehen?.aktiv ? 0 : 1;
+    };
+
+    let laeuft = false;
+    let sichtbar = false;
+    let frame = 0;
+    let zuletzt = 0;
+
+    const schritt = (jetzt: number) => {
+      const dt = Math.min((jetzt - zuletzt) / 1000, 0.05);
+      zuletzt = jetzt;
+      /* Weiches Anhalten und Anfahren statt hartem Stopp. */
+      const glatt = 1 - Math.exp(-dt * 5);
+      reihen.forEach((r) => {
+        r.faktor += (r.ziel - r.faktor) * glatt;
+        if (r.ziehen?.aktiv) return;
+        r.x = einpassen(r.x + r.richtung * r.tempo * r.faktor * dt, r.breite);
+        setzen(r);
+      });
+      frame = requestAnimationFrame(schritt);
+    };
+
+    const starten = () => {
+      if (!laeuft || !sichtbar || document.hidden || frame) return;
+      zuletzt = performance.now();
+      frame = requestAnimationFrame(schritt);
+    };
+
+    const anhalten = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const einschalten = () => {
+      if (laeuft) return;
+      laeuft = true;
+      sektion.classList.add("is-laeuft");
+      reihen.forEach((r) => (r.el.scrollLeft = 0));
+      messen();
+      starten();
+    };
+
+    const ausschalten = () => {
+      laeuft = false;
+      anhalten();
+      sektion.classList.remove("is-laeuft");
+      reihen.forEach((r) => {
+        r.x = 0;
+        r.band.style.transform = "";
+      });
+    };
+
+    if (!ruhig.matches) einschalten();
+    ruhig.addEventListener("change", () =>
+      ruhig.matches ? ausschalten() : einschalten(),
+    );
+
+    /* Nur laufen, solange die Sektion zu sehen ist. */
+    new IntersectionObserver(
+      ([eintrag]) => {
+        sichtbar = eintrag.isIntersecting;
+        sichtbar ? starten() : anhalten();
+      },
+      { rootMargin: "100px 0px" },
+    ).observe(sektion);
+
+    document.addEventListener("visibilitychange", () =>
+      document.hidden ? anhalten() : starten(),
+    );
+
+    let messTimer = 0;
+    addEventListener("resize", () => {
+      clearTimeout(messTimer);
+      messTimer = window.setTimeout(() => laeuft && messen(), 150);
+    });
+
+    reihen.forEach((r) => {
+      /* Hover: sanft anhalten - nur mit Maus, auf Touch gibt es kein Hover. */
+      r.el.addEventListener("pointerenter", (e) => {
+        if (e.pointerType !== "mouse" || !feinerZeiger.matches) return;
+        r.hover = true;
+        zielSetzen(r);
+      });
+      r.el.addEventListener("pointerleave", (e) => {
+        if (e.pointerType !== "mouse") return;
+        r.hover = false;
+        zielSetzen(r);
+      });
+
+      /* Tastatur: anhalten und die fokussierte Karte ins Bild holen. */
+      r.el.addEventListener("focusin", (e) => {
+        /* Nur Tastaturfokus - ein Mausklick fokussiert die Karte auch,
+           soll das Band danach aber nicht dauerhaft anhalten. */
+        if (!laeuft || !(e.target as HTMLElement).matches(":focus-visible"))
+          return;
+        r.fokus = true;
+        zielSetzen(r);
+        const karte = (e.target as HTMLElement).closest(".rm-karte");
+        if (!karte) return;
+        const rand = 24;
+        const box = karte.getBoundingClientRect();
+        const feld = r.el.getBoundingClientRect();
+        if (box.left < feld.left + rand) r.x += feld.left + rand - box.left;
+        else if (box.right > feld.right - rand)
+          r.x -= box.right - (feld.right - rand);
+        r.x = Math.min(0, Math.max(-r.breite, r.x));
+        setzen(r);
+      });
+      r.el.addEventListener("focusout", (e) => {
+        if (r.el.contains(e.relatedTarget as Node)) return;
+        r.fokus = false;
+        zielSetzen(r);
+      });
+
+      /* Wischen und Ziehen verschiebt das Band von Hand, danach läuft es
+         weiter. Senkrechtes Wischen bleibt Seitenscrollen (touch-action). */
+      r.el.addEventListener("pointerdown", (e) => {
+        if (!laeuft || e.button !== 0) return;
+        r.ziehen = { id: e.pointerId, start: e.clientX, x0: r.x, aktiv: false };
+        r.gezogen = false;
+      });
+      r.el.addEventListener("pointermove", (e) => {
+        const z = r.ziehen;
+        if (!z || z.id !== e.pointerId) return;
+        const dx = e.clientX - z.start;
+        if (!z.aktiv && Math.abs(dx) > 6) {
+          z.aktiv = true;
+          r.gezogen = true;
+          r.el.setPointerCapture(e.pointerId);
+          r.el.classList.add("is-gezogen");
+          zielSetzen(r);
+        }
+        if (z.aktiv) {
+          r.x = einpassen(z.x0 + dx, r.breite);
+          setzen(r);
+        }
+      });
+      const loslassen = (e: PointerEvent) => {
+        if (!r.ziehen || r.ziehen.id !== e.pointerId) return;
+        r.ziehen = null;
+        r.el.classList.remove("is-gezogen");
+        zielSetzen(r);
+      };
+      r.el.addEventListener("pointerup", loslassen);
+      r.el.addEventListener("pointercancel", loslassen);
+      /* Nach einem Zieher kein Klick - sonst öffnet jedes Wischen die
+         Lightbox. */
+      r.el.addEventListener(
+        "click",
+        (e) => {
+          if (!r.gezogen) return;
+          r.gezogen = false;
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        true,
+      );
+    });
+
+    /* ---------------------------------------------------------- Lightbox */
+    const dialog = sektion.querySelector<HTMLDialogElement>("[data-lightbox]")!;
+    const bild = dialog.querySelector<HTMLImageElement>("[data-lb-bild]")!;
+    const nr = dialog.querySelector<HTMLElement>("[data-lb-nr]")!;
+    const titel = dialog.querySelector<HTMLElement>("[data-lb-titel]")!;
+    const kategorie = dialog.querySelector<HTMLElement>("[data-lb-kategorie]")!;
+    const buehne = dialog.querySelector<HTMLElement>("[data-lb-buehne]")!;
+
+    let aktuell = 0;
+    let ausloeser: HTMLElement | null = null;
+    const geladen = new Set<number>();
+
+    const vorladen = (i: number) => {
+      const n = (i + daten.length) % daten.length;
+      if (geladen.has(n)) return;
+      geladen.add(n);
+      const vor = new Image();
+      vor.sizes = "min(92vw, 1400px)";
+      vor.srcset = daten[n].srcset;
+      vor.src = daten[n].src;
+    };
+
+    const zeigen = (i: number) => {
+      aktuell = (i + daten.length) % daten.length;
+      const d = daten[aktuell];
+      bild.classList.add("is-wechsel");
+      bild.width = d.w;
+      bild.height = d.h;
+      bild.alt = d.alt;
+      bild.sizes = "min(92vw, 1400px)";
+      bild.srcset = d.srcset;
+      bild.src = d.src;
+      nr.textContent = String(aktuell + 1).padStart(2, "0");
+      titel.textContent = d.titel;
+      kategorie.textContent = d.kategorie;
+      geladen.add(aktuell);
+      vorladen(aktuell + 1);
+      vorladen(aktuell - 1);
+    };
+
+    const fertig = () => bild.classList.remove("is-wechsel");
+    bild.addEventListener("load", fertig);
+    bild.addEventListener("error", fertig);
+
+    /* Seite festhalten, ohne dass sie um die Scrollbar-Breite springt. */
+    const sperren = (an: boolean) => {
+      const html = document.documentElement;
+      if (an) {
+        const leiste = innerWidth - html.clientWidth;
+        html.style.overflow = "hidden";
+        if (leiste > 0) html.style.paddingRight = `${leiste}px`;
+      } else {
+        html.style.overflow = "";
+        html.style.paddingRight = "";
+      }
+    };
+
+    const oeffnen = (i: number, von: HTMLElement) => {
+      ausloeser = von;
+      zeigen(i);
+      dialog.classList.remove("is-zu");
+      dialog.showModal();
+      sperren(true);
+    };
+
+    const schliessen = () => {
+      if (!dialog.open || dialog.classList.contains("is-zu")) return;
+      dialog.classList.add("is-zu");
+      const ende = () => {
+        dialog.close();
+        dialog.classList.remove("is-zu");
+      };
+      ruhig.matches ? ende() : setTimeout(ende, 180);
+    };
+
+    dialog.addEventListener("close", () => {
+      sperren(false);
+      ausloeser?.focus({ preventScroll: true });
+    });
+
+    sektion.addEventListener("click", (e) => {
+      const karte = (e.target as HTMLElement).closest<HTMLElement>(".rm-karte");
+      if (karte) {
+        /* Ein Klick auf die Kopie gibt den Fokus danach an das Original. */
+        const original =
+          sektion.querySelector<HTMLElement>(
+            `.rm-gruppe:not(.rm-gruppe--kopie) [data-index="${karte.dataset.index}"]`,
+          ) ?? karte;
+        oeffnen(Number(karte.dataset.index), original);
+        return;
+      }
+      const alle = (e.target as HTMLElement).closest<HTMLElement>(
+        "[data-alle]",
+      );
+      if (alle) oeffnen(0, alle);
+    });
+
+    dialog.querySelector("[data-lb-zu]")!.addEventListener("click", schliessen);
+    dialog
+      .querySelector("[data-lb-zurueck]")!
+      .addEventListener("click", () => zeigen(aktuell - 1));
+    dialog
+      .querySelector("[data-lb-weiter]")!
+      .addEventListener("click", () => zeigen(aktuell + 1));
+
+    dialog.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      schliessen();
+    });
+
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") zeigen(aktuell - 1);
+      else if (e.key === "ArrowRight") zeigen(aktuell + 1);
+    });
+
+    /* Klick neben das Bild schließt. */
+    dialog.addEventListener("click", (e) => {
+      if (wischGeste) return;
+      const ziel = e.target as HTMLElement;
+      if (
+        ziel === dialog ||
+        ziel === buehne ||
+        ziel.classList.contains("lb-figur")
+      )
+        schliessen();
+    });
+
+    /* Wischen in der Lightbox blättert. */
+    let wischStart: { x: number; y: number } | null = null;
+    let wischGeste = false;
+    buehne.addEventListener("pointerdown", (e) => {
+      wischStart = { x: e.clientX, y: e.clientY };
+      wischGeste = false;
+    });
+    buehne.addEventListener("pointerup", (e) => {
+      if (!wischStart) return;
+      const dx = e.clientX - wischStart.x;
+      const dy = e.clientY - wischStart.y;
+      wischStart = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        wischGeste = true;
+        zeigen(aktuell + (dx < 0 ? 1 : -1));
+        setTimeout(() => (wischGeste = false), 0);
+      }
+    });
+    buehne.addEventListener("pointercancel", () => (wischStart = null));
+  }
+</script>
+
+<style>
+  .referenzen {
+    overflow: hidden;
+    background: var(--grey);
+  }
+
+  .referenzen h2 em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    /* Die H2 steht in Versalien; das kursive Wort bleibt in normaler
+       Schreibung - der Kontrast macht den Akzent. */
+    text-transform: none;
+    color: var(--blue-bright);
+    letter-spacing: -0.01em;
+  }
+
+  /* ----------------------------------------------------------- Reihen */
+  .rm-reihen {
+    --karte-b: 380px;
+    --luecke: 14px;
+    display: grid;
+    gap: var(--luecke);
+  }
+
+  /* Grundzustand: scrollbare Leiste mit Einrasten. */
+  .rm-reihe {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .rm-reihe::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rm-band {
+    display: flex;
+    gap: var(--luecke);
+    width: max-content;
+    padding-inline: var(--gutter);
+  }
+
+  .rm-gruppe {
+    display: flex;
+    gap: var(--luecke);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rm-gruppe--kopie {
+    display: none;
+  }
+
+  .rm-eintrag {
+    flex: none;
+    width: var(--karte-b);
+    scroll-snap-align: start;
+  }
+
+  /* Laufband: das Skript bewegt das Band, die Kopie schließt die Lücke. */
+  .is-laeuft .rm-reihe {
+    overflow: hidden;
+    scroll-snap-type: none;
+    touch-action: pan-y;
+    cursor: grab;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 7%,
+      #000 93%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 7%,
+      #000 93%,
+      transparent
+    );
+  }
+
+  .is-laeuft .rm-reihe.is-gezogen {
+    cursor: grabbing;
+  }
+
+  .is-laeuft .rm-band {
+    padding-inline: 0;
+    will-change: transform;
+  }
+
+  .is-laeuft .rm-gruppe--kopie {
+    display: flex;
+  }
+
+  /* ------------------------------------------------------------ Karten */
+  .rm-karte {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--navy);
+    cursor: zoom-in;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .is-gezogen .rm-karte {
+    cursor: grabbing;
+  }
+
+  .rm-karte :global(picture),
+  .rm-karte :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .rm-karte :global(img) {
+    object-fit: cover;
+    -webkit-user-drag: none;
+    pointer-events: none;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .rm-titel {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 2.25rem 0.875rem 0.75rem;
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    text-align: left;
+    text-transform: uppercase;
+    color: #fff;
+    background: linear-gradient(
+      0deg,
+      rgba(19, 42, 92, 0.92),
+      rgba(19, 42, 92, 0.55) 55%,
+      transparent
+    );
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+
+  .rm-karte:focus-visible {
+    outline: 3px solid var(--blue-bright);
+    outline-offset: 3px;
+  }
+
+  /* Maus: Titel erst bei Hover. Touch: immer sichtbar. */
+  @media (hover: hover) and (pointer: fine) {
+    .rm-titel {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .rm-karte:hover .rm-titel,
+    .rm-karte:focus-visible .rm-titel {
+      opacity: 1;
+      transform: none;
+    }
+
+    .rm-karte:hover :global(img) {
+      transform: scale(1.03);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .rm-reihen {
+      --karte-b: 260px;
+      --luecke: 12px;
+    }
+
+    .rm-titel {
+      padding: 1.75rem 0.75rem 0.625rem;
+      font-size: 0.8125rem;
+    }
+  }
+
+  /* ---------------------------------------------------------- Aktionen */
+  .rm-aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  @media (max-width: 480px) {
+    .rm-aktionen .btn {
+      width: 100%;
+    }
+  }
+
+  /* ---------------------------------------------------------- Lightbox */
+  .lb {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: #fff;
+    background: rgba(19, 42, 92, 0.95);
+    overscroll-behavior: contain;
+  }
+
+  .lb[open] {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    animation: lb-ein 220ms var(--ease-out);
+  }
+
+  .lb[open] .lb-figur {
+    animation: lb-zoom 260ms var(--ease-out);
+  }
+
+  .lb.is-zu {
+    animation: lb-aus 180ms ease-in forwards;
+  }
+
+  .lb::backdrop {
+    background: transparent;
+  }
+
+  @keyframes lb-ein {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lb-aus {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lb-zoom {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+
+  .lb-kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem clamp(0.75rem, 3vw, 1.5rem);
+  }
+
+  .lb-zaehler {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-variant-numeric: lining-nums tabular-nums;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .lb-knopf {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition:
+      background var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+
+  .lb-knopf svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .lb-knopf:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .lb-knopf:focus-visible {
+    outline: 3px solid var(--blue-light);
+    outline-offset: 2px;
+  }
+
+  .lb-buehne {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+    min-height: 0;
+    padding: 0 clamp(0.75rem, 3vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+    touch-action: pan-y;
+  }
+
+  .lb-figur {
+    display: grid;
+    grid-template-rows: auto auto;
+    align-content: center;
+    justify-items: center;
+    gap: 0.875rem;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+  }
+
+  /* Höhe: Bildschirm minus Kopfzeile, Bildunterschrift und Rand. */
+  .lb-bild {
+    max-width: 100%;
+    max-height: calc(100vh - 11rem);
+    max-height: calc(100dvh - 11rem);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    -webkit-user-drag: none;
+    user-select: none;
+    transition: opacity 160ms ease-out;
+  }
+
+  .lb-bild.is-wechsel {
+    opacity: 0.35;
+  }
+
+  .lb-text {
+    display: grid;
+    gap: 0.2rem;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .lb-titel {
+    font-weight: 700;
+  }
+
+  .lb-kategorie {
+    font-family: var(--font-utility);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
+  }
+
+  /* Handy: Pfeile unter das Bild, damit es die volle Breite bekommt. */
+  @media (max-width: 640px) {
+    .lb-buehne {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: minmax(0, 1fr) auto;
+      padding-inline: 0.75rem;
+    }
+
+    .lb-figur {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+
+    .lb-bild {
+      max-height: calc(100dvh - 15rem);
+    }
+
+    .lb-pfeil--zurueck {
+      grid-row: 2;
+      justify-self: end;
+    }
+
+    .lb-pfeil--weiter {
+      grid-row: 2;
+      justify-self: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lb[open],
+    .lb[open] .lb-figur,
+    .lb.is-zu {
+      animation: none;
+    }
+
+    .rm-karte :global(img),
+    .rm-titel {
+      transition: none;
+    }
+  }
+</style>

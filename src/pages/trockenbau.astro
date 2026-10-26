@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/trockenbau/";
@@ -13,8 +14,8 @@ const current = "/trockenbau/";
   eyebrow="Trockenbau & Innenausbau"
   title="Trockenbau: Wände, Decken, Dachschrägen"
   heroText="Als Trockenbauer in Emden und Ostfriesland baut Fixum Objektservice Ständerwände, Vorsatzschalen, abgehängte Decken und Dachschrägen. Für private Modernisierer, Hausverwaltungen und Bauunternehmen - auf Wunsch direkt im Anschluss an Entrümpelung oder Rückbau."
-  image="/images/categories/trockenbau-innenausbau.png"
-  imageAlt="Handwerker beim Beplanken einer Trockenbauwand aus Metallprofilen (Symbolbild)"
+  image={fotos.altbauTrockenbau.pfad}
+  imageAlt={fotos.altbauTrockenbau.alt}
   serviceType="Trockenbau und Innenausbau"
   areaTitle="Trockenbau in Emden und Ostfriesland"
   lead="Trockenbau ist die zweite Säule von Fixum. Besonders stark wird es, wenn vorher geräumt oder zurückgebaut wurde und der Ausbau ohne Wartetag direkt weiterlaufen kann - ohne Übergabe zwischen zwei Firmen."

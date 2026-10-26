@@ -88,8 +88,8 @@ die auf dasselbe Hauptkeyword zielen, nehmen sich gegenseitig die Sichtbarkeit.
 
 ## Social-Preview-Bild
 
-`public/og.png` (1200x630) wird aus Hintergrundfoto, Logo-Lockup und Textebene
-zusammengesetzt:
+`public/og.png` (1200x630) wird aus einem echten Projektfoto (renoviertes
+Dachzimmer), Logo-Lockup und Textebene zusammengesetzt:
 
 ```bash
 npm run build:og
@@ -111,40 +111,28 @@ gespeichert.
 Ist der Wert leer, zeigt die Website automatisch Telefon, WhatsApp und E-Mail
 statt eines Formulars, das ins Leere läuft.
 
-## Fotos austauschen
+## Fotos und Referenzen
 
-Die Bilder liegen in `public/images/`. Jede Datei existiert als PNG, WebP und
-AVIF; die Komponenten liefern automatisch das beste Format aus. Wird ein PNG
-ersetzt, müssen WebP und AVIF neu erzeugt werden:
+Alle Bilder sind echte Projektfotos. Sie stehen zentral in
+`src/data/referenzen.ts`:
 
-```bash
-node -e "const sharp=require('sharp'); const fs=require('fs'); const path=require('path'); const dirs=['public/images','public/images/categories','public/images/referenzen']; Promise.all(dirs.flatMap(dir=>fs.readdirSync(dir).filter(f=>f.endsWith('.png')).flatMap(f=>{const p=path.join(dir,f); const b=p.replace(/\\.png\$/,''); return [sharp(p).webp({quality:82}).toFile(b+'.webp'), sharp(p).avif({quality:56}).toFile(b+'.avif')];}))).then(()=>console.log('converted images'))"
-```
+- `fotos` - jedes Foto mit Pfad und Alt-Text. Seiten, Leistungskarten
+  (`src/data/services.ts`) und Ortsseiten (`src/data/leistungsseiten.ts`)
+  verweisen darauf.
+- `referenzen` - Reihenfolge, Bildunterschrift („Leistung · Typ“) und
+  Kategorie für die Referenz-Sektion der Startseite und ihre Lightbox.
 
-Danach `npm run build:og` ausführen, falls das Hero-Bild betroffen war.
+Originale liegen unverändert in `src/assets/images/referenzen/`, Zuschnitte
+einzelner Collage-Hälften in `src/assets/images/zuschnitte/`. AVIF und WebP
+in 480/960/1400 px erzeugt astro:assets beim Bauen - nichts von Hand
+konvertieren.
 
-## Referenzen pflegen
+Die Referenz-Sektion (`src/components/ReferenzMarquee.astro`) zeigt zwei
+endlos laufende Fotoreihen und eine Lightbox. Ohne JavaScript und bei
+„Bewegung reduzieren“ sind die Reihen normal scrollbar. Über `showReferences`
+in `src/data/site.ts` lässt sich die Sektion abschalten.
 
-Die Referenzen auf der Startseite kommen aus `src/data/references.ts`. Jeder
-Eintrag besteht aus Bild, Alt-Text, Titel, kurzer Einordnung, Leistungs-Chip
-und Link auf die passende Leistungsseite. Über `showReferences` in
-`src/data/site.ts` lässt sich die ganze Sektion abschalten.
-
-### Ein Referenzfoto einsetzen
-
-Die Bilder liegen in `public/images/referenzen/`. Vorgesehen ist ein
-Vorher/Nachher-Bild im Seitenverhältnis 4:3 - **vorher links, nachher
-rechts**; die Galerie zeichnet die Trennlinie in der Bildmitte selbst.
-
-1. Foto als PNG unter dem in `references.ts` hinterlegten Dateinamen ablegen
-   und den vorhandenen Platzhalter überschreiben.
-2. WebP und AVIF neu erzeugen (Befehl unter "Fotos austauschen").
-3. Alt-Text und Beschreibung in `references.ts` an das Foto anpassen.
-
-Solange ein Platzhalter unter dem Namen liegt, zeigt die Karte deutlich
-sichtbar "PLATZHALTER" an. Neue Platzhalter erzeugt `npm run build:referenzen` -
-der Befehl überschreibt vorhandene Dateien, also nicht ausführen, wenn die
-echten Fotos schon eingesetzt sind.
+Nach einem neuen Hero-Foto `npm run build:og` ausführen.
 
 ## Rechtstexte
 

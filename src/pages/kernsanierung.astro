@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/kernsanierung/";
@@ -13,8 +14,8 @@ const current = "/kernsanierung/";
   eyebrow="Kernsanierung vorbereiten"
   title="Die Kernsanierung vorbereiten"
   heroText="Wir übernehmen die Vorbereitung einer Kernsanierung komplett: räumen, zurückbauen, ausbauen und die Fachbetriebe so takten, dass niemand wartet."
-  image="/images/categories/kernsanierung-vorbereiten.png"
-  imageAlt="Entkernter Raum mit Trockenbauplatten und Profilen vor dem Ausbau (Symbolbild)"
+  image={fotos.altbauTrockenbau.pfad}
+  imageAlt={fotos.altbauTrockenbau.alt}
   serviceType="Vorbereitung von Kernsanierungen"
   areaTitle="Kernsanierungen in Emden und Ostfriesland"
   lead="Bei einer Kernsanierung liegt das Risiko selten in den einzelnen Gewerken, sondern zwischen ihnen. Wir übernehmen die Bausteine, die man nicht zulassungspflichtig ausführen muss - und die Terminplanung, die alles zusammenhält."

@@ -9,7 +9,6 @@
     "preview": "astro preview",
     "build:og": "node scripts/build-og.mjs",
     "format": "prettier --write .",
-    "build:referenzen": "node scripts/build-reference-placeholders.mjs",
     "build:logos": "node scripts/build-logo-variants.mjs",
     "test": "node --test tests/*.test.ts",
     "build:favicons": "node scripts/build-favicons.mjs"
@@ -19,6 +18,7 @@
     "@astrojs/sitemap": "latest",
     "@astrojs/tailwind": "latest",
     "@fontsource/barlow-condensed": "latest",
+    "@fontsource/fraunces": "^5.3.0",
     "@fontsource/kaushan-script": "latest",
     "@fontsource/manrope": "^5.3.0",
     "@types/react": "^19.3.0",

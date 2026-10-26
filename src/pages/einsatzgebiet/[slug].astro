@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import { fotos } from "../../data/referenzen";
 import CtaBand from "../../components/CtaBand.astro";
 import FaqAccordion from "../../components/FaqAccordion.astro";
 import Icon from "../../components/Icon.astro";
@@ -64,14 +65,14 @@ const schema = [
   canonical={path}
   breadcrumbs={breadcrumbs}
   schema={schema}
-  preloadImage="/images/team-van.png"
+  preloadImage={fotos.umzug.pfad}
 >
   <PageHero
     eyebrow={`${stadt.landkreis} · ca. ${stadt.entfernungKm} km ab Emden`}
     title={stadt.h1}
     text={stadt.intro}
-    image="/images/team-van.png"
-    imageAlt="Transporter mit Werkzeugkisten vor einem Wohnhaus (Symbolbild)"
+    image={fotos.umzug.pfad}
+    imageAlt={fotos.umzug.alt}
     breadcrumbs={breadcrumbs}
     badges={[
       "Besichtigung kostenlos",

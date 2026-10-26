@@ -12,6 +12,7 @@ import { rechnerBereit, type Leistung } from "../lib/preisrechner";
 import preisConfig from "../data/preise.config.json";
 import RelatedServices from "./RelatedServices.astro";
 import { leistungen, staedteFuerLeistung } from "../data/leistungsseiten";
+import { fotos } from "../data/referenzen";
 import { findeStadt } from "../data/staedte";
 import { canonicalPath, serviceSchema } from "../data/seo";
 import type { PreisSchluessel } from "../data/preise";
@@ -66,7 +67,7 @@ const {
   description,
   eyebrow,
   heroText,
-  image = "/images/hero-renovation.png",
+  image = fotos.dachzimmer.pfad,
   imageAlt = "",
   lead,
   included,

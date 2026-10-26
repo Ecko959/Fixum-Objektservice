@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 
 const current = "/bodenverlegung/";
@@ -13,8 +14,8 @@ const current = "/bodenverlegung/";
   eyebrow="Boden & Türen"
   title="Bodenverlegung und Türmontage nach Aufmaß"
   heroText="Fixum Objektservice verlegt Laminat, Vinyl und Teppich und montiert Türen und Zargen in Emden und Ostfriesland. Für Eigentümer, Vermieter und Hausverwaltungen - auch direkt nach Entrümpelung, Rückbau oder Trockenbau."
-  image="/images/categories/montage-boden.png"
-  imageAlt="Handwerker beim Verlegen eines Laminatbodens (Symbolbild)"
+  image={fotos.dachzimmer.pfad}
+  imageAlt={fotos.dachzimmer.alt}
   serviceType="Bodenverlegung und Türmontage"
   areaTitle="Boden und Türen in Emden und Ostfriesland"
   lead="Bodenbeläge und Türen wirken einfach - bis der Untergrund uneben ist, die Zarge nicht ins Mauerwerk passt oder die Tür nach dem Verlegen schleift. Deshalb nehmen wir beides in einem Aufmaß auf."

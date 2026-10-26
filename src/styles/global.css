@@ -15,6 +15,11 @@
 @import "@fontsource/barlow-condensed/latin-600.css";
 @import "@fontsource/barlow-condensed/latin-700.css";
 @import "@fontsource/kaushan-script/latin-400.css";
+/* Fraunces nur für Akzente (kursives Wort in der Referenz-Überschrift,
+   Zähler der Lightbox). Der Browser lädt die Datei erst, wenn ein Zeichen
+   in dieser Schrift auf dem Bildschirm steht. */
+@import "@fontsource/fraunces/latin-400.css";
+@import "@fontsource/fraunces/latin-400-italic.css";
 
 /* Metrisch angeglichene Ersatzschriften. Bis die Webfont geladen ist, steht
    der Text in Arial bzw. Roboto - mit diesen Overrides nimmt er dabei schon
@@ -74,6 +79,7 @@
   --navy-ink: #071326;
   --mist: #eaf2fc;
   --mist-soft: #f5f9ff;
+  --grey: #edeff3;
   --line: #dce5f2;
   --line-strong: #c6d5ea;
   --ink: #101b31;
@@ -96,6 +102,7 @@
     sans-serif;
   --font-utility:
     "Barlow Condensed", "Barlow Condensed Fallback", "Arial Narrow", sans-serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --font-script:
     "Kaushan Script", "Kaushan Script Fallback", "Segoe Script", cursive;
 

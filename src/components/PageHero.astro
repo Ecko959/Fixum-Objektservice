@@ -3,7 +3,8 @@ import { Picture } from "astro:assets";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
-import { findeBild } from "../data/bilder";
+import { bildBreiten, findeBild, heroQualitaet } from "../data/bilder";
+import { fotos } from "../data/referenzen";
 import { telUrl, whatsappUrl } from "../data/site";
 import { whatsappThema } from "../data/whatsapp";
 
@@ -25,7 +26,7 @@ const {
   eyebrow = "Fixum Objektservice",
   title,
   text,
-  image = "/images/team-van.png",
+  image = fotos.dachzimmer.pfad,
   imageAlt = "",
   breadcrumbs = [],
   badges = [
@@ -53,7 +54,8 @@ const heroBild = findeBild(image);
         }}
         src={heroBild}
         alt={imageAlt}
-        widths={[640, 1024, 1600]}
+        widths={bildBreiten}
+        quality={heroQualitaet}
         sizes="100vw"
         formats={["avif", "webp"]}
         fallbackFormat="jpeg"

@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import { fotos } from "../../data/referenzen";
 import CtaBand from "../../components/CtaBand.astro";
 import Icon from "../../components/Icon.astro";
 import PageHero from "../../components/PageHero.astro";
@@ -9,7 +10,8 @@ import { landkreise, staedte } from "../../data/staedte";
 
 const path = "/einsatzgebiet/";
 const breadcrumbs: Array<[string, string]> = [["Einsatzgebiet", path]];
-const heroImage = "/images/team-van.png";
+const heroBild = fotos.umzug;
+const heroImage = heroBild.pfad;
 
 const description =
   "Entrümpelung, Entkernung, Trockenbau und Montage in Emden, Aurich, Leer, Norden und ganz Ostfriesland. Alle Orte mit Entfernung im Überblick.";
@@ -37,7 +39,7 @@ const schema = [
     title="Von Emden aus in ganz Ostfriesland"
     text="Wir arbeiten von Emden aus in einem Umkreis von rund 50 Kilometern. Die Anfahrt steht in jedem Angebot als eigene Position, getrennt von der Arbeitszeit - Sie sehen also, was der Weg kostet."
     image={heroImage}
-    imageAlt="Transporter mit Werkzeugkisten vor einem Wohnhaus (Symbolbild)"
+    imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={[
       "Besichtigung kostenlos",

@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { fotos } from "../data/referenzen";
 import AreaServed from "../components/AreaServed.astro";
 import CtaBand from "../components/CtaBand.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
@@ -16,7 +17,8 @@ const f48bKurz = f48b ? "§ 48b auf Anfrage" : "§ 48b beantragt";
 
 const path = "/fuer-bauunternehmen/";
 const breadcrumbs: Array<[string, string]> = [["Für Bauunternehmen", path]];
-const heroImage = "/images/service-drywall.png";
+const heroBild = fotos.rasterdecke;
+const heroImage = heroBild.pfad;
 
 const description = `Trockenbau und Rückbau als Nachunternehmer in Ostfriesland: Abrechnung nach m² oder Tagessatz, Material bauseits, § 48b EStG ${f48b ? "auf Anfrage" : "beantragt"}.`;
 
@@ -122,7 +124,7 @@ const schema = [
     title="Trockenbau-Sub für Ostfriesland"
     text="Fixum unterstützt Bauunternehmen, Generalunternehmer und Zimmereien bei Trockenbau und Rückbau - nach m²-Preis oder Tagessatz, Material bauseits möglich."
     image={heroImage}
-    imageAlt="Handwerker richtet eine Trockenbauwand mit der Wasserwaage aus (Symbolbild)"
+    imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={["m² oder Tagessatz", f48bKurz, "Material bauseits"]}
   />

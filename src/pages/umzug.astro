@@ -1,5 +1,6 @@
 ---
 import ServiceDetailPage from "../components/ServiceDetailPage.astro";
+import { fotos } from "../data/referenzen";
 import { serviceFaq } from "../data/faq";
 import { site } from "../data/site";
 
@@ -14,8 +15,8 @@ const current = "/umzug/";
   eyebrow="Umzüge & Transporte"
   title="Umzüge und Transporte mit festem Termin"
   heroText={`Fixum Objektservice ist Ihr Umzugsunternehmen für Emden und Ostfriesland: Umzüge und Transporte bis ${site.maxTonnage} - für Privathaushalte, kleinere Büros und Objektfahrten. Mit Möbeldemontage, Aufbau und auf Wunsch Entrümpelung im selben Termin.`}
-  image="/images/categories/umzuege-transporte.png"
-  imageAlt="Umzugshelfer laden ein in Decken gewickeltes Möbelstück in einen Transporter (Symbolbild)"
+  image={fotos.umzug.pfad}
+  imageAlt={fotos.umzug.alt}
   serviceType="Umzüge und Transporte"
   areaTitle="Umzüge in Emden, Aurich, Leer und Umgebung"
   lead="Ein Umzug scheitert selten am Tragen, sondern an der Planung: Zu wenig Kartons, kein Parkplatz vor der Tür, ein Schrank, der nicht durchs Treppenhaus passt. Genau das klären wir vorher."

@@ -13,6 +13,7 @@
  */
 import type { Faq } from "./staedte";
 import { findeStadt } from "./staedte";
+import { fotos } from "./referenzen";
 
 export type LeistungsSchluessel =
   "entruempelung" | "entkernung" | "trockenbau" | "umzug";
@@ -22,6 +23,8 @@ export type Leistung = {
   hauptseite: string;
   serviceType: string;
   bild: string;
+  /** Alt-Text zum Bild - beschreibt das echte Foto, nicht den Ort. */
+  bildAlt: string;
   badges: string[];
   /** Muster für den Seitentitel. {ort} wird ersetzt. */
   titel: string;
@@ -32,7 +35,8 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     label: "Entrümpelung",
     hauptseite: "/entruempelung/",
     serviceType: "Entrümpelung und Haushaltsauflösung",
-    bild: "/images/categories/haushaltsaufloesung.png",
+    bild: fotos.wohnungsaufloesung.pfad,
+    bildAlt: fotos.wohnungsaufloesung.alt,
     badges: ["Besichtigung kostenlos", "Festpreis schriftlich", "Besenrein"],
     titel: "Fixum Objektservice: Entrümpelung {ort}",
   },
@@ -40,7 +44,8 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     label: "Entkernung",
     hauptseite: "/entkernung/",
     serviceType: "Entkernung und nicht-tragender Rückbau",
-    bild: "/images/categories/entkernung-rueckbau.png",
+    bild: fotos.dachbodenRueckbau.pfad,
+    bildAlt: fotos.dachbodenRueckbau.alt,
     badges: ["Sortenrein getrennt", "Klare Leistungsgrenze", "Ohne Statik"],
     titel: "Fixum Objektservice: Entkernung & Rückbau {ort}",
   },
@@ -48,7 +53,8 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     label: "Trockenbau",
     hauptseite: "/trockenbau/",
     serviceType: "Trockenbau und Innenausbau",
-    bild: "/images/categories/trockenbau-innenausbau.png",
+    bild: fotos.altbauTrockenbau.pfad,
+    bildAlt: fotos.altbauTrockenbau.alt,
     badges: ["Spachtelung Q1-Q3", "Festpreis nach Aufmaß", "Auch als Sub"],
     titel: "Fixum Objektservice: Trockenbau {ort}",
   },
@@ -56,7 +62,8 @@ export const leistungen: Record<LeistungsSchluessel, Leistung> = {
     label: "Umzug",
     hauptseite: "/umzug/",
     serviceType: "Umzüge und Transporte",
-    bild: "/images/categories/umzuege-transporte.png",
+    bild: fotos.umzug.pfad,
+    bildAlt: fotos.umzug.alt,
     badges: ["Fester Termin", "Möbelmontage", "Ein Ansprechpartner"],
     titel: "Fixum Objektservice: Umzug {ort}",
   },
