@@ -1,0 +1,316 @@
+---
+/* Leistungswahl mit Preisrechnern darunter: oben wählt der Kunde die
+   Leistung, darunter erscheint der passende Rechner. Läuft auf
+   /preisrechner/ (alle Leistungen, Direktaufruf per #umzug) und auf
+   /fuer-hausverwaltungen/ (nur was im Mieterwechsel anfällt).
+
+   Entkernung hat bewusst keinen Rechner - sie erscheint als Hinweis auf
+   den Festpreis nach Besichtigung. */
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+import Preisrechner from "./Preisrechner.astro";
+import { rechnerBereit, type Leistung } from "../lib/preisrechner";
+import preisConfig from "../data/preise.config.json";
+import type { IconName } from "../data/icons";
+
+type Wahl = Leistung | "entkernung";
+
+interface Props {
+  /** Welche Leistungen zur Wahl stehen, in dieser Reihenfolge. */
+  leistungen?: Wahl[];
+  /** Auswahl in der Adresse merken (#umzug) - nur auf der Sammelseite. */
+  hash?: boolean;
+  /** Eindeutiger Name, falls mehrere Auswahlen auf einer Seite stehen. */
+  name?: string;
+  /** Text über den Kacheln für Screenreader. */
+  legende?: string;
+}
+
+const alle: Array<{
+  id: Wahl;
+  label: string;
+  text: string;
+  icon: IconName;
+  seite: string;
+}> = [
+  {
+    id: "entruempelung",
+    label: "Entrümpelung",
+    text: "Wohnung, Haus, Keller, Nachlass",
+    icon: "karton",
+    seite: "/entruempelung/",
+  },
+  {
+    id: "umzug",
+    label: "Umzug",
+    text: "Wohnung oder Haus",
+    icon: "transporter",
+    seite: "/umzug/",
+  },
+  {
+    id: "trockenbau",
+    label: "Trockenbau",
+    text: "Wände, Decken, Dachschrägen",
+    icon: "platten",
+    seite: "/trockenbau/",
+  },
+  {
+    id: "montage",
+    label: "Montage",
+    text: "Türen, Möbel, Küchen",
+    icon: "akkuschrauber",
+    seite: "/kuechenmontage/",
+  },
+  {
+    id: "boden",
+    label: "Boden",
+    text: "Laminat, Vinyl, Teppich",
+    icon: "dielen",
+    seite: "/bodenverlegung/",
+  },
+  {
+    id: "entkernung",
+    label: "Entkernung",
+    text: "Festpreis nach Besichtigung",
+    icon: "vorschlaghammer",
+    seite: "/entkernung/",
+  },
+];
+
+const {
+  leistungen = alle.map((a) => a.id),
+  hash = false,
+  name = "leistung",
+  legende = "Welche Leistung möchten Sie berechnen?",
+} = Astro.props;
+
+/* Nur Rechner mit Grundwerten in der Config erscheinen in der Auswahl.
+   Entkernung steht immer da (Festpreis nach Besichtigung). */
+const aktiv = leistungen
+  .map((id) => alle.find((a) => a.id === id)!)
+  .filter((a) => a.id === "entkernung" || rechnerBereit(preisConfig, a.id));
+
+/* Kacheln: alle in einer Reihe; auf dem Handy höchstens drei nebeneinander,
+   bei mehr als drei Leistungen zwei. */
+const spalten = `--spalten:${aktiv.length};--spalten-mittel:${Math.min(aktiv.length, 3)};--spalten-handy:${aktiv.length <= 3 ? aktiv.length : 2}`;
+---
+
+<div class="rechner-wahl" data-rechner-wahl data-hash={hash ? "" : undefined}>
+  <fieldset class="leistungswahl" style={spalten}>
+    <legend class="sr-only">{legende}</legend>
+    {
+      aktiv.map((a, i) => (
+        <label class="lw">
+          <input
+            class="lw-input"
+            type="radio"
+            name={name}
+            value={a.id}
+            checked={i === 0}
+          />
+          <span class="lw-box">
+            <span class="lw-icon">
+              <Icon name={a.icon} size={22} />
+            </span>
+            <span class="lw-label">{a.label}</span>
+            <span class="lw-text">{a.text}</span>
+          </span>
+        </label>
+      ))
+    }
+  </fieldset>
+
+  {
+    aktiv.map((a) =>
+      a.id === "entkernung" ? (
+        <div class="lw-panel" data-panel={a.id} id={hash ? a.id : undefined}>
+          <div class="card entkernung">
+            <h2>Entkernung: Festpreis nach Besichtigung</h2>
+            <p class="muted">
+              Fläche, Bauteile und Entsorgungsmengen unterscheiden sich von
+              Objekt zu Objekt zu stark für einen Rechner. Wir sehen uns das
+              Objekt kostenlos an und nennen danach einen Festpreis.
+            </p>
+            <div class="btn-row">
+              <Button href="/kontakt/" icon="arrow" data-track="angebot">
+                Besichtigung anfragen
+              </Button>
+              <a class="arrow-link" href={a.seite}>
+                Mehr zur Entkernung
+              </a>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div class="lw-panel" data-panel={a.id} id={hash ? a.id : undefined}>
+          <Preisrechner
+            leistung={a.id}
+            id={`rechner-${a.id}`}
+            titel={`Preisrechner ${a.label}`}
+            eingebettet
+          />
+          <p class="lw-mehr">
+            <a class="arrow-link" href={a.seite}>
+              Mehr zu {a.label}
+            </a>
+          </p>
+        </div>
+      ),
+    )
+  }
+</div>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-rechner-wahl]")
+    .forEach((wahl) => {
+      const panels = wahl.querySelectorAll<HTMLElement>("[data-panel]");
+      const merken = wahl.hasAttribute("data-hash");
+      const zeige = (id: string) => {
+        panels.forEach((p) => (p.hidden = p.dataset.panel !== id));
+      };
+      if (merken) {
+        const start = wahl.querySelector<HTMLInputElement>(
+          `input[value="${location.hash.slice(1)}"]`,
+        );
+        if (start) start.checked = true;
+      }
+      const gewaehlt = wahl.querySelector<HTMLInputElement>("input:checked");
+      if (gewaehlt) zeige(gewaehlt.value);
+      wahl.addEventListener("change", (e) => {
+        const ziel = e.target as HTMLInputElement;
+        if (!ziel.classList.contains("lw-input")) return;
+        zeige(ziel.value);
+        if (merken) history.replaceState(null, "", `#${ziel.value}`);
+      });
+    });
+</script>
+
+<style>
+  .leistungswahl {
+    display: grid;
+    grid-template-columns: repeat(var(--spalten), minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .lw {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .lw-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .lw-box {
+    display: grid;
+    gap: 0.25rem;
+    height: 100%;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: var(--shadow-xs);
+    transition:
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+
+  .lw-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0.4rem;
+    border-radius: 10px;
+    color: var(--navy);
+    background: var(--mist);
+    transition:
+      color var(--dur) var(--ease-out),
+      background var(--dur) var(--ease-out);
+  }
+
+  .lw-label {
+    font-weight: 800;
+    color: var(--navy);
+  }
+
+  .lw-text {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+
+  .lw:hover .lw-box {
+    border-color: var(--blue-light);
+  }
+
+  .lw-input:checked + .lw-box {
+    border-color: var(--navy);
+    box-shadow: inset 0 0 0 1px var(--navy);
+  }
+
+  .lw-input:checked + .lw-box .lw-icon {
+    color: #fff;
+    background: var(--navy);
+  }
+
+  @media (max-width: 1100px) {
+    .leistungswahl {
+      grid-template-columns: repeat(var(--spalten-mittel), minmax(0, 1fr));
+    }
+  }
+
+  /* Handy: zwei oder drei Spalten statt aller Karten untereinander */
+  @media (max-width: 640px) {
+    .leistungswahl {
+      grid-template-columns: repeat(var(--spalten-handy), minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    .lw-box {
+      padding: 0.75rem;
+    }
+
+    .lw-icon {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .lw-input:focus-visible + .lw-box {
+    outline: 3px solid var(--blue-light);
+    outline-offset: 2px;
+  }
+
+  .lw-panel[hidden] {
+    display: none;
+  }
+
+  .lw-panel + .lw-panel {
+    margin-top: 2rem;
+  }
+
+  .lw-mehr {
+    margin-top: 1rem;
+  }
+
+  .entkernung {
+    display: grid;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-top: 4px solid var(--navy);
+  }
+
+  .entkernung h2 {
+    margin: 0;
+    font-size: var(--step-3);
+  }
+</style>
