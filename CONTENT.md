@@ -9,8 +9,9 @@
   Link im Footer - beides sind spürbare lokale Suchsignale.
 - `src/data/site.ts`: `geo` enthält aktuell den Ortsmittelpunkt von Emden. Für
   eine exakte Kartenposition die Koordinaten des Firmensitzes eintragen.
-- `.env`: `PUBLIC_FORM_ENDPOINT` setzen, sobald Formspree aktiv ist. Ohne den
-  Wert zeigt die Seite Telefon, WhatsApp und E-Mail statt eines Formulars.
+- Cloudflare Pages: `RESEND_API_KEY` setzen (siehe README, „Formular
+  aktivieren“). Ohne den Schlüssel zeigt die Seite Telefon, WhatsApp und
+  E-Mail statt des Formulars.
 
 ## Fotos
 
