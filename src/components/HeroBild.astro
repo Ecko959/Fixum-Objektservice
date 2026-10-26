@@ -14,7 +14,17 @@ const { bild, alt = "", class: klasse } = Astro.props;
 const q = await heroQuellen(bild);
 ---
 
-<picture class={klasse} aria-hidden={alt ? undefined : "true"}>
+{
+  /* Die Lage steht inline am Element, nicht im Stylesheet der Seite: Lädt
+     dessen CSS nicht oder veraltet (Cache, laufendes Deployment), stünde
+     das Foto sonst in voller Größe über dem Hero statt dahinter. Die
+     umgebende Sektion braucht position: relative und isolation: isolate. */
+}
+<picture
+  class={klasse}
+  aria-hidden={alt ? undefined : "true"}
+  style="position:absolute;inset:0;z-index:-2;display:block"
+>
   <source type="image/avif" srcset={q.avif} sizes="100vw" />
   <source type="image/webp" srcset={q.webp} sizes="100vw" />
   <img
@@ -25,5 +35,6 @@ const q = await heroQuellen(bild);
     loading="eager"
     fetchpriority="high"
     decoding="sync"
+    style="display:block;width:100%;height:100%;object-fit:cover"
   />
 </picture>
