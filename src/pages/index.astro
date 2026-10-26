@@ -144,8 +144,6 @@ const serviceChips: Array<[string, string]> = [
   ["Entrümpelung", "/entruempelung/"],
   ["Entkernung", "/entkernung/"],
   ["Trockenbau", "/trockenbau/"],
-  ["Boden & Türen", "/bodenverlegung/"],
-  ["Hausmeister", "/hausmeisterservice/"],
 ];
 ---
 
@@ -368,19 +366,15 @@ const serviceChips: Array<[string, string]> = [
       }
     </div>
 
-    <div class="container grid-3 service-small" data-reveal-group>
-      {
-        services.slice(3).map((service) => (
-          <div data-reveal>
-            <ServiceCard {...service} bullets={undefined} />
-          </div>
-        ))
-      }
+    {
+      /* Nur die drei Hauptbereiche. Umzug, Montage, Boden, Hausmeister und
+         die übrigen Leistungen stehen auf /leistungen/ und im Menü. */
+    }
+    <div class="container services-more" data-reveal>
+      <Button href="/leistungen/" variant="secondary" icon="arrow">
+        Alle Leistungen ansehen
+      </Button>
     </div>
-
-    <p class="container services-more">
-      <a class="arrow-link" href="/leistungen/">Alle Leistungen im Detail</a>
-    </p>
   </section>
 
   {/* ---------------------------------------------------- Ablaufkette */}
@@ -890,17 +884,10 @@ const serviceChips: Array<[string, string]> = [
       );
   }
 
-  .service-small {
-    margin-top: 1.25rem;
-  }
-
   .services-more {
-    margin-top: 2rem;
-    text-align: center;
-  }
-
-  .services-more .arrow-link {
-    color: var(--amber);
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(2rem, 4vw, 2.75rem);
   }
 
   /* Karten auf dunklem Grund als Glasflächen */
