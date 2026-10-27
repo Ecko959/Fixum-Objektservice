@@ -2,8 +2,38 @@
 /**
  * Inline-SVG-Icons. Bewusst ohne Icon-Font oder externes Sprite:
  * kein zusätzlicher Request, volle Kontrolle über Strichstärke und Farbe.
+ *
+ * Zwei Familien:
+ * - Leistungsmotive (Entrümpelung, Umzug, Trockenbau ...) kommen aus
+ *   Phosphor Duotone (src/data/phosphor.ts) - ein einheitliches Set mit
+ *   leicht getönter Fläche, überall gleich groß und gleich gewichtet.
+ * - Bedienelemente (Telefon, Haken, Pfeil ...) bleiben schlanke Linien aus
+ *   src/data/icons.ts.
  */
 import { feineIcons, iconPaths, type IconName } from "../data/icons";
+import { phosphorIcons, type PhosphorName } from "../data/phosphor";
+
+/* Leistungsmotiv -> Phosphor-Icon. Die alten Namen bleiben gültig, damit
+   Daten und Seiten nicht angefasst werden müssen. */
+const leistungsIcons: Partial<Record<IconName, PhosphorName>> = {
+  karton: "package",
+  crate: "package",
+  transporter: "truck",
+  truck: "truck",
+  platten: "wall",
+  wall: "wall",
+  akkuschrauber: "screwdriver",
+  dielen: "squaresFour",
+  layers: "stack",
+  vorschlaghammer: "hammer",
+  hammer: "hammer",
+  wrench: "wrench",
+  snow: "snowflake",
+  home: "house",
+  key: "key",
+  building: "buildings",
+  clipboard: "clipboardText",
+};
 
 interface Props {
   name: IconName;
@@ -14,28 +44,47 @@ interface Props {
 }
 
 const { name, size = 22, class: className = "", label } = Astro.props;
+const phosphor = leistungsIcons[name];
 const d = iconPaths[name];
 const fein = feineIcons.has(name);
 ---
 
-<svg
-  class={`icon ${className}`}
-  width={size}
-  height={size}
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width={fein ? "1.5" : "1.8"}
-  stroke-linecap={fein ? "butt" : "round"}
-  stroke-linejoin={fein ? "miter" : "round"}
-  stroke-miterlimit="10"
-  aria-hidden={label ? undefined : "true"}
-  role={label ? "img" : undefined}
-  focusable="false"
->
-  {label && <title>{label}</title>}
-  <path d={d}></path>
-</svg>
+{
+  phosphor ? (
+    <svg
+      class={`icon icon--duo ${className}`}
+      width={size}
+      height={size}
+      viewBox="0 0 256 256"
+      fill="currentColor"
+      aria-hidden={label ? undefined : "true"}
+      role={label ? "img" : undefined}
+      focusable="false"
+    >
+      {label && <title>{label}</title>}
+      <Fragment set:html={phosphorIcons[phosphor]} />
+    </svg>
+  ) : (
+    <svg
+      class={`icon ${className}`}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width={fein ? "1.5" : "1.8"}
+      stroke-linecap={fein ? "butt" : "round"}
+      stroke-linejoin={fein ? "miter" : "round"}
+      stroke-miterlimit="10"
+      aria-hidden={label ? undefined : "true"}
+      role={label ? "img" : undefined}
+      focusable="false"
+    >
+      {label && <title>{label}</title>}
+      <path d={d} />
+    </svg>
+  )
+}
 
 <style>
   .icon {

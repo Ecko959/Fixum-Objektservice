@@ -43,9 +43,9 @@ const items: Array<[string, string]> = [["Startseite", "/"], ...trail];
     padding: 0;
     list-style: none;
     font-family: var(--font-utility);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
@@ -100,5 +100,14 @@ const items: Array<[string, string]> = [["Startseite", "/"], ...trail];
   :global(.section--dark) .breadcrumbs [aria-current="page"],
   :global(.page-hero) .breadcrumbs [aria-current="page"] {
     color: var(--blue-light);
+  }
+
+  /* Auf dunklem Grund (z. B. Preisrechner) heller */
+  :global(.section--dark) .breadcrumbs li {
+    color: var(--on-dark-soft);
+  }
+
+  :global(.section--dark) .breadcrumbs a:hover {
+    color: #fff;
   }
 </style>
