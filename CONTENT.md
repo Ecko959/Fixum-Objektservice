@@ -428,7 +428,9 @@ Bestandteil des Design-Systems wiederverwendbar bleibt.
 - **Alt-Texte** stehen zentral in `src/data/referenzen.ts` und beschreiben
   die echten Fotos (siehe Abschnitt „Fotos“).
 - **Schriften**: nur Latin-Subset, metrisch angeglichene Ersatzschriften
-  ("Manrope Fallback" usw.) gegen Layout-Sprünge, Preload für Manrope 400/800.
+  ("Archivo Fallback", "Inter Fallback") gegen Layout-Sprünge, Preload für
+  Archivo. Archivo für Überschriften, Labels und Zahlen, Inter für Text,
+  Buttons und Formulare - beide als Variable Font über Fontsource.
 - **Branchenportale**: siehe `EINTRAEGE.md`.
 
 ## Preisrechner

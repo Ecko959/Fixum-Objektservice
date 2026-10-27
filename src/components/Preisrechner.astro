@@ -748,7 +748,10 @@ const Tag = eingebettet ? "div" : "section";
   bereit && (
     <Tag
       id={id}
-      class:list={["rechner", !eingebettet && "section section--mist"]}
+      class:list={[
+        "rechner",
+        !eingebettet && "section section--dark section--rechner",
+      ]}
       aria-labelledby={`${id}-titel`}
       data-preisrechner={leistung}
       data-m={paket}
@@ -1163,6 +1166,16 @@ const Tag = eingebettet ? "div" : "section";
 </script>
 
 <style>
+  /* Dunkles Rechner-Design: Die Variablen (--rechner-flaeche, -rahmen,
+     -text-leise) kommen von .section--rechner im Designsystem; hier stehen
+     Rückfallwerte, falls der Rechner einmal außerhalb steht. Messing
+     (--accent) markiert Auswahl, Fokus und den Preis. */
+  .rechner {
+    --rf-flaeche: var(--rechner-flaeche, rgba(255, 255, 255, 0.04));
+    --rf-rahmen: var(--rechner-rahmen, rgba(255, 255, 255, 0.12));
+    --rf-leise: var(--rechner-text-leise, rgba(255, 255, 255, 0.7));
+  }
+
   .rechner-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
@@ -1172,8 +1185,13 @@ const Tag = eingebettet ? "div" : "section";
 
   .rechner-form {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.75rem;
     padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--rf-rahmen);
+    border-radius: 14px;
+    background: var(--rf-flaeche);
+    box-shadow: none;
+    color: #fff;
   }
 
   .rf[hidden] {
@@ -1185,7 +1203,7 @@ const Tag = eingebettet ? "div" : "section";
     margin-top: -0.75rem;
     margin-left: 0.75rem;
     padding: 0.25rem 0 0.25rem 1rem;
-    border-left: 2px solid var(--line-strong);
+    border-left: 1px solid rgba(176, 141, 87, 0.55);
   }
 
   .rf--detail .rf-frage {
@@ -1201,27 +1219,27 @@ const Tag = eingebettet ? "div" : "section";
 
   .rf-frage {
     display: block;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.7rem;
     padding: 0;
     font-size: 1.0625rem;
-    font-weight: 800;
-    color: var(--navy);
+    font-weight: 600;
+    color: #fff;
   }
 
   .rf-optional {
-    font-weight: 500;
-    color: var(--muted);
+    font-weight: 400;
+    color: var(--rf-leise);
   }
 
   .rf-hilfe {
-    margin: -0.25rem 0 0.6rem;
+    margin: -0.3rem 0 0.7rem;
     font-size: 0.875rem;
     line-height: 1.5;
-    color: var(--muted);
+    color: var(--rf-leise);
   }
 
   .rf--zahl .rf-hilfe {
-    margin: 0.5rem 0 0;
+    margin: 0.55rem 0 0;
   }
 
   .rf-zahl {
@@ -1233,19 +1251,32 @@ const Tag = eingebettet ? "div" : "section";
     width: 100%;
     min-height: 52px;
     padding: 0.75rem 3.25rem 0.75rem 1rem;
-    border: 2px solid var(--line-strong);
-    border-radius: var(--radius-sm);
-    font: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    font-family: var(--font-display);
     font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--ink);
-    background: #fff;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    transition:
+      border-color 200ms var(--ease-out),
+      background 200ms var(--ease-out);
+  }
+
+  .rf-zahl input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .rf-zahl input:hover {
+    border-color: rgba(255, 255, 255, 0.32);
   }
 
   .rf-zahl input:focus-visible {
-    outline: 3px solid var(--blue-light);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
-    border-color: var(--blue);
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .rf-einheit {
@@ -1253,15 +1284,15 @@ const Tag = eingebettet ? "div" : "section";
     top: 50%;
     right: 1rem;
     transform: translateY(-50%);
-    font-weight: 700;
-    color: var(--muted);
+    font-weight: 600;
+    color: var(--rf-leise);
   }
 
   /* ---- Auswahlkarten ---- */
   .rf-wahlen {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
-    gap: 0.6rem;
+    gap: 0.625rem;
   }
 
   .rf-wahlen--kompakt {
@@ -1284,50 +1315,56 @@ const Tag = eingebettet ? "div" : "section";
   .wahl-box {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.2rem;
     height: 100%;
     min-height: 52px;
-    padding: 0.7rem 0.9rem;
-    border: 2px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: #fff;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--rf-rahmen);
+    border-radius: 10px;
+    background: var(--rf-flaeche);
     transition:
-      border-color var(--dur) var(--ease-out),
-      background var(--dur) var(--ease-out);
+      border-color 200ms var(--ease-out),
+      background 200ms var(--ease-out);
   }
 
   .rf-wahlen--kompakt .wahl-box {
     align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 0.6rem 0.4rem;
   }
 
   .wahl-label {
     display: block;
-    font-weight: 700;
-    color: var(--ink);
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .rf-wahlen--kompakt .wahl-label {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
   }
 
   .wahl-hilfe {
     display: block;
     font-size: 0.8125rem;
     line-height: 1.45;
-    color: var(--muted);
+    color: var(--rf-leise);
   }
 
   .wahl:hover .wahl-box {
-    border-color: var(--blue-light);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   .wahl-input:checked + .wahl-box {
-    border-color: var(--navy);
-    background: var(--mist);
-    box-shadow: inset 0 0 0 1px var(--navy);
+    border-color: var(--accent);
+    background: rgba(176, 141, 87, 0.1);
+    box-shadow: inset 0 0 0 1px var(--accent);
   }
 
   .wahl-input:focus-visible + .wahl-box {
-    outline: 3px solid var(--blue-light);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 
@@ -1343,24 +1380,27 @@ const Tag = eingebettet ? "div" : "section";
     flex: none;
     display: grid;
     place-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 2px solid var(--line-strong);
-    border-radius: 6px;
-    background: #fff;
+    width: 1.375rem;
+    height: 1.375rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+    background: transparent;
+    transition:
+      background 200ms var(--ease-out),
+      border-color 200ms var(--ease-out);
   }
 
   .wahl-input:checked + .wahl-box .wahl-haken {
-    border-color: var(--navy);
-    background: var(--navy);
+    border-color: var(--accent);
+    background: var(--accent);
   }
 
   .wahl-input:checked + .wahl-box .wahl-haken::after {
     content: "";
-    width: 0.45rem;
-    height: 0.8rem;
+    width: 0.4rem;
+    height: 0.75rem;
     margin-top: -0.15rem;
-    border: solid #fff;
+    border: solid var(--navy-deep);
     border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg);
   }
@@ -1368,11 +1408,11 @@ const Tag = eingebettet ? "div" : "section";
   .rechner-hinweis {
     margin: 0;
     padding: 0.85rem 1rem;
-    border-left: 4px solid var(--amber);
-    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 10px 10px 0;
     font-size: 0.9375rem;
-    color: var(--ink);
-    background: var(--mist-soft);
+    color: var(--on-dark-soft);
+    background: rgba(255, 255, 255, 0.04);
   }
 
   /* ---- Ergebnis ---- */
@@ -1382,16 +1422,17 @@ const Tag = eingebettet ? "div" : "section";
     display: grid;
     gap: 0.75rem;
     padding: clamp(1.25rem, 3vw, 2rem);
-    border-radius: var(--radius-md);
+    border: 1px solid rgba(176, 141, 87, 0.45);
+    border-radius: 14px;
     color: var(--on-dark-soft);
     background:
       radial-gradient(
         120% 120% at 100% 0%,
-        rgba(31, 122, 224, 0.3),
+        rgba(176, 141, 87, 0.14),
         transparent 55%
       ),
-      linear-gradient(160deg, var(--navy-mid), var(--navy-deep));
-    box-shadow: var(--shadow-md);
+      rgba(7, 19, 38, 0.6);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
   }
 
   .rechner-ergebnis p {
@@ -1400,32 +1441,38 @@ const Tag = eingebettet ? "div" : "section";
 
   .re-titel {
     font-family: var(--font-utility);
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--accent);
   }
 
+  /* Der Preis: groß, Archivo, Messing, Ziffern gleich breit */
   .re-wert {
-    font-size: clamp(1.625rem, 1.2rem + 1.6vw, 2.25rem);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.4rem + 2.2vw, 2.75rem);
     font-weight: 800;
-    line-height: 1.15;
-    color: #fff;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--accent);
   }
 
   .re-wert[data-art="unvollstaendig"] {
+    font-family: var(--font-body);
     font-size: 1.0625rem;
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: 0;
     color: var(--on-dark-soft);
   }
 
   .re-zusatz {
     padding: 0.6rem 0.8rem;
-    border-left: 3px solid var(--blue-light);
+    border-left: 2px solid var(--accent);
     font-size: 0.9375rem;
     color: #fff;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
   }
 
   .re-zusatz[hidden] {
@@ -1433,13 +1480,15 @@ const Tag = eingebettet ? "div" : "section";
   }
 
   .re-hinweis strong {
+    font-weight: 600;
     color: #fff;
   }
 
   .re-steuer,
   .re-foto,
   .re-noscript {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
+    color: var(--rf-leise);
   }
 
   .re-aktionen {
@@ -1455,6 +1504,14 @@ const Tag = eingebettet ? "div" : "section";
 
     .rechner-ergebnis {
       position: static;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rf-zahl input,
+    .wahl-box,
+    .wahl-haken {
+      transition: none;
     }
   }
 </style>

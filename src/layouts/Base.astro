@@ -19,8 +19,7 @@ import { site } from "../data/site";
 /* Fließtext (400) und Überschriften (800) stehen auf jeder Seite über der
    Falzlinie. Vite hängt denselben Hash an wie in der @font-face-Regel, der
    Preload trifft also genau die Datei, die das CSS später anfordert. */
-import manrope400 from "@fontsource/manrope/files/manrope-latin-400-normal.woff2?url";
-import manrope800 from "@fontsource/manrope/files/manrope-latin-800-normal.woff2?url";
+import archivoLatin from "@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -145,18 +144,16 @@ const jsonLd = JSON.stringify({
       document.documentElement.classList.add("js");
     </script>
 
+    {
+      /* Nur Archivo vorladen: Es setzt die Hero-Überschrift. Inter für den
+         Fließtext lädt parallel über das Stylesheet - zwei Preloads würden
+         sich mit dem Hero-Bild um die Bandbreite streiten. */
+    }
     <link
       rel="preload"
       as="font"
       type="font/woff2"
-      href={manrope400}
-      crossorigin
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={manrope800}
+      href={archivoLatin}
       crossorigin
     />
 
