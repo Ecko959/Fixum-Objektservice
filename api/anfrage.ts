@@ -377,10 +377,7 @@ export const betreff = (a: Anfrage) =>
     180,
   );
 
-export const mailAnMich = (
-  a: Anfrage,
-  env: Env,
-): SendMailOptions => {
+export const mailAnMich = (a: Anfrage, env: Env): SendMailOptions => {
   const reihen = zeilen(a);
   const wa =
     a.telefon && a.kontaktweg === "whatsapp"
@@ -417,10 +414,7 @@ ${a.telefon ? `<p style="margin:16px 0 0"><a href="tel:${escapeHtml(telLink(a.te
   };
 };
 
-export const bestaetigung = (
-  a: Anfrage,
-  env: Env,
-): SendMailOptions | null => {
+export const bestaetigung = (a: Anfrage, env: Env): SendMailOptions | null => {
   if (!a.email) return null;
   const reihen = zeilen(a).filter(([feld]) => feld !== "E-Mail");
   const weg =
@@ -469,18 +463,43 @@ ${tabelle(reihen)}
 
 /* ---------------------------------------------------------- Ablauf */
 
-export const versandBereit = (env: Env) =>
-  Boolean(
-    env.SMTP_HOST &&
-    env.SMTP_USER &&
-    env.SMTP_PASS &&
-    env.CONTACT_TO &&
-    env.CONTACT_FROM,
-  );
+const PFLICHT_ENV = [
+  "SMTP_HOST",
+  "SMTP_USER",
+  "SMTP_PASS",
+  "CONTACT_TO",
+  "CONTACT_FROM",
+] as const;
 
-export const smtpVersand = (env: Env): Versand => {
+export const versandBereit = (env: Env) => PFLICHT_ENV.every((k) => env[k]);
+
+/** Werte aus Vercel bereinigen: Leerzeichen und versehentlich mitkopierte
+    Anführungszeichen ("Fixum <info@…>") entfernen. */
+export const leseEnv = (roh: Record<string, string | undefined>): Env => {
+  const env: Env = {};
+  for (const k of [
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_SECURE",
+    "SMTP_USER",
+    "SMTP_PASS",
+    "CONTACT_TO",
+    "CONTACT_FROM",
+  ] as const) {
+    const wert = roh[k]
+      ?.trim()
+      .replace(/^(["'])(.*)\1$/, "$2")
+      .trim();
+    if (wert) env[k] = wert;
+  }
+  return env;
+};
+
+export const smtpVersand = (env: Env) => {
   const port = Number(env.SMTP_PORT || 465);
-  const secure = env.SMTP_SECURE ? env.SMTP_SECURE === "true" : port === 465;
+  const secure = env.SMTP_SECURE
+    ? env.SMTP_SECURE.toLowerCase() === "true"
+    : port === 465;
   return nodemailer.createTransport({
     host: env.SMTP_HOST,
     port,
@@ -557,7 +576,7 @@ export async function bearbeite(
 
 /* Vercel: Web-Standard-Handler (Node.js-Laufzeit). */
 export async function POST(request: Request): Promise<Response> {
-  const ergebnis = await bearbeite(request, process.env as Env);
+  const ergebnis = await bearbeite(request, leseEnv(process.env));
   const perScript = request.headers.get("accept")?.includes("application/json");
   if (perScript) {
     return Response.json(
@@ -572,9 +591,31 @@ export async function POST(request: Request): Promise<Response> {
   return Response.redirect(new URL(ziel, request.url).toString(), 303);
 }
 
-export function GET(): Response {
-  return new Response("Method Not Allowed", {
-    status: 405,
-    headers: { Allow: "POST" },
-  });
+/* Statusabfrage im Browser: /api/anfrage zeigt, ob alle Variablen da sind,
+   /api/anfrage?pruefen=1 meldet sich zusätzlich testweise beim Mailserver
+   an (ohne etwas zu senden). Zeigt nur Namen fehlender Variablen, nie
+   Werte. */
+export async function GET(request: Request): Promise<Response> {
+  const env = leseEnv(process.env);
+  const fehlt = PFLICHT_ENV.filter((k) => !env[k]);
+  const antwort: Record<string, unknown> = {
+    versand: fehlt.length ? "nicht eingerichtet" : "eingerichtet",
+    fehlt,
+  };
+  if (!fehlt.length && new URL(request.url).searchParams.has("pruefen")) {
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      "unbekannt";
+    if (!ratenLimit(`pruefen:${ip}`)) {
+      antwort.smtp = "Zu viele Prüfungen, bitte in 10 Minuten erneut.";
+    } else {
+      try {
+        await smtpVersand(env).verify();
+        antwort.smtp = `Anmeldung bei ${env.SMTP_HOST} erfolgreich`;
+      } catch (fehler) {
+        antwort.smtp = `Anmeldung fehlgeschlagen: ${String((fehler as Error)?.message).slice(0, 200)}`;
+      }
+    }
+  }
+  return Response.json(antwort, { headers: { "cache-control": "no-store" } });
 }

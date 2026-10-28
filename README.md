@@ -129,6 +129,12 @@ er eine E-Mail-Adresse angibt. Versendet wird über das IONOS-Postfach
 eine Variable, antwortet die Function mit 503 und das Formular zeigt
 Telefon und WhatsApp als Ausweg.
 
+**Prüfen ohne Testanfrage:** `https://www.fixum-objektservice.de/api/anfrage`
+im Browser zeigt, ob alle Variablen gesetzt sind (nur Namen, keine Werte).
+Mit `?pruefen=1` meldet sich die Function zusätzlich testweise bei IONOS an,
+ohne eine Mail zu senden. Im Formular steht bei einem Fehler ein Code:
+503 = Variablen fehlen, 502 = Mailserver hat abgelehnt, 0 = keine Verbindung.
+
 **Vorbelegung:** Links mit `data-cta="umzug"` springen auf Seiten mit
 Formular direkt dorthin und wählen die Leistung vor; ohne Formular führen
 sie auf `/kontakt/?leistung=umzug#anfrage`. `data-cta-text` füllt die

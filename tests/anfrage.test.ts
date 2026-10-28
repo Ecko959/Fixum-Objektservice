@@ -11,9 +11,11 @@ import {
   MAX_FOTOS,
   MAX_GESAMT_BYTES,
   OBJEKTARTEN,
+  GET,
   POST,
   ZEITRAEUME,
   bearbeite,
+  leseEnv,
   bildtyp,
   type Env,
   type Versand,
@@ -396,6 +398,34 @@ describe("Anfrage: Spam", () => {
 });
 
 describe("Anfrage: HTTP", () => {
+  test("Statusabfrage nennt fehlende Variablen, keine Werte", async () => {
+    const r = await GET(
+      new Request("https://www.fixum-objektservice.de/api/anfrage"),
+    );
+    const daten = await r.json();
+    assert.equal(daten.versand, "nicht eingerichtet");
+    assert.deepEqual(daten.fehlt, [
+      "SMTP_HOST",
+      "SMTP_USER",
+      "SMTP_PASS",
+      "CONTACT_TO",
+      "CONTACT_FROM",
+    ]);
+  });
+
+  test("Variablen: Leerzeichen und mitkopierte Anführungszeichen werden entfernt", () => {
+    const env = leseEnv({
+      CONTACT_FROM: ' "Fixum Objektservice <info@fixum-objektservice.de>" ',
+      SMTP_USER: "info@fixum-objektservice.de\n",
+      SMTP_PASS: "",
+      ANDERES: "x",
+    });
+    assert.deepEqual(env, {
+      CONTACT_FROM: "Fixum Objektservice <info@fixum-objektservice.de>",
+      SMTP_USER: "info@fixum-objektservice.de",
+    });
+  });
+
   test("ohne JavaScript (kein Accept: json): 303 auf Formular mit Fehler", async () => {
     /* process.env hat hier keine SMTP-Daten -> 503 -> zurück zum Formular */
     const f = gueltig();
