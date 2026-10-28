@@ -3,13 +3,14 @@ import Base from "../layouts/Base.astro";
 import { fotos } from "../data/referenzen";
 import AreaServed from "../components/AreaServed.astro";
 import Button from "../components/Button.astro";
-import CtaBand from "../components/CtaBand.astro";
+import Anfrage from "../components/Anfrage.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
 import RechnerWahl from "../components/RechnerWahl.astro";
 import ReferenzMarquee from "../components/ReferenzMarquee.astro";
 import { preisHinweis } from "../data/preise";
+import { anfrageHref } from "../data/anfrage";
 import { canonicalPath, serviceSchema } from "../data/seo";
 
 const path = "/fuer-hausverwaltungen/";
@@ -126,6 +127,7 @@ const schema = [
     imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={["Rahmenvertrag möglich", "Feste Reaktionszeit", "Mit Fotodoku"]}
+    anfrage=""
   />
 
   {
@@ -147,7 +149,6 @@ const schema = [
       "altbauTrockenbau",
       "dachbodenRueckbau",
     ]}
-    anfrageHref="/kontakt/"
     anfrageText="Konditionen anfordern"
   />
 
@@ -221,7 +222,14 @@ const schema = [
           ausdrücklich nicht dabei sind.
         </p>
         <p class="paket-links">
-          <a class="arrow-link" href="/kontakt/">Konditionen anfordern</a>
+          <a
+            class="arrow-link"
+            href={anfrageHref()}
+            data-cta=""
+            data-cta-text="Bitte um Konditionen für unsere Hausverwaltung. Anzahl Einheiten: … Regelmäßig anfallende Leistungen: …"
+          >
+            Konditionen anfordern
+          </a>
           <a class="arrow-link" href="#kalkulator">Preis grob berechnen</a>
         </p>
       </div>
@@ -299,7 +307,13 @@ const schema = [
           rechnen lässt.
         </p>
       </div>
-      <Button href="/kontakt/">Konditionen anfordern</Button>
+      <Button
+        href={anfrageHref()}
+        cta=""
+        ctaText="Bitte um Konditionen für unsere Hausverwaltung. Anzahl Einheiten: … Regelmäßig anfallende Leistungen: …"
+      >
+        Konditionen anfordern
+      </Button>
     </div>
   </section>
 
@@ -307,9 +321,9 @@ const schema = [
     service="Objektservice für Verwaltungen"
     title="Hausverwaltungen in Emden und Ostfriesland"
   />
-  <CtaBand
+  <Anfrage
     eyebrow="Kurzer Draht"
-    title="Mieterwechsel steht an?"
+    titel="Mieterwechsel steht an?"
     text="Ein Anruf reicht, um die Einheit einzuplanen. Bei laufenden Rahmenverträgen genügt eine kurze Nachricht mit Adresse und Übergabetermin."
   />
 </Base>

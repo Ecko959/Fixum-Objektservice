@@ -3,9 +3,12 @@ import Icon from "./Icon.astro";
 import WhatsAppMark from "./WhatsAppMark.astro";
 import { telUrl, whatsappUrl } from "../data/site";
 import { whatsappThema } from "../data/whatsapp";
+import { anfrageHref, leistungFuer } from "../data/anfrage";
 
 /* Betreff je Seite - siehe src/data/whatsapp.ts. */
 const waThema = whatsappThema(Astro.url.pathname);
+/* "Anfrage" springt zum Formular und wählt die Leistung der Seite vor. */
+const leistung = leistungFuer(Astro.url.pathname);
 ---
 
 <div
@@ -24,8 +27,12 @@ const waThema = whatsappThema(Astro.url.pathname);
     target="_blank"
     rel="noopener noreferrer"
   >
-    <WhatsAppMark size={22} />
+    <WhatsAppMark size={20} />
     <span>WhatsApp</span>
+  </a>
+  <a class="sticky-secondary" href={anfrageHref(leistung)} data-cta={leistung}>
+    <Icon name="pen" size={18} />
+    <span>Anfrage</span>
   </a>
 </div>
 
@@ -46,8 +53,8 @@ const waThema = whatsappThema(Astro.url.pathname);
     bottom: 0;
     z-index: var(--z-sticky-call);
     display: none;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.625rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
     height: calc(var(--sticky-call-h) + env(safe-area-inset-bottom));
     padding: 0.6rem calc(0.875rem + env(safe-area-inset-right))
       calc(0.6rem + env(safe-area-inset-bottom))
@@ -75,11 +82,12 @@ const waThema = whatsappThema(Astro.url.pathname);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    min-width: 0;
     border-radius: var(--radius-pill);
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     letter-spacing: 0.005em;
     color: #fff;
     transition: transform var(--dur-fast) var(--ease-out);

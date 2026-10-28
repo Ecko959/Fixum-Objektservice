@@ -15,6 +15,7 @@ import {
   type Leistung,
 } from "../lib/preisrechner";
 import { site } from "../data/site";
+import { anfrageHref, leistungJeRechner } from "../data/anfrage";
 
 interface Props {
   leistung: Leistung;
@@ -721,14 +722,6 @@ const felder: Record<Leistung, Feld[]> = {
   ],
 };
 
-const thema: Record<Leistung, string> = {
-  entruempelung: "Entrümpelung / Haushaltsauflösung",
-  umzug: "Umzug / Transport",
-  trockenbau: "Trockenbau & Innenausbau",
-  montage: "Montage & Bodenverlegung",
-  boden: "Montage & Bodenverlegung",
-};
-
 const hinweis: Partial<Record<Leistung, string>> = {
   umzug:
     "Umzugskartons stellen wir auf Wunsch leihweise. Größere Umzüge und Strecken über 100 km kalkulieren wir nach Besichtigung oder Fotos. Küchen ohne Anschlüsse; Steinarbeitsplatten (Granit, Quarz, Keramik) nur montieren, nicht zuschneiden.",
@@ -755,7 +748,7 @@ const Tag = eingebettet ? "div" : "section";
       aria-labelledby={`${id}-titel`}
       data-preisrechner={leistung}
       data-m={paket}
-      data-thema={thema[leistung]}
+      data-formular={leistungJeRechner[leistung]}
       data-wa={site.whatsapp}
     >
       <div class:list={[!eingebettet && "container"]}>
@@ -886,7 +879,15 @@ const Tag = eingebettet ? "div" : "section";
             </p>
             <p class="re-steuer">Ohne Umsatzsteuer (§ 19 UStG).</p>
             <div class="re-aktionen">
-              <a class="btn btn--wide" href="/kontakt/" data-anfrage="formular">
+              {/* Mit Formular auf der Seite: data-cta springt dorthin und
+                  übernimmt das Ergebnis (data-cta-text). Sonst trägt der
+                  Link es per #rechner= nach /kontakt/. */}
+              <a
+                class="btn btn--wide"
+                href={anfrageHref(leistungJeRechner[leistung])}
+                data-anfrage="formular"
+                data-cta={leistungJeRechner[leistung]}
+              >
                 <span>Festpreis anfragen</span>
               </a>
               <a
@@ -1094,8 +1095,9 @@ const Tag = eingebettet ? "div" : "section";
         formularLink.href =
           "/kontakt/#rechner=" +
           encodeURIComponent(
-            JSON.stringify({ t: wurzel.dataset.thema, n: nachricht }),
+            JSON.stringify({ l: wurzel.dataset.formular, n: nachricht }),
           );
+        formularLink.dataset.ctaText = nachricht;
         waLink.href =
           `https://wa.me/${wurzel.dataset.wa}?text=` +
           encodeURIComponent(

@@ -8,9 +8,7 @@
    verlinkt auf sie und wird von ihnen über das KetteBand verlinkt. */
 import Base from "../layouts/Base.astro";
 import { fotos } from "../data/referenzen";
-import Button from "../components/Button.astro";
-import ContactForm from "../components/ContactForm.astro";
-import CtaBand from "../components/CtaBand.astro";
+import Anfrage from "../components/Anfrage.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
@@ -217,6 +215,7 @@ const schema = [
     image={heroImage}
     imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
+    anfrage=""
   />
 
   {/* Die drei Leistungen im Zusammenhang */}
@@ -349,33 +348,15 @@ const schema = [
     </div>
   </section>
 
-  {/* Anfrage */}
-  <section class="section" aria-labelledby="anfrage-title">
-    <div class="container split split--top">
-      <div class="stack" data-reveal>
-        <p class="eyebrow">Anfrage</p>
-        <h2 id="anfrage-title">Ihr Objekt in einem Auftrag</h2>
-        <p class="muted">
-          Beschreiben Sie kurz, was ansteht - räumen, zurückbauen, ausbauen oder
-          alles davon. Fotos per WhatsApp helfen bei der ersten Einschätzung.
-        </p>
-        <div class="btn-row">
-          <Button href="/kontakt/" icon="arrow" data-track="angebot">
-            Kostenlose Besichtigung anfragen
-          </Button>
-        </div>
-      </div>
-      <div data-reveal>
-        <ContactForm title="Besichtigung für die Leistungskette anfragen" />
-      </div>
-    </div>
-  </section>
+  <Anfrage
+    titel="Ihr Objekt in einem Auftrag"
+    text="Beschreiben Sie kurz, was ansteht – räumen, zurückbauen, ausbauen oder alles davon. Fotos helfen bei der ersten Einschätzung."
+  />
 
   <AreaServed
     service="Entrümpelung, Entkernung und Innenausbau"
     title="Alles aus einer Hand in Emden und Ostfriesland"
   />
-  <CtaBand />
 </Base>
 
 <style>

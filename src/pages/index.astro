@@ -4,15 +4,15 @@ import AblaufScroll from "../components/AblaufScroll.tsx";
 import Base from "../layouts/Base.astro";
 import AreaServed from "../components/AreaServed.astro";
 import Button from "../components/Button.astro";
-import ContactForm from "../components/ContactForm.astro";
+import Anfrage from "../components/Anfrage.astro";
 import HeroBild from "../components/HeroBild.astro";
-import CtaBand from "../components/CtaBand.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import KetteBand from "../components/KetteBand.astro";
 import Kundenstimmen from "../components/Kundenstimmen.astro";
 import Photo from "../components/Photo.astro";
 import ReferenzMarquee from "../components/ReferenzMarquee.astro";
+import SchnellKontakt from "../components/SchnellKontakt.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import { bildQualitaet, findeBild } from "../data/bilder";
 import { fotos, type Foto } from "../data/referenzen";
@@ -20,6 +20,7 @@ import { services } from "../data/services";
 import type { IconName } from "../data/icons";
 import { site, telUrl, whatsappUrl } from "../data/site";
 import { whatsappThema } from "../data/whatsapp";
+import { anfrageHref } from "../data/anfrage";
 
 const waThema = whatsappThema(Astro.url.pathname);
 
@@ -215,8 +216,8 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
         </ul>
       </div>
 
-      <div class="hero-form" id="anfrage">
-        <ContactForm dunkel />
+      <div class="hero-form">
+        <SchnellKontakt />
       </div>
     </div>
 
@@ -476,7 +477,9 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
           <li>Festpreis nach kostenloser Besichtigung</li>
           <li>Besenreine Übergabe, auf Wunsch mit Fotodokumentation</li>
         </ul>
-        <Button href="/kontakt/">Besichtigung anfragen</Button>
+        <Button href={anfrageHref("entruempelung")} cta="entruempelung">
+          Besichtigung anfragen
+        </Button>
       </article>
 
       <article class="card audience-card" data-reveal>
@@ -544,7 +547,7 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
     title="Von Emden aus in ganz Ostfriesland"
   />
 
-  <CtaBand />
+  <Anfrage />
 </Base>
 
 <style>

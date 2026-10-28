@@ -132,7 +132,12 @@ const spalten = `--spalten:${aktiv.length};--spalten-mittel:${Math.min(aktiv.len
               Objekt kostenlos an und nennen danach einen Festpreis.
             </p>
             <div class="btn-row">
-              <Button href="/kontakt/" icon="arrow" data-track="angebot">
+              <Button
+                href="/kontakt/?leistung=entkernung#anfrage"
+                cta="entkernung"
+                icon="arrow"
+                data-track="angebot"
+              >
                 Besichtigung anfragen
               </Button>
               <a class="arrow-link" href={a.seite}>

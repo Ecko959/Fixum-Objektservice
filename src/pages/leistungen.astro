@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { fotos } from "../data/referenzen";
 import AreaServed from "../components/AreaServed.astro";
-import CtaBand from "../components/CtaBand.astro";
+import Anfrage from "../components/Anfrage.astro";
 import Icon from "../components/Icon.astro";
 import KetteBand from "../components/KetteBand.astro";
 import PageHero from "../components/PageHero.astro";
@@ -68,6 +68,7 @@ const bereiche: Array<
     imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={["11 Leistungen", "Einzeln buchbar", "Ein Ansprechpartner"]}
+    anfrage=""
   />
 
   {/* Drei Bereiche zur Orientierung */}
@@ -145,7 +146,7 @@ const bereiche: Array<
     service="Objektservice"
     title="Alle Leistungen in Emden und Ostfriesland"
   />
-  <CtaBand />
+  <Anfrage />
 </Base>
 
 <style>

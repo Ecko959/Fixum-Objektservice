@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { fotos } from "../data/referenzen";
 import AreaServed from "../components/AreaServed.astro";
-import CtaBand from "../components/CtaBand.astro";
+import Anfrage from "../components/Anfrage.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
@@ -127,6 +127,7 @@ const schema = [
     imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
     badges={["m² oder Tagessatz", f48bKurz, "Material bauseits"]}
+    anfrage="trockenbau"
   />
 
   {/* Leistungsprofil */}
@@ -170,7 +171,14 @@ const schema = [
           anderen Nachunternehmern.
         </p>
         <p>
-          <a class="arrow-link" href="/kontakt/">Kapazität anfragen</a>
+          <a
+            class="arrow-link"
+            href="/kontakt/?leistung=trockenbau#anfrage"
+            data-cta="trockenbau"
+            data-cta-text="Kapazität für einen Bauabschnitt: Objekt, Umfang (m²), Zeitfenster, Material bauseits ja/nein …"
+          >
+            Kapazität anfragen
+          </a>
         </p>
       </div>
 
@@ -249,9 +257,10 @@ const schema = [
     service="Trockenbau"
     title="Nachunternehmereinsätze in Ostfriesland"
   />
-  <CtaBand
+  <Anfrage
+    leistung="trockenbau"
     eyebrow="Direkt anfragen"
-    title="Kapazität für Ihren Bauabschnitt?"
+    titel="Kapazität für Ihren Bauabschnitt?"
     text="Nennen Sie Objekt, Umfang und Zeitfenster - Sie bekommen eine ehrliche Rückmeldung, auch wenn sie 'geht nicht' lautet."
   />
 </Base>

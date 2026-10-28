@@ -3,7 +3,7 @@
    RechnerWahl.astro. Direktaufruf einer Leistung: /preisrechner/#umzug */
 import Base from "../layouts/Base.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
-import CtaBand from "../components/CtaBand.astro";
+import Anfrage from "../components/Anfrage.astro";
 import RechnerWahl from "../components/RechnerWahl.astro";
 import { rechnerBereit, type Leistung } from "../lib/preisrechner";
 import preisConfig from "../data/preise.config.json";
@@ -57,9 +57,9 @@ const namensliste =
     </div>
   </section>
 
-  <CtaBand
+  <Anfrage
     eyebrow="Lieber persönlich?"
-    title="Festpreis nach kostenloser Besichtigung"
+    titel="Festpreis nach kostenloser Besichtigung"
     text="Der Rechner zeigt einen Rahmen. Den verbindlichen Preis nennen wir, nachdem wir das Objekt gesehen haben - oder nach ein paar Fotos per WhatsApp."
   />
 </Base>

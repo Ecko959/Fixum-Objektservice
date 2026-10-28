@@ -262,7 +262,8 @@ const jsonLd = JSON.stringify({
          Dienst (z. B. Google Tag Manager oder GA4) mit Einwilligungs-Banner
          freigegeben und eingebunden ist, liest er diese Ereignisse aus.
          Ereignisse: phone_click, whatsapp_click, email_click,
-         offer_request_click; form_submit_success kommt von /danke/. */
+         offer_request_click; form_submit_success kommt vom Formular
+         (Anfrage.astro) oder - ohne JavaScript - von /danke/. */
     }
     <script is:inline>
       (() => {
@@ -279,8 +280,8 @@ const jsonLd = JSON.stringify({
             else if (href.startsWith("mailto:")) name = "email_click";
             else if (
               link.dataset.track === "angebot" ||
-              href === "/kontakt/" ||
-              href.startsWith("/kontakt/#")
+              link.hasAttribute("data-cta") ||
+              href.startsWith("/kontakt/")
             )
               name = "offer_request_click";
             if (!name) return;

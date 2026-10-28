@@ -1,6 +1,7 @@
 ---
 import Photo from "./Photo.astro";
 import type { Foto } from "../data/referenzen";
+import { anfrageHref, leistungFuer } from "../data/anfrage";
 
 interface Props {
   title: string;
@@ -22,6 +23,9 @@ const {
   large = false,
   eager = false,
 } = Astro.props;
+
+/* Zweites Ziel neben "Mehr erfahren": direkt zur Anfrage mit Vorauswahl. */
+const leistung = leistungFuer(href);
 ---
 
 <article class={`service-card card card--hover ${large ? "is-large" : ""}`}>
@@ -59,7 +63,21 @@ const {
       )
     }
 
-    <span class="arrow-link" aria-hidden="true">Mehr erfahren</span>
+    <div class="service-fuss">
+      <span class="arrow-link" aria-hidden="true">Mehr erfahren</span>
+      {
+        leistung && (
+          <a
+            class="service-anfrage"
+            href={anfrageHref(leistung)}
+            data-cta={leistung}
+            aria-label={`${title} anfragen`}
+          >
+            Anfragen
+          </a>
+        )
+      }
+    </div>
   </div>
 </article>
 
@@ -137,10 +155,43 @@ const {
     background: var(--amber);
   }
 
-  .service-card .arrow-link {
+  .service-fuss {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    width: 100%;
     margin-top: auto;
     padding-top: 0.5rem;
+  }
+
+  .service-card .arrow-link {
     color: var(--sc-link);
+  }
+
+  /* Liegt über dem Karten-Link (z-index 1), damit er eigenständig klickbar ist. */
+  .service-anfrage {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--sc-link);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--sc-link);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .service-anfrage:hover,
+  .service-anfrage:focus-visible {
+    color: #fff;
+    background: var(--sc-link);
   }
 
   .service-card :global(.photo) {

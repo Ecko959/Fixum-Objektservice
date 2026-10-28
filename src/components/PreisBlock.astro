@@ -13,6 +13,7 @@ import {
   type PreisSchluessel,
   type Preisposition,
 } from "../data/preise";
+import { anfrageHref, leistungFuer } from "../data/anfrage";
 
 interface Props {
   positionen: PreisSchluessel[];
@@ -35,6 +36,7 @@ const {
 
 const karten = positionen.map((k) => preise[k] as Preisposition);
 const mehrere = karten.length > 1;
+const leistung = leistungFuer(Astro.url.pathname);
 ---
 
 <section
@@ -55,7 +57,8 @@ const mehrere = karten.length > 1;
           )
         }
         <Button
-          href="/kontakt/"
+          href={anfrageHref(leistung)}
+          cta={leistung}
           icon="arrow"
           variant={rechner ? "secondary" : "primary"}
           data-track="angebot"
