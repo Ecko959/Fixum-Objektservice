@@ -9,9 +9,10 @@
   Link im Footer - beides sind spürbare lokale Suchsignale.
 - `src/data/site.ts`: `geo` enthält aktuell den Ortsmittelpunkt von Emden. Für
   eine exakte Kartenposition die Koordinaten des Firmensitzes eintragen.
-- Cloudflare Pages: `RESEND_API_KEY` setzen (siehe README, „Formular
-  aktivieren“). Ohne den Schlüssel zeigt die Seite Telefon, WhatsApp und
-  E-Mail statt des Formulars.
+- Kontaktformular mit Foto-Upload: Der Versand (`functions/api/anfrage.ts`)
+  ist als Cloudflare-Function gebaut, die Seite läuft aber auf Vercel. Das
+  Formular wird in einem eigenen Schritt umgestellt; bis dahin zeigt die Seite
+  Telefon, WhatsApp und E-Mail statt des Formulars.
 
 ## Fotos
 
@@ -134,8 +135,8 @@ Seit dem Umbau gilt eine klare Trennung:
 | Ebene | Beispiel | Aufgabe |
 | --- | --- | --- |
 | Leistung | `/trockenbau/` | Was Fixum macht, ortsneutral. Voller Leistungsumfang, Ablauf, Grenzen. |
-| Leistung × Ort | `/trockenbau/aurich/` | Was an diesem Ort anders ist: Bausubstanz, Zufahrt, Entsorgung, örtliche Fragen. |
-| Ort | `/einsatzgebiet/aurich/` | Der Ort als Ganzes, Einstieg in alle 13 Leistungen. |
+| Ort | `/leer/`, `/norden/`, `/aurich/` | Der Ort mit allen Leistungen, Ab-Preisen, Umgebung und Fragen von dort. |
+| Übersicht | `/einsatzgebiet/` | Radius, alle Orte nach Landkreis, schematische Karte. Orte ohne eigene Seite werden nur genannt. |
 
 Die Leistungsseiten hießen vorher `/leistung-emden/` und trugen "in Emden" in
 der H1. Beides ist weg: Der Ortsbezug gehört auf die Ortsseiten, sonst
@@ -164,9 +165,11 @@ Zwei Gründe für die Marke vorn:
 Der Preis dafür: Die ersten 21 Zeichen sind auf allen Seiten gleich. Wenn
 mehrere Fixum-Treffer nebeneinander stehen, rückt das Unterscheidende nach
 rechts. Wer lieber das Stichwort vorn hätte, dreht das Muster um - die
-Titel stehen in den `metaTitle`-Zeilen unter `src/pages/`, in `staedte.ts`
-(15 Ortsseiten) und in `leistungsseiten.ts` (4 Muster für die 20
-Leistung-Ort-Seiten).
+Titel stehen in den `metaTitle`-Zeilen unter `src/pages/`.
+
+Ausnahme: Die drei Ortsseiten tragen auf Wunsch des Inhabers das Stichwort
+vorn - „Entrümpelung, Umzug & Trockenbau in Leer | Fixum Objektservice“
+(Titel in `src/data/orte.ts`).
 
 ## Der Quellenname über dem Suchergebnis
 
@@ -184,59 +187,54 @@ Den Quellennamen aktualisiert Google in eigenen Intervallen, erfahrungsgemäß
 Änderung abwarten. Ändert sich nach ein paar Monaten nichts, gibt es in der
 Search Console eine Rückmeldefunktion dafür.
 
-## Einsatzgebiet- und Ortsseiten - vor dem Livegang prüfen
+## Einsatzgebiet und Ortsseiten (Umbau Oktober 2026)
 
-Es gibt 36 solcher Seiten: `/einsatzgebiet/` als Übersicht, 15 Ortsseiten
-(Texte in `src/data/staedte.ts`) und 20 Leistungs-Ort-Seiten (Texte in
-`src/data/leistungsseiten.ts`) - Entrümpelung, Entkernung, Trockenbau und Umzug
-für Aurich, Leer, Norden, Moormerland und Krummhörn.
+Vorher: 20 Seiten „Leistung × Ort“ (`/trockenbau/aurich/` usw.) und 15
+Ortsseiten unter `/einsatzgebiet/[ort]/`. Google hat die 20 Kombiseiten als
+„Gefunden – zurzeit nicht indexiert“ liegen lassen: zu viele ähnliche Seiten,
+die mit den Hauptleistungsseiten konkurrieren.
 
-Bewusst **nicht** 15 × 13 automatisch erzeugte Kombinationen: Seiten, die sich
-nur im Ortsnamen unterscheiden, wertet Google als Doorway-Pages - im Zweifel
-zulasten der ganzen Domain. Weitere Kombinationen erst ergänzen, wenn die
-Search Console Impressionen für den Suchbegriff zeigt, und dann mit eigenem
-Text. Ein neuer Eintrag in `leistungsseiten.ts` erzeugt die Seite automatisch,
-inklusive Verlinkung von Leistungs- und Ortsseite.
+Jetzt:
 
-Diese Angaben stammen aus der Vorlage und sind **nicht verifiziert**:
+- **Drei Ortsseiten** `/leer/`, `/norden/`, `/aurich/` mit allen Leistungen,
+  Ab-Preisen aus `preise.ts`, Umgebung, eigenen Fragen und CTA. Texte in
+  `src/data/orte.ts`, Vorlage `src/components/OrtSeite.astro`.
+- **`/einsatzgebiet/`** als Übersicht: Radius (bis ca. 50 km um Emden), alle
+  Orte nach Landkreis, schematische Karte als eigenes SVG (kein
+  Google-Maps-Embed), Links auf Ortsseiten und Leistungen.
+- Krummhörn, Moormerland und alle übrigen Orte haben **keine eigene Seite**.
+  Sie stehen im Abschnitt „Einsatzgebiet“ auf Startseite und Leistungsseiten
+  und in der Liste auf `/einsatzgebiet/`.
+- Entfernungen nur als gerundete **Fahrzeit** („ca. 30 Minuten von Emden“),
+  keine Kilometerangaben je Ort.
 
-- [ ] `entfernungKm` je Ort per Google Maps ab Hermann-Allmers-Str. 13
-      bestätigen. Die Zahl steht sichtbar auf jeder Ortsseite und in der
-      Anfahrts-FAQ.
-- [ ] Ortsteil-Listen stichprobenartig gegenlesen.
-- [ ] Zuständige Abfallwirtschaft je Landkreis bestätigen - der Absatz
-      "Entsorgung" nennt sie beim Namen.
-- [ ] Aussagen zu Anfahrt und Mindestauftrag bei Wittmund, Papenburg, Weener
-      und Wiesmoor gegen die tatsächliche Preispolitik halten. Auf der
-      Papenburg-Seite steht zum Beispiel, dass sich kleine Privataufträge bei
-      der Entfernung selten lohnen.
-- [ ] Rich-Results-Test für eine Ortsseite und eine Leistungs-Ort-Seite.
-- [ ] Die 20 Leistungs-Ort-Texte einmal gegenlesen. Sie beschreiben, was in
-      Aurich, Leer, Norden, Moormerland und Krummhörn baulich typisch ist -
-      Altbau in Leer, Ferienobjekte in Norden, Gulfhöfe in der Krummhörn,
-      Fehnsiedlungen in Moormerland. Das ist allgemeines Ortswissen und keine
-      Aussage über bereits ausgeführte Aufträge, sollte aber zur eigenen
-      Erfahrung passen.
+**Referenzprojekt je Ort:** Feld `referenz` in `orte.ts`, derzeit `null`. Der
+Abschnitt erscheint erst, wenn dort ein echtes Projekt aus dem Ort steht
+(Foto aus `referenzen.ts`, Titel, kurzer Text). Nichts erfinden.
 
-## Weiterleitungen - erledigt, laufen über public/_redirects
+**Neue Orte auf die Liste:** in `gebiet` in `orte.ts` eintragen (Name,
+Koordinaten der Ortsmitte für die Karte). Nur Orte innerhalb von ca. 50 km
+Luftlinie um Emden.
 
-Die 13 alten `/leistung-emden/`-Adressen leiten per **echter 301** auf die
-neuen Adressen weiter, jeweils mit und ohne abschließenden Slash. Die Regeln
-stehen in `public/_redirects`; Cloudflare Pages liest die Datei aus dem
-Build-Verzeichnis, Netlify versteht dasselbe Format.
+## Weiterleitungen - laufen über vercel.json
 
-Vorher erzeugte `astro.config.mjs` dafür Seiten mit Meta-Refresh. Die wertet
-Google nur als schwaches Signal und nicht als Umzug - der `redirects`-Block
-ist deshalb entfernt.
+Die Seite läuft auf **Vercel**. Vercel liest `public/_redirects` nicht - die
+alten Regeln dort waren deshalb wirkungslos, die alten `-emden`-Adressen
+lieferten 404. Die Datei ist entfernt; alle Weiterleitungen stehen in
+`vercel.json` als echte **301**, jede Adresse mit und ohne Slash am Ende,
+immer direkt aufs Endziel (keine Ketten):
 
-Reihenfolge in der Datei beachten: Zuerst die drei Regeln, die den Host auf
-`https://www.` normalisieren, danach die Slug-Regeln. Es gewinnt die erste
-passende Zeile.
+- 20 alte Leistung-×-Ort-Seiten → `/leer/`, `/norden/`, `/aurich/` bzw. bei
+  Krummhörn und Moormerland auf die Hauptleistungsseite
+- 15 alte `/einsatzgebiet/[ort]/` → `/leer/`, `/norden/`, `/aurich/` bzw.
+  `/einsatzgebiet/`
+- 13 alte `/[leistung]-emden/` → die heutige Leistungsseite
+- 6 frühe Kombiseiten (`/entruempelung-leer/` …) → Ortsseite
+- 9 frühere Seitennamen (`/montage-boden/` …) und `/ablauf/`
 
-Geprüft mit `wrangler pages dev` und `curl -sI`: alle 26 Slug-Regeln liefern
-301 auf das richtige Ziel. Adressen ohne Slash beantwortet Cloudflare selbst
-mit 308 auf die Fassung mit Slash - das passt zu `trailingSlash: "always"`
-und zum Canonical.
+Neue Weiterleitung: Eintrag in `vercel.json` ergänzen, jeweils mit und ohne
+abschließenden Slash, `"statusCode": 301`. Die Weiterleitung ohne www → mit
+www ist in Vercel unter Settings → Domains eingestellt.
 
 ## Widerspruch zwischen FAQ und AGB - bitte entscheiden
 
@@ -278,51 +276,12 @@ Startseite und die Meta-Beschreibung ziehen automatisch nach.
   eigene Bausteine. Die Kapazitätsanzeige nur einbauen, wenn sie wöchentlich
   gepflegt wird - eine veraltete Angabe schadet mehr, als sie bringt.
 
-## Weiterleitung von non-www auf www - muss beim Hoster passieren
+## Weiterleitung von non-www auf www
 
-Kanonische Adresse ist `https://www.fixum-objektservice.de`. Canonical, Open
-Graph, Sitemap und schema.org geben ausschließlich diese Fassung aus. Solange
-`https://fixum-objektservice.de` aber weiterhin ausliefert statt
-weiterzuleiten, sieht Google zwei Seiten mit identischem Inhalt.
-
-In `public/_redirects` liegt die Regel für **Netlify und Cloudflare Pages**.
-Läuft die Seite woanders, gehört stattdessen eine der folgenden Fassungen in
-die Hoster-Konfiguration - die Datei kann dann gelöscht werden.
-
-**Vercel** (`vercel.json` im Projektwurzelverzeichnis):
-
-```json
-{
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "fixum-objektservice.de" }],
-      "destination": "https://www.fixum-objektservice.de/:path*",
-      "permanent": true
-    }
-  ]
-}
-```
-
-**Apache / klassisches Webhosting** (`.htaccess` im Wurzelverzeichnis):
-
-```apache
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^fixum-objektservice\.de$ [NC]
-RewriteRule ^(.*)$ https://www.fixum-objektservice.de/$1 [R=301,L]
-```
-
-**nginx**:
-
-```nginx
-server {
-    server_name fixum-objektservice.de;
-    return 301 https://www.fixum-objektservice.de$request_uri;
-}
-```
-
-Nach dem Einrichten prüfen: `curl -I https://fixum-objektservice.de/` muss
-`301` und `Location: https://www.fixum-objektservice.de/` liefern.
+Kanonische Adresse ist `https://www.fixum-objektservice.de`. Die Weiterleitung
+von `fixum-objektservice.de` auf www ist in Vercel unter Settings → Domains
+eingestellt. Prüfen: `curl -I https://fixum-objektservice.de/` muss auf
+`https://www.fixum-objektservice.de/` weiterleiten.
 
 ## Nach dem Livegang
 

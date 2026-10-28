@@ -1,0 +1,9 @@
+---
+/* Ortsseite aurich - Inhalt in src/data/orte.ts. */
+import OrtSeite from "../components/OrtSeite.astro";
+import { findeOrt } from "../data/orte";
+
+const ort = findeOrt("aurich")!;
+---
+
+<OrtSeite ort={ort} />

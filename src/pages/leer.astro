@@ -1,0 +1,9 @@
+---
+/* Ortsseite leer - Inhalt in src/data/orte.ts. */
+import OrtSeite from "../components/OrtSeite.astro";
+import { findeOrt } from "../data/orte";
+
+const ort = findeOrt("leer")!;
+---
+
+<OrtSeite ort={ort} />

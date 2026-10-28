@@ -1,7 +1,7 @@
 /* /llms.txt - Kurzprofil für KI-Assistenten und KI-Suchen (llmstxt.org).
 
    Wird beim Bauen aus denselben Daten erzeugt wie die Website: Firmendaten
-   aus site.ts, Preise aus preise.ts, Orte aus staedte.ts. Ändert sich dort
+   aus site.ts, Preise aus preise.ts, Orte aus orte.ts. Ändert sich dort
    etwas, zieht diese Datei automatisch nach. */
 import type { APIRoute } from "astro";
 import preisConfig from "../data/preise.config.json";
@@ -10,11 +10,10 @@ import {
   rechnerBereit,
   type Leistung,
 } from "../lib/preisrechner";
-import { leistungsStadtSeiten, leistungen } from "../data/leistungsseiten";
 import { festpreisHinweis, preise, preisHinweis } from "../data/preise";
 import { absolute } from "../data/seo";
 import { kettePfad, site } from "../data/site";
-import { findeStadt } from "../data/staedte";
+import { ortSeiten, radiusText } from "../data/orte";
 
 const link = (titel: string, pfad: string, text: string) =>
   `- [${titel}](${absolute(pfad)}): ${text}`;
@@ -39,15 +38,13 @@ const rechnerNamen =
     : rechnerAktiv.join("");
 
 export const GET: APIRoute = () => {
-  const ortsseiten = leistungsStadtSeiten.map((s) => {
-    const stadt = findeStadt(s.stadtSlug)!;
-    const l = leistungen[s.leistung];
-    return link(
-      `${l.label} in ${stadt.name}`,
-      s.pfad,
-      `${l.serviceType} in ${stadt.name}.`,
-    );
-  });
+  const ortsseiten = ortSeiten.map((o) =>
+    link(
+      `${site.name} in ${o.name}`,
+      `/${o.slug}/`,
+      `Entrümpelung, Umzug, Trockenbau und Entkernung in ${o.name} (${o.landkreis}).`,
+    ),
+  );
 
   const text = `# ${site.name}
 
@@ -103,7 +100,7 @@ Arbeiten an Strom, Gas, Wasser und Heizung, Eingriffe in die Statik und Schadsto
 ## Leistungen in Orten des Einsatzgebiets
 
 ${ortsseiten.join("\n")}
-${link("Einsatzgebiet", "/einsatzgebiet/", "Alle Orte im Einsatzgebiet mit Entfernung ab Emden.")}
+${link("Einsatzgebiet", "/einsatzgebiet/", `Alle Orte im Einsatzgebiet ${radiusText}.`)}
 
 ## Kontakt
 

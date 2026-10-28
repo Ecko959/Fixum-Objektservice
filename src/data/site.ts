@@ -1,3 +1,5 @@
+import { alleOrte } from "./orte";
+
 export const site = {
   name: "Fixum Objektservice",
   legalName: "Fixum Objektservice, Inhaber Eckhard Singer",
@@ -78,25 +80,9 @@ export const site = {
       closes: "19:00",
     },
   ],
-  areaServed: [
-    "Emden",
-    "Aurich",
-    "Leer",
-    "Norden",
-    "Norddeich",
-    "Krummhörn",
-    "Hinte",
-    "Moormerland",
-    "Weener",
-    "Wiesmoor",
-    "Großefehn",
-    "Ihlow",
-    "Südbrookmerland",
-    "Westoverledingen",
-    "Papenburg",
-    "Wittmund",
-    "Uplengen",
-  ],
+  /* Alle Orte im Einsatzgebiet (schema.org areaServed) - gepflegt in
+     src/data/orte.ts. */
+  areaServed: alleOrte,
 };
 
 /** Profile, die schema.org als sameAs bestätigt bekommt. Leere Einträge fliegen raus. */

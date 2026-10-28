@@ -1,0 +1,645 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/entruempelung/leer/",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/leer",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/norden/",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/norden",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/aurich/",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/aurich",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/krummhoern/",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/krummhoern",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/moormerland/",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung/moormerland",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/leer/",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/leer",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/norden/",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/norden",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/aurich/",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/aurich",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/krummhoern/",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/krummhoern",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/moormerland/",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung/moormerland",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/leer/",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/leer",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/norden/",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/norden",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/aurich/",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/aurich",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/krummhoern/",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/krummhoern",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/moormerland/",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau/moormerland",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/leer/",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/leer",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/norden/",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/norden",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/aurich/",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/aurich",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/krummhoern/",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/krummhoern",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/moormerland/",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug/moormerland",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/leer/",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/leer",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/norden/",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/norden",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/aurich/",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/aurich",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/krummhoern/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/krummhoern",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/hinte/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/hinte",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/moormerland/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/moormerland",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/ihlow/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/ihlow",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/suedbrookmerland/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/suedbrookmerland",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/grossefehn/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/grossefehn",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/westoverledingen/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/westoverledingen",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/weener/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/weener",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/uplengen/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/uplengen",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/wiesmoor/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/wiesmoor",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/wittmund/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/wittmund",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/papenburg/",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/einsatzgebiet/papenburg",
+      "destination": "/einsatzgebiet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-emden/",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-emden",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung-emden/",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung-emden",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-emden/",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-emden",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/bodenverlegung-emden/",
+      "destination": "/bodenverlegung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/bodenverlegung-emden",
+      "destination": "/bodenverlegung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug-emden/",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzug-emden",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/haushaltsaufloesung-emden/",
+      "destination": "/haushaltsaufloesung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/haushaltsaufloesung-emden",
+      "destination": "/haushaltsaufloesung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/wohnungsraeumung-emden/",
+      "destination": "/wohnungsraeumung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/wohnungsraeumung-emden",
+      "destination": "/wohnungsraeumung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kernsanierung-emden/",
+      "destination": "/kernsanierung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kernsanierung-emden",
+      "destination": "/kernsanierung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/renovierung-emden/",
+      "destination": "/renovierung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/renovierung-emden",
+      "destination": "/renovierung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/hausmeisterservice-emden/",
+      "destination": "/hausmeisterservice/",
+      "statusCode": 301
+    },
+    {
+      "source": "/hausmeisterservice-emden",
+      "destination": "/hausmeisterservice/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kuechenmontage-emden/",
+      "destination": "/kuechenmontage/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kuechenmontage-emden",
+      "destination": "/kuechenmontage/",
+      "statusCode": 301
+    },
+    {
+      "source": "/winterdienst-emden/",
+      "destination": "/winterdienst/",
+      "statusCode": 301
+    },
+    {
+      "source": "/winterdienst-emden",
+      "destination": "/winterdienst/",
+      "statusCode": 301
+    },
+    {
+      "source": "/rueckbau-trockenbau-emden/",
+      "destination": "/rueckbau-trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/rueckbau-trockenbau-emden",
+      "destination": "/rueckbau-trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-leer/",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-leer",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-norden/",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-norden",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-aurich/",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-aurich",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-leer/",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-leer",
+      "destination": "/leer/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-norden/",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-norden",
+      "destination": "/norden/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-aurich/",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-aurich",
+      "destination": "/aurich/",
+      "statusCode": 301
+    },
+    {
+      "source": "/montage-boden/",
+      "destination": "/bodenverlegung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/montage-boden",
+      "destination": "/bodenverlegung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung-rueckbau/",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung-rueckbau",
+      "destination": "/entkernung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-haushaltsaufloesung/",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entruempelung-haushaltsaufloesung",
+      "destination": "/entruempelung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kernsanierung-vorbereiten/",
+      "destination": "/kernsanierung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kernsanierung-vorbereiten",
+      "destination": "/kernsanierung/",
+      "statusCode": 301
+    },
+    {
+      "source": "/moebel-kuechenmontage/",
+      "destination": "/kuechenmontage/",
+      "statusCode": 301
+    },
+    {
+      "source": "/moebel-kuechenmontage",
+      "destination": "/kuechenmontage/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung-trockenbau/",
+      "destination": "/rueckbau-trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/entkernung-trockenbau",
+      "destination": "/rueckbau-trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-innenausbau/",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/trockenbau-innenausbau",
+      "destination": "/trockenbau/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzuege-transporte/",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/umzuege-transporte",
+      "destination": "/umzug/",
+      "statusCode": 301
+    },
+    {
+      "source": "/winterdienst-aussenanlagen/",
+      "destination": "/winterdienst/",
+      "statusCode": 301
+    },
+    {
+      "source": "/winterdienst-aussenanlagen",
+      "destination": "/winterdienst/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ablauf/",
+      "destination": "/leistungen/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ablauf",
+      "destination": "/leistungen/",
+      "statusCode": 301
+    }
+  ]
+}
