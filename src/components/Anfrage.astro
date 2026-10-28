@@ -118,11 +118,10 @@ const Huelle = eingebettet ? "div" : "section";
         data-af-form
       >
         <div class="af-fortschritt" data-fortschritt aria-hidden="true">
-          <div class="af-balken"><span data-balken></span></div>
           <ol class="af-stufen">
-            <li data-stufe="1">Vorhaben</li>
-            <li data-stufe="2">Details</li>
-            <li data-stufe="3">Kontakt</li>
+            <li data-stufe="1"><span>01</span>Vorhaben</li>
+            <li data-stufe="2"><span>02</span>Details</li>
+            <li data-stufe="3"><span>03</span>Kontakt</li>
           </ol>
         </div>
         <p class="sr-only" aria-live="polite" data-ansage></p>
@@ -167,6 +166,9 @@ const Huelle = eingebettet ? "div" : "section";
                       <Icon name={l.icon} size={26} />
                     </span>
                     <span class="af-karte-text">{l.label}</span>
+                    <span class="af-karte-haken" aria-hidden="true">
+                      <Icon name="check" size={14} />
+                    </span>
                   </span>
                 </label>
               ))
@@ -220,7 +222,10 @@ const Huelle = eingebettet ? "div" : "section";
 
           <fieldset class="af-feld af-gruppe">
             <legend>Objektart <span class="af-pflicht">*</span></legend>
-            <div class="af-chips" aria-describedby="af-objektart-fehler">
+            <div
+              class="af-chips af-chips--4"
+              aria-describedby="af-objektart-fehler"
+            >
               {
                 anfrageObjektarten.map((o) => (
                   <label class="af-chip">
@@ -283,14 +288,15 @@ const Huelle = eingebettet ? "div" : "section";
                 aria-describedby="af-fotos-hinweis"
                 data-datei
               />
-              <span class="af-drop-icon"><Icon name="kamera" size={24} /></span>
+              <span class="af-drop-icon"><Icon name="kamera" size={22} /></span>
               <span class="af-drop-text">
                 <strong data-drop-titel aria-live="polite"
                   >Fotos hinzufügen</strong
                 >
-                <small
-                  >Kamera oder Galerie – am Computer auch per Drag &amp; Drop</small
-                >
+                <small>
+                  <span class="af-touch">Kamera oder Galerie</span>
+                  <span class="af-maus">Auswählen oder hierher ziehen</span>
+                </small>
               </span>
             </label>
             <p class="af-tipp" id="af-fotos-hinweis">
@@ -413,11 +419,8 @@ const Huelle = eingebettet ? "div" : "section";
         </div>
 
         <div class="af-nav">
-          <button
-            type="button"
-            class="btn btn--secondary af-zurueck"
-            data-zurueck
-          >
+          <button type="button" class="af-zurueck" data-zurueck>
+            <Icon name="arrow" size={16} />
             Zurück
           </button>
           <button type="button" class="btn af-vor" data-weiter>
@@ -489,7 +492,6 @@ const Huelle = eingebettet ? "div" : "section";
       ...form.querySelectorAll<HTMLFieldSetElement>("[data-schritt]"),
     ];
     const stufen = [...form.querySelectorAll<HTMLElement>("[data-stufe]")];
-    const balken = form.querySelector<HTMLElement>("[data-balken]")!;
     const ansage = form.querySelector<HTMLElement>("[data-ansage]")!;
     const status = form.querySelector<HTMLElement>("[data-status]")!;
     const vor = form.querySelector<HTMLButtonElement>("[data-weiter]")!;
@@ -637,7 +639,6 @@ const Huelle = eingebettet ? "div" : "section";
         s.classList.toggle("ist-aktiv", n === nr);
         s.classList.toggle("ist-fertig", n < nr);
       });
-      balken.style.width = `${(nr / 3) * 100}%`;
       /* Schritt 2 zeigt, was in Schritt 1 gewählt ist - auch bei Vorauswahl. */
       const gewaehlt = form.querySelector<HTMLInputElement>(
         'input[name="leistung"]:checked',
@@ -907,9 +908,11 @@ const Huelle = eingebettet ? "div" : "section";
     });
 
     /* ---------------- Senden ---------------- */
-    function fehlerText(satz: string) {
+    /* Der Fehlercode hilft bei der Suche: 503 = Versand nicht eingerichtet,
+       502 = Mailserver hat abgelehnt, 0 = keine Verbindung. */
+    function fehlerText(satz: string, code?: number) {
       const { tel, telText, wa } = wurzel!.dataset;
-      return `${satz} Bitte rufen Sie mich an unter <a href="${tel}">${telText}</a> oder schreiben Sie per <a href="${wa}" target="_blank" rel="noopener noreferrer">WhatsApp</a>. Ihre Eingaben bleiben hier erhalten.`;
+      return `<strong>Senden fehlgeschlagen</strong><span>${satz} Bitte rufen Sie mich an unter <a href="${tel}">${telText}</a> oder schreiben Sie per <a href="${wa}" target="_blank" rel="noopener noreferrer">WhatsApp</a>. Ihre Eingaben bleiben hier erhalten.</span>${code !== undefined ? `<small>Fehlercode ${code}</small>` : ""}`;
     }
 
     const zeigeStatus = (html: string) => {
@@ -1016,17 +1019,21 @@ const Huelle = eingebettet ? "div" : "section";
         }
         if (xhr.status === 429)
           return zeigeStatus(
-            fehlerText("Gerade kamen sehr viele Anfragen von Ihrem Anschluss."),
+            fehlerText(
+              "Gerade kamen sehr viele Anfragen von Ihrem Anschluss.",
+              429,
+            ),
           );
         zeigeStatus(
           fehlerText(
-            "Das hat leider nicht geklappt – die Nachricht konnte nicht zugestellt werden.",
+            "Die Nachricht konnte nicht zugestellt werden.",
+            xhr.status,
           ),
         );
       });
       const netzFehler = () => {
         fertig();
-        zeigeStatus(fehlerText("Die Verbindung ist abgebrochen."));
+        zeigeStatus(fehlerText("Die Verbindung ist abgebrochen.", 0));
       };
       xhr.addEventListener("error", netzFehler);
       xhr.addEventListener("timeout", netzFehler);
@@ -1036,19 +1043,29 @@ const Huelle = eingebettet ? "div" : "section";
 </script>
 
 <style>
+  /* Ruhig und präzise: feine Linien, viel Luft, Blau nur für Auswahl und
+     Hauptaktion. Radien 4px. Eingabefelder mit 16px Schrift, damit iOS
+     beim Antippen nicht hineinzoomt. */
+  .anfrage {
+    --af-feld: #fbfcfe;
+    --af-linie: #d6e0ee;
+    --af-text: #4b5873;
+    --af-fehler: #b3261e;
+  }
+
   /* ---------------- Sektion ---------------- */
   .anfrage-raster {
     display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 6vw, 5rem);
     align-items: start;
   }
 
   .af-seite {
     position: sticky;
-    top: calc(var(--header-h) + 24px);
+    top: calc(var(--header-h) + 32px);
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
   }
 
   .af-seite h2 {
@@ -1057,24 +1074,28 @@ const Huelle = eingebettet ? "div" : "section";
 
   .af-weiter {
     display: grid;
-    gap: 0.75rem;
-    margin: 0.5rem 0;
+    gap: 0;
+    margin: 0.25rem 0;
     padding: 0;
     list-style: none;
+    border-top: 1px solid var(--line);
   }
 
   .af-weiter li {
     display: flex;
     align-items: baseline;
-    gap: 0.875rem;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
     color: var(--ink);
   }
 
   .af-weiter span {
     flex: none;
-    font-family: var(--font-display);
-    font-size: 0.875rem;
-    font-weight: 700;
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     font-variant-numeric: tabular-nums;
     color: var(--blue);
   }
@@ -1085,6 +1106,7 @@ const Huelle = eingebettet ? "div" : "section";
     align-items: center;
     gap: 0.5rem 1.25rem;
     margin: 0;
+    font-size: 0.9375rem;
     color: var(--muted);
   }
 
@@ -1102,22 +1124,27 @@ const Huelle = eingebettet ? "div" : "section";
 
   /* ---------------- Karte ---------------- */
   .af {
-    padding: clamp(1.25rem, 3vw, 2.25rem);
+    padding: clamp(1.25rem, 4vw, 2.75rem);
+    border: 1px solid var(--line);
     border-radius: 4px;
+    background: #fff;
+    box-shadow:
+      0 1px 2px rgba(16, 27, 49, 0.04),
+      0 24px 60px -28px rgba(19, 42, 92, 0.22);
   }
 
   .af-kopf {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.75rem;
   }
 
   .af-kopf h2 {
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.5rem;
     font-size: var(--step-3);
   }
 
   .af-form {
     display: grid;
-    gap: 1.25rem;
+    gap: 1.75rem;
   }
 
   /* ---------------- Fortschritt ---------------- */
@@ -1126,59 +1153,60 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af--js .af-fortschritt {
-    display: grid;
-    gap: 0.6rem;
-  }
-
-  .af-balken {
-    height: 4px;
-    border-radius: 2px;
-    background: var(--line);
-    overflow: hidden;
-  }
-
-  .af-balken span {
     display: block;
-    width: 33%;
-    height: 100%;
-    background: linear-gradient(90deg, var(--blue), var(--blue-bright));
-    transition: width 320ms var(--ease-out);
   }
 
   .af-stufen {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .af-stufen li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding-top: 0.75rem;
+    border-top: 2px solid var(--line);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #8592a8;
+    transition:
+      border-color 320ms var(--ease-out),
+      color 320ms var(--ease-out);
+  }
+
+  .af-stufen li span {
     font-family: var(--font-utility);
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .af-stufen li:nth-child(2) {
-    text-align: center;
-  }
-
-  .af-stufen li:nth-child(3) {
-    text-align: right;
-  }
-
-  .af-stufen .ist-aktiv {
-    color: var(--navy);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
   }
 
   .af-stufen .ist-fertig {
+    border-color: var(--blue);
+    color: var(--muted);
+  }
+
+  .af-stufen .ist-aktiv {
+    border-color: var(--navy);
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .af-stufen .ist-aktiv span,
+  .af-stufen .ist-fertig span {
     color: var(--blue);
   }
 
   /* ---------------- Schritte ---------------- */
   .af-schritt {
     display: grid;
-    gap: 1.1rem;
+    gap: 1.5rem;
     min-width: 0;
     margin: 0;
     padding: 0;
@@ -1190,26 +1218,28 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af-schritt--neu {
-    animation: af-ein 280ms var(--ease-out);
+    animation: af-ein 360ms var(--ease-out);
   }
 
   @keyframes af-ein {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(6px);
     }
   }
 
   .af-legend {
     display: grid;
-    gap: 0.2rem;
-    margin-bottom: 0.25rem;
+    gap: 0.35rem;
     padding: 0;
     font-family: var(--font-display);
-    font-size: var(--step-2);
+    font-size: clamp(1.375rem, 1.1rem + 0.9vw, 1.75rem);
     font-weight: 700;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
     color: var(--navy);
+    /* Die Legende ist kein Rasterelement - Abstand deshalb hier. */
+    margin-bottom: 1.25rem;
   }
 
   .af-legend:focus {
@@ -1220,20 +1250,30 @@ const Huelle = eingebettet ? "div" : "section";
     font-family: var(--font-utility);
     font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--blue);
   }
 
-  /* Ohne JavaScript stehen alle Schritte untereinander - "von 3" passt dann. */
+  /* Mit JavaScript steht der Schritt schon im Fortschritt oben -
+     für Screenreader bleibt er in der Legende. */
+  .af--js .af-nr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 
   .af-gewaehlt {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.25rem 0.5rem;
-    margin: -0.25rem 0 0;
-    padding: 0.6rem 0.85rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.1rem 1rem;
+    margin: 0;
+    padding: 0.7rem 0.95rem;
+    border: 1px solid var(--line);
     border-radius: 4px;
     font-size: 0.9375rem;
     color: var(--muted);
@@ -1244,27 +1284,38 @@ const Huelle = eingebettet ? "div" : "section";
     display: none;
   }
 
+  .af-gewaehlt span {
+    grid-column: 1 / -1;
+    font-size: 0.75rem;
+    color: #6b7891;
+  }
+
   .af-gewaehlt strong {
+    font-weight: 600;
+    line-height: 1.35;
     color: var(--navy);
   }
 
   .af-aendern {
-    margin-left: auto;
     padding: 0;
     border: 0;
     font: inherit;
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--blue);
-    text-decoration: underline;
-    text-underline-offset: 2px;
     background: none;
     cursor: pointer;
+  }
+
+  .af-aendern:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* ---------------- Leistungskarten ---------------- */
   .af-karten {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr));
     gap: 0.625rem;
   }
 
@@ -1282,41 +1333,56 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af-karte-box {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.6rem;
+    gap: 0.85rem;
     height: 100%;
-    min-height: 112px;
-    padding: 0.9rem;
-    border: 1px solid var(--line);
+    min-height: 116px;
+    padding: 1rem 1rem 1.1rem;
+    border: 1px solid var(--af-linie);
     border-radius: 4px;
     background: #fff;
     transition:
       border-color 200ms var(--ease-out),
       background 200ms var(--ease-out),
-      transform 200ms var(--ease-out);
+      box-shadow 200ms var(--ease-out);
   }
 
   .af-karte-icon {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 4px;
+    display: inline-flex;
     color: var(--blue);
-    background: var(--mist);
   }
 
   .af-karte-text {
+    font-size: 0.9375rem;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.35;
     color: var(--navy);
+  }
+
+  .af-karte-haken {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--af-linie);
+    border-radius: 50%;
+    color: transparent;
+    background: #fff;
+    transition:
+      background 200ms var(--ease-out),
+      border-color 200ms var(--ease-out),
+      color 200ms var(--ease-out);
   }
 
   .af-karte:hover .af-karte-box {
     border-color: var(--blue-light);
-    transform: translateY(-2px);
+    box-shadow: 0 6px 18px -10px rgba(19, 42, 92, 0.25);
   }
 
   .af-karte input:checked + .af-karte-box {
@@ -1325,14 +1391,15 @@ const Huelle = eingebettet ? "div" : "section";
     box-shadow: inset 0 0 0 1px var(--blue);
   }
 
-  .af-karte input:checked + .af-karte-box .af-karte-icon {
+  .af-karte input:checked + .af-karte-box .af-karte-haken {
+    border-color: var(--blue);
     color: #fff;
     background: var(--blue);
   }
 
   .af-karte input:focus-visible + .af-karte-box,
   .af-chip input:focus-visible + span {
-    outline: 3px solid var(--blue-light);
+    outline: 2px solid var(--blue);
     outline-offset: 2px;
   }
 
@@ -1340,12 +1407,13 @@ const Huelle = eingebettet ? "div" : "section";
   .af-reihe {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 1.25rem;
   }
 
   .af-feld {
     display: grid;
-    gap: 0.4rem;
+    align-content: start;
+    gap: 0.5rem;
     min-width: 0;
     margin: 0;
     padding: 0;
@@ -1356,9 +1424,14 @@ const Huelle = eingebettet ? "div" : "section";
   .af-gruppe > legend,
   .af-label {
     padding: 0;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     font-weight: 600;
+    letter-spacing: 0.005em;
     color: var(--navy);
+  }
+
+  .af-gruppe > legend {
+    margin-bottom: 0.5rem;
   }
 
   .af-pflicht {
@@ -1366,9 +1439,9 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af-optional {
-    margin-left: 0.25rem;
+    margin-left: 0.35rem;
     font-weight: 400;
-    color: var(--muted);
+    color: #8592a8;
   }
 
   .af-feld input[type="text"],
@@ -1377,26 +1450,37 @@ const Huelle = eingebettet ? "div" : "section";
   .af-feld select,
   .af-feld textarea {
     width: 100%;
-    min-height: 50px;
-    padding: 0.75rem 0.9rem;
-    border: 1px solid var(--line-strong);
+    min-height: 52px;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--af-linie);
     border-radius: 4px;
     font: inherit;
+    font-size: 1rem;
     color: var(--ink);
-    background: #fff;
+    background: var(--af-feld);
+    -webkit-appearance: none;
+    appearance: none;
     transition:
       border-color 200ms var(--ease-out),
-      box-shadow 200ms var(--ease-out);
+      box-shadow 200ms var(--ease-out),
+      background 200ms var(--ease-out);
   }
 
   .af-feld textarea {
-    min-height: 120px;
+    min-height: 128px;
+    line-height: 1.55;
     resize: vertical;
   }
 
   .af-feld input::placeholder,
   .af-feld textarea::placeholder {
-    color: #7b879c;
+    color: #97a3b8;
+  }
+
+  .af-feld input:hover,
+  .af-feld select:hover,
+  .af-feld textarea:hover {
+    border-color: var(--line-strong);
   }
 
   .af-feld input:focus,
@@ -1404,11 +1488,13 @@ const Huelle = eingebettet ? "div" : "section";
   .af-feld textarea:focus {
     outline: none;
     border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(31, 122, 224, 0.18);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(31, 122, 224, 0.12);
   }
 
   .af-feld [aria-invalid="true"] {
-    border-color: #b3261e;
+    border-color: var(--af-fehler);
+    background: #fffafa;
   }
 
   .af-select {
@@ -1419,101 +1505,176 @@ const Huelle = eingebettet ? "div" : "section";
     content: "";
     position: absolute;
     top: 50%;
-    right: 1rem;
-    width: 8px;
-    height: 8px;
-    margin-top: -6px;
-    border-right: 2px solid var(--blue);
-    border-bottom: 2px solid var(--blue);
+    right: 1.1rem;
+    width: 7px;
+    height: 7px;
+    margin-top: -5px;
+    border-right: 1.5px solid var(--navy);
+    border-bottom: 1.5px solid var(--navy);
     transform: rotate(45deg);
     pointer-events: none;
   }
 
   .af-select select {
-    appearance: none;
-    padding-right: 2.5rem;
+    padding-right: 2.75rem;
     cursor: pointer;
   }
 
+  /* Auswahl als Segment-Schalter: eine Leiste, die gewählte Option hebt
+     sich weiß mit feinem Schatten ab. */
   .af-chips {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    padding: 4px;
+    border-radius: 4px;
+    background: #eef3f9;
+  }
+
+  /* Vier Optionen unterschiedlicher Länge: Breite nach Inhalt verteilen */
+  .af-chips--4 {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+  }
+
+  .af-chips--4 .af-chip {
+    flex: 1 1 auto;
   }
 
   .af-chip {
     position: relative;
+    display: flex;
     cursor: pointer;
   }
 
   .af-chip span {
-    display: inline-flex;
+    display: flex;
+    flex: 1;
     align-items: center;
+    justify-content: center;
     min-height: 44px;
-    padding: 0.55rem 1rem;
-    border: 1px solid var(--line-strong);
-    border-radius: 4px;
+    padding: 0.5rem 0.6rem;
+    border-radius: 3px;
     font-size: 0.9375rem;
-    color: var(--ink);
-    background: #fff;
+    font-weight: 500;
+    line-height: 1.25;
+    text-align: center;
+    color: var(--af-text);
     transition:
-      border-color 200ms var(--ease-out),
-      background 200ms var(--ease-out);
+      background 200ms var(--ease-out),
+      color 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out);
   }
 
   .af-chip:hover span {
-    border-color: var(--blue-light);
+    color: var(--navy);
   }
 
   .af-chip input:checked + span {
-    border-color: var(--blue);
-    color: #fff;
-    background: var(--blue);
+    font-weight: 600;
+    color: var(--navy);
+    background: #fff;
+    box-shadow:
+      0 1px 2px rgba(16, 27, 49, 0.08),
+      0 2px 8px -2px rgba(19, 42, 92, 0.14),
+      inset 0 -2px 0 var(--blue);
+  }
+
+  .af-chips:has([aria-invalid="true"]) {
+    box-shadow: inset 0 0 0 1px var(--af-fehler);
   }
 
   .af-tipp {
     margin: 0;
     font-size: 0.8125rem;
-    color: var(--muted);
+    line-height: 1.5;
+    color: #6b7891;
   }
 
   .af-fehler {
+    display: flex;
+    gap: 0.4rem;
     margin: 0;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    color: #b3261e;
+    line-height: 1.45;
+    color: var(--af-fehler);
   }
 
   .af-fehler:empty {
     display: none;
   }
 
+  /* Checkbox im Stil der Felder */
   .af-check {
     grid-template-columns: 22px minmax(0, 1fr);
     align-items: start;
-    gap: 0.4rem 0.75rem;
+    gap: 0.4rem 0.85rem;
   }
 
   .af-check input {
+    display: grid;
+    place-items: center;
     width: 22px;
     height: 22px;
-    margin: 2px 0 0;
-    accent-color: var(--blue);
+    margin: 1px 0 0;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 4px;
+    background: #fff;
     cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition:
+      background 160ms var(--ease-out),
+      border-color 160ms var(--ease-out);
+  }
+
+  .af-check input::after {
+    content: "";
+    width: 6px;
+    height: 11px;
+    margin-top: -2px;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(45deg) scale(0);
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .af-check input:checked {
+    border-color: var(--blue);
+    background: var(--blue);
+  }
+
+  .af-check input:checked::after {
+    transform: rotate(45deg) scale(1);
+  }
+
+  .af-check input:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  .af-check input[aria-invalid="true"] {
+    border-color: var(--af-fehler);
   }
 
   .af-check label {
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     font-weight: 400;
-    line-height: 1.55;
-    color: var(--ink);
+    line-height: 1.6;
+    color: var(--af-text);
   }
 
   .af-check a {
     font-weight: 600;
-    color: var(--blue);
+    color: var(--navy);
     text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px;
+  }
+
+  .af-check a:hover {
+    text-decoration-color: currentColor;
   }
 
   .af-check .af-fehler {
@@ -1534,11 +1695,11 @@ const Huelle = eingebettet ? "div" : "section";
     display: flex;
     align-items: center;
     gap: 1rem;
-    min-height: 84px;
+    min-height: 80px;
     padding: 1rem 1.1rem;
-    border: 1.5px dashed var(--line-strong);
+    border: 1px dashed var(--line-strong);
     border-radius: 4px;
-    background: var(--mist-soft);
+    background: var(--af-feld);
     cursor: pointer;
     transition:
       border-color 200ms var(--ease-out),
@@ -1546,20 +1707,28 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af-drop:hover,
-  .af-drop.ist-ueber,
-  .af-drop:focus-within {
+  .af-drop.ist-ueber {
     border-color: var(--blue);
-    background: #fff;
+    background: var(--mist-soft);
   }
 
   .af-drop:focus-within {
-    outline: 3px solid var(--blue-light);
-    outline-offset: 2px;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(31, 122, 224, 0.12);
   }
 
   .af-drop.ist-beschaeftigt {
-    opacity: 0.6;
     cursor: progress;
+  }
+
+  .af-drop.ist-beschaeftigt .af-drop-icon {
+    animation: af-puls 1.1s ease-in-out infinite;
+  }
+
+  @keyframes af-puls {
+    50% {
+      opacity: 0.45;
+    }
   }
 
   .af-datei {
@@ -1575,32 +1744,48 @@ const Huelle = eingebettet ? "div" : "section";
     display: grid;
     flex: none;
     place-items: center;
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border-radius: 4px;
-    color: #fff;
-    background: var(--navy);
+    color: var(--blue);
+    background: var(--mist);
   }
 
   .af-drop-text {
     display: grid;
-    gap: 0.15rem;
-    line-height: 1.35;
+    gap: 0.1rem;
+    line-height: 1.4;
   }
 
   .af-drop-text strong {
+    font-size: 0.9375rem;
+    font-weight: 600;
     color: var(--navy);
   }
 
   .af-drop-text small {
     font-size: 0.8125rem;
-    color: var(--muted);
+    color: #6b7891;
+  }
+
+  .af-maus {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .af-touch {
+      display: none;
+    }
+
+    .af-maus {
+      display: inline;
+    }
   }
 
   .af-thumbs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 0.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -1610,61 +1795,96 @@ const Huelle = eingebettet ? "div" : "section";
     display: none;
   }
 
+  /* Quadratisch und randlos beschnitten - Hochkant-Fotos ragen nicht heraus. */
   .af-thumbs :global(li) {
     position: relative;
     display: grid;
     place-items: center;
-    width: 72px;
-    height: 72px;
-    border: 1px solid var(--line);
+    aspect-ratio: 1;
+    overflow: hidden;
     border-radius: 4px;
     background: var(--mist);
     font-size: 0.75rem;
     font-weight: 600;
+    letter-spacing: 0.06em;
     color: var(--navy);
   }
 
   .af-thumbs :global(img) {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 3px;
   }
 
   .af-thumbs :global(.af-thumb-weg) {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: 4px;
+    right: 4px;
     display: grid;
     place-items: center;
     width: 26px;
     height: 26px;
-    padding: 0;
-    border: 2px solid #fff;
+    padding: 0 0 2px;
+    border: 0;
     border-radius: 50%;
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1;
     color: #fff;
-    background: var(--navy);
+    background: rgba(10, 23, 48, 0.72);
+    backdrop-filter: blur(4px);
     cursor: pointer;
   }
 
-  /* ---------------- Senden, Status ---------------- */
+  .af-thumbs :global(.af-thumb-weg:hover) {
+    background: var(--navy-deep);
+  }
+
+  /* ---------------- Navigation, Status ---------------- */
   .af-nav {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
   }
 
   .af-nav .btn {
-    flex: 1 1 0;
+    min-width: 200px;
     width: auto;
-    padding-inline: 1.25rem;
+    padding-inline: 1.5rem;
     white-space: nowrap;
   }
 
-  .af-nav .af-zurueck {
-    flex: 0 0 auto;
+  .af-zurueck {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 48px;
+    margin-right: auto;
+    padding: 0 0.25rem;
+    border: 0;
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: none;
+    cursor: pointer;
+  }
+
+  .af-zurueck :global(.icon) {
+    transform: rotate(180deg);
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .af-zurueck:hover {
+    color: var(--navy);
+  }
+
+  .af-zurueck:hover :global(.icon) {
+    transform: rotate(180deg) translateX(3px);
   }
 
   /* Ohne JavaScript: kein Weiter/Zurück, nur Senden */
@@ -1684,62 +1904,92 @@ const Huelle = eingebettet ? "div" : "section";
 
   .af-upload {
     display: grid;
-    gap: 0.4rem;
+    gap: 0.5rem;
   }
 
   .af-upload[hidden] {
     display: none;
   }
 
+  .af-upload .af-balken {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
   .af-upload .af-balken span {
+    display: block;
     width: 0;
+    height: 100%;
+    background: var(--blue);
     transition: width 120ms linear;
   }
 
   .af-upload p {
+    display: flex;
+    justify-content: space-between;
     margin: 0;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     color: var(--muted);
   }
 
   .af-status {
-    padding: 0.85rem 1rem;
-    border-left: 3px solid #b3261e;
-    border-radius: 0 4px 4px 0;
+    display: grid;
+    gap: 0.3rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid #f0d4d1;
+    border-radius: 4px;
     font-size: 0.9375rem;
-    background: #fef5f4;
+    line-height: 1.55;
+    color: var(--ink);
+    background: #fdf7f6;
   }
 
   .af-status[hidden] {
     display: none;
   }
 
+  .af-status :global(strong) {
+    font-size: 0.9375rem;
+    color: var(--af-fehler);
+  }
+
+  .af-status :global(small) {
+    font-size: 0.75rem;
+    color: #8592a8;
+  }
+
   .af-status :global(a) {
     font-weight: 600;
-    color: var(--blue);
+    color: var(--navy);
     text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px;
+    white-space: nowrap;
   }
 
   .af-note {
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
-    margin: 0;
+    margin: -0.5rem 0 0;
     font-size: 0.8125rem;
-    color: var(--muted);
+    line-height: 1.5;
+    color: #6b7891;
   }
 
   .af-note :global(.icon) {
     flex: none;
-    margin-top: 2px;
+    margin-top: 1px;
     color: var(--blue);
   }
 
   /* ---------------- Erfolg ---------------- */
   .af-erfolg {
     display: grid;
-    gap: 1rem;
-    animation: af-ein 320ms var(--ease-out);
+    gap: 1.25rem;
+    animation: af-ein 360ms var(--ease-out);
   }
 
   .af-erfolg[hidden] {
@@ -1752,19 +2002,22 @@ const Huelle = eingebettet ? "div" : "section";
 
   .af-erfolg h3 {
     margin: 0;
-    font-size: var(--step-3);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    letter-spacing: -0.02em;
   }
 
   .af-erfolg-haken {
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 4px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
     color: #fff;
     background: var(--blue);
+    box-shadow: 0 0 0 8px var(--mist);
   }
 
+  /* ---------------- Responsive ---------------- */
   @media (max-width: 980px) {
     .anfrage-raster {
       grid-template-columns: minmax(0, 1fr);
@@ -1776,35 +2029,82 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   @media (max-width: 560px) {
-    .af-reihe {
-      grid-template-columns: minmax(0, 1fr);
+    .af {
+      padding: 1.25rem 1.125rem 1.5rem;
     }
 
+    .af-form {
+      gap: 1.5rem;
+    }
+
+    .af-schritt {
+      gap: 1.25rem;
+    }
+
+    .af-reihe {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
+    }
+
+    /* Auf dem Handy als ruhige Liste: Symbol, Text, Haken rechts */
     .af-karten {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.5rem;
     }
 
     .af-karte-box {
-      min-height: 104px;
-      padding: 0.75rem;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.85rem;
+      min-height: 58px;
+      padding: 0.75rem 3rem 0.75rem 0.95rem;
     }
 
-    .af-stufen {
-      font-size: 0.6875rem;
-      letter-spacing: 0.06em;
+    .af-karte-haken {
+      top: 50%;
+      right: 0.95rem;
+      margin-top: -10px;
+    }
+
+    .af-chips--4 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .af-chip span {
+      font-size: 0.875rem;
+    }
+
+    .af-stufen li {
+      font-size: 0.75rem;
+    }
+
+    .af-nav {
+      gap: 0.75rem;
+      padding-top: 1.25rem;
+    }
+
+    .af-nav .btn {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .af-zurueck {
+      margin-right: 0;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .af-schritt--neu,
     .af-erfolg,
-    .af-balken span {
+    .af-drop.ist-beschaeftigt .af-drop-icon {
       animation: none;
-      transition: none;
     }
 
-    .af-karte:hover .af-karte-box {
-      transform: none;
+    .af-stufen li,
+    .af-karte-box,
+    .af-chip span {
+      transition: none;
     }
   }
 </style>
