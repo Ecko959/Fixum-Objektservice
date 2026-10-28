@@ -1,0 +1,179 @@
+---
+/* Kontaktkarte im Hero der Startseite. Glasfläche auf dem Foto.
+   Die Leistungs-Kacheln springen zum Formular am Seitenende (#anfrage)
+   und wählen die Leistung vor - das Formular beginnt dann bei Schritt 2. */
+import Icon from "./Icon.astro";
+import WhatsAppMark from "./WhatsAppMark.astro";
+import { anfrageHref, anfrageLeistungen } from "../data/anfrage";
+import { site, telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+
+const waThema = whatsappThema(Astro.url.pathname);
+/* Die vier häufigsten Anfragen - der Rest ist im Formular wählbar. */
+const schnell = ["entruempelung", "umzug", "trockenbau", "entkernung"]
+  .map((w) => anfrageLeistungen.find((l) => l.wert === w)!)
+  .map((l) => ({ ...l, kurz: l.label.split(" / ")[0] }));
+---
+
+<div class="sk">
+  <p class="sk-titel">Was steht an?</p>
+  <p class="sk-text">
+    Wählen Sie aus – in drei kurzen Schritten zur kostenlosen Besichtigung, gern
+    mit Fotos.
+  </p>
+
+  <ul class="sk-kacheln">
+    {
+      schnell.map((l) => (
+        <li>
+          <a href={anfrageHref(l.wert)} data-cta={l.wert} class="sk-kachel">
+            <Icon name={l.icon} size={22} />
+            <span>{l.kurz}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <a class="btn btn--wide" href={anfrageHref()} data-cta="">
+    <Icon name="kamera" size={18} />
+    <span>Anfrage mit Fotos starten</span>
+  </a>
+
+  <div class="sk-direkt">
+    <a href={telUrl}>
+      <Icon name="phone" size={18} />
+      <span>Anrufen</span>
+    </a>
+    <a href={whatsappUrl(waThema)} target="_blank" rel="noopener noreferrer">
+      <WhatsAppMark size={22} />
+      <span>WhatsApp</span>
+    </a>
+  </div>
+
+  <p class="sk-zeit">
+    <Icon name="clock" size={16} />
+    <span>{site.hours}</span>
+  </p>
+</div>
+
+<style>
+  /* Nur Navy, Weiß und Blau. Oben eine blaue Akzentkante. */
+  .sk {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 4px;
+    background:
+      linear-gradient(
+        165deg,
+        rgba(31, 122, 224, 0.22),
+        rgba(10, 23, 48, 0) 45%
+      ),
+      rgba(7, 19, 38, 0.72);
+    box-shadow:
+      0 30px 70px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px) saturate(140%);
+  }
+
+  .sk::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-bright), var(--blue-light));
+  }
+
+  .sk-titel {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: #fff;
+  }
+
+  .sk-text {
+    margin: -0.5rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--on-dark-soft);
+  }
+
+  .sk-kacheln {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sk-kachel {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 56px;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 4px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out);
+  }
+
+  .sk-kachel :global(.icon) {
+    flex: none;
+    color: var(--blue-light);
+  }
+
+  .sk-kachel:hover,
+  .sk-kachel:focus-visible {
+    border-color: var(--blue-light);
+    background: rgba(31, 122, 224, 0.18);
+  }
+
+  .sk-direkt {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .sk-direkt a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    color: #fff;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .sk-direkt a:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .sk-zeit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--on-dark-soft);
+  }
+
+  .sk-zeit :global(.icon) {
+    color: var(--blue-light);
+  }
+</style>

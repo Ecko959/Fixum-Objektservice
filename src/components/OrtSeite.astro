@@ -2,7 +2,7 @@
 /* Ortsseite mit allen Leistungen: /leer/, /norden/, /aurich/.
    Inhalt kommt aus src/data/orte.ts, Preise aus src/data/preise.ts. */
 import Base from "../layouts/Base.astro";
-import CtaBand from "./CtaBand.astro";
+import Anfrage from "./Anfrage.astro";
 import FaqAccordion from "./FaqAccordion.astro";
 import Icon from "./Icon.astro";
 import PageHero from "./PageHero.astro";
@@ -12,6 +12,7 @@ import { fotos } from "../data/referenzen";
 import { canonicalPath, serviceSchema } from "../data/seo";
 import { radiusText, type OrtSeite, type OrtsLeistung } from "../data/orte";
 import type { IconName } from "../data/icons";
+import { anfrageHref, leistungFuer } from "../data/anfrage";
 
 interface Props {
   ort: OrtSeite;
@@ -126,6 +127,8 @@ const schema = [
       "Festpreis schriftlich",
       "Ein Ansprechpartner",
     ]}
+    anfrage=""
+    anfrageOrt={ort.name}
   />
 
   {/* Leistungen mit Ab-Preisen */}
@@ -153,9 +156,19 @@ const schema = [
               <span class="ort-betrag">{k.preis}</span>
               {k.preisZusatz && <span class="ort-zusatz">{k.preisZusatz}</span>}
             </p>
-            <span class="arrow-link ort-mehr" aria-hidden="true">
-              Mehr erfahren
-            </span>
+            <div class="ort-fuss">
+              <span class="arrow-link ort-mehr" aria-hidden="true">
+                Mehr erfahren
+              </span>
+              <a
+                class="ort-anfrage"
+                href={anfrageHref(leistungFuer(k.href), ort.name)}
+                data-cta={leistungFuer(k.href)}
+                aria-label={`${k.titel} in ${ort.name} anfragen`}
+              >
+                Anfragen
+              </a>
+            </div>
           </li>
         ))
       }
@@ -246,9 +259,10 @@ const schema = [
     </div>
   </section>
 
-  <CtaBand
+  <Anfrage
+    ort={ort.name}
     eyebrow={`Fixum in ${ort.name}`}
-    title={`Kostenlose Besichtigung in ${ort.name} anfragen`}
+    titel={`Kostenlose Besichtigung in ${ort.name} anfragen`}
     text="Rufen Sie an, schreiben Sie per WhatsApp oder schicken Sie ein paar Fotos. Sie bekommen eine ehrliche Einschätzung und nach der Besichtigung einen Festpreis."
   />
 </Base>
@@ -327,6 +341,38 @@ const schema = [
   .ort-zusatz {
     font-size: 0.8125rem;
     color: var(--muted);
+  }
+
+  .ort-fuss {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  /* Über dem Karten-Link, damit er eigenständig klickbar ist. */
+  .ort-anfrage {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--blue);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--blue);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .ort-anfrage:hover,
+  .ort-anfrage:focus-visible {
+    color: #fff;
+    background: var(--blue);
   }
 
   .ort-mehr {

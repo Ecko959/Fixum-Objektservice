@@ -6,7 +6,7 @@
     "Noch kein Wert: \"von\": null, \"bis\": null. Der Rechner zeigt dann bei dieser Auswahl \"Preis auf Anfrage\".",
     "\"hinweis\" ist nur eine Erklärung für dich und wird nirgends angezeigt.",
     "Alle Beträge in Euro, netto, ohne Umsatzsteuer (§ 19 UStG). Nichts davon erscheint als Text auf der Website.",
-    "Nach dem Speichern baut Cloudflare die Seite neu, sobald die Änderung auf main ist. Die Tests (npm test) prüfen, ob die Werte zusammenpassen."
+    "Nach dem Speichern baut Vercel die Seite neu, sobald die Änderung auf main ist. Die Tests (npm test) prüfen, ob die Werte zusammenpassen."
   ],
 
   "abPreise": {

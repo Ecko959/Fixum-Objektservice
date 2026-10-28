@@ -7,6 +7,7 @@ import { findeBild } from "../data/bilder";
 import { fotos } from "../data/referenzen";
 import { telUrl, whatsappUrl } from "../data/site";
 import { whatsappThema } from "../data/whatsapp";
+import { anfrageHref } from "../data/anfrage";
 
 /* Betreff je Seite - siehe src/data/whatsapp.ts. */
 const waThema = whatsappThema(Astro.url.pathname);
@@ -20,6 +21,11 @@ interface Props {
   breadcrumbs?: Array<[string, string]>;
   /** Kurze Vertrauenspunkte unter den Buttons. */
   badges?: string[];
+  /** Zeigt "Anfrage mit Fotos senden" (springt zu #anfrage) - Wert ist die
+      vorgewählte Leistung, "" für keine. Weglassen: kein Link. */
+  anfrage?: string;
+  /** Ort für die Vorbelegung des Formulars, z. B. "Leer". */
+  anfrageOrt?: string;
 }
 
 const {
@@ -34,6 +40,8 @@ const {
     "Termin ist Termin",
     "Haftpflichtversichert",
   ],
+  anfrage,
+  anfrageOrt = "",
 } = Astro.props;
 
 /* Hero-Bild aus src/assets - siehe src/data/bilder.ts. */
@@ -69,6 +77,20 @@ const heroBild = findeBild(image);
           WhatsApp schreiben
         </Button>
       </div>
+
+      {
+        anfrage !== undefined && (
+          <a
+            class="hero-anfrage"
+            href={anfrageHref(anfrage, anfrageOrt)}
+            data-cta={anfrage}
+          >
+            <Icon name="kamera" size={18} />
+            Oder Anfrage mit Fotos senden
+            <Icon name="arrow" size={16} />
+          </a>
+        )
+      }
 
       {
         badges.length > 0 && (
@@ -132,6 +154,28 @@ const heroBild = findeBild(image);
   .page-hero .lead {
     max-width: 62ch;
     margin-bottom: 0.5rem;
+  }
+
+  .hero-anfrage {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+    min-height: 44px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.4);
+    text-underline-offset: 4px;
+    transition: text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+
+  .hero-anfrage:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .hero-anfrage :global(.icon) {
+    color: var(--blue-light);
   }
 
   .hero-badges {

@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import AreaServed from "./AreaServed.astro";
-import CtaBand from "./CtaBand.astro";
+import Anfrage from "./Anfrage.astro";
 import FaqAccordion from "./FaqAccordion.astro";
 import Icon from "./Icon.astro";
 import KetteBand from "./KetteBand.astro";
@@ -14,6 +14,7 @@ import RelatedServices from "./RelatedServices.astro";
 import { fotos } from "../data/referenzen";
 import { canonicalPath, serviceSchema } from "../data/seo";
 import type { PreisSchluessel } from "../data/preise";
+import { anfrageHref, leistungFuer } from "../data/anfrage";
 
 interface Props {
   title: string;
@@ -99,6 +100,8 @@ const {
 const rechnerAktiv = Boolean(rechner && rechnerBereit(preisConfig, rechner));
 
 const path = canonicalPath(current);
+/* Das Formular am Seitenende startet mit dieser Leistung (Schritt 2). */
+const leistung = leistungFuer(path);
 const breadcrumbs: Array<[string, string]> = [
   ["Leistungen", "/leistungen/"],
   [crumb ?? eyebrow, path],
@@ -135,6 +138,7 @@ const schema = [
     image={image}
     imageAlt={imageAlt}
     breadcrumbs={breadcrumbs}
+    anfrage={leistung}
   />
 
   {/* Leistungsumfang */}
@@ -162,7 +166,9 @@ const schema = [
             ))
           }
         </dl>
-        <a class="arrow-link" href="/kontakt/">Festpreis anfragen</a>
+        <a class="arrow-link" href={anfrageHref(leistung)} data-cta={leistung}>
+          Festpreis anfragen
+        </a>
       </aside>
     </div>
   </section>
@@ -286,7 +292,7 @@ const schema = [
 
   <AreaServed service={crumb ?? eyebrow} title={areaTitle} />
   <RelatedServices current={current} />
-  <CtaBand />
+  <Anfrage leistung={leistung} />
 </Base>
 
 {

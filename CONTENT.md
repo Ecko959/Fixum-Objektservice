@@ -9,10 +9,12 @@
   Link im Footer - beides sind spürbare lokale Suchsignale.
 - `src/data/site.ts`: `geo` enthält aktuell den Ortsmittelpunkt von Emden. Für
   eine exakte Kartenposition die Koordinaten des Firmensitzes eintragen.
-- Kontaktformular mit Foto-Upload: Der Versand (`functions/api/anfrage.ts`)
-  ist als Cloudflare-Function gebaut, die Seite läuft aber auf Vercel. Das
-  Formular wird in einem eigenen Schritt umgestellt; bis dahin zeigt die Seite
-  Telefon, WhatsApp und E-Mail statt des Formulars.
+- Anfrageformular: In Vercel die SMTP-Variablen eintragen (Liste im README,
+  „Anfrageformular“) und neu deployen. Ohne sie zeigt das Formular nach dem
+  Absenden nur den Hinweis auf Telefon und WhatsApp.
+- Datenschutzerklärung: Abschnitt zum Anfrageformular (Anker
+  `#anfrageformular`, auf den die Einwilligung verlinkt) und Hosting bei
+  Vercel ergänzen, sobald der Wortlaut freigegeben ist.
 
 ## Fotos
 

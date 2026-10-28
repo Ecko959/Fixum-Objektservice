@@ -3,8 +3,11 @@ import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 import { navItems, site, telUrl } from "../data/site";
 import { serviceMenuGroups } from "../data/serviceMenu";
+import { anfrageHref, leistungFuer } from "../data/anfrage";
 
 const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+/* "Festpreis anfragen" wählt auf Leistungsseiten die Leistung vor. */
+const ctaLeistung = leistungFuer(Astro.url.pathname);
 
 const isActive = (href: string) => {
   if (href.startsWith("/#")) return false;
@@ -164,7 +167,13 @@ const servicesActive = serviceMenuGroups.some((group) =>
         <Icon name="phone" size={18} />
         <span>{site.phoneDisplay}</span>
       </a>
-      <Button href="/kontakt/" class="header-cta">Festpreis anfragen</Button>
+      <Button
+        href={anfrageHref(ctaLeistung)}
+        cta={ctaLeistung}
+        class="header-cta"
+      >
+        Festpreis anfragen
+      </Button>
     </div>
 
     <button
@@ -248,7 +257,13 @@ const servicesActive = serviceMenuGroups.some((group) =>
 
       <div class="mobile-cta">
         <Button href={telUrl} icon="phone">Anrufen</Button>
-        <Button href="/kontakt/" variant="secondary">Festpreis anfragen</Button>
+        <Button
+          href={anfrageHref(ctaLeistung)}
+          cta={ctaLeistung}
+          variant="secondary"
+        >
+          Festpreis anfragen
+        </Button>
       </div>
     </nav>
   </div>

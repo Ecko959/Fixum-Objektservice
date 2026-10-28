@@ -26,12 +26,14 @@
     "astro": "latest",
     "framer-motion": "^13.3.0",
     "lucide-react": "^1.46.0",
+    "nodemailer": "^10.2.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwindcss": "latest"
   },
   "devDependencies": {
     "@astrojs/check": "latest",
+    "@types/nodemailer": "^8.0.2",
     "prettier": "latest",
     "prettier-plugin-astro": "latest",
     "sharp": "latest",

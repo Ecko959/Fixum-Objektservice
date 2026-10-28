@@ -12,6 +12,11 @@ interface Props {
   "aria-label"?: string;
   /** Messpunkt für die Klickmessung, siehe Base.astro (z. B. "angebot"). */
   "data-track"?: string;
+  /** Springt zum Anfrageformular (#anfrage) und wählt die Leistung vor,
+      z. B. "umzug". Leerer Text: Formular ohne Vorauswahl. */
+  cta?: string;
+  /** Text, mit dem die Beschreibung im Formular vorbelegt wird. */
+  ctaText?: string;
 }
 
 const {
@@ -22,6 +27,8 @@ const {
   external,
   "aria-label": ariaLabel,
   "data-track": track,
+  cta,
+  ctaText,
 } = Astro.props;
 
 const variantClass =
@@ -45,6 +52,8 @@ const isExternal = external ?? /^https?:/.test(href);
   href={href}
   aria-label={ariaLabel}
   data-track={track}
+  data-cta={cta}
+  data-cta-text={ctaText}
   {...isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {}}
 >
   {isWhatsApp && <WhatsAppMark size={24} />}

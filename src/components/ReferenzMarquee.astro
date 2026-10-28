@@ -13,6 +13,7 @@
    auf Laufband um (Klasse is-laeuft) und blendet dafür die Kopie jeder
    Reihe ein, die den nahtlosen Übergang trägt. */
 import { getImage, Picture } from "astro:assets";
+import { anfrageHref } from "../data/anfrage";
 import Icon from "./Icon.astro";
 import { bildQualitaet, findeBild } from "../data/bilder";
 import { fotos, referenzen, type FotoName } from "../data/referenzen";
@@ -26,8 +27,8 @@ interface Props {
   text?: string;
   /** Diese Fotos stehen vorn, in dieser Reihenfolge. */
   zuerst?: FotoName[];
-  /** Ziel des Anfrage-Buttons. */
-  anfrageHref?: string;
+  /** Vorauswahl im Anfrageformular, z. B. "entruempelung". */
+  anfrageLeistung?: string;
   anfrageText?: string;
 }
 
@@ -37,7 +38,7 @@ const {
   akzent = "Projekte.",
   text = "Echte Aufträge aus Emden und Ostfriesland – von der Entrümpelung bis zum fertigen Raum.",
   zuerst = [],
-  anfrageHref = "#anfrage",
+  anfrageLeistung = "",
   anfrageText = "Ihr Projekt anfragen",
 } = Astro.props;
 
@@ -151,7 +152,12 @@ const anzahl = eintraege.length;
     <button type="button" class="btn btn--secondary" data-alle>
       Alle Projekte ansehen
     </button>
-    <a class="btn" href={anfrageHref} data-track="angebot">
+    <a
+      class="btn"
+      href={anfrageHref(anfrageLeistung)}
+      data-cta={anfrageLeistung}
+      data-track="angebot"
+    >
       {anfrageText}
       <Icon name="arrow" size={18} />
     </a>

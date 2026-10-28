@@ -99,31 +99,54 @@ Das Bild muss ein PNG oder JPEG sein - Facebook, LinkedIn, WhatsApp und X
 rendern kein SVG als `og:image`. Nach Änderungen an Claim, Telefonnummer oder
 Hintergrundbild das Skript erneut ausführen.
 
-## Formular aktivieren
+## Anfrageformular
 
-Das Kontaktformular schickt Anfragen samt Fotos als E-Mail. Den Versand
-übernimmt die Pages Function `functions/api/anfrage.ts` über
-[Resend](https://resend.com) (kostenlos bis 3.000 Mails im Monat).
+Ein Bauteil für alle Seiten: `src/components/Anfrage.astro` (drei Schritte:
+Vorhaben, Details mit Fotos, Kontakt). Es steht vollständig auf `/kontakt/`
+und als Abschluss-Sektion (`#anfrage`) auf Startseite, Leistungs-, Orts- und
+Firmenseiten.
 
-1. Bei Resend ein Konto anlegen und unter „API Keys“ einen Schlüssel
-   erzeugen.
-2. In Cloudflare Pages → Projekt → Settings → Variables and Secrets für
-   „Production“ anlegen:
-   - `RESEND_API_KEY` – der Schlüssel (als Secret)
-   - `ANFRAGE_AN` – Empfänger, Standard `info@fixum-objektservice.de`
-   - `ANFRAGE_VON` – optional, siehe unten
-3. Neu deployen (Deployments → Retry deployment). Erst dann erscheint das
-   Formular; vorher zeigt die Seite Telefon, WhatsApp und E-Mail.
+**Versand:** Vercel Function `api/anfrage.ts` (Region Frankfurt, siehe
+`vercel.json`). Sie prüft alle Angaben, schickt die Anfrage mit Fotos im
+Anhang an `CONTACT_TO` und eine Bestätigung ohne Fotos an den Kunden, falls
+er eine E-Mail-Adresse angibt. Versendet wird über das IONOS-Postfach
+(SMTP, nodemailer). Fotos werden nirgends gespeichert.
 
-Ohne bestätigte Domain darf Resend nur an die E-Mail-Adresse des eigenen
-Resend-Kontos senden (Absender `onboarding@resend.dev`). Für einen eigenen
-Absender wie `anfrage@fixum-objektservice.de` die Domain bei Resend unter
-„Domains“ hinzufügen, die angezeigten DNS-Einträge setzen und
-`ANFRAGE_VON` auf `Fixum Website <anfrage@fixum-objektservice.de>` stellen.
+**Variablen** in Vercel → Project → Settings → Environment Variables, für
+„Production“ und „Preview“, danach neu deployen:
 
-Fotos: bis 6 Stück. Das Formular verkleinert sie im Browser auf 1920 px
-(meist unter 1 MB je Foto); Antworten auf die Mail gehen direkt an die
-E-Mail-Adresse des Kunden, falls er eine angegeben hat.
+| Variable       | Beispiel                                             |
+| -------------- | ---------------------------------------------------- |
+| `SMTP_HOST`    | `smtp.ionos.de`                                      |
+| `SMTP_PORT`    | `465` (SSL/TLS) – alternativ `587` (STARTTLS)        |
+| `SMTP_SECURE`  | optional; ohne Angabe `true` bei 465, sonst `false`  |
+| `SMTP_USER`    | `info@fixum-objektservice.de` (ganze Adresse)        |
+| `SMTP_PASS`    | Passwort des Postfachs (als „Sensitive“)             |
+| `CONTACT_TO`   | `info@fixum-objektservice.de`                        |
+| `CONTACT_FROM` | `Fixum Objektservice <info@fixum-objektservice.de>`  |
+
+`CONTACT_FROM` muss zum IONOS-Postfach gehören, sonst lehnt IONOS ab. Fehlt
+eine Variable, antwortet die Function mit 503 und das Formular zeigt
+Telefon und WhatsApp als Ausweg.
+
+**Vorbelegung:** Links mit `data-cta="umzug"` springen auf Seiten mit
+Formular direkt dorthin und wählen die Leistung vor; ohne Formular führen
+sie auf `/kontakt/?leistung=umzug#anfrage`. `data-cta-text` füllt die
+Beschreibung (z. B. das Ergebnis des Preisrechners). Welche Seite welche
+Leistung vorwählt, steht in `src/data/anfrage.ts`.
+
+**Fotos:** bis 8. Das Formular verkleinert sie im Browser auf 1600 px
+(JPEG 0,8) und rechnet notfalls weiter herunter, damit alles unter 4 MB
+bleibt – Vercel nimmt höchstens 4,5 MB pro Anfrage an. Der Server prüft Typ
+(an den ersten Bytes) und Größe noch einmal.
+
+**Spamschutz:** unsichtbares Feld (Honeypot), Mindest-Ausfüllzeit von drei
+Sekunden, höchstens 5 Anfragen je IP in 10 Minuten (im Speicher der
+Function; wo Upstash Redis später eingehängt wird, steht im Code). Kein
+reCAPTCHA.
+
+**Lokal testen:** `npm test` prüft die Function mit einem Versand-Ersatz
+(ohne Mails zu verschicken).
 
 ## Fotos und Referenzen
 
@@ -183,6 +206,6 @@ umgekehrt.
 - Build command: `npm run build`
 - Output directory: `dist`
 - Weiterleitungen (301): `vercel.json`
-- Formular: Die Function unter `functions/` ist noch im Cloudflare-Format und
-  läuft auf Vercel nicht - Umstellung steht aus.
-- Variables: `RESEND_API_KEY`, `ANFRAGE_AN`, optional `ANFRAGE_VON` (siehe „Formular aktivieren“)
+- Formular: Vercel Function `api/anfrage.ts`, Region `fra1`
+- Variables: `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`,
+  `CONTACT_TO`, `CONTACT_FROM` (siehe „Anfrageformular“)

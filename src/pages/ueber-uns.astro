@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { fotos } from "../data/referenzen";
 import AreaServed from "../components/AreaServed.astro";
-import CtaBand from "../components/CtaBand.astro";
+import Anfrage from "../components/Anfrage.astro";
 import Icon from "../components/Icon.astro";
 import PageHero from "../components/PageHero.astro";
 import Photo from "../components/Photo.astro";
@@ -172,7 +172,7 @@ const werte: Array<[string, string, "check" | "euro" | "clock" | "shield"]> = [
           halten.
         </p>
         <p>
-          <a class="arrow-link" href="/kontakt/"
+          <a class="arrow-link" href="/kontakt/#anfrage" data-cta=""
             >Kostenlose Besichtigung anfragen</a
           >
         </p>
@@ -190,9 +190,9 @@ const werte: Array<[string, string, "check" | "euro" | "clock" | "shield"]> = [
   </section>
 
   <AreaServed service="Objektservice" />
-  <CtaBand
+  <Anfrage
     eyebrow="Lernen Sie uns kennen"
-    title="Reden Sie mit dem, der auch kalkuliert"
+    titel="Reden Sie mit dem, der auch kalkuliert"
     text="Bei Fixum sprechen Sie nicht mit einem Callcenter, sondern mit der Person, die das Angebot schreibt und am Ausführungstag auf der Baustelle steht."
   />
 </Base>

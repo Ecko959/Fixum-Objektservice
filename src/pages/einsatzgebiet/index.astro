@@ -5,7 +5,7 @@
    werden nur genannt. Daten: src/data/orte.ts. */
 import Base from "../../layouts/Base.astro";
 import { fotos } from "../../data/referenzen";
-import CtaBand from "../../components/CtaBand.astro";
+import Anfrage from "../../components/Anfrage.astro";
 import Icon from "../../components/Icon.astro";
 import PageHero from "../../components/PageHero.astro";
 import { canonicalPath, serviceSchema } from "../../data/seo";
@@ -89,6 +89,7 @@ const leistungsLinks: Array<[string, string, IconName]> = [
       "Anfahrt separat ausgewiesen",
       "Festpreis schriftlich",
     ]}
+    anfrage=""
   />
 
   {/* Orte mit eigener Seite */}
@@ -241,9 +242,9 @@ const leistungsLinks: Array<[string, string, IconName]> = [
     </ul>
   </section>
 
-  <CtaBand
+  <Anfrage
     eyebrow="Ihr Ort im Umkreis?"
-    title="Kostenlose Besichtigung anfragen"
+    titel="Kostenlose Besichtigung anfragen"
     text="Sagen Sie uns kurz, wo und worum es geht. Die Besichtigung ist kostenlos, die Anfahrt steht im Angebot als eigene Position."
   />
 </Base>

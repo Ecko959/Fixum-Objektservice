@@ -1,0 +1,1810 @@
+---
+/* Anfrageformular in drei Schritten: Was planen Sie? -> Details -> Kontakt.
+   Sendet an die Vercel Function api/anfrage.ts (Mail an Fixum mit Fotos,
+   Bestätigung an den Kunden).
+
+   Ein Bauteil für alle Seiten: als Abschluss-Sektion (#anfrage) oder auf
+   /kontakt/ eingebettet. Leistung und Ort lassen sich vorbelegen - per
+   Eigenschaft, per URL (?leistung=umzug&ort=Leer), per Preisrechner
+   (#rechner=…) oder per Klick auf einen Link mit data-cta="umzug".
+   Steht die Leistung fest, beginnt das Formular bei Schritt 2.
+
+   Ohne JavaScript ist es ein normales Formular mit allen drei Schritten
+   untereinander. */
+import Icon from "./Icon.astro";
+import WhatsAppMark from "./WhatsAppMark.astro";
+import { site, telUrl, whatsappUrl } from "../data/site";
+import { whatsappThema } from "../data/whatsapp";
+import {
+  anfrageKontaktwege,
+  anfrageLeistungen,
+  anfrageObjektarten,
+  anfrageZeitraeume,
+} from "../data/anfrage";
+
+interface Props {
+  /** Vorausgewählte Leistung, z. B. "umzug". */
+  leistung?: string;
+  /** Vorausgefüllter Ort, z. B. "Leer". */
+  ort?: string;
+  eyebrow?: string;
+  titel?: string;
+  text?: string;
+  /** Ohne eigene Sektion, z. B. in der Spalte auf /kontakt/. */
+  eingebettet?: boolean;
+}
+
+const {
+  leistung = "",
+  ort = "",
+  eyebrow = "Anfrage",
+  titel = "Kostenlose Besichtigung anfragen",
+  text = "Ein paar Angaben genügen. Ich melde mich in der Regel innerhalb von 24 Stunden – mit Fotos oft schon mit einem ersten Richtpreis.",
+  eingebettet = false,
+} = Astro.props;
+
+const seite = Astro.url.pathname;
+const waThema = whatsappThema(seite);
+const Huelle = eingebettet ? "div" : "section";
+---
+
+<Huelle
+  id="anfrage"
+  class:list={[
+    "anfrage",
+    !eingebettet && "section section--soft anfrage--sektion",
+  ]}
+  aria-labelledby="af-titel"
+>
+  <div class:list={[!eingebettet && "container anfrage-raster"]}>
+    {
+      !eingebettet && (
+        <div class="af-seite" data-reveal>
+          <p class="eyebrow">{eyebrow}</p>
+          <h2 id="af-titel">{titel}</h2>
+          <p class="muted">{text}</p>
+          <ol class="af-weiter">
+            <li>
+              <span>01</span>Rückmeldung, meist am selben Werktag
+            </li>
+            <li>
+              <span>02</span>Kostenlose Besichtigung vor Ort
+            </li>
+            <li>
+              <span>03</span>Schriftliches Festpreis-Angebot
+            </li>
+          </ol>
+          <p class="af-direkt">
+            Lieber direkt?
+            <a href={telUrl}>
+              <Icon name="phone" size={16} />
+              {site.phoneDisplay}
+            </a>
+            <a
+              href={whatsappUrl(waThema)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <WhatsAppMark size={18} />
+              WhatsApp
+            </a>
+          </p>
+        </div>
+      )
+    }
+
+    <div
+      class="af card"
+      data-anfrageformular
+      data-leistung={leistung}
+      data-tel={telUrl}
+      data-tel-text={site.phoneDisplay}
+      data-wa={whatsappUrl(waThema)}
+    >
+      {
+        eingebettet && (
+          <div class="af-kopf">
+            <h2 id="af-titel">{titel}</h2>
+            <p class="muted">{text}</p>
+          </div>
+        )
+      }
+
+      <form
+        class="af-form"
+        method="post"
+        action="/api/anfrage"
+        enctype="multipart/form-data"
+        data-af-form
+      >
+        <div class="af-fortschritt" data-fortschritt aria-hidden="true">
+          <div class="af-balken"><span data-balken></span></div>
+          <ol class="af-stufen">
+            <li data-stufe="1">Vorhaben</li>
+            <li data-stufe="2">Details</li>
+            <li data-stufe="3">Kontakt</li>
+          </ol>
+        </div>
+        <p class="sr-only" aria-live="polite" data-ansage></p>
+
+        <input type="hidden" name="seite" value={seite} />
+        <input type="hidden" name="_t" value="" data-zeit />
+        <div class="af-honig" aria-hidden="true">
+          <label>
+            Bitte leer lassen
+            <input
+              type="text"
+              name="_gotcha"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </label>
+        </div>
+
+        {/* ---------------- Schritt 1 ---------------- */}
+        <fieldset class="af-schritt" data-schritt="1">
+          <legend class="af-legend" tabindex="-1">
+            <span class="af-nr">Schritt 1 von 3</span>
+            Was planen Sie?
+          </legend>
+          <div
+            class="af-karten"
+            role="radiogroup"
+            aria-describedby="af-leistung-fehler"
+          >
+            {
+              anfrageLeistungen.map((l) => (
+                <label class="af-karte">
+                  <input
+                    type="radio"
+                    name="leistung"
+                    value={l.wert}
+                    required
+                    checked={l.wert === leistung}
+                  />
+                  <span class="af-karte-box">
+                    <span class="af-karte-icon">
+                      <Icon name={l.icon} size={26} />
+                    </span>
+                    <span class="af-karte-text">{l.label}</span>
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+          <p class="af-fehler" id="af-leistung-fehler" data-fehler="leistung">
+          </p>
+        </fieldset>
+
+        {/* ---------------- Schritt 2 ---------------- */}
+        <fieldset class="af-schritt" data-schritt="2">
+          <legend class="af-legend" tabindex="-1">
+            <span class="af-nr">Schritt 2 von 3</span>
+            Details
+          </legend>
+
+          <p class="af-gewaehlt" data-gewaehlt hidden>
+            <span>Ihr Vorhaben:</span>
+            <strong data-gewaehlt-text></strong>
+            <button type="button" class="af-aendern" data-aendern>ändern</button
+            >
+          </p>
+
+          <div class="af-reihe">
+            <div class="af-feld">
+              <label for="af-ort"
+                >Ort oder PLZ <span class="af-pflicht">*</span></label
+              >
+              <input
+                id="af-ort"
+                name="ort"
+                type="text"
+                required
+                autocomplete="address-level2"
+                placeholder="z. B. Leer oder 26789"
+                value={ort}
+                aria-describedby="af-ort-fehler"
+              />
+              <p class="af-fehler" id="af-ort-fehler" data-fehler="ort"></p>
+            </div>
+            <div class="af-feld">
+              <label for="af-groesse">Größe ca.</label>
+              <input
+                id="af-groesse"
+                name="groesse"
+                type="text"
+                placeholder="z. B. 70 m² oder 3 Zimmer"
+              />
+            </div>
+          </div>
+
+          <fieldset class="af-feld af-gruppe">
+            <legend>Objektart <span class="af-pflicht">*</span></legend>
+            <div class="af-chips" aria-describedby="af-objektart-fehler">
+              {
+                anfrageObjektarten.map((o) => (
+                  <label class="af-chip">
+                    <input
+                      type="radio"
+                      name="objektart"
+                      value={o.wert}
+                      required
+                    />
+                    <span>{o.label}</span>
+                  </label>
+                ))
+              }
+            </div>
+            <p
+              class="af-fehler"
+              id="af-objektart-fehler"
+              data-fehler="objektart"
+            >
+            </p>
+          </fieldset>
+
+          <div class="af-feld">
+            <label for="af-zeitraum">Wunschzeitraum</label>
+            <div class="af-select">
+              <select id="af-zeitraum" name="zeitraum">
+                <option value="">Bitte auswählen</option>
+                {
+                  anfrageZeitraeume.map((z) => (
+                    <option value={z.wert}>{z.label}</option>
+                  ))
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="af-feld">
+            <label for="af-beschreibung">Beschreibung</label>
+            <textarea
+              id="af-beschreibung"
+              name="beschreibung"
+              rows="4"
+              maxlength="3000"
+              placeholder="Was soll gemacht werden? Etage, Aufzug, Besonderheiten …"
+            ></textarea>
+          </div>
+
+          <div class="af-feld af-fotos" data-fotos>
+            <span class="af-label" id="af-fotos-label">
+              Fotos <span class="af-optional">optional, bis 8</span>
+            </span>
+            <label class="af-drop" data-drop>
+              <input
+                class="af-datei"
+                type="file"
+                name="fotos"
+                accept="image/*"
+                multiple
+                aria-labelledby="af-fotos-label"
+                aria-describedby="af-fotos-hinweis"
+                data-datei
+              />
+              <span class="af-drop-icon"><Icon name="kamera" size={24} /></span>
+              <span class="af-drop-text">
+                <strong data-drop-titel aria-live="polite"
+                  >Fotos hinzufügen</strong
+                >
+                <small
+                  >Kamera oder Galerie – am Computer auch per Drag &amp; Drop</small
+                >
+              </span>
+            </label>
+            <p class="af-tipp" id="af-fotos-hinweis">
+              Mit Fotos kann ich Ihnen oft schon vorab einen Richtpreis nennen.
+            </p>
+            <ul class="af-thumbs" data-thumbs aria-label="Ausgewählte Fotos">
+            </ul>
+            <p class="af-fehler" data-fehler="fotos" aria-live="polite"></p>
+          </div>
+        </fieldset>
+
+        {/* ---------------- Schritt 3 ---------------- */}
+        <fieldset class="af-schritt" data-schritt="3">
+          <legend class="af-legend" tabindex="-1">
+            <span class="af-nr">Schritt 3 von 3</span>
+            Kontakt
+          </legend>
+
+          <div class="af-feld">
+            <label for="af-name">Name <span class="af-pflicht">*</span></label>
+            <input
+              id="af-name"
+              name="name"
+              type="text"
+              required
+              autocomplete="name"
+              aria-describedby="af-name-fehler"
+            />
+            <p class="af-fehler" id="af-name-fehler" data-fehler="name"></p>
+          </div>
+
+          <div class="af-reihe">
+            <div class="af-feld">
+              <label for="af-telefon">
+                Telefon <span class="af-pflicht" data-pflicht-telefon>*</span>
+              </label>
+              <input
+                id="af-telefon"
+                name="telefon"
+                type="tel"
+                autocomplete="tel"
+                inputmode="tel"
+                aria-describedby="af-telefon-fehler"
+              />
+              <p class="af-fehler" id="af-telefon-fehler" data-fehler="telefon">
+              </p>
+            </div>
+            <div class="af-feld">
+              <label for="af-email">
+                E-Mail <span class="af-pflicht" data-pflicht-email hidden
+                  >*</span
+                >
+              </label>
+              <input
+                id="af-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                aria-describedby="af-email-hinweis af-email-fehler"
+              />
+              <p class="af-tipp" id="af-email-hinweis">
+                Für Ihre Bestätigung per E-Mail.
+              </p>
+              <p class="af-fehler" id="af-email-fehler" data-fehler="email"></p>
+            </div>
+          </div>
+
+          <fieldset class="af-feld af-gruppe">
+            <legend>Wie soll ich mich melden?</legend>
+            <div class="af-chips">
+              {
+                anfrageKontaktwege.map((k, i) => (
+                  <label class="af-chip">
+                    <input
+                      type="radio"
+                      name="kontaktweg"
+                      value={k.wert}
+                      checked={i === 0}
+                    />
+                    <span>{k.label}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <div class="af-feld af-check">
+            <input
+              id="af-datenschutz"
+              name="datenschutz"
+              type="checkbox"
+              value="ja"
+              required
+              aria-describedby="af-datenschutz-fehler"
+            />
+            <label for="af-datenschutz">
+              Ich willige ein, dass meine Angaben und Fotos zur Bearbeitung
+              meiner Anfrage verarbeitet werden. Hinweise in der
+              <a href="/datenschutz/#anfrageformular">Datenschutzerklärung</a>.
+              <span class="af-pflicht">*</span>
+            </label>
+            <p
+              class="af-fehler"
+              id="af-datenschutz-fehler"
+              data-fehler="datenschutz"
+            >
+            </p>
+          </div>
+        </fieldset>
+
+        <div class="af-status" role="alert" data-status hidden></div>
+
+        <div class="af-upload" data-upload hidden>
+          <div class="af-balken"><span data-upload-balken></span></div>
+          <p>
+            <span data-upload-text>Wird gesendet …</span>
+            <span data-prozent></span>
+          </p>
+        </div>
+
+        <div class="af-nav">
+          <button
+            type="button"
+            class="btn btn--secondary af-zurueck"
+            data-zurueck
+          >
+            Zurück
+          </button>
+          <button type="button" class="btn af-vor" data-weiter>
+            Weiter
+            <Icon name="arrow" size={18} />
+          </button>
+          <button type="submit" class="btn af-senden" data-senden>
+            Anfrage senden
+          </button>
+        </div>
+
+        <p class="af-note">
+          <Icon name="shield" size={16} />
+          Unverbindlich und kostenlos. Ihre Fotos werden nur per E-Mail an mich weitergeleitet,
+          nicht gespeichert.
+        </p>
+      </form>
+
+      <div class="af-erfolg" data-erfolg hidden tabindex="-1">
+        <span class="af-erfolg-haken" aria-hidden="true"
+          ><Icon name="check" size={28} /></span
+        >
+        <h3>Danke<span data-vorname></span>. Ihre Anfrage ist da.</h3>
+        <p class="muted">
+          Eine Bestätigung ist unterwegs, falls Sie eine E-Mail-Adresse
+          angegeben haben. So geht es weiter:
+        </p>
+        <ol class="af-weiter">
+          <li>
+            <span>01</span>Ich melde mich in der Regel innerhalb von 24 Stunden.
+          </li>
+          <li><span>02</span>Wir vereinbaren eine kostenlose Besichtigung.</li>
+          <li>
+            <span>03</span>Sie bekommen ein schriftliches Festpreis-Angebot.
+          </li>
+        </ol>
+        <p class="af-direkt">
+          Eilig?
+          <a href={telUrl}>
+            <Icon name="phone" size={16} />
+            {site.phoneDisplay}
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</Huelle>
+
+<script>
+  /* Grenzen - passend zu api/anfrage.ts. Vercel nimmt höchstens 4,5 MB pro
+     Anfrage; mit Formularfeldern bleiben wir sicher darunter. */
+  const MAX_FOTOS = 8;
+  const BUDGET = 4 * 1024 * 1024;
+  /* Erst 1600 px / 0,8. Passt das nicht ins Budget, rechnet das Skript
+     alle Fotos stufenweise kleiner, bevor es einen Hinweis zeigt. */
+  const STUFEN = [
+    { kante: 1600, qualitaet: 0.8 },
+    { kante: 1280, qualitaet: 0.72 },
+    { kante: 1024, qualitaet: 0.65 },
+  ];
+
+  type Foto = { original: File; datei: File; unveraendert: boolean };
+
+  const wurzel = document.querySelector<HTMLElement>("[data-anfrageformular]");
+  const form = wurzel?.querySelector<HTMLFormElement>("[data-af-form]");
+
+  if (wurzel && form) {
+    const schritte = [
+      ...form.querySelectorAll<HTMLFieldSetElement>("[data-schritt]"),
+    ];
+    const stufen = [...form.querySelectorAll<HTMLElement>("[data-stufe]")];
+    const balken = form.querySelector<HTMLElement>("[data-balken]")!;
+    const ansage = form.querySelector<HTMLElement>("[data-ansage]")!;
+    const status = form.querySelector<HTMLElement>("[data-status]")!;
+    const vor = form.querySelector<HTMLButtonElement>("[data-weiter]")!;
+    const zurueck = form.querySelector<HTMLButtonElement>("[data-zurueck]")!;
+    const senden = form.querySelector<HTMLButtonElement>("[data-senden]")!;
+    const upload = form.querySelector<HTMLElement>("[data-upload]")!;
+    const uploadBalken = form.querySelector<HTMLElement>(
+      "[data-upload-balken]",
+    )!;
+    const prozent = form.querySelector<HTMLElement>("[data-prozent]")!;
+    const uploadText = form.querySelector<HTMLElement>("[data-upload-text]")!;
+    const erfolg = wurzel.querySelector<HTMLElement>("[data-erfolg]")!;
+    const gewaehltZeile = form.querySelector<HTMLElement>("[data-gewaehlt]")!;
+    const gewaehltText = form.querySelector<HTMLElement>(
+      "[data-gewaehlt-text]",
+    )!;
+    const ruhig = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* Mit JavaScript prüft das Skript selbst - mit deutschen Meldungen. */
+    form.noValidate = true;
+    form.querySelector<HTMLInputElement>("[data-zeit]")!.value = String(
+      Date.now(),
+    );
+    wurzel.classList.add("af--js");
+
+    const feld = <T extends Element = HTMLInputElement>(name: string) =>
+      form.querySelector<T>(`[name="${name}"]`);
+    const wert = (name: string) => {
+      const el =
+        form.querySelector<HTMLInputElement>(`[name="${name}"]:checked`) ??
+        form.querySelector<HTMLInputElement>(
+          `[name="${name}"]:not([type=radio])`,
+        );
+      return (el?.value ?? "").trim();
+    };
+
+    /* ---------------- Fehler ---------------- */
+    const zeigeFehler = (name: string, meldung: string) => {
+      const ziel = form.querySelector<HTMLElement>(`[data-fehler="${name}"]`);
+      if (ziel) ziel.textContent = meldung;
+      form
+        .querySelectorAll<HTMLInputElement>(`[name="${name}"]`)
+        .forEach((el) => {
+          if (meldung) el.setAttribute("aria-invalid", "true");
+          else el.removeAttribute("aria-invalid");
+        });
+      ziel
+        ?.closest(".af-feld, .af-schritt")
+        ?.classList.toggle("af--fehler", Boolean(meldung));
+    };
+
+    const EMAIL = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/;
+    const TELEFON = /^[+()\d][\d\s()/+.-]{5,28}$/;
+
+    const pruefeFeld = (name: string): string => {
+      const v = wert(name);
+      const weg = wert("kontaktweg") || "anruf";
+      switch (name) {
+        case "leistung":
+          return v ? "" : "Bitte wählen Sie aus, was Sie planen.";
+        case "ort":
+          return v ? "" : "Bitte geben Sie Ort oder Postleitzahl an.";
+        case "objektart":
+          return v ? "" : "Bitte wählen Sie die Art des Objekts.";
+        case "name":
+          return v ? "" : "Bitte geben Sie Ihren Namen an.";
+        case "telefon":
+          if (!v)
+            return weg === "email"
+              ? ""
+              : "Bitte geben Sie Ihre Telefonnummer an.";
+          return TELEFON.test(v) ? "" : "Bitte prüfen Sie die Telefonnummer.";
+        case "email":
+          if (!v)
+            return weg === "email"
+              ? "Bitte geben Sie Ihre E-Mail-Adresse an."
+              : "";
+          return EMAIL.test(v)
+            ? ""
+            : "Bitte prüfen Sie die E-Mail-Adresse – z. B. name@beispiel.de.";
+        case "datenschutz":
+          return feld("datenschutz")!.checked
+            ? ""
+            : "Bitte bestätigen Sie die Einwilligung.";
+        default:
+          return "";
+      }
+    };
+
+    const PFLICHT: Record<number, string[]> = {
+      1: ["leistung"],
+      2: ["ort", "objektart"],
+      3: ["name", "telefon", "email", "datenschutz"],
+    };
+    const geprueft = new Set<string>();
+
+    const pruefeSchritt = (nr: number) => {
+      let erstesFeld: string | null = null;
+      for (const name of PFLICHT[nr]) {
+        const meldung = pruefeFeld(name);
+        geprueft.add(name);
+        zeigeFehler(name, meldung);
+        if (meldung && !erstesFeld) erstesFeld = name;
+      }
+      if (nr === 2 && fotoFehler) erstesFeld ??= "fotos";
+      return erstesFeld;
+    };
+
+    /* Nach dem ersten Prüfen live nachprüfen */
+    form.addEventListener("input", (e) => {
+      const name = (e.target as HTMLInputElement).name;
+      if (geprueft.has(name)) zeigeFehler(name, pruefeFeld(name));
+    });
+    form.addEventListener("change", (e) => {
+      const name = (e.target as HTMLInputElement).name;
+      if (name === "kontaktweg") {
+        const weg = wert("kontaktweg");
+        form.querySelector<HTMLElement>("[data-pflicht-telefon]")!.hidden =
+          weg === "email";
+        form.querySelector<HTMLElement>("[data-pflicht-email]")!.hidden =
+          weg !== "email";
+        feld("telefon")!.required = weg !== "email";
+        feld("email")!.required = weg === "email";
+        ["telefon", "email"].forEach(
+          (n) => geprueft.has(n) && zeigeFehler(n, pruefeFeld(n)),
+        );
+      }
+      if (geprueft.has(name)) zeigeFehler(name, pruefeFeld(name));
+      /* Leistung gewählt: direkt weiter */
+      if (name === "leistung" && aktuell === 1)
+        setTimeout(() => gehe(2), ruhig ? 0 : 180);
+    });
+
+    /* ---------------- Schritte ---------------- */
+    let aktuell = 1;
+    const gehe = (nr: number, fokus = true) => {
+      aktuell = nr;
+      schritte.forEach((s) => {
+        const an = Number(s.dataset.schritt) === nr;
+        s.hidden = !an;
+        s.classList.toggle("af-schritt--neu", an && !ruhig);
+      });
+      stufen.forEach((s) => {
+        const n = Number(s.dataset.stufe);
+        s.classList.toggle("ist-aktiv", n === nr);
+        s.classList.toggle("ist-fertig", n < nr);
+      });
+      balken.style.width = `${(nr / 3) * 100}%`;
+      /* Schritt 2 zeigt, was in Schritt 1 gewählt ist - auch bei Vorauswahl. */
+      const gewaehlt = form.querySelector<HTMLInputElement>(
+        'input[name="leistung"]:checked',
+      );
+      gewaehltZeile.hidden = !gewaehlt;
+      gewaehltText.textContent =
+        gewaehlt?.closest(".af-karte")?.querySelector(".af-karte-text")
+          ?.textContent ?? "";
+      zurueck.hidden = nr === 1;
+      vor.hidden = nr === 3;
+      senden.hidden = nr !== 3;
+      ansage.textContent = `Schritt ${nr} von 3`;
+      if (fokus) {
+        const legend =
+          schritte[nr - 1].querySelector<HTMLElement>(".af-legend");
+        legend?.focus({ preventScroll: true });
+        const oben = wurzel.getBoundingClientRect().top;
+        if (oben < 0 || oben > innerHeight * 0.6)
+          wurzel.scrollIntoView({
+            behavior: ruhig ? "auto" : "smooth",
+            block: "start",
+          });
+      }
+    };
+
+    vor.addEventListener("click", () => {
+      const fehler = pruefeSchritt(aktuell);
+      if (fehler) {
+        form.querySelector<HTMLElement>(`[name="${fehler}"]`)?.focus();
+        return;
+      }
+      gehe(aktuell + 1);
+    });
+    zurueck.addEventListener("click", () => gehe(Math.max(1, aktuell - 1)));
+    form
+      .querySelector("[data-aendern]")!
+      .addEventListener("click", () => gehe(1));
+
+    /* ---------------- Vorbelegung ---------------- */
+    const waehleLeistung = (l: string) => {
+      /* Wert kommt auch aus der URL - nicht in einen Selektor einsetzen. */
+      const radio = [
+        ...form.querySelectorAll<HTMLInputElement>('input[name="leistung"]'),
+      ].find((r) => r.value === l);
+      if (radio) radio.checked = true;
+      return Boolean(radio);
+    };
+    const params = new URLSearchParams(location.search);
+    let start = wurzel.dataset.leistung || "";
+    if (params.get("leistung")) start = params.get("leistung")!;
+    if (params.get("ort"))
+      feld("ort")!.value = params.get("ort")!.slice(0, 100);
+    /* Übergabe aus dem Preisrechner: #rechner={l: Leistung, n: Text} */
+    if (location.hash.startsWith("#rechner=")) {
+      try {
+        const d = JSON.parse(decodeURIComponent(location.hash.slice(9)));
+        if (d.l) start = d.l;
+        if (d.n)
+          feld<HTMLTextAreaElement>("beschreibung")!.value = String(d.n).slice(
+            0,
+            2000,
+          );
+        history.replaceState(
+          null,
+          "",
+          location.pathname + location.search + "#anfrage",
+        );
+        requestAnimationFrame(() => wurzel.scrollIntoView({ block: "start" }));
+      } catch {
+        /* unlesbar - ignorieren */
+      }
+    }
+    const hatLeistung = start ? waehleLeistung(start) : false;
+    gehe(hatLeistung ? 2 : 1, false);
+    if (params.get("fehler")) {
+      status.hidden = false;
+      status.className = "af-status af-status--fehler";
+      status.innerHTML = fehlerText("Das hat leider nicht geklappt.");
+    }
+
+    /* Links mit data-cta springen zum Formular statt auf /kontakt/ */
+    let ctaText = "";
+    document.addEventListener("click", (e) => {
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>(
+        "a[data-cta]",
+      );
+      if (!link || !erfolg.hidden) return;
+      e.preventDefault();
+      const l = link.dataset.cta || "";
+      /* Vorlagetext nur in ein leeres Feld - oder über den letzten Vorlagetext,
+         z. B. ein neues Rechner-Ergebnis. Eigene Eingaben bleiben stehen. */
+      const text = link.dataset.ctaText || "";
+      const beschreibung = feld<HTMLTextAreaElement>("beschreibung")!;
+      if (
+        text &&
+        (!beschreibung.value.trim() || beschreibung.value === ctaText)
+      ) {
+        beschreibung.value = ctaText = text.slice(0, 2000);
+      }
+      if (l && waehleLeistung(l) && aktuell === 1) gehe(2, false);
+      wurzel.scrollIntoView({
+        behavior: ruhig ? "auto" : "smooth",
+        block: "start",
+      });
+      setTimeout(
+        () => {
+          schritte[aktuell - 1]
+            .querySelector<HTMLElement>(".af-legend")
+            ?.focus({ preventScroll: true });
+        },
+        ruhig ? 0 : 400,
+      );
+      history.replaceState(null, "", "#anfrage");
+    });
+
+    /* ---------------- Fotos ---------------- */
+    const dateiFeld = form.querySelector<HTMLInputElement>("[data-datei]")!;
+    const drop = form.querySelector<HTMLElement>("[data-drop]")!;
+    const dropTitel = form.querySelector<HTMLElement>("[data-drop-titel]")!;
+    const thumbs = form.querySelector<HTMLUListElement>("[data-thumbs]")!;
+    let fotos: Foto[] = [];
+    let stufe = 0;
+    let fotoFehler = "";
+
+    const summe = () => fotos.reduce((s, f) => s + f.datei.size, 0);
+    const pruefeBudget = () => {
+      fotoFehler =
+        summe() > BUDGET
+          ? "Die Fotos sind zusammen zu groß. Bitte ein, zwei Fotos entfernen – oder die übrigen per WhatsApp schicken."
+          : "";
+    };
+
+    const verkleinere = async (
+      datei: File,
+      { kante, qualitaet }: { kante: number; qualitaet: number },
+    ) => {
+      const bild = await createImageBitmap(datei);
+      const faktor = Math.min(1, kante / Math.max(bild.width, bild.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(bild.width * faktor);
+      canvas.height = Math.round(bild.height * faktor);
+      canvas
+        .getContext("2d")!
+        .drawImage(bild, 0, 0, canvas.width, canvas.height);
+      bild.close();
+      const blob = await new Promise<Blob | null>((ok) =>
+        canvas.toBlob(ok, "image/jpeg", qualitaet),
+      );
+      if (!blob) throw new Error("toBlob");
+      const name = (datei.name.replace(/\.[^.]+$/, "") || "foto") + ".jpg";
+      return new File([blob], name, { type: "image/jpeg" });
+    };
+
+    const istHeic = (d: File) =>
+      /heic|heif/i.test(d.type) || /\.(heic|heif)$/i.test(d.name);
+
+    const zeichne = () => {
+      thumbs
+        .querySelectorAll("img")
+        .forEach((img) => URL.revokeObjectURL(img.src));
+      thumbs.replaceChildren(
+        ...fotos.map((f, i) => {
+          const li = document.createElement("li");
+          if (f.unveraendert) {
+            li.className = "af-thumb--datei";
+            li.textContent = "HEIC";
+          } else {
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(f.datei);
+            img.alt = `Foto ${i + 1}`;
+            li.append(img);
+          }
+          const weg = document.createElement("button");
+          weg.type = "button";
+          weg.className = "af-thumb-weg";
+          weg.setAttribute("aria-label", `Foto ${i + 1} entfernen`);
+          weg.textContent = "×";
+          weg.addEventListener("click", () => {
+            fotos.splice(i, 1);
+            pruefeBudget();
+            zeigeFehler("fotos", fotoFehler);
+            dropTitel.textContent = "Fotos hinzufügen";
+            zeichne();
+            dateiFeld.focus();
+          });
+          li.append(weg);
+          return li;
+        }),
+      );
+    };
+
+    const fuegeHinzu = async (liste: FileList | File[]) => {
+      const neu = [...liste];
+      const frei = MAX_FOTOS - fotos.length;
+      const hinweise: string[] = [];
+      if (neu.length > frei)
+        hinweise.push(
+          `Es gehen höchstens ${MAX_FOTOS} Fotos – ${neu.length - frei} wurden nicht übernommen.`,
+        );
+      drop.classList.add("ist-beschaeftigt");
+      dropTitel.textContent = "Fotos werden vorbereitet …";
+      for (const d of neu.slice(0, Math.max(0, frei))) {
+        if (!d.type.startsWith("image/") && !istHeic(d)) {
+          hinweise.push(`„${d.name}“ ist kein Foto.`);
+          continue;
+        }
+        try {
+          const klein = await verkleinere(d, STUFEN[stufe]);
+          fotos.push({
+            original: d,
+            datei: klein.size < d.size ? klein : d,
+            unveraendert: false,
+          });
+        } catch {
+          /* Browser kann das Format nicht lesen - meist HEIC am Desktop */
+          if (summe() + d.size <= BUDGET) {
+            fotos.push({ original: d, datei: d, unveraendert: true });
+          } else {
+            hinweise.push(
+              istHeic(d)
+                ? `„${d.name}“ ist ein iPhone-Foto (HEIC), das Ihr Browser nicht verkleinern kann. Bitte als JPEG senden oder per WhatsApp schicken.`
+                : `„${d.name}“ kann nicht gelesen werden.`,
+            );
+          }
+        }
+      }
+      /* Zu groß? Alle noch einmal kleiner rechnen. */
+      while (summe() > BUDGET && stufe < STUFEN.length - 1) {
+        stufe++;
+        for (const f of fotos) {
+          if (f.unveraendert) continue;
+          try {
+            f.datei = await verkleinere(f.original, STUFEN[stufe]);
+          } catch {
+            /* bleibt wie es ist */
+          }
+        }
+      }
+      pruefeBudget();
+      drop.classList.remove("ist-beschaeftigt");
+      dropTitel.textContent =
+        fotos.length < MAX_FOTOS
+          ? "Fotos hinzufügen"
+          : "8 von 8 Fotos ausgewählt";
+      zeigeFehler("fotos", [fotoFehler, ...hinweise].filter(Boolean).join(" "));
+      zeichne();
+    };
+
+    dateiFeld.addEventListener("change", async () => {
+      if (dateiFeld.files?.length) await fuegeHinzu(dateiFeld.files);
+      /* Feld leeren - gesendet wird die Liste. So lässt sich nachlegen. */
+      dateiFeld.value = "";
+    });
+    ["dragenter", "dragover"].forEach((t) =>
+      drop.addEventListener(t, (e) => {
+        e.preventDefault();
+        drop.classList.add("ist-ueber");
+      }),
+    );
+    ["dragleave", "drop"].forEach((t) =>
+      drop.addEventListener(t, () => drop.classList.remove("ist-ueber")),
+    );
+    drop.addEventListener("drop", (e) => {
+      e.preventDefault();
+      if ((e as DragEvent).dataTransfer?.files.length)
+        fuegeHinzu((e as DragEvent).dataTransfer!.files);
+    });
+
+    /* ---------------- Senden ---------------- */
+    function fehlerText(satz: string) {
+      const { tel, telText, wa } = wurzel!.dataset;
+      return `${satz} Bitte rufen Sie mich an unter <a href="${tel}">${telText}</a> oder schreiben Sie per <a href="${wa}" target="_blank" rel="noopener noreferrer">WhatsApp</a>. Ihre Eingaben bleiben hier erhalten.`;
+    }
+
+    const zeigeStatus = (html: string) => {
+      status.hidden = false;
+      status.className = "af-status af-status--fehler";
+      status.innerHTML = html;
+    };
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      status.hidden = true;
+      /* Alle Schritte prüfen, zum ersten Fehler springen */
+      for (const nr of [1, 2, 3]) {
+        const fehler = pruefeSchritt(nr);
+        if (fehler) {
+          gehe(nr);
+          setTimeout(
+            () =>
+              form.querySelector<HTMLElement>(`[name="${fehler}"]`)?.focus(),
+            50,
+          );
+          return;
+        }
+      }
+
+      const daten = new FormData(form);
+      daten.delete("fotos");
+      fotos.forEach((f) => daten.append("fotos", f.datei, f.datei.name));
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", form.action);
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.timeout = 90_000;
+      senden.disabled = true;
+      upload.hidden = false;
+      uploadText.textContent = fotos.length
+        ? "Fotos werden gesendet …"
+        : "Wird gesendet …";
+      xhr.upload.addEventListener("progress", (ev) => {
+        if (!ev.lengthComputable) return;
+        const p = Math.round((ev.loaded / ev.total) * 100);
+        uploadBalken.style.width = `${p}%`;
+        prozent.textContent = `${p} %`;
+        if (p >= 100) uploadText.textContent = "Wird zugestellt …";
+      });
+      const fertig = () => {
+        senden.disabled = false;
+        upload.hidden = true;
+        uploadBalken.style.width = "0";
+        prozent.textContent = "";
+      };
+      xhr.addEventListener("load", () => {
+        fertig();
+        let antwort: {
+          ok?: boolean;
+          vorname?: string;
+          fehler?: string;
+          felder?: Record<string, string>;
+        } = {};
+        try {
+          antwort = JSON.parse(xhr.responseText);
+        } catch {
+          /* z. B. 413 von Vercel als Text */
+        }
+        if (xhr.status === 200 && antwort.ok) {
+          const v = antwort.vorname || wert("name").split(/\s+/)[0];
+          erfolg.querySelector<HTMLElement>("[data-vorname]")!.textContent = v
+            ? `, ${v}`
+            : "";
+          form.hidden = true;
+          wurzel.querySelector(".af-kopf")?.setAttribute("hidden", "");
+          erfolg.hidden = false;
+          erfolg.focus();
+          erfolg.scrollIntoView({
+            behavior: ruhig ? "auto" : "smooth",
+            block: "center",
+          });
+          const w = window as unknown as { dataLayer?: unknown[] };
+          (w.dataLayer = w.dataLayer || []).push({
+            event: "form_submit_success",
+            form: "anfrage",
+            leistung: wert("leistung"),
+          });
+          return;
+        }
+        if (xhr.status === 400 && antwort.felder) {
+          Object.entries(antwort.felder).forEach(([n, m]) => zeigeFehler(n, m));
+          const erstes = Object.keys(antwort.felder)[0];
+          const nr = Number(
+            Object.entries(PFLICHT).find(([, f]) => f.includes(erstes))?.[0] ??
+              3,
+          );
+          gehe(nr);
+          return;
+        }
+        if (xhr.status === 413 || xhr.status === 415) {
+          gehe(2);
+          zeigeFehler(
+            "fotos",
+            antwort.fehler ||
+              "Die Fotos sind zusammen zu groß. Bitte ein, zwei Fotos entfernen.",
+          );
+          return;
+        }
+        if (xhr.status === 429)
+          return zeigeStatus(
+            fehlerText("Gerade kamen sehr viele Anfragen von Ihrem Anschluss."),
+          );
+        zeigeStatus(
+          fehlerText(
+            "Das hat leider nicht geklappt – die Nachricht konnte nicht zugestellt werden.",
+          ),
+        );
+      });
+      const netzFehler = () => {
+        fertig();
+        zeigeStatus(fehlerText("Die Verbindung ist abgebrochen."));
+      };
+      xhr.addEventListener("error", netzFehler);
+      xhr.addEventListener("timeout", netzFehler);
+      xhr.send(daten);
+    });
+  }
+</script>
+
+<style>
+  /* ---------------- Sektion ---------------- */
+  .anfrage-raster {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .af-seite {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 1rem;
+  }
+
+  .af-seite h2 {
+    margin: 0;
+  }
+
+  .af-weiter {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .af-weiter li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.875rem;
+    color: var(--ink);
+  }
+
+  .af-weiter span {
+    flex: none;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--blue);
+  }
+
+  .af-direkt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .af-direkt a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .af-direkt a:hover {
+    color: var(--blue);
+  }
+
+  /* ---------------- Karte ---------------- */
+  .af {
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-radius: 4px;
+  }
+
+  .af-kopf {
+    margin-bottom: 1.25rem;
+  }
+
+  .af-kopf h2 {
+    margin: 0 0 0.4rem;
+    font-size: var(--step-3);
+  }
+
+  .af-form {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  /* ---------------- Fortschritt ---------------- */
+  .af-fortschritt {
+    display: none;
+  }
+
+  .af--js .af-fortschritt {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .af-balken {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .af-balken span {
+    display: block;
+    width: 33%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright));
+    transition: width 320ms var(--ease-out);
+  }
+
+  .af-stufen {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .af-stufen li:nth-child(2) {
+    text-align: center;
+  }
+
+  .af-stufen li:nth-child(3) {
+    text-align: right;
+  }
+
+  .af-stufen .ist-aktiv {
+    color: var(--navy);
+  }
+
+  .af-stufen .ist-fertig {
+    color: var(--blue);
+  }
+
+  /* ---------------- Schritte ---------------- */
+  .af-schritt {
+    display: grid;
+    gap: 1.1rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .af-schritt[hidden] {
+    display: none;
+  }
+
+  .af-schritt--neu {
+    animation: af-ein 280ms var(--ease-out);
+  }
+
+  @keyframes af-ein {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  .af-legend {
+    display: grid;
+    gap: 0.2rem;
+    margin-bottom: 0.25rem;
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--navy);
+  }
+
+  .af-legend:focus {
+    outline: none;
+  }
+
+  .af-nr {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  /* Ohne JavaScript stehen alle Schritte untereinander - "von 3" passt dann. */
+
+  .af-gewaehlt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.5rem;
+    margin: -0.25rem 0 0;
+    padding: 0.6rem 0.85rem;
+    border-radius: 4px;
+    font-size: 0.9375rem;
+    color: var(--muted);
+    background: var(--mist-soft);
+  }
+
+  .af-gewaehlt[hidden] {
+    display: none;
+  }
+
+  .af-gewaehlt strong {
+    color: var(--navy);
+  }
+
+  .af-aendern {
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-weight: 600;
+    color: var(--blue);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: none;
+    cursor: pointer;
+  }
+
+  /* ---------------- Leistungskarten ---------------- */
+  .af-karten {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+    gap: 0.625rem;
+  }
+
+  .af-karte {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .af-karte input,
+  .af-chip input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .af-karte-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    height: 100%;
+    min-height: 112px;
+    padding: 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    transition:
+      border-color 200ms var(--ease-out),
+      background 200ms var(--ease-out),
+      transform 200ms var(--ease-out);
+  }
+
+  .af-karte-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    color: var(--blue);
+    background: var(--mist);
+  }
+
+  .af-karte-text {
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--navy);
+  }
+
+  .af-karte:hover .af-karte-box {
+    border-color: var(--blue-light);
+    transform: translateY(-2px);
+  }
+
+  .af-karte input:checked + .af-karte-box {
+    border-color: var(--blue);
+    background: var(--mist-soft);
+    box-shadow: inset 0 0 0 1px var(--blue);
+  }
+
+  .af-karte input:checked + .af-karte-box .af-karte-icon {
+    color: #fff;
+    background: var(--blue);
+  }
+
+  .af-karte input:focus-visible + .af-karte-box,
+  .af-chip input:focus-visible + span {
+    outline: 3px solid var(--blue-light);
+    outline-offset: 2px;
+  }
+
+  /* ---------------- Felder ---------------- */
+  .af-reihe {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .af-feld {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .af-feld > label,
+  .af-gruppe > legend,
+  .af-label {
+    padding: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .af-pflicht {
+    color: var(--blue);
+  }
+
+  .af-optional {
+    margin-left: 0.25rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .af-feld input[type="text"],
+  .af-feld input[type="tel"],
+  .af-feld input[type="email"],
+  .af-feld select,
+  .af-feld textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+    transition:
+      border-color 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out);
+  }
+
+  .af-feld textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .af-feld input::placeholder,
+  .af-feld textarea::placeholder {
+    color: #7b879c;
+  }
+
+  .af-feld input:focus,
+  .af-feld select:focus,
+  .af-feld textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(31, 122, 224, 0.18);
+  }
+
+  .af-feld [aria-invalid="true"] {
+    border-color: #b3261e;
+  }
+
+  .af-select {
+    position: relative;
+  }
+
+  .af-select::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    width: 8px;
+    height: 8px;
+    margin-top: -6px;
+    border-right: 2px solid var(--blue);
+    border-bottom: 2px solid var(--blue);
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+
+  .af-select select {
+    appearance: none;
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+
+  .af-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .af-chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .af-chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    font-size: 0.9375rem;
+    color: var(--ink);
+    background: #fff;
+    transition:
+      border-color 200ms var(--ease-out),
+      background 200ms var(--ease-out);
+  }
+
+  .af-chip:hover span {
+    border-color: var(--blue-light);
+  }
+
+  .af-chip input:checked + span {
+    border-color: var(--blue);
+    color: #fff;
+    background: var(--blue);
+  }
+
+  .af-tipp {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .af-fehler {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #b3261e;
+  }
+
+  .af-fehler:empty {
+    display: none;
+  }
+
+  .af-check {
+    grid-template-columns: 22px minmax(0, 1fr);
+    align-items: start;
+    gap: 0.4rem 0.75rem;
+  }
+
+  .af-check input {
+    width: 22px;
+    height: 22px;
+    margin: 2px 0 0;
+    accent-color: var(--blue);
+    cursor: pointer;
+  }
+
+  .af-check label {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  .af-check a {
+    font-weight: 600;
+    color: var(--blue);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .af-check .af-fehler {
+    grid-column: 2;
+  }
+
+  .af-honig {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* ---------------- Fotos ---------------- */
+  .af-drop {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 84px;
+    padding: 1rem 1.1rem;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 4px;
+    background: var(--mist-soft);
+    cursor: pointer;
+    transition:
+      border-color 200ms var(--ease-out),
+      background 200ms var(--ease-out);
+  }
+
+  .af-drop:hover,
+  .af-drop.ist-ueber,
+  .af-drop:focus-within {
+    border-color: var(--blue);
+    background: #fff;
+  }
+
+  .af-drop:focus-within {
+    outline: 3px solid var(--blue-light);
+    outline-offset: 2px;
+  }
+
+  .af-drop.ist-beschaeftigt {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .af-datei {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .af-drop-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    color: #fff;
+    background: var(--navy);
+  }
+
+  .af-drop-text {
+    display: grid;
+    gap: 0.15rem;
+    line-height: 1.35;
+  }
+
+  .af-drop-text strong {
+    color: var(--navy);
+  }
+
+  .af-drop-text small {
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .af-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .af-thumbs:empty {
+    display: none;
+  }
+
+  .af-thumbs :global(li) {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--mist);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .af-thumbs :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  .af-thumbs :global(.af-thumb-weg) {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    font-size: 1rem;
+    line-height: 1;
+    color: #fff;
+    background: var(--navy);
+    cursor: pointer;
+  }
+
+  /* ---------------- Senden, Status ---------------- */
+  .af-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .af-nav .btn {
+    flex: 1 1 0;
+    width: auto;
+    padding-inline: 1.25rem;
+    white-space: nowrap;
+  }
+
+  .af-nav .af-zurueck {
+    flex: 0 0 auto;
+  }
+
+  /* Ohne JavaScript: kein Weiter/Zurück, nur Senden */
+  .af:not(.af--js) .af-zurueck,
+  .af:not(.af--js) .af-vor {
+    display: none;
+  }
+
+  .af-nav [hidden] {
+    display: none;
+  }
+
+  .af-senden:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .af-upload {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .af-upload[hidden] {
+    display: none;
+  }
+
+  .af-upload .af-balken span {
+    width: 0;
+    transition: width 120ms linear;
+  }
+
+  .af-upload p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .af-status {
+    padding: 0.85rem 1rem;
+    border-left: 3px solid #b3261e;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.9375rem;
+    background: #fef5f4;
+  }
+
+  .af-status[hidden] {
+    display: none;
+  }
+
+  .af-status :global(a) {
+    font-weight: 600;
+    color: var(--blue);
+    text-decoration: underline;
+  }
+
+  .af-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .af-note :global(.icon) {
+    flex: none;
+    margin-top: 2px;
+    color: var(--blue);
+  }
+
+  /* ---------------- Erfolg ---------------- */
+  .af-erfolg {
+    display: grid;
+    gap: 1rem;
+    animation: af-ein 320ms var(--ease-out);
+  }
+
+  .af-erfolg[hidden] {
+    display: none;
+  }
+
+  .af-erfolg:focus {
+    outline: none;
+  }
+
+  .af-erfolg h3 {
+    margin: 0;
+    font-size: var(--step-3);
+  }
+
+  .af-erfolg-haken {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 4px;
+    color: #fff;
+    background: var(--blue);
+  }
+
+  @media (max-width: 980px) {
+    .anfrage-raster {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .af-seite {
+      position: static;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .af-reihe {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .af-karten {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .af-karte-box {
+      min-height: 104px;
+      padding: 0.75rem;
+    }
+
+    .af-stufen {
+      font-size: 0.6875rem;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .af-schritt--neu,
+    .af-erfolg,
+    .af-balken span {
+      animation: none;
+      transition: none;
+    }
+
+    .af-karte:hover .af-karte-box {
+      transform: none;
+    }
+  }
+</style>
