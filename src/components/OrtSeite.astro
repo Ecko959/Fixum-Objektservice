@@ -1,0 +1,398 @@
+---
+/* Ortsseite mit allen Leistungen: /leer/, /norden/, /aurich/.
+   Inhalt kommt aus src/data/orte.ts, Preise aus src/data/preise.ts. */
+import Base from "../layouts/Base.astro";
+import CtaBand from "./CtaBand.astro";
+import FaqAccordion from "./FaqAccordion.astro";
+import Icon from "./Icon.astro";
+import PageHero from "./PageHero.astro";
+import Photo from "./Photo.astro";
+import { festpreisHinweis, preisHinweis, preise } from "../data/preise";
+import { fotos } from "../data/referenzen";
+import { canonicalPath, serviceSchema } from "../data/seo";
+import { radiusText, type OrtSeite, type OrtsLeistung } from "../data/orte";
+import type { IconName } from "../data/icons";
+
+interface Props {
+  ort: OrtSeite;
+}
+
+const { ort } = Astro.props;
+const path = `/${ort.slug}/`;
+const breadcrumbs: Array<[string, string]> = [
+  ["Einsatzgebiet", "/einsatzgebiet/"],
+  [ort.name, path],
+];
+const heroBild = fotos[ort.heroFoto];
+
+/* Reihenfolge und Ab-Preise der vier Leistungen. Der Betrag kommt
+   unverändert aus preise.ts - hier wird nichts gerechnet. */
+const karten: Array<{
+  key: OrtsLeistung;
+  titel: string;
+  href: string;
+  icon: IconName;
+  preis: string;
+  preisZusatz?: string;
+}> = [
+  {
+    key: "entruempelung",
+    titel: "Entrümpelung & Haushaltsauflösung",
+    href: "/entruempelung/",
+    icon: "karton",
+    preis: preise.entruempelungNormal.betrag,
+    preisZusatz: "normal möbliert",
+  },
+  {
+    key: "umzug",
+    titel: "Umzug",
+    href: "/umzug/",
+    icon: "transporter",
+    preis: preise.umzug.betrag,
+    preisZusatz: preise.umzug.leistung,
+  },
+  {
+    key: "trockenbau",
+    titel: "Trockenbau & Innenausbau",
+    href: "/trockenbau/",
+    icon: "platten",
+    preis: preise.trockenbau.betrag,
+    preisZusatz: preise.trockenbau.leistung,
+  },
+  {
+    key: "entkernung",
+    titel: "Entkernung & Rückbau",
+    href: "/entkernung/",
+    icon: "vorschlaghammer",
+    preis: festpreisHinweis,
+  },
+];
+
+const faqItems = ort.faq.map((f) => ({ question: f.frage, answer: f.antwort }));
+
+/* Service-Knoten mit Ab-Preisen als Offer; areaServed ist der Ort plus
+   Umland statt der ganzen Liste. Der LocalBusiness-Knoten im Layout
+   führt alle Orte im Einsatzgebiet. */
+const service = serviceSchema({
+  name: `Entrümpelung, Umzug, Trockenbau und Entkernung in ${ort.name}`,
+  description: ort.metaDescription,
+  path: canonicalPath(path),
+  serviceType: "Entrümpelung, Umzug, Trockenbau und Entkernung",
+  preis: ["entruempelungNormal", "umzug", "trockenbau"],
+});
+const schema = [
+  {
+    ...service,
+    areaServed: [
+      {
+        "@type": "City",
+        name: ort.name,
+        containedInPlace: {
+          "@type": "AdministrativeArea",
+          name: ort.landkreis,
+        },
+      },
+      ...ort.umgebung.map((name) => ({ "@type": "Place", name })),
+    ],
+  },
+  {
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+];
+---
+
+<Base
+  title={ort.metaTitle}
+  description={ort.metaDescription}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  preloadImage={heroBild.pfad}
+>
+  <PageHero
+    eyebrow={`${ort.landkreis} · ${ort.fahrzeit} von Emden`}
+    title={ort.h1}
+    text={ort.intro}
+    image={heroBild.pfad}
+    imageAlt={heroBild.alt}
+    breadcrumbs={breadcrumbs}
+    badges={[
+      "Besichtigung kostenlos",
+      "Festpreis schriftlich",
+      "Ein Ansprechpartner",
+    ]}
+  />
+
+  {/* Leistungen mit Ab-Preisen */}
+  <section class="section" aria-labelledby="leistungen-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Leistungen in {ort.name}</p>
+      <h2 id="leistungen-title">
+        Alles aus einer Hand – vom Räumen bis zum Ausbau
+      </h2>
+    </div>
+    <ul class="container ort-leistungen" data-reveal-group>
+      {
+        karten.map((k) => (
+          <li class="ort-karte card" data-reveal>
+            <span class="ort-icon">
+              <Icon name={k.icon} size={26} />
+            </span>
+            <h3>
+              <a href={k.href} class="ort-link">
+                {k.titel}
+              </a>
+            </h3>
+            <p class="ort-text">{ort.leistungen[k.key]}</p>
+            <p class="ort-preis">
+              <span class="ort-betrag">{k.preis}</span>
+              {k.preisZusatz && <span class="ort-zusatz">{k.preisZusatz}</span>}
+            </p>
+            <span class="arrow-link ort-mehr" aria-hidden="true">
+              Mehr erfahren
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="container ort-hinweis">{preisHinweis}</p>
+  </section>
+
+  {/* Was vor Ort oft ansteht */}
+  <section class="section section--soft" aria-labelledby="lage-title">
+    <div class="container ort-lage" data-reveal>
+      <p class="eyebrow">Vor Ort</p>
+      <h2 id="lage-title">{ort.lageTitel}</h2>
+      <p class="lead">{ort.lage}</p>
+      {
+        ort.lageLink && (
+          <p>
+            <a class="arrow-link" href={ort.lageLink.href}>
+              {ort.lageLink.text}
+            </a>
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  {/* Anfahrt und Umgebung */}
+  <section class="section" aria-labelledby="anfahrt-title">
+    <div class="container split split--top">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Anfahrt &amp; Einsatzgebiet</p>
+        <h2 id="anfahrt-title">{ort.name} und Umgebung</h2>
+        <p class="muted">
+          Von unserem Standort in Emden nach {ort.name} sind es {ort.fahrzeit}.
+          Wir arbeiten in einem Umkreis {radiusText}. Die Anfahrt steht im
+          Angebot als eigene Position, getrennt von der Arbeitszeit; die
+          Besichtigung ist kostenlos.
+        </p>
+        <p class="muted">{ort.entsorgung}</p>
+        <p>
+          <a class="arrow-link" href="/einsatzgebiet/"
+            >Alle Orte im Einsatzgebiet</a
+          >
+        </p>
+      </div>
+      <div class="card ort-orte" data-reveal>
+        <h3>Ortsteile</h3>
+        <ul class="ort-chips">
+          {ort.ortsteile.map((t) => <li>{t}</li>)}
+        </ul>
+        <h3>Von hier aus auch in</h3>
+        <ul class="ort-chips">
+          {ort.umgebung.map((t) => <li>{t}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {
+    /* Referenzprojekt aus dem Ort - erscheint erst, wenn in orte.ts ein
+       echtes Projekt eingetragen ist (siehe Feld "referenz"). */
+    ort.referenz && (
+      <section class="section section--soft" aria-labelledby="referenz-title">
+        <div class="container split" data-reveal>
+          <Photo
+            src={fotos[ort.referenz.foto].pfad}
+            alt={fotos[ort.referenz.foto].alt}
+            width={900}
+            height={700}
+            sizes="(max-width: 900px) 100vw, 46vw"
+          />
+          <div class="stack">
+            <p class="eyebrow">Referenz aus {ort.name}</p>
+            <h2 id="referenz-title">{ort.referenz.titel}</h2>
+            <p class="muted">{ort.referenz.text}</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--soft" aria-labelledby="faq-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="faq-title">Fragen aus {ort.name}</h2>
+    </div>
+    <div class="container container--narrow" data-reveal>
+      <FaqAccordion items={faqItems} />
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow={`Fixum in ${ort.name}`}
+    title={`Kostenlose Besichtigung in ${ort.name} anfragen`}
+    text="Rufen Sie an, schreiben Sie per WhatsApp oder schicken Sie ein paar Fotos. Sie bekommen eine ehrliche Einschätzung und nach der Besichtigung einen Festpreis."
+  />
+</Base>
+
+<style>
+  .ort-leistungen {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style: none;
+  }
+
+  .ort-karte {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: clamp(1.25rem, 2.4vw, 1.5rem);
+    transition:
+      border-color var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+
+  .ort-karte:hover {
+    border-color: var(--blue-light);
+    transform: translateY(-2px);
+  }
+
+  .ort-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    color: var(--blue);
+    background: var(--mist);
+  }
+
+  .ort-karte h3 {
+    margin: 0.2rem 0 0;
+    font-size: var(--step-1);
+  }
+
+  /* Ganze Karte klickbar, im DOM bleibt es ein Link */
+  .ort-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .ort-text {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .ort-preis {
+    display: grid;
+    gap: 0.15rem;
+    margin: auto 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .ort-betrag {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--navy);
+  }
+
+  .ort-zusatz {
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .ort-mehr {
+    font-size: 0.875rem;
+  }
+
+  .ort-hinweis {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .ort-lage {
+    max-width: 860px;
+  }
+
+  .ort-lage .lead {
+    margin: 0.75rem 0 1rem;
+  }
+
+  .ort-orte {
+    display: grid;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  }
+
+  .ort-orte h3 {
+    margin: 0;
+    font-size: var(--step-0);
+  }
+
+  .ort-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ort-chips li {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    color: var(--ink);
+    background: var(--mist-soft);
+  }
+
+  @media (max-width: 1100px) {
+    .ort-leistungen {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ort-leistungen {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ort-karte,
+    .ort-karte:hover {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

@@ -11,9 +11,7 @@ import Preisrechner from "./Preisrechner.astro";
 import { rechnerBereit, type Leistung } from "../lib/preisrechner";
 import preisConfig from "../data/preise.config.json";
 import RelatedServices from "./RelatedServices.astro";
-import { leistungen, staedteFuerLeistung } from "../data/leistungsseiten";
 import { fotos } from "../data/referenzen";
-import { findeStadt } from "../data/staedte";
 import { canonicalPath, serviceSchema } from "../data/seo";
 import type { PreisSchluessel } from "../data/preise";
 
@@ -118,19 +116,6 @@ const schema = [
     preis,
   }),
 ];
-
-/* Gibt es für diese Leistung eigene Ortsseiten, werden sie hier verlinkt.
-   Die Seiten sind sonst nur über das Einsatzgebiet erreichbar - und genau
-   dieser Link von der starken Leistungsseite aus ist das, was sie trägt.
-
-   Die Zuordnung läuft über die Hauptseite aus leistungen, nicht über eine
-   zweite Liste: So kann keine Leistung hinzukommen, ohne dass die
-   Verknüpfung mitwächst. */
-const schluessel = (
-  Object.keys(leistungen) as Array<keyof typeof leistungen>
-).find((k) => leistungen[k].hauptseite === path);
-
-const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
 ---
 
 <Base
@@ -299,40 +284,6 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
     )
   }
 
-  {
-    stadtSeiten.length > 0 && (
-      <section class="section section--tight" aria-labelledby="orte-title">
-        <div class="container orte-block" data-reveal>
-          <div>
-            <p class="eyebrow">Im Einsatzgebiet</p>
-            {/* Die Ortsnamen gehören in die Liste, nicht in die Überschrift -
-                 bei fünf Orten wird daraus sonst eine Zeile, die niemand liest. */}
-            <h2 id="orte-title">{crumb ?? eyebrow} außerhalb von Emden</h2>
-            <p class="muted">
-              Für diese Orte steht alles Örtliche - Bausubstanz, Zufahrt,
-              Entfernung, Entsorgung und die Fragen von dort - ausführlich auf
-              einer eigenen Seite.
-            </p>
-          </div>
-          <ul class="orte-liste">
-            {stadtSeiten.map((s) => (
-              <li>
-                <a class="arrow-link" href={s.pfad}>
-                  {crumb ?? eyebrow} in {findeStadt(s.stadtSlug)!.name}
-                </a>
-              </li>
-            ))}
-            <li>
-              <a class="arrow-link" href="/einsatzgebiet/">
-                Gesamtes Einsatzgebiet
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-    )
-  }
-
   <AreaServed service={crumb ?? eyebrow} title={areaTitle} />
   <RelatedServices current={current} />
   <CtaBand />
@@ -470,36 +421,6 @@ const stadtSeiten = schluessel ? staedteFuerLeistung(schluessel) : [];
 
   /* Ablauf: .process-flow steht im Designsystem (global.css), damit alle
      Seiten mit Ablauf dieselbe Darstellung benutzen. */
-
-  /* ---- Ortsseiten ---- */
-  .orte-block {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: clamp(1.5rem, 4vw, 3rem);
-    align-items: start;
-  }
-
-  .orte-block h2 {
-    margin: 0.35rem 0 0.75rem;
-    font-size: var(--step-3);
-  }
-
-  .orte-liste {
-    display: grid;
-    gap: 0.75rem;
-    margin: 0;
-    padding: clamp(1.25rem, 2.5vw, 1.75rem);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    background: var(--mist-soft);
-    list-style: none;
-  }
-
-  @media (max-width: 860px) {
-    .orte-block {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
 
   /* ---- Hinweisblock ---- */
   .note-card {

@@ -1,7 +1,7 @@
 ---
 import Icon from "./Icon.astro";
 import { site } from "../data/site";
-import { findeStadt } from "../data/staedte";
+import { emden, gebiet, ortSeiten } from "../data/orte";
 
 interface Props {
   /** Leistung im Satz, z. B. "Entrümpelung". */
@@ -12,28 +12,17 @@ interface Props {
 const { service = "Objektservice", title } = Astro.props;
 const heading = title ?? `${service} in Emden und Ostfriesland`;
 
-/* Norddeich ist Stadtteil von Norden - eine Seite statt einer Dublette. */
-const sonderziele: Record<string, string> = {
-  Emden: "/",
-  Norddeich: "/einsatzgebiet/norden/",
-};
-
-const gebiet = site.areaServed.map((name) => {
-  const treffer = findeStadt(
-    name
-      .toLowerCase()
-      .replace(/ö/g, "oe")
-      .replace(/ü/g, "ue")
-      .replace(/ä/g, "ae")
-      .replace(/ß/g, "ss"),
-  );
-  return {
-    name,
-    href:
-      sonderziele[name] ??
-      (treffer ? `/einsatzgebiet/${treffer.slug}/` : "/einsatzgebiet/"),
-  };
-});
+/* Verlinkt werden nur Orte mit eigener Seite: Emden (Startseite), Leer,
+   Norden, Aurich. Alle übrigen Orte stehen als Text - eigene Unterseiten
+   für jeden Ort hat Google als Doorway-Muster liegen lassen. */
+const alle = gebiet.flatMap((g) => g.orte);
+/* Reihenfolge: Emden, dann die Ortsseiten (Leer, Norden, Aurich). */
+const mitSeite = [
+  { name: emden.name, seite: emden.seite },
+  ...ortSeiten.map((o) => ({ name: o.name, seite: `/${o.slug}/` })),
+];
+const weitere = alle.filter((o) => !o.seite).map((o) => o.name);
+const weitereText = `${weitere.slice(0, -1).join(", ")} und ${weitere[weitere.length - 1]}`;
 ---
 
 <section class="section section--tight area-served">
@@ -42,10 +31,9 @@ const gebiet = site.areaServed.map((name) => {
       <p class="eyebrow">Einsatzgebiet</p>
       <h2>{heading}</h2>
       <p class="muted">
-        Fixum arbeitet von {site.city} aus in einem Umkreis von rund {
-          site.radiusKm
-        } Kilometern. Anfahrt und Arbeitszeit stehen im Angebot getrennt, damit Sie
-        sehen, was der Weg kostet. Größere Projekte fahren wir auf Anfrage auch weiter.
+        Fixum arbeitet von {site.city} aus in einem Umkreis von bis zu ca. 50 km.
+        Anfahrt und Arbeitszeit stehen im Angebot getrennt, damit Sie sehen, was der
+        Weg kostet. Größere Projekte fahren wir auf Anfrage auch weiter.
       </p>
       <p class="area-meta">
         <span
@@ -57,20 +45,21 @@ const gebiet = site.areaServed.map((name) => {
       </p>
     </div>
 
-    {
-      /* Die Ortsliste stand sitewide als reiner Text und hatte damit keinen
-        Ranking-Wert. Jetzt führt jeder Ort auf seine eigene Seite - Emden auf
-        die Startseite, Norddeich als Ortsteil auf Norden. */
-    }
-    <ul class="area-chips" data-reveal>
-      {
-        gebiet.map((ort) => (
-          <li>
-            <a href={ort.href}>{ort.name}</a>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="area-orte" data-reveal>
+      <ul class="area-chips">
+        {
+          mitSeite.map((ort) => (
+            <li>
+              <a href={ort.seite}>{ort.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="area-weitere">
+        Außerdem regelmäßig in {weitereText}.
+        <a href="/einsatzgebiet/">Alle Orte im Einsatzgebiet</a>
+      </p>
+    </div>
   </div>
 </section>
 
@@ -119,16 +108,38 @@ const gebiet = site.areaServed.map((name) => {
     color: var(--blue);
   }
 
+  .area-orte {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, var(--mist-soft), var(--mist));
+  }
+
   .area-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    padding: clamp(1.25rem, 2.5vw, 1.75rem);
     margin: 0;
+    padding: 0;
     list-style: none;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    background: linear-gradient(160deg, var(--mist-soft), var(--mist));
+  }
+
+  .area-weitere {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .area-weitere a {
+    display: inline-block;
+    margin-left: 0.25rem;
+    font-weight: 600;
+    color: var(--blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .area-chips a {

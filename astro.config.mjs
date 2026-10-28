@@ -20,7 +20,7 @@ export default defineConfig({
      `output: "static"` nur Seiten mit Meta-Refresh, und die wertet Google
      als schwaches Signal statt als Umzug. Die alten /leistung-emden/-Adressen
      leiten deshalb per echter 301 weiter - die Regeln stehen in
-     public/_redirects und werden von Cloudflare Pages ausgeführt. */
+     vercel.json (Hosting: Vercel). */
   integrations: [tailwind({ applyBaseStyles: false }), sitemap({
     /* Die Sitemap ist eine Empfehlung an Google, welche Seiten es
        indexieren soll - nicht das Verzeichnis aller Seiten. Draußen
@@ -31,7 +31,7 @@ export default defineConfig({
           ein Ausschluss hier ist kein noindex -, aber sie konkurrieren
           um kein Stichwort und verdünnen sonst nur das Signal.
        3. Die alten -emden-Adressen. Die entstehen im Build gar nicht
-          mehr, seit die Weiterleitung über public/_redirects läuft; die
+          mehr, seit die Weiterleitung über vercel.json läuft; die
           Prüfung bleibt stehen, damit eine versehentlich wieder
           eingeführte Altadresse nicht unbemerkt hineinrutscht. Eine
           Sitemap, die auf Weiterleitungen zeigt, hält die veraltete URL

@@ -1,12 +1,16 @@
 ---
+/* Übersicht Einsatzgebiet: Radius, alle Orte nach Landkreis, schematische
+   Karte (eigenes SVG, kein Karten-Embed - keine Daten an Dritte) und Links
+   auf die drei Ortsseiten und die Leistungsseiten. Orte ohne eigene Seite
+   werden nur genannt. Daten: src/data/orte.ts. */
 import Base from "../../layouts/Base.astro";
 import { fotos } from "../../data/referenzen";
 import CtaBand from "../../components/CtaBand.astro";
 import Icon from "../../components/Icon.astro";
 import PageHero from "../../components/PageHero.astro";
 import { canonicalPath, serviceSchema } from "../../data/seo";
-import { site } from "../../data/site";
-import { landkreise, staedte } from "../../data/staedte";
+import { emden, gebiet, ortSeiten, radiusText } from "../../data/orte";
+import type { IconName } from "../../data/icons";
 
 const path = "/einsatzgebiet/";
 const breadcrumbs: Array<[string, string]> = [["Einsatzgebiet", path]];
@@ -14,15 +18,54 @@ const heroBild = fotos.umzug;
 const heroImage = heroBild.pfad;
 
 const description =
-  "Entrümpelung, Entkernung, Trockenbau und Montage in Emden, Aurich, Leer, Norden und ganz Ostfriesland. Alle Orte mit Entfernung im Überblick.";
+  "Entrümpelung, Umzug, Trockenbau und Entkernung in Emden und bis ca. 50 km Umkreis: Aurich, Leer, Norden, Krummhörn, Moormerland, Wittmund und mehr.";
 
 const schema = [
   serviceSchema({
     name: "Objektservice in Ostfriesland",
     description,
     path: canonicalPath(path),
-    serviceType: "Entrümpelung, Entkernung, Trockenbau und Montage",
+    serviceType: "Entrümpelung, Umzug, Trockenbau und Entkernung",
   }),
+];
+
+/* ---- Schematische Karte ----
+   Flächentreue Näherung um Emden: 1 km = 5 Einheiten. Der Kreis zeigt den
+   Radius von 50 km Luftlinie. */
+const MASS = 5;
+const RADIUS_KM = 50;
+const kmProGradLaenge = 111.32 * Math.cos((emden.lat * Math.PI) / 180);
+const punkt = (lat: number, lon: number) => ({
+  x: (lon - emden.lon) * kmProGradLaenge * MASS,
+  y: -(lat - emden.lat) * 110.57 * MASS,
+});
+const mitLabel = new Set([
+  "Emden",
+  "Leer",
+  "Norden",
+  "Aurich",
+  "Wittmund",
+  "Esens",
+  "Papenburg",
+  "Wiesmoor",
+  "Krummhörn",
+]);
+const kartenOrte = gebiet.flatMap((g) =>
+  g.orte.map((o) => ({
+    ...o,
+    ...punkt(o.lat, o.lon),
+    label: mitLabel.has(o.name),
+  })),
+);
+const halb = (RADIUS_KM + 8) * MASS;
+/* Beschriftung links vom Punkt, wo rechts ein Nachbarort sitzt. */
+const links = new Set(["Norden", "Krummhörn"]);
+
+const leistungsLinks: Array<[string, string, IconName]> = [
+  ["Entrümpelung", "/entruempelung/", "karton"],
+  ["Umzug", "/umzug/", "transporter"],
+  ["Trockenbau", "/trockenbau/", "platten"],
+  ["Entkernung", "/entkernung/", "vorschlaghammer"],
 ];
 ---
 
@@ -36,8 +79,8 @@ const schema = [
 >
   <PageHero
     eyebrow="Einsatzgebiet"
-    title="Von Emden aus in ganz Ostfriesland"
-    text="Wir arbeiten von Emden aus in einem Umkreis von rund 50 Kilometern. Die Anfahrt steht in jedem Angebot als eigene Position, getrennt von der Arbeitszeit - Sie sehen also, was der Weg kostet."
+    title="Von Emden aus bis ca. 50 km Umkreis"
+    text="Wir arbeiten von unserem Standort in Emden aus in einem Umkreis von bis zu ca. 50 km – in Teilen der Landkreise Aurich, Leer und Wittmund und bis Papenburg. Die Anfahrt steht in jedem Angebot als eigene Position, getrennt von der Arbeitszeit."
     image={heroImage}
     imageAlt={heroBild.alt}
     breadcrumbs={breadcrumbs}
@@ -48,159 +91,377 @@ const schema = [
     ]}
   />
 
-  <section class="section" aria-labelledby="orte-title">
+  {/* Orte mit eigener Seite */}
+  <section class="section" aria-labelledby="staedte-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Eigene Ortsseiten</p>
+      <h2 id="staedte-title">Leer, Norden und Aurich</h2>
+      <p class="muted">
+        Für die drei größten Orte im Umkreis gibt es eine eigene Seite mit allen
+        Leistungen, Ab-Preisen, typischen Aufträgen vor Ort und Fragen von dort.
+      </p>
+    </div>
+    <ul class="container staedte" data-reveal-group>
+      {
+        ortSeiten.map((o) => (
+          <li class="card stadt-karte" data-reveal>
+            <p class="stadt-meta">
+              {o.landkreis} · {o.fahrzeit} von Emden
+            </p>
+            <h3>
+              <a href={`/${o.slug}/`} class="stadt-link">
+                {o.name}
+              </a>
+            </h3>
+            <p class="muted">{o.teaser}</p>
+            <span class="arrow-link" aria-hidden="true">
+              Zur Seite {o.name}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {/* Alle Orte nach Landkreis + Karte */}
+  <section class="section section--soft" aria-labelledby="orte-title">
     <div class="container section-head" data-reveal>
       <p class="eyebrow">Alle Orte</p>
-      <h2 id="orte-title">Orte in unserem Einsatzgebiet</h2>
+      <h2 id="orte-title">Hier sind wir regelmäßig im Einsatz</h2>
       <p class="muted">
-        Nach Landkreis sortiert, innerhalb des Landkreises nach Entfernung. Für
-        jeden Ort steht auf der eigenen Seite, welche Objekte dort typisch sind
-        und wer für die Entsorgung zuständig ist.
+        Alle Orte liegen {radiusText} (Luftlinie). Ihr Ort fehlt? Fragen Sie trotzdem
+        – größere Aufträge fahren wir auch weiter.
       </p>
     </div>
 
-    <div class="container standort" data-reveal>
-      <span class="standort-icon"><Icon name="pin" size={22} /></span>
-      <div>
-        <p class="standort-titel">
-          {site.city} ist unser Standort
-        </p>
-        <p class="muted">
-          Für Aufträge in Emden selbst geht es direkt zu den Leistungen - eine
-          eigene Ortsseite braucht es dafür nicht.
-        </p>
-        <p>
-          <a class="arrow-link" href="/leistungen/">Leistungen ansehen</a>
-        </p>
+    <div class="container gebiet-grid">
+      <div class="kreise" data-reveal>
+        {
+          gebiet.map((g) => (
+            <div class="kreis">
+              <h3>{g.kreis}</h3>
+              <ul>
+                {g.orte.map((o) => (
+                  <li>
+                    {o.seite ? <a href={o.seite}>{o.name}</a> : o.name}
+                    {o.zusatz && <span class="zusatz"> {o.zusatz}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
       </div>
-    </div>
 
-    {
-      landkreise.map((kreis) => (
-        <div class="container kreis" data-reveal-group>
-          <h3 class="kreis-titel" data-reveal>
-            {kreis}
-          </h3>
-          <ul class="ort-grid">
-            {staedte
-              .filter((stadt) => stadt.landkreis === kreis)
-              .sort((a, b) => a.entfernungKm - b.entfernungKm)
-              .map((stadt) => (
-                <li data-reveal>
-                  <a
-                    class="ort-karte card card--hover"
-                    href={`/einsatzgebiet/${stadt.slug}/`}
+      <figure class="karte card" data-reveal>
+        <svg
+          viewBox={`${-halb} ${-halb} ${halb * 2} ${halb * 2}`}
+          role="img"
+          aria-labelledby="karte-titel"
+        >
+          <title id="karte-titel">
+            Vereinfachte Karte: Emden in der Mitte, Kreis mit 50 km Radius und
+            die Orte im Einsatzgebiet
+          </title>
+          <circle class="k-radius" r={RADIUS_KM * MASS}></circle>
+          <circle class="k-radius k-radius--innen" r={25 * MASS}></circle>
+          <text
+            class="k-km"
+            x="0"
+            y={-RADIUS_KM * MASS + 18}
+            text-anchor="middle"
+          >
+            50 km
+          </text>
+          {
+            kartenOrte.map((o) => (
+              <g
+                class:list={[
+                  "k-ort",
+                  {
+                    "k-ort--seite": o.seite && o.name !== "Emden",
+                    "k-ort--emden": o.name === "Emden",
+                  },
+                ]}
+              >
+                <circle
+                  cx={o.x}
+                  cy={o.y}
+                  r={o.name === "Emden" ? 9 : o.seite ? 7 : 4}
+                />
+                {o.label && (
+                  <text
+                    x={links.has(o.name) ? o.x - 11 : o.x + 11}
+                    y={o.y + 5}
+                    text-anchor={links.has(o.name) ? "end" : "start"}
                   >
-                    <strong>{stadt.name}</strong>
-                    <span class="ort-km">
-                      ca. {stadt.entfernungKm} km ab Emden
-                    </span>
-                    <span class="ort-pfeil" aria-hidden="true" />
-                  </a>
-                </li>
-              ))}
-          </ul>
-        </div>
-      ))
-    }
+                    {o.name}
+                  </text>
+                )}
+              </g>
+            ))
+          }
+        </svg>
+        <figcaption>
+          Vereinfachte Darstellung, Luftlinie. Größere Punkte: Emden und die
+          Orte mit eigener Seite.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  {/* Leistungen */}
+  <section class="section" aria-labelledby="leistungen-title">
+    <div class="container section-head" data-reveal>
+      <p class="eyebrow">Leistungen</p>
+      <h2 id="leistungen-title">Im ganzen Einsatzgebiet</h2>
+      <p class="muted">
+        Alle Leistungen gibt es überall im Umkreis – zum selben Ablauf wie in
+        Emden: kostenlose Besichtigung, schriftlicher Festpreis, gehaltener
+        Termin.
+      </p>
+    </div>
+    <ul class="container leistungs-links" data-reveal>
+      {
+        leistungsLinks.map(([label, href, icon]) => (
+          <li>
+            <a href={href}>
+              <Icon name={icon} size={22} />
+              <span>{label}</span>
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href="/leistungen/">
+          <Icon name="arrow" size={22} />
+          <span>Alle Leistungen</span>
+        </a>
+      </li>
+    </ul>
   </section>
 
   <CtaBand
-    eyebrow="Ihr Ort ist nicht dabei?"
-    title="Fragen Sie trotzdem an"
-    text="Die Liste zeigt unser Einsatzgebiet - nicht, wo wir aufhören. Bei größeren Projekten fahren wir auf Anfrage auch weiter. Sagen Sie kurz, worum es geht."
+    eyebrow="Ihr Ort im Umkreis?"
+    title="Kostenlose Besichtigung anfragen"
+    text="Sagen Sie uns kurz, wo und worum es geht. Die Besichtigung ist kostenlos, die Anfahrt steht im Angebot als eigene Position."
   />
 </Base>
 
 <style>
-  .standort {
+  .staedte {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 1.25rem;
-    margin-bottom: clamp(2rem, 4vw, 3rem);
-    padding: clamp(1.25rem, 2.5vw, 1.75rem);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    background: var(--mist-soft);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 auto;
+    list-style: none;
   }
 
-  .standort-icon {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-sm);
-    color: #fff;
-    background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  .stadt-karte {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 2.4vw, 1.75rem);
+    transition:
+      border-color var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
   }
 
-  .standort-titel {
-    margin-bottom: 0.25rem;
+  .stadt-karte:hover {
+    border-color: var(--blue-light);
+    transform: translateY(-2px);
+  }
+
+  .stadt-karte h3 {
+    margin: 0;
+    font-size: var(--step-3);
+  }
+
+  .stadt-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .stadt-meta {
+    margin: 0;
     font-family: var(--font-utility);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--navy);
-  }
-
-  .kreis + .kreis {
-    margin-top: clamp(2rem, 4vw, 2.75rem);
-  }
-
-  .kreis-titel {
-    margin-bottom: 1rem;
-    font-size: var(--step-2);
     color: var(--blue);
   }
 
-  .ort-grid {
+  .stadt-karte .muted {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .stadt-karte .arrow-link {
+    margin-top: auto;
+  }
+
+  .gebiet-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
-    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  /* Spalten statt Raster: lange und kurze Listen laufen ohne Lücken
+     untereinander. */
+  .kreise {
+    columns: 2;
+    column-gap: 2rem;
+  }
+
+  .kreis {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+  }
+
+  .kreis h3 {
+    margin: 0 0 0.6rem;
+    font-size: var(--step-1);
+  }
+
+  .kreis ul {
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .ort-karte {
-    position: relative;
-    display: grid;
-    gap: 0.15rem;
-    padding: 1rem 2.25rem 1rem 1.125rem;
+  .kreis li {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
   }
 
-  .ort-karte strong {
-    font-size: 1.0625rem;
-    color: var(--navy);
+  .kreis a {
+    font-weight: 600;
+    color: var(--blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
-  .ort-km {
-    font-size: 0.875rem;
+  .zusatz {
     color: var(--muted);
   }
 
-  /* Gleicher Winkel wie .arrow-link, nur rechtsbündig in der Karte. */
-  .ort-pfeil {
-    position: absolute;
-    top: 50%;
-    right: 1.125rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    margin-top: -0.35rem;
-    border-top: 2px solid var(--blue);
-    border-right: 2px solid var(--blue);
-    transform: rotate(45deg);
-    transition: transform var(--dur) var(--ease-out);
+  .karte {
+    margin: 0;
+    padding: 1rem;
   }
 
-  .ort-karte:hover .ort-pfeil {
-    transform: rotate(45deg) translate(2px, -2px);
+  .karte svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: var(--font-body);
   }
 
-  @media (max-width: 560px) {
-    .standort {
+  .k-radius {
+    fill: rgba(22, 104, 196, 0.05);
+    stroke: var(--blue);
+    stroke-width: 2;
+    stroke-dasharray: 8 6;
+  }
+
+  .k-radius--innen {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-dasharray: 4 6;
+  }
+
+  .k-km {
+    font-size: 15px;
+    font-weight: 600;
+    fill: var(--blue);
+  }
+
+  .k-ort circle {
+    fill: var(--muted);
+  }
+
+  .k-ort text {
+    font-size: 15px;
+    fill: var(--ink);
+  }
+
+  .k-ort--seite circle {
+    fill: var(--blue);
+  }
+
+  .k-ort--seite text,
+  .k-ort--emden text {
+    font-size: 17px;
+    font-weight: 700;
+    fill: var(--navy);
+  }
+
+  .k-ort--emden circle {
+    fill: var(--navy);
+  }
+
+  .karte figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .leistungs-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0 auto;
+    list-style: none;
+  }
+
+  .leistungs-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 48px;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    color: var(--navy);
+    background: #fff;
+    transition: border-color var(--dur) var(--ease-out);
+  }
+
+  .leistungs-links a:hover {
+    border-color: var(--blue);
+  }
+
+  .leistungs-links :global(.icon) {
+    color: var(--blue);
+  }
+
+  @media (max-width: 1000px) {
+    .staedte {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .gebiet-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .kreise {
+      columns: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stadt-karte,
+    .stadt-karte:hover {
+      transition: none;
+      transform: none;
     }
   }
 </style>

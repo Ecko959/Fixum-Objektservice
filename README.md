@@ -1,6 +1,6 @@
 # Fixum Objektservice Website
 
-Statische Astro-Website für Fixum Objektservice. Vorbereitet für Cloudflare Pages und ohne externe Laufzeit-Ressourcen: keine Google Fonts, keine CDNs, kein Tracking, keine Cookies.
+Statische Astro-Website für Fixum Objektservice. Gehostet auf Vercel, ohne externe Laufzeit-Ressourcen: keine Google Fonts, keine CDNs, kein Tracking, keine Cookies.
 
 ## Lokal starten
 
@@ -131,7 +131,7 @@ Alle Bilder sind echte Projektfotos. Sie stehen zentral in
 `src/data/referenzen.ts`:
 
 - `fotos` - jedes Foto mit Pfad und Alt-Text. Seiten, Leistungskarten
-  (`src/data/services.ts`) und Ortsseiten (`src/data/leistungsseiten.ts`)
+  (`src/data/services.ts`) und Ortsseiten (`src/data/orte.ts`)
   verweisen darauf.
 - `referenzen` - Reihenfolge, Bildunterschrift („Leistung · Typ“) und
   Kategorie für die Referenz-Sektion der Startseite und ihre Lightbox.
@@ -178,8 +178,11 @@ Für hervorgehobene Passagen (Rechtsgrundlagen, Schlusshinweise) gibt es
 zuerst in das geprüfte Dokument und erst danach in die Seite - nicht
 umgekehrt.
 
-## Cloudflare Pages
+## Vercel
 
 - Build command: `npm run build`
 - Output directory: `dist`
+- Weiterleitungen (301): `vercel.json`
+- Formular: Die Function unter `functions/` ist noch im Cloudflare-Format und
+  läuft auf Vercel nicht - Umstellung steht aus.
 - Variables: `RESEND_API_KEY`, `ANFRAGE_AN`, optional `ANFRAGE_VON` (siehe „Formular aktivieren“)

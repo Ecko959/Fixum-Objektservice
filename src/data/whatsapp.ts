@@ -7,9 +7,8 @@
  * die Seite gar nicht kennen. Über den Pfad bekommen alle denselben Text,
  * ohne dass eine Seite etwas vergessen kann.
  */
-import { leistungen, leistungsStadtSeiten } from "./leistungsseiten";
+import { ortSeiten } from "./orte";
 import { serviceMenuGroups } from "./serviceMenu";
-import { findeStadt } from "./staedte";
 
 const STANDARD = "Moin, ich habe eine Anfrage zu:";
 
@@ -41,30 +40,17 @@ const normalisiere = (pfad: string) => {
 /**
  * Baut die Betreffzeile für einen Pfad.
  *
- * - Leistung + Ort  auf den Kombiseiten  (/trockenbau/aurich/)
- * - nur der Ort     auf den Ortsseiten   (/einsatzgebiet/aurich/)
+ * - nur der Ort     auf den Ortsseiten   (/aurich/)
  * - nur die Leistung auf den Leistungsseiten (/trockenbau/)
  * - sonst der neutrale Standardtext
  */
 export const whatsappThema = (pfad: string): string => {
   const p = normalisiere(pfad);
 
-  // Kombiseite: Leistung und Ort stehen beide fest.
-  const kombi = leistungsStadtSeiten.find((s) => s.pfad === p);
-  if (kombi) {
-    const stadt = findeStadt(kombi.stadtSlug);
-    const ort = stadt?.kurzName ?? stadt?.name;
-    return `Moin, ich habe eine Anfrage zu ${leistungen[kombi.leistung].label} in ${ort}:`;
-  }
-
   // Ortsseite: Es gibt keine einzelne Leistung, also nur der Ort.
-  const ortsseite = p.match(/^\/einsatzgebiet\/([a-z-]+)\/$/);
-  if (ortsseite) {
-    const stadt = findeStadt(ortsseite[1]);
-    if (stadt) {
-      return `Moin, ich habe eine Anfrage zu einem Auftrag in ${stadt.kurzName ?? stadt.name}:`;
-    }
-  }
+  const ort = ortSeiten.find((o) => p === `/${o.slug}/`);
+  if (ort)
+    return `Moin, ich habe eine Anfrage zu einem Auftrag in ${ort.name}:`;
 
   // Leistungsseite: Ort bleibt weg, die Seite gilt für das ganze Gebiet.
   const leistung = leistungJePfad.get(p);
