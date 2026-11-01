@@ -64,6 +64,9 @@ export const FIRMA = {
   telefonLink: "+4915129628025",
   adresse: "Hermann-Allmers-Str. 13, 26721 Emden",
   web: "https://www.fixum-objektservice.de",
+  whatsapp: "4915129628025",
+  /** Logo für Mails: 440 px breit, angezeigt mit 220 px (scharf auf Retina). */
+  logo: "https://www.fixum-objektservice.de/logo/fixum-mail.png",
 };
 
 /* Grenzen. Vercel nimmt höchstens 4,5 MB pro Anfrage an; das Formular
@@ -433,42 +436,139 @@ const wegText = (wege: Anfrage["kontaktwege"]) => {
     : (teile[0] ?? "");
 };
 
+/* Farben der Marke für Mails (Inline-Styles, E-Mail-Programme kennen
+   keine CSS-Variablen): Navy und Blau tragen, Kupfer nur als Akzent. */
+const MAIL = {
+  navy: "#132a5c",
+  navyTief: "#0a1730",
+  blau: "#1668c4",
+  text: "#101b31",
+  grau: "#55637d",
+  linie: "#dce5f2",
+  grund: "#eef2f8",
+  hell: "#f5f8fc",
+  kupfer: "#b08d57",
+  kupferHell: "#cfab72",
+  schrift: "Arial,Helvetica,sans-serif",
+};
+
+/** Angaben als ruhige Liste - für die Bestätigung */
+const angabenListe = (reihen: Array<[string, string, string]>) =>
+  `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;font-family:${MAIL.schrift};font-size:14px;line-height:1.5">
+${reihen
+  .map(
+    ([feld, , html]) =>
+      `<tr><td style="padding:10px 16px 10px 0;border-bottom:1px solid ${MAIL.linie};color:${MAIL.grau};vertical-align:top;width:38%">${feld}</td><td style="padding:10px 0;border-bottom:1px solid ${MAIL.linie};color:${MAIL.text};white-space:pre-wrap">${html.replace(/<a /g, `<a style="color:${MAIL.blau};text-decoration:none" `)}</td></tr>`,
+  )
+  .join("\n")}
+</table>`;
+
 export const bestaetigung = (a: Anfrage, env: Env): SendMailOptions | null => {
   if (!a.email) return null;
   const reihen = zeilen(a).filter(([feld]) => feld !== "E-Mail");
   const weg = wegText(a.kontaktwege);
+  const vor = vorname(a.name);
   const fotosSatz = a.fotos.length
     ? `Sie haben ${a.fotos.length === 1 ? "ein Foto" : `${a.fotos.length} Fotos`} mitgeschickt – danke, das hilft uns bei der Einschätzung.`
     : "";
-  const absatz = (t: string) => `<p style="margin:0 0 14px">${t}</p>`;
-  const html = `<div style="background:#f3f6fa;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
-<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;margin:0 auto;border-collapse:collapse;background:#ffffff;border:1px solid #dce5f2">
-<tr><td style="padding:22px 28px;background:#0a1730;border-bottom:3px solid #b08d57">
-<span style="font-size:18px;font-weight:bold;letter-spacing:0.5px;color:#ffffff">${FIRMA.name}</span>
+  const schritte: Array<[string, string, string]> = [
+    [
+      "01",
+      "Rückmeldung",
+      `Wir melden uns in der Regel innerhalb von 24 Stunden ${weg} bei Ihnen.`,
+    ],
+    [
+      "02",
+      "Besichtigung",
+      "Kostenlos und unverbindlich, zu einem Termin, der Ihnen passt.",
+    ],
+    [
+      "03",
+      "Festpreis-Angebot",
+      "Schriftlich, mit klarem Leistungsumfang – ohne Überraschungen.",
+    ],
+  ];
+  const p = (t: string) =>
+    `<p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:${MAIL.text}">${t}</p>`;
+  const html = `<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><style>@media (max-width:480px){.rand{padding-left:24px!important;padding-right:24px!important}}</style><title>Ihre Anfrage bei ${FIRMA.name}</title></head>
+<body style="margin:0;padding:0;background:${MAIL.grund}">
+<div style="display:none;max-height:0;overflow:hidden">Danke, ${escapeHtml(vor)} – Ihre Anfrage ist bei uns angekommen. Wir melden uns in der Regel innerhalb von 24 Stunden.</div>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:${MAIL.grund};font-family:${MAIL.schrift}">
+<tr><td align="center" style="padding:32px 12px">
+<table role="presentation" cellpadding="0" cellspacing="0" width="600" style="width:100%;max-width:600px;border-collapse:collapse;background:#ffffff;border:1px solid ${MAIL.linie}">
+
+<tr><td class="rand" style="padding:30px 40px 24px">
+<a href="${FIRMA.web}" style="text-decoration:none"><img src="${FIRMA.logo}" width="220" height="49" alt="${FIRMA.name}" style="display:block;width:220px;height:auto;border:0;font-family:${MAIL.schrift};font-size:20px;font-weight:bold;color:${MAIL.navy}"></a>
+<div style="width:44px;height:2px;margin-top:20px;background:${MAIL.kupfer};line-height:2px;font-size:0">&nbsp;</div>
 </td></tr>
-<tr><td style="padding:28px;font-size:15px;line-height:1.6;color:#101b31">
-${absatz(`Guten Tag ${escapeHtml(a.name)},`)}
-${absatz(`vielen Dank für Ihre Anfrage – sie ist bei uns angekommen. Wir melden uns in der Regel innerhalb von 24 Stunden ${weg} bei Ihnen.`)}
-${fotosSatz ? absatz(fotosSatz) : ""}
-${absatz(`Wenn es eilt, erreichen Sie uns direkt unter <a href="tel:${FIRMA.telefonLink}" style="color:#1668c4;font-weight:bold;text-decoration:none">${FIRMA.telefon}</a>.`)}
-<p style="margin:26px 0 10px;font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#b08d57">Ihre Angaben im Überblick</p>
-${tabelle(reihen)}
-<p style="margin:26px 0 0">Freundliche Grüße<br><strong>Ihr Team von ${FIRMA.name}</strong></p>
+
+<tr><td class="rand" style="padding:34px 40px;background:${MAIL.navy}">
+<p style="margin:0 0 10px;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:${MAIL.kupferHell}">Anfrage eingegangen</p>
+<p style="margin:0 0 8px;font-size:26px;line-height:1.25;font-weight:bold;color:#ffffff">Vielen Dank, ${escapeHtml(vor)}.</p>
+<p style="margin:0;font-size:15px;line-height:1.6;color:#c9d6ea">Ihre Anfrage ist bei uns angekommen.</p>
 </td></tr>
-<tr><td style="padding:16px 28px;border-top:1px solid #dce5f2;font-size:12px;line-height:1.6;color:#55637d">
-${FIRMA.name} · Inhaber ${FIRMA.inhaber}<br>${FIRMA.adresse} · <a href="${FIRMA.web}" style="color:#55637d">${FIRMA.web.replace("https://", "")}</a>
+
+<tr><td class="rand" style="padding:34px 40px 8px">
+${p(`Guten Tag ${escapeHtml(a.name)},`)}
+${p(`vielen Dank für Ihr Vertrauen. Wir sehen uns Ihre Angaben${a.fotos.length ? " und Fotos" : ""} in Ruhe an und melden uns zeitnah bei Ihnen.`)}
+${fotosSatz ? p(fotosSatz) : ""}
+</td></tr>
+
+<tr><td class="rand" style="padding:8px 40px 6px">
+<p style="margin:0 0 14px;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:${MAIL.navy}">So geht es weiter</p>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+${schritte
+  .map(
+    ([nr, titel, satz], i) =>
+      `<tr><td width="44" style="padding:14px 0;vertical-align:top;${i ? `border-top:1px solid ${MAIL.linie};` : ""}font-size:13px;font-weight:bold;letter-spacing:1px;color:${MAIL.kupfer}">${nr}</td><td style="padding:14px 0;vertical-align:top;${i ? `border-top:1px solid ${MAIL.linie};` : ""}"><p style="margin:0 0 3px;font-size:15px;font-weight:bold;color:${MAIL.navy}">${titel}</p><p style="margin:0;font-size:14px;line-height:1.55;color:${MAIL.grau}">${satz}</p></td></tr>`,
+  )
+  .join("\n")}
+</table>
+</td></tr>
+
+<tr><td class="rand" style="padding:22px 40px 30px">
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;background:${MAIL.hell};border-left:3px solid ${MAIL.blau}">
+<tr><td style="padding:18px 22px">
+<p style="margin:0 0 12px;font-size:14px;line-height:1.5;color:${MAIL.text}"><strong style="color:${MAIL.navy}">Es eilt?</strong> Rufen Sie uns direkt an oder schreiben Sie per WhatsApp.</p>
+<a href="tel:${FIRMA.telefonLink}" style="display:inline-block;padding:12px 20px;margin:0 8px 6px 0;background:${MAIL.blau};color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;border-radius:4px">${FIRMA.telefon}</a>
+<a href="https://wa.me/${FIRMA.whatsapp}" style="display:inline-block;padding:11px 19px;margin:0 0 6px;border:1px solid ${MAIL.navy};color:${MAIL.navy};font-size:14px;font-weight:bold;text-decoration:none;border-radius:4px">WhatsApp</a>
 </td></tr>
 </table>
-</div>`;
+</td></tr>
+
+<tr><td class="rand" style="padding:0 40px 10px">
+<p style="margin:0 0 6px;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:${MAIL.navy}">Ihre Angaben</p>
+${angabenListe(reihen)}
+</td></tr>
+
+<tr><td class="rand" style="padding:28px 40px 36px">
+<p style="margin:0;font-size:15px;line-height:1.65;color:${MAIL.text}">Freundliche Grüße<br><strong style="color:${MAIL.navy}">Ihr Team von ${FIRMA.name}</strong></p>
+</td></tr>
+
+<tr><td class="rand" style="padding:24px 40px;background:${MAIL.hell};border-top:1px solid ${MAIL.linie};font-size:12px;line-height:1.7;color:${MAIL.grau}">
+<strong style="color:${MAIL.navy}">${FIRMA.name}</strong> · Inhaber ${FIRMA.inhaber}<br>
+${FIRMA.adresse}<br>
+<a href="tel:${FIRMA.telefonLink}" style="color:${MAIL.grau};text-decoration:none">${FIRMA.telefon}</a> · <a href="${FIRMA.web}" style="color:${MAIL.grau};text-decoration:none">${FIRMA.web.replace("https://www.", "")}</a>
+<p style="margin:12px 0 0;font-size:11px;color:#8592a8">Diese E-Mail wurde automatisch versendet, weil Sie auf unserer Website eine Anfrage gestellt haben. Für Rückfragen antworten Sie einfach auf diese Nachricht.</p>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>`;
   const klartext = [
     `Guten Tag ${a.name},`,
     "",
-    `vielen Dank für Ihre Anfrage – sie ist bei uns angekommen. Wir melden uns in der Regel innerhalb von 24 Stunden ${weg} bei Ihnen.`,
+    `vielen Dank für Ihr Vertrauen – Ihre Anfrage ist bei uns angekommen. Wir sehen uns Ihre Angaben${a.fotos.length ? " und Fotos" : ""} in Ruhe an und melden uns zeitnah bei Ihnen.`,
     ...(fotosSatz ? ["", fotosSatz] : []),
     "",
-    `Wenn es eilt, erreichen Sie uns direkt unter ${FIRMA.telefon}.`,
+    "So geht es weiter:",
+    ...schritte.map(([nr, titel, satz]) => `${nr} ${titel}: ${satz}`),
     "",
-    "Ihre Angaben im Überblick:",
+    `Es eilt? Rufen Sie uns an: ${FIRMA.telefon}`,
+    "",
+    "Ihre Angaben:",
     ...reihen.map(([feld, wert]) => `${feld}: ${wert}`),
     "",
     "Freundliche Grüße",
@@ -476,6 +576,7 @@ ${FIRMA.name} · Inhaber ${FIRMA.inhaber}<br>${FIRMA.adresse} · <a href="${FIRM
     "",
     `${FIRMA.name} · Inhaber ${FIRMA.inhaber}`,
     FIRMA.adresse,
+    FIRMA.web,
   ].join("\n");
   return {
     from: env.CONTACT_FROM,
