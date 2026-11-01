@@ -515,6 +515,17 @@ describe("Anfrage: Daten stimmen überein", () => {
     assert.ok(site.includes("Hermann-Allmers-Str. 13"));
   });
 
+  test("Logo der Bestätigungsmail liegt in public/", () => {
+    assert.ok(FIRMA.logo.startsWith(`${FIRMA.web}/`));
+    const pfad = `public${FIRMA.logo.slice(FIRMA.web.length)}`;
+    assert.ok(existsSync(pfad), pfad);
+    const site = readFileSync("src/data/site.ts", "utf8");
+    assert.ok(
+      site.includes(`whatsapp: "${FIRMA.whatsapp}"`),
+      "WhatsApp-Nummer",
+    );
+  });
+
   test("Formular-Grenzen passen zum Server und zu Vercel (4,5 MB)", () => {
     const astro = readFileSync("src/components/Anfrage.astro", "utf8");
     assert.match(astro, new RegExp(`const MAX_FOTOS = ${MAX_FOTOS};`));
