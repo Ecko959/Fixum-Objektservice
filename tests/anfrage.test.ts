@@ -128,14 +128,16 @@ describe("Anfrage: Versand", () => {
     assert.equal(kopie.replyTo, ENV.CONTACT_TO);
     assert.match(
       kopie.text!,
-      /Ich melde mich in der Regel innerhalb von 24 Stunden/,
+      /Wir melden uns in der Regel innerhalb von 24 Stunden telefonisch bei Ihnen/,
     );
+    assert.match(kopie.text!, /Ihr Team von Fixum Objektservice/);
+    assert.doesNotMatch(kopie.text!, /\b(Ich|mich|mir)\b/, "Wir-Form");
     assert.match(kopie.text!, /\+49 151 29628025/);
     assert.match(kopie.text!, /Leer/);
     assert.equal(kopie.attachments, undefined);
   });
 
-  test("ohne E-Mail-Adresse: nur die Mail an Fixum, kein Reply-To", async () => {
+  test("ohne E-Mail-Adresse: 400, E-Mail ist Pflicht", async () => {
     const { mails, versand } = postfach();
     const e = await bearbeite(
       anfrage(gueltig({ email: "" })),
@@ -143,9 +145,23 @@ describe("Anfrage: Versand", () => {
       versand,
       JETZT,
     );
+    assert.ok(!e.ok && e.felder?.email);
+    assert.equal(mails.length, 0);
+  });
+
+  test("mehrere Kontaktwege: alle in der Mail, Bestätigung nennt sie", async () => {
+    const { mails, versand } = postfach();
+    const f = gueltig();
+    f.append("kontaktweg", "whatsapp");
+    f.append("kontaktweg", "email");
+    const e = await bearbeite(anfrage(f), ENV, versand, JETZT);
     assert.equal(e.ok, true);
-    assert.equal(mails.length, 1);
-    assert.equal(mails[0].replyTo, undefined);
+    assert.match(mails[0].text!, /Kontakt bevorzugt: Anruf, WhatsApp, E-Mail/);
+    assert.match(mails[0].html!, /wa\.me\/491511234567/);
+    assert.match(
+      mails[1].text!,
+      /telefonisch, per WhatsApp oder per E-Mail bei Ihnen/,
+    );
   });
 
   test("1 Foto: als Anhang, Name und Typ vom Server", async () => {
@@ -236,7 +252,7 @@ describe("Anfrage: Prüfung", () => {
     assert.equal(mails.length, 0);
   });
 
-  test("Kontaktweg E-Mail: E-Mail Pflicht, Telefon nicht", async () => {
+  test("nur E-Mail als Kontaktweg: Telefon nicht nötig", async () => {
     const { versand } = postfach();
     const ohne = await bearbeite(
       anfrage(gueltig({ kontaktweg: "email", email: "", telefon: "" })),
@@ -253,6 +269,21 @@ describe("Anfrage: Prüfung", () => {
       JETZT,
     );
     assert.equal(mit.ok, true);
+  });
+
+  test("kein oder unbekannter Kontaktweg wird gemeldet", async () => {
+    const { versand } = postfach();
+    const f = gueltig();
+    f.delete("kontaktweg");
+    const ohne = await bearbeite(anfrage(f), ENV, versand, JETZT);
+    assert.ok(!ohne.ok && ohne.felder?.kontaktweg);
+    const fremd = await bearbeite(
+      anfrage(gueltig({ kontaktweg: "brieftaube" })),
+      ENV,
+      versand,
+      JETZT,
+    );
+    assert.ok(!fremd.ok && fremd.felder?.kontaktweg);
   });
 
   test("ungültige E-Mail und Telefonnummer werden gemeldet", async () => {

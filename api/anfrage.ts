@@ -102,7 +102,8 @@ export interface Anfrage {
   name: string;
   telefon: string;
   email: string;
-  kontaktweg: keyof typeof KONTAKTWEGE;
+  /** Mehrfachauswahl, mindestens ein Weg */
+  kontaktwege: Array<keyof typeof KONTAKTWEGE>;
   seite: string;
   fotos: Foto[];
 }
@@ -210,7 +211,10 @@ export async function pruefe(
   const name = zeile(text(form, "name", 100));
   const telefon = zeile(text(form, "telefon", 40));
   const email = zeile(text(form, "email", 200));
-  const kontaktweg = text(form, "kontaktweg", 20) || "anruf";
+  const wegeRoh = form.getAll("kontaktweg").map((w) => String(w).trim());
+  const kontaktwege = [
+    ...new Set(wegeRoh.filter((w) => istSchluessel(KONTAKTWEGE, w))),
+  ] as Anfrage["kontaktwege"];
 
   if (!istSchluessel(LEISTUNGEN, leistung))
     felder.leistung = "Bitte wählen Sie aus, was Sie planen.";
@@ -220,17 +224,18 @@ export async function pruefe(
   if (zeitraum && !istSchluessel(ZEITRAEUME, zeitraum))
     felder.zeitraum = "Bitte wählen Sie einen Zeitraum.";
   if (!name) felder.name = "Bitte geben Sie Ihren Namen an.";
-  if (!istSchluessel(KONTAKTWEGE, kontaktweg))
-    felder.kontaktweg = "Bitte wählen Sie, wie wir Sie erreichen.";
-  const telefonNoetig = kontaktweg !== "email";
+  if (!kontaktwege.length || kontaktwege.length !== wegeRoh.length)
+    felder.kontaktweg = "Bitte wählen Sie mindestens einen Weg.";
+  /* E-Mail ist immer Pflicht; Telefon nur für Rückruf oder WhatsApp. */
+  if (!email) felder.email = "Bitte geben Sie Ihre E-Mail-Adresse an.";
+  else if (!EMAIL.test(email))
+    felder.email = "Bitte prüfen Sie die E-Mail-Adresse.";
+  const telefonNoetig =
+    kontaktwege.includes("anruf") || kontaktwege.includes("whatsapp");
   if (telefonNoetig && !telefon)
-    felder.telefon = "Bitte geben Sie Ihre Telefonnummer an.";
+    felder.telefon = "Für Rückruf oder WhatsApp brauchen wir Ihre Nummer.";
   else if (telefon && !TELEFON.test(telefon))
     felder.telefon = "Bitte prüfen Sie die Telefonnummer.";
-  if (kontaktweg === "email" && !email)
-    felder.email = "Bitte geben Sie Ihre E-Mail-Adresse an.";
-  else if (email && !EMAIL.test(email))
-    felder.email = "Bitte prüfen Sie die E-Mail-Adresse.";
   if (!form.get("datenschutz"))
     felder.datenschutz = "Bitte bestätigen Sie die Einwilligung.";
 
@@ -298,7 +303,7 @@ export async function pruefe(
       name,
       telefon,
       email,
-      kontaktweg: kontaktweg as Anfrage["kontaktweg"],
+      kontaktwege,
       seite: zeile(text(form, "seite", 200)),
       fotos,
     },
@@ -354,7 +359,7 @@ const zeilen = (a: Anfrage): Array<[string, string, string]> => {
         ? `<a href="mailto:${escapeHtml(a.email)}">${escapeHtml(a.email)}</a>`
         : "",
     ],
-    ["Kontakt bevorzugt", KONTAKTWEGE[a.kontaktweg]],
+    ["Kontakt bevorzugt", a.kontaktwege.map((w) => KONTAKTWEGE[w]).join(", ")],
   ];
   return z
     .filter(([, wert]) => wert)
@@ -380,7 +385,7 @@ export const betreff = (a: Anfrage) =>
 export const mailAnMich = (a: Anfrage, env: Env): SendMailOptions => {
   const reihen = zeilen(a);
   const wa =
-    a.telefon && a.kontaktweg === "whatsapp"
+    a.telefon && a.kontaktwege.includes("whatsapp")
       ? `<p style="margin:16px 0 0"><a href="https://wa.me/${waNummer(a.telefon)}" style="color:#1668c4;font-weight:bold">Per WhatsApp antworten</a></p>`
       : "";
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;color:#101b31">
@@ -414,41 +419,62 @@ ${a.telefon ? `<p style="margin:16px 0 0"><a href="tel:${escapeHtml(telLink(a.te
   };
 };
 
+/** "telefonisch, per WhatsApp oder per E-Mail" */
+const wegText = (wege: Anfrage["kontaktwege"]) => {
+  const teile = wege.map((w) =>
+    w === "anruf"
+      ? "telefonisch"
+      : w === "whatsapp"
+        ? "per WhatsApp"
+        : "per E-Mail",
+  );
+  return teile.length > 1
+    ? `${teile.slice(0, -1).join(", ")} oder ${teile.at(-1)}`
+    : (teile[0] ?? "");
+};
+
 export const bestaetigung = (a: Anfrage, env: Env): SendMailOptions | null => {
   if (!a.email) return null;
   const reihen = zeilen(a).filter(([feld]) => feld !== "E-Mail");
-  const weg =
-    a.kontaktweg === "email"
-      ? "per E-Mail"
-      : a.kontaktweg === "whatsapp"
-        ? "per WhatsApp"
-        : "telefonisch";
+  const weg = wegText(a.kontaktwege);
   const fotosSatz = a.fotos.length
-    ? `Sie haben ${a.fotos.length === 1 ? "ein Foto" : `${a.fotos.length} Fotos`} mitgeschickt – danke, das hilft mir bei der Einschätzung.`
+    ? `Sie haben ${a.fotos.length === 1 ? "ein Foto" : `${a.fotos.length} Fotos`} mitgeschickt – danke, das hilft uns bei der Einschätzung.`
     : "";
-  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#101b31;max-width:640px">
-<p>Guten Tag ${escapeHtml(a.name)},</p>
-<p>vielen Dank für Ihre Anfrage – sie ist bei mir angekommen. Ich melde mich in der Regel innerhalb von 24 Stunden ${weg} bei Ihnen.</p>
-<p>Wenn es eilt, erreichen Sie mich direkt unter <a href="tel:${FIRMA.telefonLink}" style="color:#1668c4;font-weight:bold">${FIRMA.telefon}</a>.</p>
-${fotosSatz ? `<p>${fotosSatz}</p>` : ""}
-<p style="margin:24px 0 8px;font-weight:bold;color:#132a5c">Ihre Angaben im Überblick</p>
+  const absatz = (t: string) => `<p style="margin:0 0 14px">${t}</p>`;
+  const html = `<div style="background:#f3f6fa;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
+<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;margin:0 auto;border-collapse:collapse;background:#ffffff;border:1px solid #dce5f2">
+<tr><td style="padding:22px 28px;background:#0a1730;border-bottom:3px solid #b08d57">
+<span style="font-size:18px;font-weight:bold;letter-spacing:0.5px;color:#ffffff">${FIRMA.name}</span>
+</td></tr>
+<tr><td style="padding:28px;font-size:15px;line-height:1.6;color:#101b31">
+${absatz(`Guten Tag ${escapeHtml(a.name)},`)}
+${absatz(`vielen Dank für Ihre Anfrage – sie ist bei uns angekommen. Wir melden uns in der Regel innerhalb von 24 Stunden ${weg} bei Ihnen.`)}
+${fotosSatz ? absatz(fotosSatz) : ""}
+${absatz(`Wenn es eilt, erreichen Sie uns direkt unter <a href="tel:${FIRMA.telefonLink}" style="color:#1668c4;font-weight:bold;text-decoration:none">${FIRMA.telefon}</a>.`)}
+<p style="margin:26px 0 10px;font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#b08d57">Ihre Angaben im Überblick</p>
 ${tabelle(reihen)}
-<p style="margin-top:24px">Viele Grüße<br>${FIRMA.inhaber}<br>${FIRMA.name}</p>
-<p style="color:#55637d;font-size:13px">${FIRMA.adresse} · <a href="${FIRMA.web}" style="color:#55637d">${FIRMA.web.replace("https://", "")}</a></p>
+<p style="margin:26px 0 0">Freundliche Grüße<br><strong>Ihr Team von ${FIRMA.name}</strong></p>
+</td></tr>
+<tr><td style="padding:16px 28px;border-top:1px solid #dce5f2;font-size:12px;line-height:1.6;color:#55637d">
+${FIRMA.name} · Inhaber ${FIRMA.inhaber}<br>${FIRMA.adresse} · <a href="${FIRMA.web}" style="color:#55637d">${FIRMA.web.replace("https://", "")}</a>
+</td></tr>
+</table>
 </div>`;
   const klartext = [
     `Guten Tag ${a.name},`,
     "",
-    `vielen Dank für Ihre Anfrage – sie ist bei mir angekommen. Ich melde mich in der Regel innerhalb von 24 Stunden ${weg} bei Ihnen.`,
-    `Wenn es eilt, erreichen Sie mich direkt unter ${FIRMA.telefon}.`,
+    `vielen Dank für Ihre Anfrage – sie ist bei uns angekommen. Wir melden uns in der Regel innerhalb von 24 Stunden ${weg} bei Ihnen.`,
     ...(fotosSatz ? ["", fotosSatz] : []),
+    "",
+    `Wenn es eilt, erreichen Sie uns direkt unter ${FIRMA.telefon}.`,
     "",
     "Ihre Angaben im Überblick:",
     ...reihen.map(([feld, wert]) => `${feld}: ${wert}`),
     "",
-    "Viele Grüße",
-    FIRMA.inhaber,
-    FIRMA.name,
+    "Freundliche Grüße",
+    `Ihr Team von ${FIRMA.name}`,
+    "",
+    `${FIRMA.name} · Inhaber ${FIRMA.inhaber}`,
     FIRMA.adresse,
   ].join("\n");
   return {

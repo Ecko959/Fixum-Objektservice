@@ -58,7 +58,7 @@ const schnell = ["entruempelung", "umzug", "trockenbau", "entkernung"]
 </div>
 
 <style>
-  /* Nur Navy, Weiß und Blau. Oben eine blaue Akzentkante. */
+  /* Navy, Weiß, Blau für die Aktion; Messing als Akzent (Kante, Motive). */
   .sk {
     position: relative;
     display: grid;
@@ -85,7 +85,7 @@ const schnell = ["entruempelung", "umzug", "trockenbau", "entkernung"]
     position: absolute;
     inset: 0 0 auto;
     height: 3px;
-    background: linear-gradient(90deg, var(--blue-bright), var(--blue-light));
+    background: linear-gradient(90deg, var(--amber-deep), var(--amber));
   }
 
   .sk-titel {
@@ -132,13 +132,13 @@ const schnell = ["entruempelung", "umzug", "trockenbau", "entkernung"]
 
   .sk-kachel :global(.icon) {
     flex: none;
-    color: var(--blue-light);
+    color: var(--amber);
   }
 
   .sk-kachel:hover,
   .sk-kachel:focus-visible {
-    border-color: var(--blue-light);
-    background: rgba(31, 122, 224, 0.18);
+    border-color: var(--amber);
+    background: rgba(207, 171, 114, 0.12);
   }
 
   .sk-direkt {
