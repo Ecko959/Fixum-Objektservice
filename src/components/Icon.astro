@@ -36,7 +36,8 @@ const leistungsIcons: Partial<Record<IconName, PhosphorName>> = {
 };
 
 interface Props {
-  name: IconName;
+  /** Bedienelement aus icons.ts oder direkt ein Phosphor-Motiv. */
+  name: IconName | PhosphorName;
   size?: number;
   class?: string;
   /** Nur setzen, wenn das Icon allein steht und Bedeutung trägt. */
@@ -44,9 +45,12 @@ interface Props {
 }
 
 const { name, size = 22, class: className = "", label } = Astro.props;
-const phosphor = leistungsIcons[name];
-const d = iconPaths[name];
-const fein = feineIcons.has(name);
+const phosphor =
+  name in phosphorIcons
+    ? (name as PhosphorName)
+    : leistungsIcons[name as IconName];
+const d = iconPaths[name as IconName];
+const fein = feineIcons.has(name as IconName);
 ---
 
 {

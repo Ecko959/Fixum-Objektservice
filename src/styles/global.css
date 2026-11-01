@@ -102,16 +102,21 @@
   --mist: #eaf2fc;
   --mist-soft: #f5f9ff;
   --grey: #edeff3;
-  /* Zweite Akzentfarbe Messing - nur im Preisrechner: Auswahl, Fokus und
-     Preisanzeige. Logo-Blau bleibt für Kopfleiste und Handlungsaufrufe.
+  /* Zweite Akzentfarbe Messing/Kupfer: Preisrechner (Auswahl, Fokus,
+     Preisanzeige), Anfrageformular und - als --amber - die Akzente auf
+     dunklem Grund. Logo-Blau bleibt für Kopfleiste und Handlungsaufrufe.
      Kontrast auf #0A1730: 5,8:1 (WCAG AA). */
   --accent: #b08d57;
+  /* Dunkler für Schrift und feine Symbole auf Weiß (4,6:1). */
+  --accent-text: #8a6a3a;
+  --accent-hauch: #faf6ef;
   --line: #dce5f2;
   --line-strong: #c6d5ea;
   --ink: #101b31;
   --muted: #55637d;
-  --amber: #ffb020;
-  --amber-deep: #e08f00;
+  /* Akzent auf dunklem Grund: helles Messing statt Signalgelb. */
+  --amber: #cfab72;
+  --amber-deep: #a8834d;
 
   /* Farbe auf dunklem Grund */
   --on-dark: #ffffff;
@@ -884,7 +889,7 @@ h4 {
   mask: var(--check-mask);
 }
 
-/* Auf dunklem Grund trägt Amber den Akzent, der Haken wird dunkel. */
+/* Auf dunklem Grund trägt Messing den Akzent, der Haken wird dunkel. */
 .section--dark .check-list li::before,
 .section--chain .check-list li::before {
   background: linear-gradient(160deg, var(--amber), var(--amber-deep));

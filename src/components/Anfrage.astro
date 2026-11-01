@@ -39,7 +39,7 @@ const {
   ort = "",
   eyebrow = "Anfrage",
   titel = "Kostenlose Besichtigung anfragen",
-  text = "Ein paar Angaben genügen. Ich melde mich in der Regel innerhalb von 24 Stunden – mit Fotos oft schon mit einem ersten Richtpreis.",
+  text = "Ein paar Angaben genügen. Wir melden uns in der Regel innerhalb von 24 Stunden – mit Fotos oft schon mit einem ersten Richtpreis.",
   eingebettet = false,
 } = Astro.props;
 
@@ -288,19 +288,22 @@ const Huelle = eingebettet ? "div" : "section";
                 aria-describedby="af-fotos-hinweis"
                 data-datei
               />
-              <span class="af-drop-icon"><Icon name="kamera" size={22} /></span>
+              <span class="af-drop-icon"><Icon name="images" size={28} /></span>
               <span class="af-drop-text">
                 <strong data-drop-titel aria-live="polite"
                   >Fotos hinzufügen</strong
                 >
                 <small>
-                  <span class="af-touch">Kamera oder Galerie</span>
-                  <span class="af-maus">Auswählen oder hierher ziehen</span>
+                  <span class="af-touch">Aus Kamera oder Galerie</span>
+                  <span class="af-maus">Klicken oder hierher ziehen</span>
+                  · bis zu 8 Fotos
                 </small>
               </span>
+              <span class="af-drop-knopf" aria-hidden="true">Auswählen</span>
             </label>
             <p class="af-tipp" id="af-fotos-hinweis">
-              Mit Fotos kann ich Ihnen oft schon vorab einen Richtpreis nennen.
+              Mit Fotos können wir Ihnen oft schon vorab einen Richtpreis
+              nennen.
             </p>
             <ul class="af-thumbs" data-thumbs aria-label="Ausgewählte Fotos">
             </ul>
@@ -330,8 +333,28 @@ const Huelle = eingebettet ? "div" : "section";
 
           <div class="af-reihe">
             <div class="af-feld">
+              <label for="af-email">
+                E-Mail <span class="af-pflicht">*</span>
+              </label>
+              <input
+                id="af-email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                inputmode="email"
+                aria-describedby="af-email-hinweis af-email-fehler"
+              />
+              <p class="af-tipp" id="af-email-hinweis">
+                Für Ihre Bestätigung und unser Angebot.
+              </p>
+              <p class="af-fehler" id="af-email-fehler" data-fehler="email"></p>
+            </div>
+            <div class="af-feld">
               <label for="af-telefon">
-                Telefon <span class="af-pflicht" data-pflicht-telefon>*</span>
+                Telefon
+                <span class="af-pflicht" data-pflicht-telefon hidden>*</span>
+                <span class="af-optional" data-optional-telefon>optional</span>
               </label>
               <input
                 id="af-telefon"
@@ -339,49 +362,42 @@ const Huelle = eingebettet ? "div" : "section";
                 type="tel"
                 autocomplete="tel"
                 inputmode="tel"
-                aria-describedby="af-telefon-fehler"
+                aria-describedby="af-telefon-hinweis af-telefon-fehler"
               />
+              <p class="af-tipp" id="af-telefon-hinweis">
+                Nötig, wenn wir anrufen oder per WhatsApp schreiben sollen.
+              </p>
               <p class="af-fehler" id="af-telefon-fehler" data-fehler="telefon">
               </p>
-            </div>
-            <div class="af-feld">
-              <label for="af-email">
-                E-Mail <span class="af-pflicht" data-pflicht-email hidden
-                  >*</span
-                >
-              </label>
-              <input
-                id="af-email"
-                name="email"
-                type="email"
-                autocomplete="email"
-                inputmode="email"
-                aria-describedby="af-email-hinweis af-email-fehler"
-              />
-              <p class="af-tipp" id="af-email-hinweis">
-                Für Ihre Bestätigung per E-Mail.
-              </p>
-              <p class="af-fehler" id="af-email-fehler" data-fehler="email"></p>
             </div>
           </div>
 
           <fieldset class="af-feld af-gruppe">
-            <legend>Wie soll ich mich melden?</legend>
-            <div class="af-chips">
+            <legend>
+              Wie sollen wir uns melden? <span class="af-pflicht">*</span>
+              <span class="af-optional">Mehrfachauswahl möglich</span>
+            </legend>
+            <div class="af-chips" aria-describedby="af-kontaktweg-fehler">
               {
-                anfrageKontaktwege.map((k, i) => (
-                  <label class="af-chip">
+                anfrageKontaktwege.map((k) => (
+                  <label class="af-chip af-chip--mehr">
                     <input
-                      type="radio"
+                      type="checkbox"
                       name="kontaktweg"
                       value={k.wert}
-                      checked={i === 0}
+                      checked={k.wert === "email"}
                     />
                     <span>{k.label}</span>
                   </label>
                 ))
               }
             </div>
+            <p
+              class="af-fehler"
+              id="af-kontaktweg-fehler"
+              data-fehler="kontaktweg"
+            >
+            </p>
           </fieldset>
 
           <div class="af-feld af-check">
@@ -434,36 +450,68 @@ const Huelle = eingebettet ? "div" : "section";
 
         <p class="af-note">
           <Icon name="shield" size={16} />
-          Unverbindlich und kostenlos. Ihre Fotos werden nur per E-Mail an mich weitergeleitet,
+          Unverbindlich und kostenlos. Ihre Fotos werden nur per E-Mail an uns weitergeleitet,
           nicht gespeichert.
         </p>
       </form>
 
       <div class="af-erfolg" data-erfolg hidden tabindex="-1">
-        <span class="af-erfolg-haken" aria-hidden="true"
-          ><Icon name="check" size={28} /></span
-        >
-        <h3>Danke<span data-vorname></span>. Ihre Anfrage ist da.</h3>
-        <p class="muted">
-          Eine Bestätigung ist unterwegs, falls Sie eine E-Mail-Adresse
-          angegeben haben. So geht es weiter:
-        </p>
-        <ol class="af-weiter">
+        <div class="af-erfolg-kopf">
+          <span class="af-erfolg-siegel" aria-hidden="true">
+            <Icon name="sealCheck" size={34} />
+          </span>
+          <p class="af-erfolg-marke">Anfrage eingegangen</p>
+          <h3>Danke<span data-vorname></span>.</h3>
+          <p class="af-erfolg-text">
+            Ihre Anfrage ist bei uns angekommen. Eine Bestätigung haben wir an
+            <strong data-erfolg-mail>Ihre E-Mail-Adresse</strong> geschickt.
+          </p>
+        </div>
+
+        <ol class="af-ablauf">
           <li>
-            <span>01</span>Ich melde mich in der Regel innerhalb von 24 Stunden.
+            <span class="af-ablauf-icon"
+              ><Icon name="chatCircleText" size={22} /></span
+            >
+            <div>
+              <strong>Rückmeldung</strong>
+              <p>
+                Wir melden uns in der Regel innerhalb von 24 Stunden – auf dem
+                Weg, den Sie gewählt haben.
+              </p>
+            </div>
           </li>
-          <li><span>02</span>Wir vereinbaren eine kostenlose Besichtigung.</li>
           <li>
-            <span>03</span>Sie bekommen ein schriftliches Festpreis-Angebot.
+            <span class="af-ablauf-icon"
+              ><Icon name="calendarCheck" size={22} /></span
+            >
+            <div>
+              <strong>Besichtigung</strong>
+              <p>
+                Kostenlos und unverbindlich, zu einem Termin, der Ihnen passt.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="af-ablauf-icon"
+              ><Icon name="fileText" size={22} /></span
+            >
+            <div>
+              <strong>Festpreis-Angebot</strong>
+              <p>
+                Schriftlich, mit klarem Leistungsumfang – ohne Überraschungen.
+              </p>
+            </div>
           </li>
         </ol>
-        <p class="af-direkt">
-          Eilig?
-          <a href={telUrl}>
-            <Icon name="phone" size={16} />
+
+        <div class="af-erfolg-fuss">
+          <p>Es eilt? Rufen Sie uns direkt an.</p>
+          <a class="af-erfolg-tel" href={telUrl}>
+            <Icon name="phone" size={18} />
             {site.phoneDisplay}
           </a>
-        </p>
+        </div>
       </div>
     </div>
   </div>
@@ -527,6 +575,15 @@ const Huelle = eingebettet ? "div" : "section";
         );
       return (el?.value ?? "").trim();
     };
+    /** Gewählte Kontaktwege (Mehrfachauswahl) */
+    const wege = () =>
+      [
+        ...form.querySelectorAll<HTMLInputElement>(
+          'input[name="kontaktweg"]:checked',
+        ),
+      ].map((el) => el.value);
+    const telefonNoetig = () =>
+      wege().some((w) => w === "anruf" || w === "whatsapp");
 
     /* ---------------- Fehler ---------------- */
     const zeigeFehler = (name: string, meldung: string) => {
@@ -548,7 +605,6 @@ const Huelle = eingebettet ? "div" : "section";
 
     const pruefeFeld = (name: string): string => {
       const v = wert(name);
-      const weg = wert("kontaktweg") || "anruf";
       switch (name) {
         case "leistung":
           return v ? "" : "Bitte wählen Sie aus, was Sie planen.";
@@ -560,15 +616,14 @@ const Huelle = eingebettet ? "div" : "section";
           return v ? "" : "Bitte geben Sie Ihren Namen an.";
         case "telefon":
           if (!v)
-            return weg === "email"
-              ? ""
-              : "Bitte geben Sie Ihre Telefonnummer an.";
-          return TELEFON.test(v) ? "" : "Bitte prüfen Sie die Telefonnummer.";
-        case "email":
-          if (!v)
-            return weg === "email"
-              ? "Bitte geben Sie Ihre E-Mail-Adresse an."
+            return telefonNoetig()
+              ? "Für Rückruf oder WhatsApp brauchen wir Ihre Nummer."
               : "";
+          return TELEFON.test(v) ? "" : "Bitte prüfen Sie die Telefonnummer.";
+        case "kontaktweg":
+          return wege().length ? "" : "Bitte wählen Sie mindestens einen Weg.";
+        case "email":
+          if (!v) return "Bitte geben Sie Ihre E-Mail-Adresse an.";
           return EMAIL.test(v)
             ? ""
             : "Bitte prüfen Sie die E-Mail-Adresse – z. B. name@beispiel.de.";
@@ -584,7 +639,7 @@ const Huelle = eingebettet ? "div" : "section";
     const PFLICHT: Record<number, string[]> = {
       1: ["leistung"],
       2: ["ort", "objektart"],
-      3: ["name", "telefon", "email", "datenschutz"],
+      3: ["name", "email", "telefon", "kontaktweg", "datenschutz"],
     };
     const geprueft = new Set<string>();
 
@@ -608,16 +663,15 @@ const Huelle = eingebettet ? "div" : "section";
     form.addEventListener("change", (e) => {
       const name = (e.target as HTMLInputElement).name;
       if (name === "kontaktweg") {
-        const weg = wert("kontaktweg");
+        /* Telefon wird Pflicht, sobald Anruf oder WhatsApp gewählt ist. */
+        const noetig = telefonNoetig();
         form.querySelector<HTMLElement>("[data-pflicht-telefon]")!.hidden =
-          weg === "email";
-        form.querySelector<HTMLElement>("[data-pflicht-email]")!.hidden =
-          weg !== "email";
-        feld("telefon")!.required = weg !== "email";
-        feld("email")!.required = weg === "email";
-        ["telefon", "email"].forEach(
-          (n) => geprueft.has(n) && zeigeFehler(n, pruefeFeld(n)),
-        );
+          !noetig;
+        form.querySelector<HTMLElement>("[data-optional-telefon]")!.hidden =
+          noetig;
+        feld("telefon")!.required = noetig;
+        if (geprueft.has("telefon"))
+          zeigeFehler("telefon", pruefeFeld("telefon"));
       }
       if (geprueft.has(name)) zeigeFehler(name, pruefeFeld(name));
       /* Leistung gewählt: direkt weiter */
@@ -912,7 +966,7 @@ const Huelle = eingebettet ? "div" : "section";
        502 = Mailserver hat abgelehnt, 0 = keine Verbindung. */
     function fehlerText(satz: string, code?: number) {
       const { tel, telText, wa } = wurzel!.dataset;
-      return `<strong>Senden fehlgeschlagen</strong><span>${satz} Bitte rufen Sie mich an unter <a href="${tel}">${telText}</a> oder schreiben Sie per <a href="${wa}" target="_blank" rel="noopener noreferrer">WhatsApp</a>. Ihre Eingaben bleiben hier erhalten.</span>${code !== undefined ? `<small>Fehlercode ${code}</small>` : ""}`;
+      return `<strong>Senden fehlgeschlagen</strong><span>${satz} Bitte rufen Sie uns an unter <a href="${tel}">${telText}</a> oder schreiben Sie per <a href="${wa}" target="_blank" rel="noopener noreferrer">WhatsApp</a>. Ihre Eingaben bleiben hier erhalten.</span>${code !== undefined ? `<small>Fehlercode ${code}</small>` : ""}`;
     }
 
     const zeigeStatus = (html: string) => {
@@ -979,6 +1033,8 @@ const Huelle = eingebettet ? "div" : "section";
         }
         if (xhr.status === 200 && antwort.ok) {
           const v = antwort.vorname || wert("name").split(/\s+/)[0];
+          erfolg.querySelector<HTMLElement>("[data-erfolg-mail]")!.textContent =
+            wert("email");
           erfolg.querySelector<HTMLElement>("[data-vorname]")!.textContent = v
             ? `, ${v}`
             : "";
@@ -1097,7 +1153,7 @@ const Huelle = eingebettet ? "div" : "section";
     font-weight: 600;
     letter-spacing: 0.08em;
     font-variant-numeric: tabular-nums;
-    color: var(--blue);
+    color: var(--accent-text);
   }
 
   .af-direkt {
@@ -1147,6 +1203,11 @@ const Huelle = eingebettet ? "div" : "section";
     gap: 1.75rem;
   }
 
+  /* display: grid würde hidden sonst überstimmen */
+  .af-form[hidden] {
+    display: none;
+  }
+
   /* ---------------- Fortschritt ---------------- */
   .af-fortschritt {
     display: none;
@@ -1188,7 +1249,7 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af-stufen .ist-fertig {
-    border-color: var(--blue);
+    border-color: var(--accent);
     color: var(--muted);
   }
 
@@ -1200,7 +1261,7 @@ const Huelle = eingebettet ? "div" : "section";
 
   .af-stufen .ist-aktiv span,
   .af-stufen .ist-fertig span {
-    color: var(--blue);
+    color: var(--accent-text);
   }
 
   /* ---------------- Schritte ---------------- */
@@ -1252,7 +1313,7 @@ const Huelle = eingebettet ? "div" : "section";
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--blue);
+    color: var(--accent-text);
   }
 
   /* Mit JavaScript steht der Schritt schon im Fortschritt oben -
@@ -1352,7 +1413,7 @@ const Huelle = eingebettet ? "div" : "section";
 
   .af-karte-icon {
     display: inline-flex;
-    color: var(--blue);
+    color: var(--accent);
   }
 
   .af-karte-text {
@@ -1381,20 +1442,21 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af-karte:hover .af-karte-box {
-    border-color: var(--blue-light);
+    border-color: var(--accent);
     box-shadow: 0 6px 18px -10px rgba(19, 42, 92, 0.25);
   }
 
+  /* Auswahl in Messing - wie im Preisrechner */
   .af-karte input:checked + .af-karte-box {
-    border-color: var(--blue);
-    background: var(--mist-soft);
-    box-shadow: inset 0 0 0 1px var(--blue);
+    border-color: var(--accent);
+    background: var(--accent-hauch);
+    box-shadow: inset 0 0 0 1px var(--accent);
   }
 
   .af-karte input:checked + .af-karte-box .af-karte-haken {
-    border-color: var(--blue);
+    border-color: var(--accent);
     color: #fff;
-    background: var(--blue);
+    background: var(--accent);
   }
 
   .af-karte input:focus-visible + .af-karte-box,
@@ -1577,7 +1639,7 @@ const Huelle = eingebettet ? "div" : "section";
     box-shadow:
       0 1px 2px rgba(16, 27, 49, 0.08),
       0 2px 8px -2px rgba(19, 42, 92, 0.14),
-      inset 0 -2px 0 var(--blue);
+      inset 0 -2px 0 var(--accent);
   }
 
   .af-chips:has([aria-invalid="true"]) {
@@ -1641,8 +1703,8 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   .af-check input:checked {
-    border-color: var(--blue);
-    background: var(--blue);
+    border-color: var(--navy);
+    background: var(--navy);
   }
 
   .af-check input:checked::after {
@@ -1690,31 +1752,39 @@ const Huelle = eingebettet ? "div" : "section";
   }
 
   /* ---------------- Fotos ---------------- */
+  /* Zentriert gestapelt: Motiv, Titel, Hinweis, Knopf - wirkt in jeder
+     Spaltenbreite gleich ruhig. */
   .af-drop {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    min-height: 80px;
-    padding: 1rem 1.1rem;
-    border: 1px dashed var(--line-strong);
+    display: grid;
+    justify-items: center;
+    gap: 0.85rem;
+    padding: 1.75rem 1.25rem 1.6rem;
+    text-align: center;
+    border: 1px dashed #cdb894;
     border-radius: 4px;
-    background: var(--af-feld);
+    background: radial-gradient(
+      120% 120% at 50% 0%,
+      #fff 0%,
+      var(--accent-hauch) 100%
+    );
     cursor: pointer;
     transition:
       border-color 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out),
       background 200ms var(--ease-out);
   }
 
   .af-drop:hover,
   .af-drop.ist-ueber {
-    border-color: var(--blue);
-    background: var(--mist-soft);
+    border-color: var(--accent);
+    border-style: solid;
+    box-shadow: 0 10px 28px -18px rgba(138, 106, 58, 0.55);
   }
 
   .af-drop:focus-within {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 4px rgba(31, 122, 224, 0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(176, 141, 87, 0.18);
   }
 
   .af-drop.ist-beschaeftigt {
@@ -1740,32 +1810,55 @@ const Huelle = eingebettet ? "div" : "section";
     cursor: pointer;
   }
 
+  /* Motiv in Messing auf weißer Scheibe mit feinem Ring */
   .af-drop-icon {
     display: grid;
-    flex: none;
     place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 4px;
-    color: var(--blue);
-    background: var(--mist);
+    width: 56px;
+    height: 56px;
+    border: 1px solid #e6d9c2;
+    border-radius: 50%;
+    color: var(--accent);
+    background: #fff;
+    box-shadow: 0 6px 16px -8px rgba(138, 106, 58, 0.45);
   }
 
   .af-drop-text {
     display: grid;
-    gap: 0.1rem;
+    gap: 0.2rem;
     line-height: 1.4;
   }
 
   .af-drop-text strong {
-    font-size: 0.9375rem;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--navy);
   }
 
   .af-drop-text small {
     font-size: 0.8125rem;
     color: #6b7891;
+  }
+
+  .af-drop-knopf {
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--navy);
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--navy);
+    background: #fff;
+    transition:
+      background 200ms var(--ease-out),
+      color 200ms var(--ease-out);
+  }
+
+  .af-drop:hover .af-drop-knopf {
+    color: #fff;
+    background: var(--navy);
   }
 
   .af-maus {
@@ -1988,8 +2081,8 @@ const Huelle = eingebettet ? "div" : "section";
   /* ---------------- Erfolg ---------------- */
   .af-erfolg {
     display: grid;
-    gap: 1.25rem;
-    animation: af-ein 360ms var(--ease-out);
+    gap: 2rem;
+    animation: af-ein 420ms var(--ease-out);
   }
 
   .af-erfolg[hidden] {
@@ -2000,21 +2093,147 @@ const Huelle = eingebettet ? "div" : "section";
     outline: none;
   }
 
-  .af-erfolg h3 {
-    margin: 0;
-    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
-    letter-spacing: -0.02em;
+  .af-erfolg-kopf {
+    display: grid;
+    justify-items: start;
+    gap: 0.6rem;
   }
 
-  .af-erfolg-haken {
+  .af-erfolg-siegel {
     display: grid;
     place-items: center;
-    width: 52px;
-    height: 52px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e6d9c2;
     border-radius: 50%;
+    color: var(--accent);
+    background: var(--accent-hauch);
+    box-shadow:
+      0 0 0 6px #fff,
+      0 0 0 7px #efe5d4;
+  }
+
+  .af-erfolg-marke {
+    margin: 0;
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .af-erfolg h3 {
+    margin: 0;
+    font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.375rem);
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+
+  .af-erfolg-text {
+    max-width: 46ch;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .af-erfolg-text strong {
+    font-weight: 600;
+    color: var(--navy);
+    word-break: break-word;
+  }
+
+  /* Ablauf als Zeitleiste: Motiv, Titel, ein Satz */
+  .af-ablauf {
+    position: relative;
+    display: grid;
+    gap: 1.4rem;
+    margin: 0;
+    padding: 1.5rem 0 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .af-ablauf::before {
+    content: "";
+    position: absolute;
+    top: calc(1.5rem + 22px);
+    bottom: 22px;
+    left: 21px;
+    width: 1px;
+    background: linear-gradient(var(--accent), #e6d9c2);
+  }
+
+  .af-ablauf li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .af-ablauf-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #e6d9c2;
+    border-radius: 50%;
+    color: var(--accent);
+    background: #fff;
+  }
+
+  .af-ablauf strong {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .af-ablauf p {
+    margin: 0.2rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .af-erfolg-fuss {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: 4px;
+    background: var(--navy-deep);
+  }
+
+  .af-erfolg-fuss p {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--on-dark-soft);
+  }
+
+  .af-erfolg-tel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
     color: #fff;
-    background: var(--blue);
-    box-shadow: 0 0 0 8px var(--mist);
+  }
+
+  .af-erfolg-tel :global(.icon) {
+    color: var(--amber);
+  }
+
+  .af-erfolg-tel:hover {
+    color: var(--amber);
   }
 
   /* ---------------- Responsive ---------------- */
@@ -2064,6 +2283,10 @@ const Huelle = eingebettet ? "div" : "section";
       top: 50%;
       right: 0.95rem;
       margin-top: -10px;
+    }
+
+    .af-drop {
+      padding: 1.5rem 1rem 1.4rem;
     }
 
     .af-chips--4 {
