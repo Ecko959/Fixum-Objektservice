@@ -121,18 +121,16 @@ Google liefert über die API höchstens fünf Texte; Note und Anzahl stimmen
 immer. Namen werden auf „Vorname N.“ gekürzt. Bewusst ohne
 `AggregateRating`-Markup (Selbstbewertungen wertet Google als Verstoß).
 
-## Ratgeber und Referenzen
+## Ratgeber
 
 - **Ratgeber** (`/ratgeber/`): Artikel in `src/data/ratgeber.ts`. Jeder
   Artikel hat eine sichtbare Kurzantwort (wird von Google-Snippets und
   KI-Assistenten bevorzugt zitiert), FAQ mit FAQPage-Markup und Article-Markup
   mit Autor. Preise nur über `preise.ts`, rechtliche Aussagen mit Quelle.
-- **Referenzen** (`/referenzen/`): Projektberichte in `src/data/projekte.ts`,
-  nur abgerechnete Aufträge, ohne Namen, Straßen und Einzelpreise. Fotos nur
-  mit Einverständnis (`foto`). Ohne Foto zeigt die Übersicht eine neutrale
-  Kachel, die Detailseite ein gekennzeichnetes Symbolbild.
-- Beide Detailseiten nutzen `src/components/Beitrag.astro`. Neue Einträge
+- Die Artikelseiten nutzen `src/components/Beitrag.astro`. Neue Einträge
   erscheinen automatisch in Sitemap, `llms.txt` und Übersicht.
+- Referenz-/Projektberichte zu einzelnen Aufträgen gibt es bewusst nicht
+  (Diskretion). `/referenzen/` leitet per 301 auf die Startseite um.
 
 ## IndexNow (Bing & Co.)
 
