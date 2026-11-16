@@ -23,7 +23,19 @@ import { fileURLToPath } from "node:url";
 const ZIEL = fileURLToPath(
   new URL("../src/data/reviews.json", import.meta.url),
 );
-const SUCHE = "Fixum Objektservice, Hermann-Allmers-Str. 13, 26721 Emden";
+/* Mehrere Anläufe: Das Profil ist ein Servicegebiet ohne sichtbare Adresse,
+   eine Suche mit Straße findet es deshalb nicht. */
+const SUCHEN = [
+  "Fixum Objektservice Emden",
+  "Fixum Objektservice",
+  "Fixum Objektservice Ostfriesland",
+];
+const NAME_MUSS_ENTHALTEN = "fixum";
+/* Rathaus Emden, 50 km - wie in site.ts */
+const UMKREIS = {
+  center: { latitude: 53.3671, longitude: 7.2061 },
+  radius: 50000,
+};
 const API = "https://places.googleapis.com/v1";
 const TIMEOUT_MS = 10_000;
 
@@ -70,15 +82,32 @@ async function main() {
   }
 
   if (!placeId) {
-    const treffer = await anfrage(
-      `${API}/places:searchText`,
-      {
-        method: "POST",
-        body: JSON.stringify({ textQuery: SUCHE, languageCode: "de" }),
-      },
-      "places.id,places.displayName",
-    );
-    placeId = treffer.places?.[0]?.id;
+    for (const textQuery of SUCHEN) {
+      const treffer = await anfrage(
+        `${API}/places:searchText`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            textQuery,
+            languageCode: "de",
+            regionCode: "DE",
+            locationBias: { circle: UMKREIS },
+          }),
+        },
+        "places.id,places.displayName",
+      );
+      const namen = (treffer.places ?? []).map((p) => p.displayName?.text);
+      log(
+        `Suche "${textQuery}": ${namen.length ? namen.join(" | ") : "keine Treffer"}`,
+      );
+      const passend = (treffer.places ?? []).find((p) =>
+        p.displayName?.text?.toLowerCase().includes(NAME_MUSS_ENTHALTEN),
+      );
+      if (passend) {
+        placeId = passend.id;
+        break;
+      }
+    }
     if (!placeId) throw new Error("Eintrag über die Textsuche nicht gefunden.");
     log(
       `Place-ID gefunden: ${placeId} (als GOOGLE_PLACE_ID hinterlegen spart eine Abfrage)`,
