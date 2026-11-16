@@ -85,29 +85,31 @@ import {
         ))}
       </ul>
 
-      <div class="container btn-row stimmen-aktionen" data-reveal>
-        {profilUrl && (
-          <a
-            class="btn btn--secondary"
-            href={profilUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-track="bewertungen"
-          >
-            <span>Alle Bewertungen bei Google</span>
-          </a>
-        )}
-        {bewertenUrl && (
-          <a
-            class="btn"
-            href={bewertenUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-track="bewertung-schreiben"
-          >
-            <span>Eigene Bewertung schreiben</span>
-          </a>
-        )}
+      <div class="container" data-reveal>
+        <div class="btn-row stimmen-aktionen">
+          {profilUrl && (
+            <a
+              class="btn btn--secondary"
+              href={profilUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track="bewertungen"
+            >
+              <span>Alle Bewertungen bei Google</span>
+            </a>
+          )}
+          {bewertenUrl && (
+            <a
+              class="btn"
+              href={bewertenUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track="bewertung-schreiben"
+            >
+              <span>Eigene Bewertung schreiben</span>
+            </a>
+          )}
+        </div>
       </div>
     </section>
   )
@@ -275,5 +277,18 @@ import {
   .stimmen-aktionen {
     justify-content: center;
     margin-top: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  /* Handy: untereinander, zentriert, nicht über die volle Breite */
+  @media (max-width: 560px) {
+    .stimmen-aktionen {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .stimmen-aktionen .btn {
+      width: min(100%, 18.5rem);
+    }
   }
 </style>
