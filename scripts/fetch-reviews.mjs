@@ -40,7 +40,12 @@ const API = "https://places.googleapis.com/v1";
 const TIMEOUT_MS = 10_000;
 
 const key = process.env.GOOGLE_PLACES_API_KEY?.trim();
-let placeId = process.env.GOOGLE_PLACE_ID?.trim();
+/* Place-ID des Google-Profils "Fixum Objektservice". Das Profil ist ein
+   Servicegebiet ohne Kartenpunkt und wird von der Textsuche nicht gefunden -
+   deshalb fest hinterlegt (geprüft: google.com/maps/place/?q=place_id:…).
+   GOOGLE_PLACE_ID in Vercel überschreibt den Wert, falls er sich ändert. */
+const FIXUM_PLACE_ID = "ChIJ7x1lxJLw-I8RWrbtARBtIh8";
+let placeId = process.env.GOOGLE_PLACE_ID?.trim() || FIXUM_PLACE_ID;
 
 const log = (msg) => console.log(`[bewertungen] ${msg}`);
 
