@@ -496,6 +496,8 @@ export const artikel: Artikel[] = [
       ["Winterdienst & Außenanlagen", "/winterdienst/"],
     ],
     datum: "2026-11-16",
+    bild: fotos.dachzimmer.pfad,
+    bildAlt: fotos.dachzimmer.alt,
     anfrage: "sonstiges",
   },
 
