@@ -1,8 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": [
-    "fra1"
-  ],
+  "regions": ["fra1"],
   "functions": {
     "api/anfrage.ts": {
       "maxDuration": 30
@@ -647,6 +645,46 @@
     {
       "source": "/ablauf",
       "destination": "/leistungen/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen/wohnungsentruempelung-rhede/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen/wohnungsentruempelung-rhede",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen/wandkassetten-dachgeschoss-riepe/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen/wandkassetten-dachgeschoss-riepe",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen/notsicherung-balkontuer-emden/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/referenzen/notsicherung-balkontuer-emden",
+      "destination": "/",
       "statusCode": 301
     }
   ]

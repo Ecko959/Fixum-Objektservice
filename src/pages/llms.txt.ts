@@ -15,7 +15,6 @@ import { absolute } from "../data/seo";
 import { kettePfad, site } from "../data/site";
 import { ortSeiten, radiusText } from "../data/orte";
 import { artikel, ratgeberPfad } from "../data/ratgeber";
-import { projekte, projektPfad } from "../data/projekte";
 
 const link = (titel: string, pfad: string, text: string) =>
   `- [${titel}](${absolute(pfad)}): ${text}`;
@@ -106,9 +105,6 @@ ${link("Einsatzgebiet", "/einsatzgebiet/", `Alle Orte im Einsatzgebiet ${radiusT
 
 ## Ratgeber
 ${artikel.map((a) => link(a.titel, ratgeberPfad(a), a.kurzantwort)).join("\n")}
-
-## Referenzen (abgeschlossene Aufträge)
-${projekte.map((p) => link(p.titel, projektPfad(p), `${p.ort}, ${p.zeitraum}. ${p.kurz}`)).join("\n")}
 
 ## Kontakt
 
