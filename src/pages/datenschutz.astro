@@ -6,6 +6,11 @@ import { mailUrl, site, telUrl } from "../data/site";
   Wortlaut übernommen aus der geprüften Fassung (Fixum_Datenschutzerklaerung,
   Stand 04.08.2026). Inhaltliche Änderungen gehören zuerst ins geprüfte
   Dokument, nicht hierher.
+
+  Ergänzt am 16.11.2026 (noch NICHT im geprüften Dokument): 3.5
+  Kundenbewertungen, 3.6 Hosting, 3.7 Anfrageformular, Ziffer 4
+  Auftragsverarbeiter und Drittlandübermittlung. Bitte ins geprüfte Dokument
+  übernehmen bzw. dort gegenprüfen lassen.
 */
 
 const sections: Array<[string, string]> = [
@@ -29,7 +34,7 @@ const sections: Array<[string, string]> = [
   metaTitle="Fixum Objektservice: Datenschutzerklärung"
   description="Datenschutzerklärung von Fixum Objektservice, Emden: verarbeitete Daten, Rechtsgrundlagen, Speicherdauer, Empfänger und Ihre Rechte nach DSGVO."
   path="/datenschutz/"
-  stand="04.08.2026"
+  stand="16.11.2026"
   intro="Diese Erklärung beschreibt, welche personenbezogenen Daten wir verarbeiten, zu welchem Zweck und auf welcher Rechtsgrundlage - und welche Rechte Sie dabei haben."
   sections={sections}
 >
@@ -147,6 +152,67 @@ const sections: Array<[string, string]> = [
         Kunden zu zeigen.
       </p>
     </div>
+
+    <h3>3.6 Aufruf dieser Website (Hosting und Server-Logfiles)</h3>
+    <p>
+      Diese Website wird bei Vercel Inc., 440 N Barranca Ave #4133, Covina, CA
+      91723, USA, gehostet. Beim Aufruf der Website verarbeitet der Hoster
+      technisch notwendige Daten, die Ihr Browser automatisch übermittelt:
+      IP-Adresse, Datum und Uhrzeit des Abrufs, aufgerufene Seite bzw. Datei,
+      übertragene Datenmenge, Referrer-URL sowie Browsertyp und Betriebssystem.
+      Diese Daten werden in Server-Logfiles kurzzeitig gespeichert und nicht mit
+      anderen Datenquellen zusammengeführt.
+    </p>
+    <p>
+      Diese Website setzt keine Cookies, verwendet keine Analyse- oder
+      Tracking-Dienste und lädt keine Inhalte von Drittanbietern (Schriften,
+      Bilder und Skripte liegen auf unserem eigenen Server). Mit Vercel besteht
+      ein Vertrag über die Auftragsverarbeitung nach Art. 28 DSGVO.
+    </p>
+    <div class="legal-note">
+      <p>
+        <strong>Zweck:</strong> Auslieferung der Website, Gewährleistung von Stabilität
+        und Sicherheit, Abwehr von Angriffen.
+      </p>
+      <p>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes
+        Interesse an einer sicheren und funktionsfähigen Website). Zur Übermittlung
+        in die USA siehe Ziffer 4.
+      </p>
+    </div>
+
+    <h3>3.7 Anfrageformular auf dieser Website</h3>
+    <p>
+      Wenn Sie das Anfrageformular nutzen, verarbeiten wir die dort eingegebenen
+      Angaben (Art des Vorhabens, Ort, Objekt- und Termindetails, Beschreibung,
+      Name, Telefonnummer, E-Mail-Adresse, Ihr gewünschter Kontaktweg, die
+      Seite, von der Sie die Anfrage senden, sowie freiwillig hochgeladene
+      Fotos). Die Angaben werden über eine Serverfunktion des Hosters
+      (Rechenzentrum Frankfurt am Main) per E-Mail an uns übermittelt. Der
+      E-Mail-Versand erfolgt über unser Postfach bei der IONOS SE, Elgendorfer
+      Str. 57, 56410 Montabaur. Die Fotos werden dabei nicht auf dem Webserver
+      gespeichert, sondern nur als Anhang der E-Mail an uns weitergeleitet.
+      Geben Sie eine E-Mail-Adresse an, erhalten Sie eine Eingangsbestätigung
+      ohne Fotos.
+    </p>
+    <p>
+      Zum Schutz vor Missbrauch und automatisierten Anfragen wird Ihre
+      IP-Adresse für höchstens zehn Minuten im Arbeitsspeicher der
+      Serverfunktion vorgehalten, um die Zahl der Anfragen pro Absender zu
+      begrenzen; sie wird nicht dauerhaft gespeichert. Mit IONOS besteht ein
+      Vertrag über die Auftragsverarbeitung nach Art. 28 DSGVO.
+    </p>
+    <div class="legal-note">
+      <p>
+        <strong>Zweck:</strong> Bearbeitung Ihrer Anfrage (siehe Ziffer 3.1) und Schutz
+        des Formulars vor Missbrauch.
+      </p>
+      <p>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO für die Anfrage,
+        Art. 6 Abs. 1 lit. f DSGVO für den Missbrauchsschutz. Gespeichert werden die
+        Anfragen wie unter Ziffer 5 beschrieben.
+      </p>
+    </div>
   </section>
 
   <section id="empfaenger">
@@ -168,12 +234,22 @@ const sections: Array<[string, string]> = [
       <li>Steuerberatung sowie Buchhaltungsdienstleister,</li>
       <li>Kreditinstitute und Zahlungsdienstleister zur Zahlungsabwicklung,</li>
       <li>Versicherungen im Schadensfall,</li>
-      <li>Behörden und Gerichte, soweit gesetzlich verpflichtend.</li>
+      <li>Behörden und Gerichte, soweit gesetzlich verpflichtend,</li>
+      <li>
+        technische Dienstleister als Auftragsverarbeiter nach Art. 28 DSGVO:
+        Vercel Inc. (Hosting der Website, siehe Ziffer 3.6) und IONOS SE
+        (E-Mail, siehe Ziffer 3.7).
+      </li>
     </ul>
     <p>
-      Eine Übermittlung in Drittländer außerhalb der EU bzw. des EWR findet
-      nicht statt, ausgenommen die technisch bedingte Verarbeitung bei Nutzung
-      von Messenger-Diensten (siehe Ziffer 6).
+      Vercel Inc. hat ihren Sitz in den USA. Auch wenn die Serverfunktion
+      unseres Anfrageformulars in Frankfurt am Main betrieben wird, kann ein
+      Zugriff auf Daten aus den USA nicht ausgeschlossen werden. Vercel ist nach
+      dem EU-U.S. Data Privacy Framework zertifiziert; für die Übermittlung
+      besteht damit ein Angemessenheitsbeschluss der EU-Kommission (Art. 45
+      DSGVO). Im Übrigen findet eine Übermittlung in Drittländer außerhalb der
+      EU bzw. des EWR nicht statt, ausgenommen die technisch bedingte
+      Verarbeitung bei Nutzung von Messenger-Diensten (siehe Ziffer 6).
     </p>
   </section>
 
