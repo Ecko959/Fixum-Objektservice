@@ -76,6 +76,10 @@ export const fotos = {
     pfad: "/images/referenzen/bad-fliesen.webp",
     alt: "Badezimmer im Ausbau mit neuen Wandfliesen, Abschlussleiste und Vorwand",
   },
+  wandkassetten: {
+    pfad: "/images/referenzen/wandkassetten-dachgeschoss.webp",
+    alt: "Wandkassetten im Dachgeschoss in vier Schritten: Vorbereitung, Montage der Wandleisten unter der Dachschräge, Anstrich und fertiges Wohnzimmer",
+  },
   abstellraum: {
     pfad: "/images/referenzen/entruempelung-abstellraum.webp",
     alt: "Vollgestellter Abstellraum vor der Entrümpelung mit Waschmaschine, Matratzen, Lattenrost und Müllsäcken",
@@ -109,6 +113,10 @@ export const fotos = {
   badDeckeNachher: {
     pfad: "/images/zuschnitte/bad-decke-nachher.webp",
     alt: "Renoviertes Badezimmer mit frisch gestrichener Decke und Einbaustrahlern",
+  },
+  wandkassettenAnstrich: {
+    pfad: "/images/zuschnitte/wandkassetten-anstrich.webp",
+    alt: "Dachgeschoss mit fertig montierten und gestrichenen Wandkassetten unter der Dachschräge, links und rechts vom Fenster",
   },
 } satisfies Record<string, Foto>;
 

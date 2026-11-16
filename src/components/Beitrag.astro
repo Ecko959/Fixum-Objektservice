@@ -9,6 +9,7 @@ import PageHero from "./PageHero.astro";
 import FaqAccordion from "./FaqAccordion.astro";
 import Anfrage from "./Anfrage.astro";
 import Icon from "./Icon.astro";
+import Photo from "./Photo.astro";
 import { absolute, ids } from "../data/seo";
 import { site } from "../data/site";
 import type { FaqItem } from "../data/faq";
@@ -34,6 +35,8 @@ interface Props {
   bildAlt?: string;
   /** Hinweis unter dem Hero-Bild, z. B. bei Symbolbildern */
   bildHinweis?: string;
+  /** Abbildung zwischen Kurzantwort und Text */
+  abbildung?: { pfad: string; alt: string; text: string };
   datum: string;
   aktualisiert?: string;
   anfrageLeistung?: string;
@@ -56,6 +59,7 @@ const {
   bild,
   bildAlt = "",
   bildHinweis,
+  abbildung,
   datum,
   aktualisiert,
   anfrageLeistung = "",
@@ -163,6 +167,21 @@ const datumText = (iso: string) =>
         }
 
         {bildHinweis && <p class="bild-hinweis">{bildHinweis}</p>}
+
+        {
+          abbildung && (
+            <figure class="abbildung">
+              <Photo
+                src={abbildung.pfad}
+                alt={abbildung.alt}
+                width={1400}
+                height={1100}
+                sizes="(max-width: 960px) 100vw, 760px"
+              />
+              <figcaption>{abbildung.text}</figcaption>
+            </figure>
+          )
+        }
 
         <div class="legal-copy beitrag-copy" set:html={html} />
       </div>
@@ -335,5 +354,20 @@ const datumText = (iso: string) =>
 
   .seite-karte a:hover {
     color: var(--blue);
+  }
+
+  .abbildung {
+    max-width: var(--measure);
+    margin: 0 0 2rem;
+  }
+
+  .abbildung :global(img) {
+    border-radius: var(--radius-md);
+  }
+
+  .abbildung figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.875rem;
+    color: var(--muted);
   }
 </style>

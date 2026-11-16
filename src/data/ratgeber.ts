@@ -39,6 +39,8 @@ export interface Artikel {
       die Seite eine neutrale Fläche. Kein Foto mehrfach verwenden. */
   bild?: string;
   bildAlt?: string;
+  /** Abbildung im Text, z. B. eine Schritt-für-Schritt-Collage */
+  abbildung?: { pfad: string; alt: string; text: string };
   /** Vorauswahl im Anfrageformular (Schlüssel aus api/anfrage.ts LEISTUNGEN) */
   anfrage?: string;
 }
@@ -739,6 +741,12 @@ export const artikel: Artikel[] = [
       ["Trockenbau", "/trockenbau/"],
     ],
     datum: "2026-11-16",
+    bild: fotos.wandkassettenAnstrich.pfad,
+    bildAlt: fotos.wandkassettenAnstrich.alt,
+    abbildung: {
+      ...fotos.wandkassetten,
+      text: "Ablauf in einem Dachgeschoss: Vorbereitung, Wandleisten, Anstrich, Ergebnis.",
+    },
     anfrage: "montage",
   },
 ];
