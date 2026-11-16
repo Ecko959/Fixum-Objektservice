@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/fetch-reviews.mjs",
     "build": "astro check && astro build",
+    "bewertungen": "node scripts/fetch-reviews.mjs",
     "preview": "astro preview",
     "build:og": "node scripts/build-og.mjs",
     "format": "prettier --write .",

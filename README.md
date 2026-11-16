@@ -86,6 +86,41 @@ Zentral gepflegt, nicht pro Seite dupliziert:
 Wichtig: Titel und H1 verwandter Seiten müssen sich unterscheiden. Zwei Seiten,
 die auf dasselbe Hauptkeyword zielen, nehmen sich gegenseitig die Sichtbarkeit.
 
+## Google-Bewertungen
+
+Die Bewertungen auf Startseite und Kontaktseite (Sektion `#bewertungen`)
+und die Note im Hero kommen aus `src/data/reviews.json`. Die Datei wird
+automatisch gepflegt:
+
+1. **Vor jedem Build** holt `scripts/fetch-reviews.mjs` Note, Anzahl und
+   die neuesten Rezensionstexte über die Google Places API (New).
+2. **Einmal täglich** stößt `.github/workflows/bewertungen-aktualisieren.yml`
+   über einen Vercel Deploy Hook einen neuen Build an.
+
+Neue Bewertungen stehen damit spätestens am nächsten Morgen auf der Seite.
+Schlägt der Abruf fehl, bleibt die letzte Fassung stehen und der Build
+läuft trotzdem durch.
+
+**Einrichtung (einmalig):**
+
+1. Google Cloud Console → Projekt anlegen → „Places API (New)“ aktivieren →
+   API-Schlüssel erstellen und auf „Places API (New)“ beschränken.
+   Ein Rechnungskonto muss hinterlegt sein; ein Abruf pro Tag liegt weit
+   unter dem monatlichen Freikontingent.
+2. Vercel → Settings → Environment Variables: `GOOGLE_PLACES_API_KEY`
+   (Production und Preview). Optional `GOOGLE_PLACE_ID` - sonst sucht das
+   Skript den Eintrag selbst und schreibt die ID ins Build-Log.
+3. Vercel → Settings → Git → Deploy Hooks: Hook für `main` anlegen, URL als
+   GitHub-Secret `VERCEL_DEPLOY_HOOK` hinterlegen.
+4. Einmal neu deployen. Der Button „Eigene Bewertung schreiben“ erscheint
+   danach automatisch (Link wird aus der Place-ID gebaut).
+
+Lokal testen: `GOOGLE_PLACES_API_KEY=… npm run bewertungen`.
+
+Google liefert über die API höchstens fünf Texte; Note und Anzahl stimmen
+immer. Namen werden auf „Vorname N.“ gekürzt. Bewusst ohne
+`AggregateRating`-Markup (Selbstbewertungen wertet Google als Verstoß).
+
 ## Social-Preview-Bild
 
 `public/og.png` (1200x630) wird aus einem echten Projektfoto (renoviertes
@@ -115,15 +150,15 @@ er eine E-Mail-Adresse angibt. Versendet wird über das IONOS-Postfach
 **Variablen** in Vercel → Project → Settings → Environment Variables, für
 „Production“ und „Preview“, danach neu deployen:
 
-| Variable       | Beispiel                                             |
-| -------------- | ---------------------------------------------------- |
-| `SMTP_HOST`    | `smtp.ionos.de`                                      |
-| `SMTP_PORT`    | `465` (SSL/TLS) – alternativ `587` (STARTTLS)        |
-| `SMTP_SECURE`  | optional; ohne Angabe `true` bei 465, sonst `false`  |
-| `SMTP_USER`    | `info@fixum-objektservice.de` (ganze Adresse)        |
-| `SMTP_PASS`    | Passwort des Postfachs (als „Sensitive“)             |
-| `CONTACT_TO`   | `info@fixum-objektservice.de`                        |
-| `CONTACT_FROM` | `Fixum Objektservice <info@fixum-objektservice.de>`  |
+| Variable       | Beispiel                                            |
+| -------------- | --------------------------------------------------- |
+| `SMTP_HOST`    | `smtp.ionos.de`                                     |
+| `SMTP_PORT`    | `465` (SSL/TLS) – alternativ `587` (STARTTLS)       |
+| `SMTP_SECURE`  | optional; ohne Angabe `true` bei 465, sonst `false` |
+| `SMTP_USER`    | `info@fixum-objektservice.de` (ganze Adresse)       |
+| `SMTP_PASS`    | Passwort des Postfachs (als „Sensitive“)            |
+| `CONTACT_TO`   | `info@fixum-objektservice.de`                       |
+| `CONTACT_FROM` | `Fixum Objektservice <info@fixum-objektservice.de>` |
 
 `CONTACT_FROM` muss zum IONOS-Postfach gehören, sonst lehnt IONOS ab. Fehlt
 eine Variable, antwortet die Function mit 503 und das Formular zeigt

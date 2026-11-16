@@ -13,6 +13,10 @@ export const faq: FaqItem[] = [
     answer: `${entruempelungPreissatz} ${preisHinweis} Einen ersten Rahmen für Ihr Objekt zeigt der Preisrechner.`,
   },
   {
+    question: "Was kosten Umzug und Trockenbau in Emden?",
+    answer: `${preise.umzug.leistung}: ${preise.umzug.betrag}. ${preise.trockenbau.leistung}: ${preise.trockenbau.betrag}. Entkernung, Montage und Hausmeisterservice bieten wir zum Festpreis nach Besichtigung an, weil sich die Objekte zu stark unterscheiden. ${preisHinweis}`,
+  },
+  {
     question: "Wie schnell bekomme ich einen Termin?",
     answer:
       "Die Besichtigung schaffen wir meist innerhalb von zwei Werktagen. Der Ausführungstermin liegt je nach Umfang bei ein bis zwei Wochen Vorlauf. Bei Wohnungsübergaben mit fester Frist sagen Sie es gleich beim Anruf - dann planen wir darum herum.",
