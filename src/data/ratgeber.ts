@@ -34,9 +34,11 @@ export interface Artikel {
   /** ISO-Datum */
   datum: string;
   aktualisiert?: string;
-  /** Bildpfad aus referenzen.ts für Hero und Social Preview */
-  bild: string;
-  bildAlt: string;
+  /** Bildpfad aus referenzen.ts für Hero und Social Preview. Nur setzen,
+      wenn ein Foto wirklich zum Thema passt - sonst weglassen, dann zeigt
+      die Seite eine neutrale Fläche. Kein Foto mehrfach verwenden. */
+  bild?: string;
+  bildAlt?: string;
   /** Vorauswahl im Anfrageformular (Schlüssel aus api/anfrage.ts LEISTUNGEN) */
   anfrage?: string;
 }
@@ -251,8 +253,8 @@ export const artikel: Artikel[] = [
       ["Entrümpelung", "/entruempelung/"],
     ],
     datum: "2026-11-16",
-    bild: fotos.abstellraum.pfad,
-    bildAlt: fotos.abstellraum.alt,
+    bild: fotos.messieNachher.pfad,
+    bildAlt: fotos.messieNachher.alt,
   },
 
   {
@@ -440,8 +442,6 @@ export const artikel: Artikel[] = [
       ["Für Hausverwaltungen", "/fuer-hausverwaltungen/"],
     ],
     datum: "2026-11-16",
-    bild: fotos.dachzimmer.pfad,
-    bildAlt: fotos.dachzimmer.alt,
     anfrage: "sonstiges",
   },
 
@@ -496,8 +496,6 @@ export const artikel: Artikel[] = [
       ["Winterdienst & Außenanlagen", "/winterdienst/"],
     ],
     datum: "2026-11-16",
-    bild: fotos.dachzimmer.pfad,
-    bildAlt: fotos.dachzimmer.alt,
     anfrage: "sonstiges",
   },
 
@@ -739,8 +737,6 @@ export const artikel: Artikel[] = [
       ["Trockenbau", "/trockenbau/"],
     ],
     datum: "2026-11-16",
-    bild: fotos.dachzimmer.pfad,
-    bildAlt: fotos.dachzimmer.alt,
     anfrage: "montage",
   },
 ];

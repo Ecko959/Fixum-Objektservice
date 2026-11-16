@@ -49,14 +49,21 @@ const listSchema = {
           artikel.map((a) => (
             <li class="card karte" data-reveal>
               <a href={ratgeberPfad(a)} class="karte-link">
-                <Photo
-                  src={a.bild}
-                  alt=""
-                  width={640}
-                  height={400}
-                  sizes="(max-width: 900px) 100vw, 33vw"
-                  class="karte-bild"
-                />
+                {a.bild ? (
+                  <Photo
+                    src={a.bild}
+                    alt=""
+                    width={640}
+                    height={400}
+                    sizes="(max-width: 900px) 100vw, 33vw"
+                    class="karte-bild"
+                  />
+                ) : (
+                  <div class="karte-platzhalter" aria-hidden="true">
+                    <span class="karte-thema">Ratgeber</span>
+                    <span>{a.leistungen[0]?.[0]}</span>
+                  </div>
+                )}
                 <div class="karte-text">
                   <h2>{a.titel}</h2>
                   <p>{a.beschreibung}</p>
@@ -128,5 +135,33 @@ const listSchema = {
 
   .karte-link:hover h2 {
     color: var(--blue);
+  }
+
+  /* Artikel ohne passendes Foto: neutrale Fläche statt Wiederholung */
+  .karte-platzhalter {
+    display: grid;
+    align-content: end;
+    gap: 0.25rem;
+    aspect-ratio: 16 / 10;
+    padding: 1.25rem 1.4rem;
+    background: linear-gradient(
+      135deg,
+      var(--navy) 0%,
+      var(--navy-mid) 60%,
+      var(--blue-deep) 100%
+    );
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.35rem;
+  }
+
+  .karte-thema {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
   }
 </style>

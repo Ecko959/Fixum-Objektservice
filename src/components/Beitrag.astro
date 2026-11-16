@@ -29,8 +29,9 @@ interface Props {
   html: string;
   faq?: FaqItem[];
   leistungen: Array<[string, string]>;
-  bild: string;
-  bildAlt: string;
+  /** Ohne Bild: Hero ohne Foto, Social Preview mit Standardbild */
+  bild?: string;
+  bildAlt?: string;
   /** Hinweis unter dem Hero-Bild, z. B. bei Symbolbildern */
   bildHinweis?: string;
   datum: string;
@@ -53,7 +54,7 @@ const {
   faq = [],
   leistungen,
   bild,
-  bildAlt,
+  bildAlt = "",
   bildHinweis,
   datum,
   aktualisiert,
@@ -68,7 +69,7 @@ const articleSchema = {
   "@id": `${url}#article`,
   headline: titel,
   description: beschreibung,
-  image: absolute(bild),
+  image: absolute(bild ?? site.ogImage),
   datePublished: datum,
   dateModified: aktualisiert ?? datum,
   inLanguage: "de-DE",
@@ -111,14 +112,14 @@ const datumText = (iso: string) =>
   breadcrumbs={breadcrumbs}
   schema={[articleSchema, ...faqSchema]}
   image={bild}
-  imageAlt={bildAlt}
+  imageAlt={bild ? bildAlt : undefined}
   preloadImage={bild}
 >
   <PageHero
     eyebrow={eyebrow}
     title={titel}
     text={lead}
-    image={bild}
+    image={bild ?? ""}
     imageAlt={bildAlt}
     breadcrumbs={breadcrumbs}
     badges={[]}
