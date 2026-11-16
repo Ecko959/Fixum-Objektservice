@@ -211,18 +211,6 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
         </div>
 
         <ul class="hero-proof">
-          {
-            hatBewertungen && (
-              <li class="hero-bewertung">
-                <a href="#bewertungen" data-track="hero-bewertung">
-                  <Sterne wert={bewertungsNote} size={14} />
-                  <span>
-                    {noteText} · {bewertungsAnzahl} Google-Bewertungen
-                  </span>
-                </a>
-              </li>
-            )
-          }
           <li>
             <Icon name="check" size={15} /><span>Besichtigung kostenlos</span>
           </li>
@@ -237,6 +225,23 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
 
       <div class="hero-form">
         <SchnellKontakt />
+        {
+          /* Google-Note direkt unter dem Anfrage-Kästchen: Vertrauen genau
+             dort, wo die Entscheidung fällt - auf Desktop und Handy. */
+          hatBewertungen && (
+            <a
+              class="hero-bewertung"
+              href="#bewertungen"
+              data-track="hero-bewertung"
+            >
+              <Sterne wert={bewertungsNote} size={16} />
+              <span>
+                <strong>{noteText}</strong> · {bewertungsAnzahl}{" "}
+                Google-Bewertungen
+              </span>
+            </a>
+          )
+        }
       </div>
     </div>
 
@@ -665,21 +670,26 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
     color: var(--amber);
   }
 
-  /* Google-Note als erster Punkt der Vertrauenszeile */
-  .hero-proof .hero-bewertung {
-    flex-basis: 100%;
-  }
-
-  .hero-bewertung a {
-    display: inline-flex;
+  /* Google-Note unter dem Anfrage-Kästchen */
+  .hero-bewertung {
+    display: flex;
     align-items: center;
-    gap: 0.55rem;
-    color: inherit;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 0.85rem;
+    font-size: 0.875rem;
+    color: var(--on-dark-soft);
     text-decoration: none;
   }
 
-  .hero-bewertung a:hover span {
+  .hero-bewertung strong {
     color: var(--on-dark);
+  }
+
+  .hero-bewertung:hover span {
+    color: var(--on-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* ---- Drei Bereiche unter dem Hero ---- */
