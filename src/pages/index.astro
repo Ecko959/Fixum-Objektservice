@@ -10,6 +10,13 @@ import FaqAccordion from "../components/FaqAccordion.astro";
 import Icon from "../components/Icon.astro";
 import KetteBand from "../components/KetteBand.astro";
 import Kundenstimmen from "../components/Kundenstimmen.astro";
+import Sterne from "../components/Sterne.astro";
+import {
+  anzahl as bewertungsAnzahl,
+  hatBewertungen,
+  note as bewertungsNote,
+  noteText,
+} from "../data/bewertungen";
 import Photo from "../components/Photo.astro";
 import ReferenzMarquee from "../components/ReferenzMarquee.astro";
 import SchnellKontakt from "../components/SchnellKontakt.astro";
@@ -204,6 +211,18 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
         </div>
 
         <ul class="hero-proof">
+          {
+            hatBewertungen && (
+              <li class="hero-bewertung">
+                <a href="#bewertungen" data-track="hero-bewertung">
+                  <Sterne wert={bewertungsNote} size={14} />
+                  <span>
+                    {noteText} · {bewertungsAnzahl} Google-Bewertungen
+                  </span>
+                </a>
+              </li>
+            )
+          }
           <li>
             <Icon name="check" size={15} /><span>Besichtigung kostenlos</span>
           </li>
@@ -358,7 +377,9 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
     <div class="container section-head" data-reveal>
       <p class="script">Drei Bereiche, eine Rechnung</p>
       <p class="eyebrow">Leistungen</p>
-      <h2>Das machen <span class="blue-word">wir</span></h2>
+      <h2>
+        Unsere Leistungen in <span class="blue-word">Emden</span> und Ostfriesland
+      </h2>
       <p class="muted">
         Die meisten Betriebe können entweder räumen oder ausbauen. Wir machen
         beides - und genau dazwischen liegt die Arbeit, die sonst liegen bleibt.
@@ -532,7 +553,7 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
   <section class="section section--mist" aria-labelledby="faq-title">
     <div class="container section-head" data-reveal>
       <p class="eyebrow">FAQ</p>
-      <h2 id="faq-title">Fragen und Antworten</h2>
+      <h2 id="faq-title">Fragen zu Entrümpelung, Entkernung und Trockenbau</h2>
       <p class="muted">
         Wenn Ihre Frage nicht dabei ist: einmal anrufen reicht.
       </p>
@@ -641,6 +662,27 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
   }
 
   .hero-proof :global(.icon) {
+    color: var(--amber);
+  }
+
+  /* Google-Note als erster Punkt der Vertrauenszeile */
+  .hero-proof .hero-bewertung {
+    flex-basis: 100%;
+  }
+
+  .hero-bewertung a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .hero-bewertung a:hover span {
+    color: var(--on-dark);
+  }
+
+  .hero-bewertung :global(.sterne) {
     color: var(--amber);
   }
 

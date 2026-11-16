@@ -1,100 +1,111 @@
 ---
-/* Kundenstimmen aus src/data/reviews.json.
+/* Kundenstimmen aus dem Google-Unternehmensprofil.
 
-   Nur echte Bewertungen eintragen - wörtlich übernommen, mit Einverständnis
-   bzw. aus dem öffentlichen Google-Profil. Solange die Datei leer ist
-   ([]), wird die Sektion gar nicht ausgegeben.
+   Daten: src/data/reviews.json, automatisch aktualisiert durch
+   scripts/fetch-reviews.mjs (vor jedem Build) und den täglichen
+   Neu-Build (.github/workflows/bewertungen-aktualisieren.yml).
+   Logik und Hinweise zum Markup: src/data/bewertungen.ts.
 
-   Bewusst ohne Review- oder AggregateRating-Markup: Google wertet
-   Bewertungen, die ein Unternehmen auf der eigenen Seite über sich selbst
-   zeigt, nicht als Rich Result und kann sie als Verstoß einstufen.
-
-   Format eines Eintrags:
-   { "name": "Vorname N.", "ort": "Emden", "text": "...",
-     "sterne": 5, "datum": "2026-09", "quelle": "Google" } */
-import Icon from "./Icon.astro";
-import reviews from "../data/reviews.json";
-import { site } from "../data/site";
-
-interface Bewertung {
-  name: string;
-  text: string;
-  ort?: string;
-  sterne?: number;
-  datum?: string;
-  quelle?: string;
-}
-
-const eintraege = (reviews as Bewertung[]).filter(
-  (r) => r && r.name?.trim() && r.text?.trim(),
-);
-
-const monat = (datum?: string) => {
-  if (!datum) return "";
-  const [jahr, mon] = datum.split("-");
-  if (!jahr || !mon) return datum;
-  return new Date(Number(jahr), Number(mon) - 1, 1).toLocaleDateString(
-    "de-DE",
-    { month: "long", year: "numeric" },
-  );
-};
+   Auf dem Handy laufen die Karten als wischbare Reihe, ab Tablet als
+   Raster. Ohne Bewertungen wird die Sektion nicht ausgegeben. */
+import Sterne from "./Sterne.astro";
+import {
+  anzahl,
+  bewertenUrl,
+  bewertungen,
+  hatBewertungen,
+  monatText,
+  note,
+  noteText,
+  profilUrl,
+} from "../data/bewertungen";
 ---
 
 {
-  eintraege.length > 0 && (
+  hatBewertungen && bewertungen.length > 0 && (
     <section
+      id="bewertungen"
       class="section section--soft kundenstimmen"
       aria-labelledby="stimmen-title"
     >
-      <div class="container section-head" data-reveal>
-        <p class="eyebrow">Kundenstimmen</p>
-        <h2 id="stimmen-title">Was Auftraggeber über Fixum sagen</h2>
+      <div class="container stimmen-kopf" data-reveal>
+        <div class="stimmen-titel">
+          <p class="eyebrow">Kundenstimmen</p>
+          <h2 id="stimmen-title">
+            Was Kunden in Emden und Ostfriesland über Fixum sagen
+          </h2>
+        </div>
+
+        <a
+          class="stimmen-note"
+          href={profilUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-track="bewertungen"
+        >
+          <span class="note-zahl">{noteText}</span>
+          <span class="note-details">
+            <Sterne wert={note} size={18} />
+            <span>
+              {`${anzahl} ${anzahl === 1 ? "Bewertung" : "Bewertungen"} bei Google`}
+            </span>
+          </span>
+        </a>
       </div>
 
-      <ul class="container stimmen-grid" data-reveal-group>
-        {eintraege.map((r) => (
-          <li class="card stimme" data-reveal>
+      <ul class="container stimmen-reihe" data-reveal-group>
+        {bewertungen.map((r) => (
+          <li class="stimme" data-reveal>
+            <span class="stimme-zeichen" aria-hidden="true">
+              „
+            </span>
             {r.sterne && (
-              <p class="stimme-sterne" aria-label={`${r.sterne} von 5 Sternen`}>
-                {Array.from({ length: Math.round(r.sterne) }).map(() => (
-                  <Icon name="star" size={16} />
-                ))}
+              <p class="stimme-sterne">
+                <Sterne wert={r.sterne} size={15} />
+                <span class="sr-only">{r.sterne} von 5 Sternen</span>
               </p>
             )}
             <blockquote>
               <p>{r.text}</p>
             </blockquote>
-            <p class="stimme-quelle">
-              <strong>{r.name}</strong>
-              {[r.ort, monat(r.datum), r.quelle && `via ${r.quelle}`]
-                .filter(Boolean)
-                .join(" · ")}
-            </p>
+            <footer class="stimme-fuss">
+              <span class="stimme-avatar" aria-hidden="true">
+                {r.name.trim()[0]?.toUpperCase()}
+              </span>
+              <span class="stimme-wer">
+                <strong>{r.name}</strong>
+                <span>
+                  {[r.ort, monatText(r.datum), r.quelle && `via ${r.quelle}`]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </span>
+              </span>
+            </footer>
           </li>
         ))}
       </ul>
 
       <div class="container btn-row stimmen-aktionen" data-reveal>
-        {site.googleProfile && (
+        {profilUrl && (
           <a
             class="btn btn--secondary"
-            href={site.googleProfile}
+            href={profilUrl}
             target="_blank"
             rel="noopener noreferrer"
             data-track="bewertungen"
           >
-            <span>Bewertungen bei Google ansehen</span>
+            <span>Alle Bewertungen bei Google</span>
           </a>
         )}
-        {site.googleReviewUrl && (
+        {bewertenUrl && (
           <a
             class="btn"
-            href={site.googleReviewUrl}
+            href={bewertenUrl}
             target="_blank"
             rel="noopener noreferrer"
             data-track="bewertung-schreiben"
           >
-            <span>Bewertung schreiben</span>
+            <span>Eigene Bewertung schreiben</span>
           </a>
         )}
       </div>
@@ -103,51 +114,171 @@ const monat = (datum?: string) => {
 }
 
 <style>
-  .stimmen-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-    gap: clamp(1rem, 2vw, 1.5rem);
-    margin-block: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .stimme {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: 0.75rem;
-    padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  }
-
-  .stimme-sterne {
+  .stimmen-kopf {
     display: flex;
-    gap: 0.15rem;
-    margin: 0;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 2.5rem;
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+  }
+
+  .stimmen-titel {
+    flex: 1 1 22rem;
+  }
+
+  .stimmen-titel > * {
+    max-width: 34ch;
+  }
+
+  .stimmen-titel h2 {
+    margin: 0.35rem 0 0;
+  }
+
+  /* Gesamtnote als ruhige Plakette */
+  .stimmen-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-xs);
+    color: var(--ink);
+    text-decoration: none;
+    transition:
+      box-shadow var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+
+  .stimmen-note:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+
+  .note-zahl {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--navy);
+  }
+
+  .note-details {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .note-details :global(.sterne),
+  .stimme-sterne :global(.sterne) {
     color: var(--amber-deep);
   }
 
+  /* Karten: Handy = wischbare Reihe, ab Tablet = Raster */
+  .stimmen-reihe {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(85%, 20rem);
+    gap: 1rem;
+    margin-block: 0;
+    padding: 0.25rem 0 1rem;
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  @media (min-width: 48rem) {
+    .stimmen-reihe {
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+      gap: clamp(1rem, 2vw, 1.5rem);
+      overflow: visible;
+    }
+  }
+
+  .stimme {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 0.9rem;
+    padding: clamp(1.35rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-xs);
+    scroll-snap-align: start;
+    overflow: hidden;
+  }
+
+  .stimme-zeichen {
+    position: absolute;
+    top: -0.6rem;
+    right: 1rem;
+    font-family: var(--font-serif);
+    font-size: 6rem;
+    line-height: 1;
+    color: var(--mist);
+    pointer-events: none;
+  }
+
+  .stimme-sterne {
+    position: relative;
+    margin: 0;
+  }
+
   .stimme blockquote {
+    position: relative;
     margin: 0;
   }
 
   .stimme blockquote p {
     margin: 0;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--ink);
   }
 
-  .stimme-quelle {
+  .stimme-fuss {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .stimme-avatar {
     display: grid;
-    margin: 0;
-    font-size: 0.875rem;
+    place-items: center;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-rund);
+    background: var(--navy);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .stimme-wer {
+    display: grid;
+    font-size: 0.8125rem;
     color: var(--muted);
   }
 
-  .stimme-quelle strong {
+  .stimme-wer strong {
+    font-size: 0.9375rem;
     color: var(--navy);
   }
 
   .stimmen-aktionen {
     justify-content: center;
-    margin-top: clamp(1.5rem, 3vw, 2rem);
+    margin-top: clamp(1.25rem, 3vw, 2rem);
   }
 </style>

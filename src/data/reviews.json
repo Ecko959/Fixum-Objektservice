@@ -1,1 +1,39 @@
-[]
+{
+  "stand": "2026-11-16",
+  "placeId": "",
+  "note": 5,
+  "anzahl": 6,
+  "profilUrl": "https://share.google/cM6Kd9rGWegey8zPO",
+  "bewertungen": [
+    {
+      "name": "Volker D.",
+      "ort": "Krummhörn",
+      "text": "Herr Singer hat unseren Umzug nach Krummhörn Rysum in vorbildlicher Weise organisiert und durchgeführt. Stets stand er uns mit Rat und Tat zur Verfügung,",
+      "sterne": 5,
+      "datum": "2026-11",
+      "quelle": "Google"
+    },
+    {
+      "name": "Jack N.",
+      "ort": "Bremerhaven",
+      "text": "Ein sehr zuverlässiges Unternehmen und kann ich nur weiterempfehlen. Sehr freundlich und gerne wieder. Vielen Dank auch für die schnelle Abwicklung. Schöne Grüße aus Bremerhaven.",
+      "sterne": 5,
+      "datum": "2026-11",
+      "quelle": "Google"
+    },
+    {
+      "name": "Noemi B.",
+      "text": "Der Service war sehr freundlich und der Ablauf unkompliziert. Kann ich mit guten Gewissen weiterempfehlen.",
+      "sterne": 5,
+      "datum": "2026-09",
+      "quelle": "Google"
+    },
+    {
+      "name": "Dezzah55",
+      "text": "Zuverlässig, freundlich und pünktlich. Sehr zufrieden gewesen kann ich nur weiter empfehlen!",
+      "sterne": 5,
+      "datum": "2026-09",
+      "quelle": "Google"
+    }
+  ]
+}
