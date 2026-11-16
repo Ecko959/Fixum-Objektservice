@@ -1,0 +1,34 @@
+---
+import Beitrag from "../../components/Beitrag.astro";
+import { projekte, projektPfad, type Projekt } from "../../data/projekte";
+
+export function getStaticPaths() {
+  return projekte.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+
+const { p } = Astro.props as { p: Projekt };
+const path = projektPfad(p);
+const bild = p.foto ?? p.symbolbild;
+---
+
+<Beitrag
+  path={path}
+  breadcrumbs={[
+    ["Referenzen", "/referenzen/"],
+    [p.titel, path],
+  ]}
+  eyebrow={`Referenz · ${p.leistung}`}
+  titel={p.titel}
+  metaTitel={p.metaTitel}
+  beschreibung={p.beschreibung}
+  lead={p.kurz}
+  fakten={[["Ort", p.ort], ["Zeitraum", p.zeitraum], ...p.fakten]}
+  html={p.html}
+  leistungen={p.leistungen}
+  bild={bild.pfad}
+  bildAlt={bild.alt}
+  bildHinweis={p.foto
+    ? undefined
+    : "Titelbild: Symbolbild aus einem anderen Fixum-Auftrag."}
+  datum={p.datum}
+/>

@@ -1,0 +1,166 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import Photo from "../../components/Photo.astro";
+import Icon from "../../components/Icon.astro";
+import { projekte, projektPfad } from "../../data/projekte";
+import { fotos } from "../../data/referenzen";
+import { absolute, ids } from "../../data/seo";
+
+const path = "/referenzen/";
+const breadcrumbs: Array<[string, string]> = [["Referenzen", path]];
+const hero = fotos.altbauTrockenbau;
+
+const listSchema = {
+  "@type": "CollectionPage",
+  "@id": `${absolute(path)}#collection`,
+  name: "Referenzen von Fixum Objektservice",
+  about: { "@id": ids.business },
+  hasPart: projekte.map((a) => ({
+    "@type": "Article",
+    headline: a.titel,
+    url: absolute(projektPfad(a)),
+  })),
+};
+---
+
+<Base
+  title="Fixum Objektservice: Referenzen aus Ostfriesland"
+  description="Projektberichte von Fixum Objektservice: Entrümpelung, Innenausbau und Objektservice in Emden und Ostfriesland – was wir gemacht haben und wie."
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={[listSchema]}
+  preloadImage={hero.pfad}
+>
+  <PageHero
+    eyebrow="Referenzen"
+    title="Projekte aus Emden und Ostfriesland"
+    text="Abgeschlossene Aufträge im Detail: Ausgangslage, Vorgehen und Ergebnis. Ohne Namen und Adressen unserer Auftraggeber."
+    image={hero.pfad}
+    imageAlt={hero.alt}
+    breadcrumbs={breadcrumbs}
+    badges={[]}
+  />
+
+  <section class="section">
+    <div class="container">
+      <ul class="karten" data-reveal-group>
+        {
+          projekte.map((a) => (
+            <li class="card karte" data-reveal>
+              <a href={projektPfad(a)} class="karte-link">
+                {a.foto ? (
+                  <Photo
+                    src={a.foto.pfad}
+                    alt=""
+                    width={640}
+                    height={400}
+                    sizes="(max-width: 900px) 100vw, 33vw"
+                    class="karte-bild"
+                  />
+                ) : (
+                  <div class="karte-platzhalter" aria-hidden="true">
+                    <span>{a.leistung}</span>
+                    <span class="karte-ort">{a.ort}</span>
+                  </div>
+                )}
+                <div class="karte-text">
+                  <h2>{a.titel}</h2>
+                  <p>{a.kurz}</p>
+                  <span class="karte-mehr">
+                    Projekt ansehen <Icon name="arrow" size={16} />
+                  </span>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .karten {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .karte {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .karte-link {
+    display: grid;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .karte-link :global(.karte-bild) {
+    aspect-ratio: 16 / 10;
+  }
+
+  .karte-text {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 1.25rem 1.4rem 1.5rem;
+  }
+
+  .karte h2 {
+    margin: 0;
+    font-size: var(--step-1, 1.25rem);
+    color: var(--navy);
+  }
+
+  .karte p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  .karte-mehr {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--blue);
+    font-weight: 700;
+  }
+
+  .karte-link:hover h2 {
+    color: var(--blue);
+  }
+
+  .karte-platzhalter {
+    display: grid;
+    align-content: end;
+    gap: 0.25rem;
+    aspect-ratio: 16 / 7;
+    padding: 1.25rem 1.4rem;
+    background: linear-gradient(
+      135deg,
+      var(--navy) 0%,
+      var(--navy-mid) 60%,
+      var(--blue-deep) 100%
+    );
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .karte-ort {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
+  }
+</style>
