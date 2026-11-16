@@ -139,16 +139,39 @@ async function main() {
     .sort((a, b) => String(b.zeit).localeCompare(String(a.zeit)))
     .map(({ zeit, ...rest }) => rest);
 
-  if (!ort.userRatingCount || bewertungen.length === 0) {
-    throw new Error("Antwort ohne Bewertungen - nichts überschrieben.");
-  }
+  log(
+    `Antwort: id=${ort.id ?? "-"}, Note=${ort.rating ?? "-"}, Anzahl=${ort.userRatingCount ?? "-"}, Texte=${ort.reviews?.length ?? 0}, Felder=${Object.keys(ort).join(",") || "keine"}`,
+  );
 
-  /* Orte aus der bisherigen Datei übernehmen: Google liefert keinen Wohnort,
-     von Hand eingetragene Orte sollen nicht verloren gehen. */
   let alt = {};
   try {
     alt = JSON.parse(await readFile(ZIEL, "utf8"));
   } catch {}
+
+  if (!ort.userRatingCount) {
+    throw new Error("Antwort ohne Note/Anzahl - nichts überschrieben.");
+  }
+
+  /* Google liefert Note und Anzahl, aber keine Texte: Zahlen aktualisieren,
+     die vorhandenen Texte stehen lassen. */
+  if (bewertungen.length === 0) {
+    const daten = {
+      ...alt,
+      stand: new Date().toISOString().slice(0, 10),
+      placeId: ort.id ?? placeId,
+      note: ort.rating,
+      anzahl: ort.userRatingCount,
+      profilUrl: ort.googleMapsUri ?? alt.profilUrl,
+    };
+    await writeFile(ZIEL, `${JSON.stringify(daten, null, 2)}\n`);
+    log(
+      `Nur Note/Anzahl aktualisiert (${daten.note} / ${daten.anzahl}), Texte unverändert.`,
+    );
+    return;
+  }
+
+  /* Orte aus der bisherigen Datei übernehmen: Google liefert keinen Wohnort,
+     von Hand eingetragene Orte sollen nicht verloren gehen. */
   const orte = new Map(
     (alt.bewertungen ?? [])
       .filter((r) => r.ort)
