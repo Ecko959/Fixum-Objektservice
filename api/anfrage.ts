@@ -432,7 +432,7 @@ const wegText = (wege: Anfrage["kontaktwege"]) => {
         : "per E-Mail",
   );
   return teile.length > 1
-    ? `${teile.slice(0, -1).join(", ")} oder ${teile.at(-1)}`
+    ? `${teile.slice(0, -1).join(", ")} oder ${teile[teile.length - 1]}`
     : (teile[0] ?? "");
 };
 
@@ -706,12 +706,14 @@ export async function POST(request: Request): Promise<Response> {
   const ergebnis = await bearbeite(request, leseEnv(process.env));
   const perScript = request.headers.get("accept")?.includes("application/json");
   if (perScript) {
-    return Response.json(
-      ergebnis.ok
-        ? { ok: true, vorname: ergebnis.vorname }
-        : { ok: false, fehler: ergebnis.fehler, felder: ergebnis.felder },
-      { status: ergebnis.ok ? 200 : ergebnis.status },
-    );
+    /* Mit "in" eingegrenzt statt über ergebnis.ok: Vercel prüft diese Datei
+       ohne strictNullChecks, dort greift die Eingrenzung über ok nicht. */
+    return "fehler" in ergebnis
+      ? Response.json(
+          { ok: false, fehler: ergebnis.fehler, felder: ergebnis.felder },
+          { status: ergebnis.status },
+        )
+      : Response.json({ ok: true, vorname: ergebnis.vorname }, { status: 200 });
   }
   /* Ohne JavaScript: Danke-Seite oder zurück zum Formular. */
   const ziel = ergebnis.ok ? "/danke/" : "/kontakt/?fehler=1#anfrage";
