@@ -37,6 +37,8 @@ export interface Artikel {
   /** Bildpfad aus referenzen.ts für Hero und Social Preview */
   bild: string;
   bildAlt: string;
+  /** Vorauswahl im Anfrageformular (Schlüssel aus api/anfrage.ts LEISTUNGEN) */
+  anfrage?: string;
 }
 
 export const artikel: Artikel[] = [
@@ -251,6 +253,495 @@ export const artikel: Artikel[] = [
     datum: "2026-11-16",
     bild: fotos.abstellraum.pfad,
     bildAlt: fotos.abstellraum.alt,
+  },
+
+  {
+    slug: "sperrmuell-emden-oder-entruempelungsfirma",
+    titel: "Sperrmüll in Emden oder Entrümpelungsfirma – was lohnt sich?",
+    metaTitel: "Fixum Objektservice: Sperrmüll Emden oder Entrümpelung?",
+    beschreibung:
+      "Sperrmüll in Emden: was die städtische Abfuhr mitnimmt, wo die Grenzen liegen und wann sich eine Entrümpelungsfirma mehr lohnt.",
+    kurzantwort:
+      "In Emden kann jeder Haushalt Sperrmüll bis zu 4 m³ nach vorheriger Anmeldung beim Bau- und Entsorgungsbetrieb Emden (BEE) gegen Gebühr abholen lassen. Das reicht für einzelne Möbel. Eine Entrümpelungsfirma lohnt sich, wenn es mehr ist, wenn getragen und demontiert werden muss, wenn Bau- und Umbauabfälle dabei sind oder wenn ein fester Termin zählt.",
+    html: `
+<h2>Was die Sperrmüllabfuhr in Emden leistet</h2>
+<p>In Emden ist der <strong>Bau- und Entsorgungsbetrieb Emden (BEE)</strong> zuständig. Sperrmüll wird nicht zu festen Terminen eingesammelt, sondern auf Anmeldung abgeholt, telefonisch oder über das Online-Formular auf bee-emden.de. Die Abholung kostet eine Gebühr. Pro Abholung sind bis zu <strong>4 m³</strong> möglich.</p>
+<p>Zum Sperrmüll zählen zum Beispiel Schränke, Kommoden, Regale, Sofas, Betten, Matratzen, Teppiche, Fahrräder sowie Wasch- und Spülmaschinen, Trockner und Herde. <strong>Nicht</strong> dazu gehören Abfälle aus Bau- und Umbauarbeiten.</p>
+<p>Wichtig für die Planung: Die Termine sind gefragt. Der BEE weist auf seiner Website darauf hin, dass Sperrmüll zeitweise ausgebucht ist und es zu Verzögerungen kommt. Wer einen festen Auszugstermin hat, sollte früh anmelden oder eine andere Lösung einplanen.</p>
+
+<h2>Wann der Sperrmüll reicht</h2>
+<ul>
+  <li>Es geht um einzelne Möbelstücke oder ein Zimmer.</li>
+  <li>Sie können die Sachen selbst an die Straße stellen.</li>
+  <li>Es gibt keinen engen Termin, zum Beispiel keine Wohnungsübergabe.</li>
+</ul>
+
+<h2>Wann eine Entrümpelungsfirma die bessere Wahl ist</h2>
+<ul>
+  <li><strong>Mehr als 4 m³:</strong> Eine normal möblierte Wohnung kommt schnell auf ein Vielfaches davon, Keller und Dachboden nicht mitgerechnet.</li>
+  <li><strong>Tragen und Demontieren:</strong> Schrankwände abbauen, Waschmaschinen aus dem Keller holen, Treppen ohne Aufzug: Das nimmt Ihnen die Abfuhr nicht ab.</li>
+  <li><strong>Gemischte Abfälle:</strong> Neben Möbeln fallen fast immer Hausrat, Elektrogeräte, Holz, Metall und Restmüll an. Wir trennen nach Fraktionen und bringen alles zu den passenden Annahmestellen.</li>
+  <li><strong>Bau- und Umbauabfälle:</strong> Alte Böden, Vertäfelungen oder Wandverkleidungen sind kein Sperrmüll.</li>
+  <li><strong>Termin und Übergabe:</strong> Wenn die Wohnung zu einem festen Tag besenrein sein muss, zählt Planbarkeit mehr als der günstigste Weg.</li>
+</ul>
+
+<h2>Die Kombination aus beidem</h2>
+<p>Manchmal ist eine Mischung sinnvoll: Was Sie selbst rausstellen können, geht über den Sperrmüll. Für den Rest, also schwere Teile, Keller oder die besenreine Übergabe, holen Sie sich ein Festpreisangebot. Sagen Sie uns bei der Besichtigung einfach, was schon angemeldet ist. Dann rechnen wir nur den Rest.</p>
+`,
+    faq: [
+      {
+        question: "Wie viel Sperrmüll holt die Stadt Emden ab?",
+        answer:
+          "Laut Bau- und Entsorgungsbetrieb Emden kann jeder Haushalt Sperrmüll bis zu 4 m³ nach vorheriger Anmeldung abholen lassen. Die Abholung ist gebührenpflichtig.",
+      },
+      {
+        question: "Ist Bauschutt Sperrmüll?",
+        answer:
+          "Nein. Abfälle aus Bau- und Umbauarbeiten gehören nicht zum Sperrmüll und müssen gesondert entsorgt werden.",
+      },
+      {
+        question: "Was ist, wenn der Sperrmülltermin zu spät kommt?",
+        answer:
+          "Dann ist eine Entrümpelung zum festen Termin die sicherere Lösung. Der BEE weist selbst darauf hin, dass es bei der Sperrmüllabfuhr zeitweise zu Verzögerungen kommt.",
+      },
+    ],
+    leistungen: [
+      ["Entrümpelung", "/entruempelung/"],
+      ["Haushaltsauflösung", "/haushaltsaufloesung/"],
+      ["Preisrechner", "/preisrechner/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.abstellraum.pfad,
+    bildAlt: fotos.abstellraum.alt,
+    anfrage: "entruempelung",
+  },
+
+  {
+    slug: "umzug-checkliste",
+    titel: "Umzug planen: Checkliste für einen stressfreien Umzugstag",
+    metaTitel: "Fixum Objektservice: Umzug planen – Checkliste",
+    beschreibung:
+      "Umzug in Emden und Ostfriesland planen: Halteverbot, Kartons, Großgeräte, Möbelmontage und was am Umzugstag wirklich zählt – auch beim Firmenumzug.",
+    kurzantwort: `Ein guter Umzug wird vorher entschieden: Halteverbot rechtzeitig bei der Straßenverkehrsbehörde beantragen (meist rund zwei Wochen Vorlauf), Kartons beschriften, Großgeräte vorbereiten und klären, welche Möbel demontiert werden müssen. Bei uns gilt als Richtwert: ${preise.umzug.leistung} ${preise.umzug.betrag}. ${preisHinweis}`,
+    html: `
+<h2>4 bis 6 Wochen vorher</h2>
+<ul>
+  <li><strong>Umfang klären:</strong> Was kommt mit, was wird verkauft, verschenkt oder entsorgt? Jedes Teil, das nicht umzieht, spart Zeit und Geld.</li>
+  <li><strong>Angebot einholen:</strong> Am besten nach Besichtigung oder anhand von Fotos aller Räume, inklusive Keller, Dachboden und Schuppen.</li>
+  <li><strong>Mietverträge und Termine:</strong> Kündigungsfrist, Übergabetermin der alten Wohnung und Schlüsselübergabe der neuen aufeinander abstimmen.</li>
+</ul>
+
+<h2>2 bis 3 Wochen vorher</h2>
+<ul>
+  <li><strong>Halteverbot beantragen:</strong> Ein Halteverbot vor der Tür beantragen Sie bei der Straßenverkehrsbehörde Ihrer Stadt oder Ihres Landkreises. Planen Sie rund zwei Wochen Vorlauf ein. Die genauen Fristen und Gebühren nennt die Behörde. Kurze Tragewege sparen am Umzugstag mehr Zeit als jeder zusätzliche Helfer.</li>
+  <li><strong>Kartons packen:</strong> Schwere Sachen wie Bücher in kleine Kartons, leichte in große. Jeden Karton mit Zielraum beschriften.</li>
+  <li><strong>Ummelden und Nachsendeauftrag:</strong> Nachsendeauftrag bei der Post einrichten, Verträge mit der neuen Adresse versehen.</li>
+</ul>
+
+<h2>Die Woche davor</h2>
+<ul>
+  <li><strong>Kühlschrank und Gefriertruhe:</strong> Rechtzeitig leeren und abtauen. Nach dem Transport einige Stunden stehen lassen, bevor sie wieder eingeschaltet werden. Die Herstellerangaben gehen vor.</li>
+  <li><strong>Waschmaschine:</strong> Transportsicherung einsetzen, falls vorhanden. Ohne Sicherung kann die Trommel beim Transport Schaden nehmen.</li>
+  <li><strong>Möbel:</strong> Klären, was zerlegt werden muss, zum Beispiel große Schränke, Betten und verschraubte Arbeitsplatten. Schrauben pro Möbelstück in einen beschrifteten Beutel.</li>
+  <li><strong>Wertsachen und Unterlagen</strong> transportieren Sie selbst.</li>
+</ul>
+
+<h2>Am Umzugstag</h2>
+<ul>
+  <li>Eine Person, die vor Ort entscheidet, wohin was kommt.</li>
+  <li>Zählerstände in alter und neuer Wohnung fotografieren.</li>
+  <li>Nach dem Ausladen die alte Wohnung besenrein übergeben. Mehr dazu im Beitrag <a href="/ratgeber/wohnung-besenrein-uebergeben/">Besenrein übergeben</a>.</li>
+</ul>
+
+<h2>Sonderfall Firmenumzug</h2>
+<p>Bei Werkstätten, Lagern und Büros lohnt eine eigene Planung. Regale und verschraubte Werkbänke müssen in transportfähige Teile zerlegt werden, und schwere Geräte wie Hubwagen brauchen einen eigenen Transport. Packen und beschriften können die Mitarbeitenden oft selbst. Das spart Kosten. Wichtig ist ein Plan für den neuen Standort: Was steht wo, damit am nächsten Werktag weitergearbeitet werden kann.</p>
+
+<h2>Auch kurze Wege brauchen Planung</h2>
+<p>Ein Umzug „nur ein paar Häuser weiter“ wird gern unterschätzt. Die Fahrt ist kurz, aber Tragen, Treppen, Großgeräte und Möbelmontage bleiben gleich. Kombiniert man den Umzug mit dem Ausräumen von Schuppen, Garage oder Dachboden, ist alles an einem Tag erledigt.</p>
+`,
+    faq: [
+      {
+        question: "Wie früh muss ich ein Halteverbot für den Umzug beantragen?",
+        answer:
+          "Rechnen Sie mit rund zwei Wochen Vorlauf bei der zuständigen Straßenverkehrsbehörde. Die genauen Fristen und Gebühren legt die jeweilige Stadt oder der Landkreis fest.",
+      },
+      {
+        question: "Was kostet ein Umzug in Emden?",
+        answer: `Als Richtwert gilt: ${preise.umzug.leistung} ${preise.umzug.betrag}. Menge, Etagen, Wege und Möbelmontage verändern den Preis. Verbindlich ist der Festpreis nach Besichtigung.`,
+      },
+      {
+        question: "Bauen Sie Möbel und Küchen ab und wieder auf?",
+        answer:
+          "Ja, Demontage und Montage von Möbeln und Küchen gehören dazu. Elektro-, Gas- und Wasseranschlüsse übernimmt ein zugelassener Fachbetrieb.",
+      },
+    ],
+    leistungen: [
+      ["Umzüge & Transporte", "/umzug/"],
+      ["Möbel- & Küchenmontage", "/kuechenmontage/"],
+      ["Entrümpelung", "/entruempelung/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.umzug.pfad,
+    bildAlt: fotos.umzug.alt,
+    anfrage: "umzug",
+  },
+
+  {
+    slug: "winterdienst-pflichten-eigentuemer",
+    titel: "Winterdienst: Welche Pflichten Eigentümer und Vermieter haben",
+    metaTitel: "Fixum Objektservice: Winterdienst-Pflichten für Eigentümer",
+    beschreibung:
+      "Räum- und Streupflicht im Winter: wer zuständig ist, wo die Regeln stehen, ob man sie abgeben kann und wie sich die Kosten absetzen lassen.",
+    kurzantwort:
+      "Fast alle Kommunen übertragen die Räum- und Streupflicht für Gehwege per Straßenreinigungssatzung auf die Grundstückseigentümer. Uhrzeiten, Breiten und Ausnahmen stehen in der Satzung Ihrer Stadt oder Gemeinde. Die Pflicht lässt sich an Mieter oder einen Dienstleister übertragen, kontrollieren muss der Eigentümer aber weiterhin.",
+    html: `
+<h2>Wer räumen und streuen muss</h2>
+<p>Die Räum- und Streupflicht auf öffentlichen Gehwegen liegt zunächst bei der Kommune. Fast alle Städte und Gemeinden übertragen sie aber über ihre <strong>Straßenreinigungssatzung</strong> auf die Eigentümer der angrenzenden Grundstücke. Was genau gilt, ab welcher Uhrzeit, in welcher Breite und an welchen Tagen, steht in der Satzung oder Verordnung Ihrer Stadt oder Gemeinde. Die Regeln unterscheiden sich von Ort zu Ort, auch innerhalb Ostfrieslands.</p>
+
+<h2>Was in der Praxis dazugehört</h2>
+<ul>
+  <li><strong>Gehweg vor dem Grundstück</strong> von Schnee räumen und bei Glätte streuen, in der Breite, die die Satzung vorgibt.</li>
+  <li><strong>Zugänge</strong> zum Haus, zu Mülltonnen und Briefkästen sicher halten. Das liegt im eigenen Interesse, weil Sie für Stürze auf Ihrem Grundstück haften können.</li>
+  <li><strong>Wiederholen</strong>, wenn es weiter schneit oder friert.</li>
+  <li><strong>Nach dem Winter:</strong> Viele Satzungen verlangen, dass Streugut wieder zusammengekehrt wird.</li>
+</ul>
+
+<h2>Kann ich die Pflicht abgeben?</h2>
+<p>Ja, an Mieter (über den Mietvertrag oder die Hausordnung) oder an einen Dienstleister. Der Eigentümer bleibt aber in der Verantwortung, regelmäßig zu kontrollieren, ob tatsächlich geräumt wird. Bei einem Dienstleister sollten Sie schriftlich festhalten, welche Flächen betreut werden, ab wann geräumt wird und wie Einsätze dokumentiert werden.</p>
+
+<h2>Besonders kritisch: leerstehende Häuser und Abwesenheit</h2>
+<p>Steht ein Haus leer oder sind Sie über den Winter verreist, räumt niemand „nebenbei“. Gerade dann lohnt ein fester Winterdienst. Häufig lässt er sich mit einer regelmäßigen Kontrolle des Hauses verbinden, siehe <a href="/ratgeber/haus-leerstand-winter/">Leerstehendes Haus im Winter</a>.</p>
+
+<h2>Kosten absetzen</h2>
+<p>Winterdienst durch einen Dienstleister zählt zu den haushaltsnahen Dienstleistungen. Nach § 35a EStG sind 20 Prozent der Arbeitskosten von der Steuer abziehbar. Der Bundesfinanzhof hat das auch für den Gehweg vor dem eigenen Grundstück bestätigt (BFH, Urteil vom 20.03.2014, VI R 55/12). Voraussetzung: Die Arbeitskosten stehen auf der Rechnung und werden überwiesen.</p>
+
+<p><em>Hinweis: Dieser Beitrag ersetzt keine Rechtsberatung. Maßgeblich ist die Satzung Ihrer Kommune.</em></p>
+`,
+    faq: [
+      {
+        question: "Wo finde ich die Winterdienst-Regeln für meinen Ort?",
+        answer:
+          "In der Straßenreinigungssatzung bzw. -verordnung Ihrer Stadt oder Gemeinde. Dort stehen Uhrzeiten, Breiten und welche Straßen betroffen sind.",
+      },
+      {
+        question: "Bin ich als Vermieter raus, wenn die Mieter räumen müssen?",
+        answer:
+          "Nicht ganz. Die Pflicht kann übertragen werden, der Eigentümer muss aber kontrollieren, dass sie auch erfüllt wird.",
+      },
+      {
+        question: "Kann ich einen Winterdienst von der Steuer absetzen?",
+        answer:
+          "Ja, als haushaltsnahe Dienstleistung nach § 35a EStG: 20 Prozent der Arbeitskosten, auch für den öffentlichen Gehweg vor dem Grundstück (BFH VI R 55/12).",
+      },
+    ],
+    leistungen: [
+      ["Winterdienst & Außenanlagen", "/winterdienst/"],
+      ["Hausmeisterservice", "/hausmeisterservice/"],
+      ["Für Hausverwaltungen", "/fuer-hausverwaltungen/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.dachzimmer.pfad,
+    bildAlt: fotos.dachzimmer.alt,
+    anfrage: "sonstiges",
+  },
+
+  {
+    slug: "haus-leerstand-winter",
+    titel: "Leerstehendes Haus im Winter: So vermeiden Sie Schäden",
+    metaTitel: "Fixum Objektservice: Leerstehendes Haus im Winter sichern",
+    beschreibung:
+      "Haus steht leer oder Sie sind monatelang weg? Was Wohngebäudeversicherungen verlangen, was regelmäßig kontrolliert werden sollte und wie eine Hausbetreuung hilft.",
+    kurzantwort:
+      "Wer ein Haus im Winter nicht bewohnt, muss es nach den üblichen Versicherungsbedingungen ausreichend beheizen und regelmäßig kontrollieren oder die Wasserleitungen absperren und entleeren. Sonst kann die Wohngebäudeversicherung bei Frost- und Wasserschäden kürzen. Ein fester Kontrollrhythmus mit kurzem Protokoll schützt Haus und Versicherungsschutz.",
+    html: `
+<h2>Was die Versicherung erwartet</h2>
+<p>Die meisten Wohngebäudeversicherungen enthalten Pflichten für die kalte Jahreszeit: Das Gebäude muss <strong>ausreichend beheizt</strong> und das <strong>genügend häufig kontrolliert</strong> werden. Nicht genutzte Gebäude oder Gebäudeteile müssen außerdem kontrolliert werden, und die wasserführenden Leitungen sind dort <strong>abzusperren, zu entleeren und entleert zu halten</strong>. Wer das versäumt, riskiert nach einem Rohrbruch Kürzungen. Gerichte haben auch klargestellt: Dass noch Möbel im Haus stehen, macht es nicht zu einem bewohnten Haus.</p>
+<p>Melden Sie längeren Leerstand außerdem Ihrer Versicherung. Welche Fristen und Pflichten genau gelten, steht in Ihren Vertragsbedingungen.</p>
+
+<h2>Checkliste für Abwesenheit oder Leerstand</h2>
+<ul>
+  <li><strong>Heizung:</strong> Nicht abschalten, sondern auf eine frostsichere Temperatur einstellen. Funktion regelmäßig prüfen.</li>
+  <li><strong>Wasser:</strong> Leitungen in ungenutzten Bereichen absperren und entleeren, Außenhähne frostsicher machen.</li>
+  <li><strong>Lüften:</strong> Kurz stoßlüften bei Kontrollen, damit sich keine Feuchtigkeit und kein Schimmel bilden.</li>
+  <li><strong>Außen:</strong> Laub von Wegen, Eingang und Terrasse entfernen, Dachrinnen und Abläufe frei halten.</li>
+  <li><strong>Post und Eindruck:</strong> Briefkasten leeren, damit das Haus nicht verlassen wirkt.</li>
+  <li><strong>Winterdienst:</strong> Auch ein leeres Haus hat eine Räum- und Streupflicht, siehe <a href="/ratgeber/winterdienst-pflichten-eigentuemer/">Winterdienst-Pflichten</a>.</li>
+</ul>
+
+<h2>Wie oft kontrollieren?</h2>
+<p>Das hängt von Haus, Heizung und Witterung ab und davon, was Ihr Versicherungsvertrag verlangt. Bewährt hat sich ein fester Rhythmus, zum Beispiel ein Einsatz pro Monat, plus zusätzliche Kurzkontrollen bei starkem Frost oder nach Sturm. Jede Kontrolle sollte kurz dokumentiert werden: Datum, Temperatur, Auffälligkeiten, Fotos.</p>
+
+<h2>Hausbetreuung durch einen Dienstleister</h2>
+<p>Wenn Sie weit weg wohnen, übernimmt ein Hausmeisterservice die Kontrollen. Sinnvoll ist eine feste Pauschale pro Einsatz, ein vereinbarter Rhythmus und eine kurze Rückmeldung mit Fotos nach jedem Besuch. Grünschnitt, Laub und kleinere Arbeiten lassen sich direkt mit erledigen.</p>
+`,
+    faq: [
+      {
+        question: "Muss ich ein leerstehendes Haus im Winter heizen?",
+        answer:
+          "Nach den üblichen Bedingungen der Wohngebäudeversicherung: Entweder ausreichend beheizen und regelmäßig kontrollieren oder in nicht genutzten Bereichen die Wasserleitungen absperren und entleeren. Maßgeblich sind Ihre Vertragsbedingungen.",
+      },
+      {
+        question: "Wie oft sollte ein leeres Haus kontrolliert werden?",
+        answer:
+          "Ein fester Rhythmus, etwa monatlich, plus Kurzkontrollen bei starkem Frost oder Sturm hat sich bewährt. Entscheidend ist, was Ihre Versicherung verlangt.",
+      },
+      {
+        question: "Gilt ein Haus mit Möbeln als bewohnt?",
+        answer:
+          "Nein. Gerichte haben entschieden, dass das bloße Lagern von Möbeln keine Nutzung im Sinne der Wohngebäudeversicherung ist.",
+      },
+    ],
+    leistungen: [
+      ["Hausmeisterservice", "/hausmeisterservice/"],
+      ["Winterdienst & Außenanlagen", "/winterdienst/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.dachzimmer.pfad,
+    bildAlt: fotos.dachzimmer.alt,
+    anfrage: "sonstiges",
+  },
+
+  {
+    slug: "trockenbau-altbau-holzbalkendecke",
+    titel: "Trockenbau im Altbau: Dielen, Holzbalken und schiefe Böden",
+    metaTitel: "Fixum Objektservice: Trockenbau im Altbau",
+    beschreibung:
+      "Altbau mit Holzbalkendecke und Dielenboden ausbauen: was vor dem Trockenbau geklärt werden muss, wie Boden, Decke und Wände aufgebaut werden.",
+    kurzantwort: `Im Altbau entscheidet der Untergrund: Bevor Trockenbau beginnt, müssen Holzbalken, Dielen und vorhandener Estrich geprüft und ausgeglichen werden. Bewährt hat sich die Reihenfolge Rückbau, Boden ausgleichen, Decke, Wände, Oberflächen. Als Richtwert gilt bei uns: ${preise.trockenbau.leistung} ${preise.trockenbau.betrag}. ${preisHinweis}`,
+    html: `
+<h2>Erst prüfen, dann planen</h2>
+<p>Altbauten in Ostfriesland haben oft <strong>Holzbalkendecken mit Dielenböden</strong>, in Teilen auch alte Estriche, die über die Jahre schief geworden sind. Vor dem Ausbau sollte klar sein:</p>
+<ul>
+  <li>Sind die Balken tragfähig, trocken und frei von Schädlingen? Bei Zweifeln gehört ein Statiker oder Sachverständiger dazu.</li>
+  <li>Wie stark weichen Böden und Wände von der Ebene ab?</li>
+  <li>Wo laufen Leitungen? Anschlüsse an Strom, Wasser und Heizung legt ein zugelassener Fachbetrieb.</li>
+  <li>Gibt es Hinweise auf Schadstoffe, etwa alte Dämmwolle oder asbesthaltige Bauteile? Dann zuerst prüfen lassen.</li>
+</ul>
+
+<h2>Der Boden: Dielen raus oder drauf aufbauen?</h2>
+<p>Beides ist möglich. Bei losen oder beschädigten Dielen werden sie entfernt, die Balken bei Bedarf aufgedoppelt und mit Holzwerkstoffplatten belegt. Darauf kommt ein <strong>Trockenestrich</strong>. Sind die Dielen fest, kann auch direkt darauf aufgebaut werden, mit Ausgleich und passender Trittschalldämmung. Wo ein alter Estrich schief ist, wird er mit Ausgleichsmasse in die Ebene gebracht. Oft gibt es beides in einem Geschoss, und dann müssen beide Aufbauten am Ende auf gleicher Höhe enden.</p>
+
+<h2>Decke und Wände</h2>
+<ul>
+  <li><strong>Decke:</strong> Unter Holzbalkendecken wird eine Unterkonstruktion gesetzt und mit Gipskarton beplankt. Das ergibt eine ebene Fläche und Platz für Leitungen und Einbauleuchten.</li>
+  <li><strong>Vorsatzschalen:</strong> Krumme Altbauwände werden nicht verputzt, sondern mit einer Vorsatzschale gerade gestellt.</li>
+  <li><strong>Bäder:</strong> In Feuchträumen gehören imprägnierte Platten und eine Abdichtung unter die Fliesen.</li>
+</ul>
+
+<h2>Die richtige Reihenfolge</h2>
+<ol>
+  <li>Räumen und nicht tragende Bauteile zurückbauen</li>
+  <li>Untergrund prüfen, Leitungen durch Fachbetriebe vorbereiten</li>
+  <li>Boden ausgleichen bzw. neu aufbauen</li>
+  <li>Decke und Vorsatzschalen</li>
+  <li>Spachteln, Oberflächen, Bodenbelag, Türen</li>
+</ol>
+<p>Wer Räumung, Rückbau und Ausbau von einem Betrieb machen lässt, spart Wartezeit zwischen den Gewerken und Diskussionen darüber, wer welchen Schaden verursacht hat.</p>
+
+<h2>Material selbst kaufen?</h2>
+<p>Möglich, und für manche Bauherren sinnvoll. Wichtig ist dann eine genaue Materialliste vom Ausführenden, damit nichts fehlt und keine Wartezeiten entstehen. Alternativ übernimmt der Betrieb die Beschaffung, mit Kostenvoranschlag vorab.</p>
+`,
+    faq: [
+      {
+        question: "Kann man Trockenestrich auf Dielen verlegen?",
+        answer:
+          "Ja, wenn die Dielen fest und tragfähig sind, mit Ausgleich und passender Trittschalldämmung. Lose oder beschädigte Dielen werden vorher entfernt und durch Holzwerkstoffplatten ersetzt.",
+      },
+      {
+        question: "Was kostet Trockenbau im Altbau?",
+        answer: `Als Richtwert gilt: ${preise.trockenbau.leistung} ${preise.trockenbau.betrag}. Untergrund, Ausgleich und Sonderbauteile verändern den Preis. Verbindlich ist der Festpreis nach Besichtigung.`,
+      },
+      {
+        question: "Wer macht Strom und Wasser beim Ausbau?",
+        answer:
+          "Anschlüsse an Strom, Wasser und Heizung übernehmen zugelassene Fachbetriebe. Wir stimmen die Termine mit ihnen ab.",
+      },
+    ],
+    leistungen: [
+      ["Trockenbau", "/trockenbau/"],
+      ["Rückbau + Trockenbau", "/rueckbau-trockenbau/"],
+      ["Kernsanierung vorbereiten", "/kernsanierung/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.altbauTrockenbau.pfad,
+    bildAlt: fotos.altbauTrockenbau.alt,
+    anfrage: "trockenbau",
+  },
+
+  {
+    slug: "feuchte-wand-vor-dem-innenausbau",
+    titel: "Feuchte Wand: Was vor dem Innenausbau passieren muss",
+    metaTitel: "Fixum Objektservice: Feuchte Wand vor dem Innenausbau",
+    beschreibung:
+      "Feuchte Außenwand oder mürber Sockelputz? Warum zuerst die Ursache behoben und die Wand getrocknet werden muss, bevor gespachtelt, verkleidet oder gestrichen wird.",
+    kurzantwort:
+      "Erst die Ursache, dann der Ausbau: Feuchtigkeit in der Wand muss von einem Fachbetrieb behoben werden, etwa mit einer Horizontalsperre oder einem Sanierputz. Danach muss die Wand trocknen, und erst wenn eine Messung das bestätigt, folgt der Innenausbau. Wer vorher verkleidet oder spachtelt, schließt die Feuchtigkeit ein.",
+    html: `
+<h2>Typische Anzeichen</h2>
+<ul>
+  <li>Dunkle Flecken oder Ränder im unteren Wandbereich</li>
+  <li>Mürber, abbröckelnder Putz am Sockel, Salzausblühungen</li>
+  <li>Muffiger Geruch, Schimmel hinter Möbeln</li>
+  <li>Tapete, die sich unten löst</li>
+</ul>
+
+<h2>Warum man nicht einfach drüber baut</h2>
+<p>Eine neue Vorsatzschale oder frische Spachtelung sieht zunächst gut aus. Bleibt die Ursache aber bestehen, wandert die Feuchtigkeit weiter und zeigt sich nach einigen Monaten wieder, dann hinter der neuen Oberfläche. Das kostet doppelt.</p>
+
+<h2>Die sinnvolle Reihenfolge</h2>
+<ol>
+  <li><strong>Ursache klären:</strong> aufsteigende Feuchte, eine defekte Leitung, Kondensat oder ein Schaden von außen? Das gehört in die Hände eines Fachbetriebs für Bautenschutz.</li>
+  <li><strong>Ursache beheben:</strong> zum Beispiel Horizontalsperre, Abdichtung oder Sanierputz durch den Fachbetrieb.</li>
+  <li><strong>Trocknen lassen:</strong> je nach Wand und Jahreszeit mehrere Wochen, auf Wunsch mit Bautrockner.</li>
+  <li><strong>Messen:</strong> Erst wenn eine Kontrollmessung bestätigt, dass die Wand trocken genug ist, geht es weiter.</li>
+  <li><strong>Innenausbau:</strong> Spachteln, Dämmung, Boden und Anstrich.</li>
+</ol>
+
+<h2>Worauf es beim Ausbau ankommt</h2>
+<ul>
+  <li><strong>Hohlräume und Leitungen:</strong> Gerade im Sockelbereich älterer Häuser verlaufen manchmal Leitungen, auch Gas. Vor dem Bohren oder Abschlagen klären, was in der Wand liegt.</li>
+  <li><strong>Diffusionsoffene Materialien:</strong> Nach einer Sanierung sollten Putz und Farbe Feuchtigkeit abgeben können. Fragen Sie den Bautenschutz-Fachbetrieb, welche Oberflächen er empfiehlt.</li>
+  <li><strong>Heizkörper:</strong> Für die Arbeiten demontieren und danach wieder montieren lassen, statt um sie herum zu arbeiten.</li>
+</ul>
+
+<h2>Ein Ansprechpartner für den Ausbau</h2>
+<p>Die Abdichtung macht der Fachbetrieb, den Rest ein Ausbaubetrieb. Bewährt hat sich, wenn beide sich direkt abstimmen. Dann muss der Auftraggeber keine Termine hin- und herschieben, und der Ausbau beginnt genau dann, wenn die Wand bereit ist.</p>
+`,
+    faq: [
+      {
+        question:
+          "Kann ich eine feuchte Wand einfach mit Trockenbau verkleiden?",
+        answer:
+          "Nein. Ohne Behebung der Ursache bleibt die Feuchtigkeit in der Wand und zeigt sich später hinter der Verkleidung. Erst sanieren, trocknen, messen, dann ausbauen.",
+      },
+      {
+        question: "Wie lange muss eine Wand nach der Sanierung trocknen?",
+        answer:
+          "Je nach Wand, Material und Jahreszeit mehrere Wochen. Entscheidend ist eine Kontrollmessung vor Beginn des Innenausbaus.",
+      },
+    ],
+    leistungen: [
+      ["Renovierung", "/renovierung/"],
+      ["Trockenbau", "/trockenbau/"],
+      ["Bodenverlegung", "/bodenverlegung/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.dachausbauTrockenbau.pfad,
+    bildAlt: fotos.dachausbauTrockenbau.alt,
+    anfrage: "trockenbau",
+  },
+
+  {
+    slug: "gewerbeflaeche-rueckbau-mietende",
+    titel: "Gewerbefläche zurückgeben: Rückbau und Räumung bei Mietende",
+    metaTitel: "Fixum Objektservice: Gewerbefläche zurückbauen bei Mietende",
+    beschreibung:
+      "Laden, Büro oder Praxis aufgeben: was der Mieter bei Mietende zurückbauen muss, wie man den Rückbau plant und was Fachbetriebe übernehmen.",
+    kurzantwort:
+      "Bei Mietende muss der Mieter die Räume zurückgeben (§ 546 BGB) und eigene Einbauten grundsätzlich entfernen, also den ursprünglichen Zustand wiederherstellen, soweit nichts anderes vereinbart ist. Wer rechtzeitig plant, mit Vermieter-Abstimmung, Aufmaß und festem Zeitfenster, vermeidet Mietausfall-Forderungen und Nachverhandlungen.",
+    html: `
+<h2>Was zurückgebaut werden muss</h2>
+<p>Grundsätzlich gilt: Was der Mieter eingebaut hat, baut er bei Mietende wieder aus. Typisch sind <strong>Trockenbauwände</strong>, Theken und Einbaumöbel, verklebte Teppichböden, Sauberlaufzonen, abgehängte Decken mit Leuchten sowie Beschriftungen und Werbeanlagen. Was im Einzelnen bleiben darf, regeln Mietvertrag und Absprachen mit dem Vermieter. Holen Sie sich das <strong>schriftlich</strong>, bevor die Arbeiten beginnen.</p>
+
+<h2>So planen Sie den Rückbau</h2>
+<ol>
+  <li><strong>Mietvertrag lesen:</strong> Rückbaupflichten, Übergabetermin und Zustand bei Übergabe.</li>
+  <li><strong>Begehung mit dem Vermieter:</strong> Liste, was raus muss und was bleiben darf.</li>
+  <li><strong>Aufmaß:</strong> Wandlängen, Deckenflächen und Bodenflächen. Die Grundrisse helfen, entscheidend ist aber das Maß vor Ort.</li>
+  <li><strong>Fachbetriebe einplanen:</strong> Strom, Klima, Gas und Wasser werden von zugelassenen Betrieben abgeklemmt und gesichert, bevor der Rückbau beginnt.</li>
+  <li><strong>Entsorgung organisieren:</strong> Container vor der Tür, falls Platz ist, sonst Transporterfahrten. Bauabfälle werden getrennt.</li>
+  <li><strong>Puffer bis zur Übergabe:</strong> Rückbau dauert je nach Fläche oft mehrere Arbeitstage. Planen Sie Reserve vor dem Übergabetermin ein.</li>
+</ol>
+
+<h2>Sonderfälle früh klären</h2>
+<ul>
+  <li><strong>Schadstoffe:</strong> Bei älteren Bodenbelägen, Klebern oder Dämmstoffen vorher prüfen lassen.</li>
+  <li><strong>Strahlenschutz:</strong> In ehemaligen Röntgenräumen können Wände mit Blei verkleidet sein. Das muss vorab geklärt und fachgerecht entsorgt werden.</li>
+  <li><strong>Akten und Datenträger:</strong> Gehören nicht in die normale Räumung. Sie müssen nach den geltenden Aufbewahrungs- und Datenschutzregeln behandelt werden.</li>
+  <li><strong>Untergrund:</strong> Nach dem Entfernen von Teppich oder Fliesen bleiben oft Kleberreste und Vertiefungen. Ob geschliffen oder ausgeglichen werden muss, hängt von der Vereinbarung mit dem Vermieter ab.</li>
+</ul>
+
+<h2>Festpreis statt offener Abrechnung</h2>
+<p>Für Rückbau bei Mietende ist ein Festpreis nach Aufmaß meist die sicherere Wahl. Er steht vor Beginn fest, und Positionen, die erst vor Ort entschieden werden, etwa ein Bodenausgleich, lassen sich als Option mit eigenem Preis aufnehmen.</p>
+
+<p><em>Hinweis: Dieser Beitrag ersetzt keine Rechtsberatung. Bei Streit über Rückbaupflichten hilft eine Fachanwaltskanzlei für Mietrecht.</em></p>
+`,
+    faq: [
+      {
+        question: "Muss ich als Gewerbemieter meine Einbauten zurückbauen?",
+        answer:
+          "Grundsätzlich ja. Bei Rückgabe nach § 546 BGB ist der ursprüngliche Zustand wiederherzustellen, soweit nichts anderes vereinbart ist. Was bleiben darf, sollten Sie schriftlich mit dem Vermieter festhalten.",
+      },
+      {
+        question: "Wer klemmt Strom und Klima beim Rückbau ab?",
+        answer:
+          "Zugelassene Fachbetriebe für Elektro und Klima, vor Beginn des Rückbaus. Wir stimmen uns mit ihnen ab.",
+      },
+    ],
+    leistungen: [
+      ["Entkernung", "/entkernung/"],
+      ["Rückbau + Trockenbau", "/rueckbau-trockenbau/"],
+      ["Für Hausverwaltungen", "/fuer-hausverwaltungen/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.rasterdecke.pfad,
+    bildAlt: fotos.rasterdecke.alt,
+    anfrage: "entkernung",
+  },
+
+  {
+    slug: "wandkassetten-planen",
+    titel: "Wandkassetten mit Zierleisten planen – auch unter Dachschrägen",
+    metaTitel: "Fixum Objektservice: Wandkassetten richtig planen",
+    beschreibung:
+      "Wandkassetten aus Zierleisten: Abstände, Aufteilung, Dachschrägen, Heizkörper und Steckdosen. So wirkt das Ergebnis ruhig und hochwertig.",
+    kurzantwort:
+      "Wandkassetten wirken hochwertig, wenn die Abstände überall gleich sind. Bewährt haben sich rund 8 cm zwischen den Kassetten und zum Rand. Die Kassettenbreite ergibt sich aus der Wandlänge: (Wandlänge − Anzahl Abstände × 8 cm) ÷ Anzahl Kassetten. Heizkörper, Steckdosen und Dachschrägen werden vorher eingeplant, nicht nachträglich umgangen.",
+    html: `
+<h2>Erst zeichnen, dann kleben</h2>
+<p>Wandkassetten aus Zierleisten sind eine günstige Art, einem Raum Charakter zu geben, gerade in Dachgeschossen und Altbauten. Der Unterschied zwischen „selbst gemacht“ und „wie vom Profi“ liegt fast nur in der Planung. Messen Sie jede Wand aus und zeichnen Sie die Aufteilung auf Papier oder direkt mit Bleistift an die Wand.</p>
+
+<h2>Abstände und Aufteilung</h2>
+<ul>
+  <li><strong>Gleichmäßige Abstände:</strong> Rund 8 cm zwischen den Kassetten und zum Rand wirken ruhig. Wichtiger als das genaue Maß ist, dass es überall gleich ist.</li>
+  <li><strong>Höhe:</strong> Ein paar Zentimeter Luft über der Fußleiste und unter der oberen Abschlussleiste, auf allen Wänden gleich.</li>
+  <li><strong>Rechenbeispiel:</strong> Eine 4 m lange Wand mit drei Kassetten hat vier Abstände à 8 cm. (400 cm − 32 cm) ÷ 3 ergibt rund 1,23 m Kassettenbreite.</li>
+  <li><strong>Ungerade Zahl wählen,</strong> wenn ein Fenster oder Bett mittig sitzt, damit eine Kassette in der Mitte liegt.</li>
+</ul>
+
+<h2>Dachschrägen und Drempel</h2>
+<p>Unter Dachschrägen werden die Kassetten oben schräg angeschnitten und folgen der Neigung. Am niedrigen Drempel entstehen flache Kassetten. Damit sie zu den hohen Wänden passen, sollten die senkrechten Linien möglichst in einer Flucht weiterlaufen. Für die Winkel an Schrägen und Fenstern brauchen Sie eine verstellbare Gehrungslade oder Kappsäge. Mit 45 Grad allein kommt man dort nicht hin.</p>
+
+<h2>Heizkörper, Steckdosen, Nischen</h2>
+<ul>
+  <li><strong>Heizkörper</strong> bekommen eine eigene, passend breite Kassette darüber oder bleiben bewusst ausgespart, symmetrisch zum Rest.</li>
+  <li><strong>Steckdosen und Schalter</strong> sollten möglichst mitten in einer Kassette liegen, nicht auf einer Leiste. Das vorher anzeichnen.</li>
+  <li><strong>Nischen</strong> wirken am besten mit eigenen, kleineren Kassetten im gleichen Abstandsraster.</li>
+</ul>
+
+<h2>Material und Aufwand</h2>
+<p>Leisten aus Hartpolystyrol oder PU sind leicht, lassen sich gut schneiden und werden mit Montagekleber gesetzt. Anschließend werden Fugen gefüllt, und Wand und Leisten zusammen gestrichen. Der Aufwand wird meist unterschätzt: Ausmessen, Zuschnitt, Gehrungen und Sonderwinkel kosten mehr Zeit als das Kleben selbst. Für ein Wohnzimmer unter dem Dach mit rund 20 Kassetten sollten Sie mehrere Arbeitstage nur für die Montage einplanen.</p>
+`,
+    faq: [
+      {
+        question: "Welcher Abstand ist bei Wandkassetten üblich?",
+        answer:
+          "Bewährt haben sich rund 8 cm zwischen den Kassetten und zum Rand. Entscheidend ist, dass der Abstand an allen Wänden gleich ist.",
+      },
+      {
+        question: "Wie berechne ich die Breite der Kassetten?",
+        answer:
+          "Wandlänge minus alle Abstände, geteilt durch die Anzahl der Kassetten. Beispiel: (400 cm − 4 × 8 cm) ÷ 3 ≈ 123 cm.",
+      },
+    ],
+    leistungen: [
+      ["Renovierung", "/renovierung/"],
+      ["Trockenbau", "/trockenbau/"],
+    ],
+    datum: "2026-11-16",
+    bild: fotos.dachzimmer.pfad,
+    bildAlt: fotos.dachzimmer.alt,
+    anfrage: "montage",
   },
 ];
 
