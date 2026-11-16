@@ -1,0 +1,30 @@
+# Meldet nach jedem erfolgreichen Produktions-Deploy auf Vercel alle URLs
+# der Sitemap per IndexNow (Bing & Co.). Keine Einrichtung nötig: Vercel
+# meldet Deploys von main als GitHub-Deployment, darauf reagiert dieser
+# Workflow. Manuell auslösbar über "Run workflow".
+name: IndexNow
+
+on:
+  deployment_status:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  melden:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: URLs an IndexNow melden
+        run: node scripts/indexnow.mjs

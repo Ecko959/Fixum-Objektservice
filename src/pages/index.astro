@@ -565,6 +565,10 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
     </div>
     <div class="container container--narrow" data-reveal>
       <FaqAccordion />
+      <p class="faq-mehr">
+        Mehr Antworten im <a href="/ratgeber/">Ratgeber</a> – und echte Aufträge im
+        Detail unter <a href="/referenzen/">Referenzen</a>.
+      </p>
     </div>
   </section>
 
@@ -1291,5 +1295,16 @@ const bereiche: Array<{ label: string; href: string; icon: IconName }> = [
     .hero-form {
       max-width: none;
     }
+  }
+
+  .faq-mehr {
+    margin: 1.5rem 0 0;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .faq-mehr a {
+    color: var(--blue);
+    font-weight: 700;
   }
 </style>

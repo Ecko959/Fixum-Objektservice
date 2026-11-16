@@ -1,0 +1,338 @@
+---
+/* Gemeinsame Vorlage für Ratgeber-Artikel und Projektberichte.
+
+   Aufbau: Hero → Kurzantwort/Kurzfakten → Fließtext → FAQ (optional) →
+   passende Leistungen → Anfrage. Markup: Article mit Autor und Datum,
+   FAQPage nur, wenn die Fragen sichtbar auf der Seite stehen. */
+import Base from "../layouts/Base.astro";
+import PageHero from "./PageHero.astro";
+import FaqAccordion from "./FaqAccordion.astro";
+import Anfrage from "./Anfrage.astro";
+import Icon from "./Icon.astro";
+import { absolute, ids } from "../data/seo";
+import { site } from "../data/site";
+import type { FaqItem } from "../data/faq";
+
+interface Props {
+  path: string;
+  breadcrumbs: Array<[string, string]>;
+  eyebrow: string;
+  titel: string;
+  metaTitel: string;
+  beschreibung: string;
+  /** Lead im Hero */
+  lead: string;
+  /** Hervorgehobene Kurzantwort (Ratgeber) */
+  kurzantwort?: string;
+  /** Kurzfakten als [Label, Wert] (Projekte) */
+  fakten?: Array<[string, string]>;
+  html: string;
+  faq?: FaqItem[];
+  leistungen: Array<[string, string]>;
+  bild: string;
+  bildAlt: string;
+  /** Hinweis unter dem Hero-Bild, z. B. bei Symbolbildern */
+  bildHinweis?: string;
+  datum: string;
+  aktualisiert?: string;
+  anfrageLeistung?: string;
+  anfrageOrt?: string;
+}
+
+const {
+  path,
+  breadcrumbs,
+  eyebrow,
+  titel,
+  metaTitel,
+  beschreibung,
+  lead,
+  kurzantwort,
+  fakten = [],
+  html,
+  faq = [],
+  leistungen,
+  bild,
+  bildAlt,
+  bildHinweis,
+  datum,
+  aktualisiert,
+  anfrageLeistung = "",
+  anfrageOrt = "",
+} = Astro.props;
+
+const url = absolute(path);
+
+const articleSchema = {
+  "@type": "Article",
+  "@id": `${url}#article`,
+  headline: titel,
+  description: beschreibung,
+  image: absolute(bild),
+  datePublished: datum,
+  dateModified: aktualisiert ?? datum,
+  inLanguage: "de-DE",
+  mainEntityOfPage: { "@id": `${url}#webpage` },
+  author: {
+    "@type": "Person",
+    name: site.owner,
+    jobTitle: `Inhaber ${site.name}`,
+    worksFor: { "@id": ids.business },
+  },
+  publisher: { "@id": ids.business },
+};
+
+const faqSchema = faq.length
+  ? [
+      {
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        mainEntity: faq.map((f) => ({
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: { "@type": "Answer", text: f.answer },
+        })),
+      },
+    ]
+  : [];
+
+const datumText = (iso: string) =>
+  new Date(iso).toLocaleDateString("de-DE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+---
+
+<Base
+  title={metaTitel}
+  description={beschreibung}
+  canonical={path}
+  breadcrumbs={breadcrumbs}
+  schema={[articleSchema, ...faqSchema]}
+  image={bild}
+  imageAlt={bildAlt}
+  preloadImage={bild}
+>
+  <PageHero
+    eyebrow={eyebrow}
+    title={titel}
+    text={lead}
+    image={bild}
+    imageAlt={bildAlt}
+    breadcrumbs={breadcrumbs}
+    badges={[]}
+    anfrage={anfrageLeistung}
+    anfrageOrt={anfrageOrt}
+  />
+
+  <article class="section beitrag">
+    <div class="container beitrag-raster">
+      <div class="beitrag-text">
+        <p class="beitrag-meta">
+          <span>Von {site.owner}, Inhaber {site.name}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime={aktualisiert ?? datum}>
+            {aktualisiert ? "Aktualisiert am " : ""}{
+              datumText(aktualisiert ?? datum)
+            }
+          </time>
+        </p>
+
+        {
+          kurzantwort && (
+            <div class="kurzantwort">
+              <p class="kurzantwort-label">Kurz gesagt</p>
+              <p>{kurzantwort}</p>
+            </div>
+          )
+        }
+
+        {
+          fakten.length > 0 && (
+            <dl class="fakten">
+              {fakten.map(([label, wert]) => (
+                <div>
+                  <dt>{label}</dt>
+                  <dd>{wert}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        {bildHinweis && <p class="bild-hinweis">{bildHinweis}</p>}
+
+        <div class="legal-copy beitrag-copy" set:html={html} />
+      </div>
+
+      <aside class="beitrag-seite" aria-label="Passende Leistungen">
+        <div class="card seite-karte">
+          <p class="eyebrow">Passende Leistungen</p>
+          <ul>
+            {
+              leistungen.map(([label, href]) => (
+                <li>
+                  <a href={href}>
+                    <span>{label}</span>
+                    <Icon name="arrow" size={16} />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  {
+    faq.length > 0 && (
+      <section class="section section--mist" aria-labelledby="beitrag-faq">
+        <div class="container section-head">
+          <p class="eyebrow">FAQ</p>
+          <h2 id="beitrag-faq">Häufige Fragen</h2>
+        </div>
+        <div class="container container--narrow">
+          <FaqAccordion items={faq} />
+        </div>
+      </section>
+    )
+  }
+
+  <Anfrage leistung={anfrageLeistung} ort={anfrageOrt} />
+</Base>
+
+<style>
+  .beitrag-raster {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  @media (min-width: 960px) {
+    .beitrag-raster {
+      grid-template-columns: minmax(0, 1fr) 18rem;
+      align-items: start;
+    }
+
+    .beitrag-seite {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+
+  .beitrag-text {
+    min-width: 0;
+  }
+
+  .beitrag-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 1.5rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .kurzantwort {
+    max-width: var(--measure);
+    margin-bottom: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid var(--blue);
+    border-radius: var(--radius-md);
+    background: var(--mist-soft);
+  }
+
+  .kurzantwort p {
+    margin: 0;
+    color: var(--ink);
+    line-height: 1.65;
+  }
+
+  .kurzantwort .kurzantwort-label {
+    margin-bottom: 0.4rem;
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .fakten {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: 0.75rem;
+    max-width: var(--measure);
+    margin: 0 0 2rem;
+  }
+
+  .fakten div {
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+  }
+
+  .fakten dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .fakten dd {
+    margin: 0.25rem 0 0;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .bild-hinweis {
+    max-width: var(--measure);
+    margin: -1rem 0 1.5rem;
+    font-size: 0.8125rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .beitrag-copy :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .beitrag-copy :global(strong) {
+    color: var(--ink);
+  }
+
+  .seite-karte {
+    padding: 1.25rem 1.4rem;
+  }
+
+  .seite-karte ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .seite-karte a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .seite-karte li:last-child a {
+    border-bottom: 0;
+  }
+
+  .seite-karte a:hover {
+    color: var(--blue);
+  }
+</style>

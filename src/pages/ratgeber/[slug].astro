@@ -1,0 +1,33 @@
+---
+import Beitrag from "../../components/Beitrag.astro";
+import { artikel, ratgeberPfad, type Artikel } from "../../data/ratgeber";
+
+export function getStaticPaths() {
+  return artikel.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+
+const { a } = Astro.props as { a: Artikel };
+const path = ratgeberPfad(a);
+---
+
+<Beitrag
+  path={path}
+  breadcrumbs={[
+    ["Ratgeber", "/ratgeber/"],
+    [a.titel, path],
+  ]}
+  eyebrow="Ratgeber"
+  titel={a.titel}
+  metaTitel={a.metaTitel}
+  beschreibung={a.beschreibung}
+  lead={a.beschreibung}
+  kurzantwort={a.kurzantwort}
+  html={a.html}
+  faq={a.faq}
+  leistungen={a.leistungen}
+  bild={a.bild}
+  bildAlt={a.bildAlt}
+  datum={a.datum}
+  aktualisiert={a.aktualisiert}
+  anfrageLeistung="entruempelung"
+/>
